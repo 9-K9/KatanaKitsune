@@ -6,7 +6,6 @@ extends Node2D
 func _ready():
 	if is_instance_valid(world_camera):
 		world_camera.visible = true
-		Dialogic.start("timeline")
 		
 		
 	
