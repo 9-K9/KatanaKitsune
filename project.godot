@@ -26,8 +26,9 @@ directories/dch_directory={}
 directories/dtl_directory={
 "timeline": "res://dialogue/_test/timeline.dtl"
 }
-layout/style_list=["res://dialogue/styles/speachBubble.tres"]
-layout/default_style="res://dialogue/styles/speachBubble.tres"
+layout/style_list=[]
+layout/default_style=""
+glossary/default_case_sensitive=true
 
 [display]
 
