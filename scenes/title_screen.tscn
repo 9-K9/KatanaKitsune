@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://bxrwgrturdtdt"]
+[gd_scene load_steps=10 format=3 uid="uid://bxrwgrturdtdt"]
 
 [ext_resource type="Texture2D" uid="uid://doxc4726cnu5u" path="res://pictures/Title_01.PNG" id="1_0ypq7"]
 [ext_resource type="Script" path="res://scripts/title_screen.gd" id="1_qt58a"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_alalm"]
 [ext_resource type="Texture2D" uid="uid://1udml63fvrn5" path="res://shaders/PerlinNoise.png" id="3_xrkwe"]
 [ext_resource type="Shader" path="res://shaders/crtretro.gdshader" id="4_jb61l"]
+[ext_resource type="AudioStream" uid="uid://68pf8sw50hcr" path="res://sound/Meta06.wav" id="7_k668w"]
 [ext_resource type="Texture2D" uid="uid://ducv6sbw2w66a" path="res://pictures/gui/ButtonText_Underlay.png" id="7_r3v5r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tithw"]
@@ -43,7 +44,6 @@ shader_parameter/vignette_opacity = 0.3
 script = ExtResource("1_qt58a")
 
 [node name="TitleCover" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -101,4 +101,10 @@ icon = ExtResource("7_r3v5r")
 icon_alignment = 1
 expand_icon = true
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_k668w")
+pitch_scale = 0.85
+autoplay = true
+
 [connection signal="pressed" from="Menu/New Game" to="." method="_on_new_game_pressed"]
+[connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

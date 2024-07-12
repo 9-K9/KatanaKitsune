@@ -1531,7 +1531,6 @@ polygon = PackedVector2Array(-15, 45.1177, -47, 33, -47, -1, -15, -12.1059, 17, 
 path_postprocessing = 1
 debug_use_custom = true
 debug_path_custom_color = Color(1, 0, 1, 1)
-debug_path_custom_point_size = 10.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -30)

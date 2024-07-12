@@ -12,7 +12,7 @@ enableModulate = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2(-8, 40)
-polygon = PackedVector2Array(-64, -12, -64, -40, 8, -72, 8, -40, -56, -8)
+polygon = PackedVector2Array(-64, -12, -64, -40, 8, -68, 8, -40, -56, -8)
 
 [node name="Area2D" type="Area2D" parent="."]
 y_sort_enabled = true

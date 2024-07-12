@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://7tcv51b02dp6"]
+
+[ext_resource type="Texture2D" uid="uid://du43ejc4t3a4u" path="res://assets/tilesets/isometric/objects/building-outside/street-lamp.png" id="1_8x0nt"]
+[ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="2_k0ah5"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_kvaiu"]
+polygon = PackedVector2Array(-16, 70, -21, 73, -27, 70, -25, 69, -25, -19, -22, -21, -18, -19, -18, 68)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(16.6, -63.5)
+polygon = PackedVector2Array(0, 64, -16, 72, -32, 64, -16, 56)
+
+[node name="PointLight2D" type="PointLight2D" parent="CollisionPolygon2D"]
+position = Vector2(24, -52)
+scale = Vector2(0.816406, 0.871094)
+texture = ExtResource("2_k0ah5")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(21.6, -67.5)
+occluder = SubResource("OccluderPolygon2D_kvaiu")
+
+[node name="Street-lamp" type="Sprite2D" parent="."]
+position = Vector2(21.6, -67.5)
+texture = ExtResource("1_8x0nt")

@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://cp6hnnfjhnj2"]
+
+[ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_thf2u"]
+[ext_resource type="Texture2D" uid="uid://cvc8rf0n7sxnk" path="res://assets/tilesets/isometric/buildings/building1/Building_dir4.png" id="2_nfcpk"]
+
+[node name="Building1" type="StaticBody2D"]
+script = ExtResource("1_thf2u")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-62, -497)
+polygon = PackedVector2Array(-266, 489, 70, 321, 406, 489, 406, 497, 70, 665, -266, 497)
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(8, -304)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(2, -5)
+polygon = PackedVector2Array(264, -264, 264, -244, 240, -236, 240, -140, 240, 304, -16, 428, -256, 308, -256, -224, -279.028, -234.315, -280, -256, 0, -396)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(8, -336)
+texture = ExtResource("2_nfcpk")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

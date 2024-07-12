@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://tqmw37vrndm4"]
+
+[ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_t0iks"]
+[ext_resource type="Texture2D" uid="uid://ci5vxbp1nrgge" path="res://assets/tilesets/isometric/buildings/gasStation/GasStation_dir1.png" id="2_gxbv4"]
+
+[node name="GasStation" type="StaticBody2D"]
+script = ExtResource("1_t0iks")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(8, -50)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(0, -44)
+scale = Vector2(1, 0.243952)
+polygon = PackedVector2Array(172, -680.463, 340, -327.934, 340, 393.521, 0, 1098.58, -336, 409.917, -336, -196.76, 0, -885.422, 136, -606.678)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-64, -448)
+polygon = PackedVector2Array(-268, 450, -268, 446, 72, 270, 412, 444, 412, 450, 72, 620)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(8, -52)
+texture = ExtResource("2_gxbv4")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
