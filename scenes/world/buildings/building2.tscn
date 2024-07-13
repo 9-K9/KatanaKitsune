@@ -1,11 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://byt0qe5hp1dkj"]
+[gd_scene load_steps=4 format=3 uid="uid://byt0qe5hp1dkj"]
 
 [ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_eg7vn"]
 [ext_resource type="Texture2D" uid="uid://dccxws1q33y4f" path="res://assets/tilesets/isometric/buildings/building2/Building2_dir1.png" id="2_hvvte"]
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_n047k"]
+polygon = PackedVector2Array(-280, -4, -279, -1033, -27, -1152, 232, -1032, 121, -972, -161, -973, -85, -658, -100, 81)
+
 [node name="Building2" type="StaticBody2D"]
 y_sort_enabled = true
 script = ExtResource("1_eg7vn")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_n047k")
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2(8, -252)
@@ -20,7 +26,7 @@ polygon = PackedVector2Array(-288, 528, -288, 520, 72, 332, 392, 520, 392, 528, 
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-position = Vector2(8, -252)
+position = Vector2(0, -252)
 texture = ExtResource("2_hvvte")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

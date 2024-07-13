@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cnmkpk4otnq6w"]
+
+[ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_oiv4w"]
+[ext_resource type="Texture2D" uid="uid://bxenyeb2h0fm5" path="res://assets/tilesets/isometric/objects/dumpster/Dumpster_dir2.png" id="2_ww6iy"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_bfeqs"]
+polygon = PackedVector2Array(28, -130, 52, -152, 92, -132, 68, -112, 68, -84, 28, -106)
+
+[node name="Dumpster" type="StaticBody2D"]
+script = ExtResource("1_oiv4w")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(-64, 102)
+occluder = SubResource("OccluderPolygon2D_bfeqs")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-60.0221, -580)
+scale = Vector2(0.386029, 1)
+polygon = PackedVector2Array(124.4, 564, 228.019, 586, 165.848, 598, 62.2286, 578)
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(8, -304)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(-32, 110)
+polygon = PackedVector2Array(28, 210, -12, 192, -12, 166, 12, 144, 52, 164, 52, 200)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-4, 6)
+texture = ExtResource("2_ww6iy")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
