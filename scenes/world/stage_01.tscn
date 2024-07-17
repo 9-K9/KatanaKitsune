@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://do30gyenmy25v"]
+[gd_scene load_steps=19 format=3 uid="uid://do30gyenmy25v"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_wy2ru"]
 [ext_resource type="Texture2D" uid="uid://by0ujl7fc1y1i" path="res://assets/tilesets/isometric/cyberpunk/mergedTileset.png" id="2_6qqe0"]
@@ -10,10 +10,11 @@
 [ext_resource type="PackedScene" uid="uid://7tcv51b02dp6" path="res://scenes/world/objects/street_lamp.tscn" id="8_gqjij"]
 [ext_resource type="PackedScene" uid="uid://byt0qe5hp1dkj" path="res://scenes/world/buildings/building2.tscn" id="8_t5fby"]
 [ext_resource type="PackedScene" uid="uid://cnmkpk4otnq6w" path="res://scenes/world/objects/Dumpster.tscn" id="9_81o8t"]
-[ext_resource type="PackedScene" uid="uid://4ebrlpb2h27n" path="res://scenes/characters/PC02.tscn" id="9_wfn4l"]
+[ext_resource type="PackedScene" uid="uid://wpy5piyut3ay" path="res://scenes/characters/PC01.tscn" id="12_3d0e1"]
 [ext_resource type="PackedScene" uid="uid://ctglcak6gr3cj" path="res://scenes/world/buildings/building3.tscn" id="13_4oqwq"]
-[ext_resource type="AudioStream" uid="uid://bs7re8nd2e8ge" path="res://sound/bgs/Unknown02.wav" id="13_eyoga"]
+[ext_resource type="AudioStream" uid="uid://dasqhlglsiig5" path="res://sound/bgs/Unknown02.ogg" id="13_8p2f8"]
 [ext_resource type="PackedScene" uid="uid://dfa3fffkr1hip" path="res://scenes/world/buildings/building4.tscn" id="14_8gm8d"]
+[ext_resource type="PackedScene" uid="uid://mk0ja43ubaf2" path="res://scenes/world/overlay_menues.tscn" id="15_baxig"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_xlpxv"]
 vertices = PackedVector2Array(-536, -256, -548, -262, -536, -268, -464, -300, -497, -288, -464, -304, -400, -332, -432, -320, -400, -336, -336, -364, -366, -353, -336, -368, -272, -396, -301, -385, -272, -400, -208, -428, -235, -418, -208, -431, -144, -460, -170, -450, -144, -463, -80, -492, -105, -483, -80, -495, -16, -524, -39, -516, -16, -527, 40, -553, 25, -547, 40, -555, 202, -544, 192, -548, 192, -550, 114, -589, 88, -579, 111, -590, 144, -574, 128, -580, 128, -582, 1, 280, 340, 115, -4, 287, -23, 292, 737, 256, 761, 244, 958, 168, 684, 305, 684, 287, -32, 82, -8, 70, 612, -5, 414, -390, 429, -384, 428, -384, -763, 188, -739, 176, -437, 168, -781, 340, -783, 201, 176, -254, 155, -261, 247, -307, 300, -448, 363, -416, 335, -405, 220, -177, 236, -168, 208, -158, 104, -235, 635, -277, 656, -265, 628, -255, -448, -244, -467, -251, -444, -264, -4, 305, 340, 477, 256, 519, -80, 351, -783, 191, -1123, 21, -1111, 15, -939, 104, -781, 345, -925, 271, -761, 15, -761, 13, -752, 19, 713, 244, -787, 176, -559, 82, -562, 80, -235, -83, 723, -249, 723, -276, 912, -178, 612, -23, 712, -243, 404, -89, -62, 72, -56, 69, -56, 70, 1, 270, -787, 166, -763, 154, -93, 357, -93, 340, -47, 280, 95, -286, 95, -285, 88, -288, 761, 234, -8, 60, -23, 258, -267, 166, -267, 156, -739, 166, -592, 99, 713, 234, -47, 270, -291, 178, 620, -288, 628, -249, 580, -232, -120, -177, -120, -171, -168, -154, -400, -221, -448, -238, 112, -542, 580, -223, 516, -200, 368, -158, 304, -181, 304, -190, 240, -213, 240, -222, 320, -343, 176, -245, 159, -317, 159, -309, 88, -273, 24, -250, 208, -149, 144, -126, 40, -203, 144, -117, 80, -94, -336, -189, -400, -212, -168, -145, -215, -127, -272, -149, -272, -156, 335, -401, 304, -389, 516, -192, 452, -167, 80, -86, 16, -61, 24, -211, -336, -181, -32, -212, -750, 18, -736, 27, 452, -160, 405, -141, 368, -156, 16, -54, -30, -35, -30, 49, -30, 46, -734, 26, -720, 35, 635, -280, -168, -67, -168, -98, -148, -109, -32, -167, -112, -68, -718, 34, -704, 43, -702, 42, -688, 51, -686, 50, -672, 59, -670, 58, -656, 67, -654, 66, -640, 75, -638, 74, -624, 83, -622, 82, -608, 91, -606, 90, -315, 156, -226, -79, -291, 144, -32, 17, 288, -143, 352, -111, 356, -113, -78, 20, -112, -23, -110, 38, -315, 166, -225, -79, -184, -59, 304, -351, 247, -352, 737, 222, -110, 48)
@@ -633,220 +634,226 @@ layer_4/y_sort_enabled = true
 layer_4/z_index = 2
 layer_4/tile_data = PackedInt32Array()
 
-[node name="Objects" type="Node2D" parent="NavigationRegion2D"]
+[node name="YSort Objects" type="Node2D" parent="NavigationRegion2D"]
 y_sort_enabled = true
 
-[node name="Walls" type="Node2D" parent="NavigationRegion2D/Objects"]
+[node name="Walls" type="Node2D" parent="NavigationRegion2D/YSort Objects"]
 y_sort_enabled = true
 position = Vector2(8, -68)
 
-[node name="Wall_D" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(88, -180)
 
-[node name="Wall_D4" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D4" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(152, -148)
 
-[node name="Wall_D14" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D14" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(104, -483)
 
-[node name="Wall_D15" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D15" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(168, -451)
 
-[node name="Wall_D16" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D16" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(232, -419)
 
-[node name="Wall_D17" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D17" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(296, -387)
 
-[node name="Wall_D18" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D18" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(360, -355)
 
-[node name="Wall_D19" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D19" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(424, -323)
 
-[node name="Wall_D20" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D20" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(488, -291)
 
-[node name="Wall_D21" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D21" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(552, -259)
 
-[node name="Wall_D22" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D22" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(616, -227)
 
-[node name="Wall_D23" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D23" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(635, -214)
 
-[node name="Wall_D12" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D12" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(280, -84)
 
-[node name="Wall_D13" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D13" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(324, -66)
 
-[node name="Wall_D5" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D5" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(216, -116)
 
-[node name="Wall_C" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(96, -176)
 
-[node name="Wall_C4" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C4" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-48, -104)
 
-[node name="Wall_C5" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C5" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-96, -80)
 
-[node name="Wall_C11" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C11" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-456, -203)
 
-[node name="Wall_C12" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C12" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-392, -235)
 
-[node name="Wall_C13" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C13" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-328, -267)
 
-[node name="Wall_C14" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C14" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-264, -299)
 
-[node name="Wall_C15" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C15" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-200, -331)
 
-[node name="Wall_C16" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C16" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-136, -363)
 
-[node name="Wall_C17" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C17" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-72, -395)
 
-[node name="Wall_C18" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C18" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-8, -427)
 
-[node name="Wall_C19" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C19" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(56, -459)
 
-[node name="Wall_C21" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C21" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(167, -212)
 
-[node name="Wall_C22" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C22" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(231, -244)
 
-[node name="Wall_C24" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C24" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(376, -316)
 
-[node name="Wall_C25" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C25" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(407, -332)
 
-[node name="Wall_C26" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C26" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(460, -62)
 
-[node name="Wall_C27" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C27" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(524, -94)
 
-[node name="Wall_C28" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C28" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(588, -126)
 
-[node name="Wall_C29" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C29" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(652, -158)
 
-[node name="Wall_C30" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C30" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(700, -182)
 
-[node name="Wall_C20" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C20" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(112, -487)
 
-[node name="Wall_C6" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C6" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(-160, -48)
 
-[node name="Wall_D6" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D6" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-112, 40)
 
-[node name="Wall_D3" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D3" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-256, -32)
 
-[node name="Wall_D7" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D7" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-296, -51)
 
-[node name="Wall_D8" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D8" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-360, -83)
 
-[node name="Wall_D9" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D9" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-424, -115)
 
-[node name="Wall_D10" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D10" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-488, -147)
 
-[node name="Wall_D11" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("3_6fnbp")]
+[node name="Wall_D11" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("3_6fnbp")]
 position = Vector2(-536, -171)
 
-[node name="Wall_C2" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C2" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(280, -84)
 
-[node name="Wall_C7" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C7" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(216, -52)
 
-[node name="Wall_C8" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C8" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(152, -20)
 
-[node name="Wall_C9" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C9" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(88, 12)
 
-[node name="Wall_C10" parent="NavigationRegion2D/Objects/Walls" instance=ExtResource("4_y4aal")]
+[node name="Wall_C10" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("4_y4aal")]
 position = Vector2(24, 44)
 
-[node name="Street-lamp" parent="NavigationRegion2D/Objects" instance=ExtResource("8_gqjij")]
+[node name="Street-lamp" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_gqjij")]
 position = Vector2(-33, 64)
 
-[node name="Street-lamp3" parent="NavigationRegion2D/Objects" instance=ExtResource("8_gqjij")]
+[node name="Street-lamp3" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_gqjij")]
 position = Vector2(-292, 160)
 
-[node name="Street-lamp4" parent="NavigationRegion2D/Objects" instance=ExtResource("8_gqjij")]
+[node name="Street-lamp4" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_gqjij")]
 position = Vector2(736, 238)
 
-[node name="Street-lamp6" parent="NavigationRegion2D/Objects" instance=ExtResource("8_gqjij")]
+[node name="Street-lamp6" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_gqjij")]
 position = Vector2(-24, 274)
 
-[node name="Street-lamp7" parent="NavigationRegion2D/Objects" instance=ExtResource("8_gqjij")]
+[node name="Street-lamp7" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_gqjij")]
 position = Vector2(-764, 170)
 
-[node name="Building1" parent="NavigationRegion2D/Objects" instance=ExtResource("3_nyfhs")]
+[node name="Building1" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("3_nyfhs")]
 position = Vector2(344, 296)
 enableModulate = true
 
-[node name="Building2" parent="NavigationRegion2D/Objects" instance=ExtResource("8_t5fby")]
+[node name="Building2" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_t5fby")]
 y_sort_enabled = false
 position = Vector2(996, -18)
 enableModulate = true
 
-[node name="GasStation" parent="NavigationRegion2D/Objects" instance=ExtResource("8_1a1rb")]
+[node name="GasStation" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("8_1a1rb")]
 position = Vector2(-588, -92)
 enableModulate = true
 
-[node name="Dumpster" parent="NavigationRegion2D/Objects" instance=ExtResource("9_81o8t")]
+[node name="Dumpster" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("9_81o8t")]
 position = Vector2(-66, 45)
+enableModulate = true
 
-[node name="Building3" parent="NavigationRegion2D/Objects" instance=ExtResource("13_4oqwq")]
+[node name="Building3" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("13_4oqwq")]
 position = Vector2(-433, 349)
+enableModulate = true
 
-[node name="Building4" parent="NavigationRegion2D/Objects" instance=ExtResource("14_8gm8d")]
+[node name="Building4" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("14_8gm8d")]
 position = Vector2(-949, 4)
+enableModulate = true
 
-[node name="PC02" parent="NavigationRegion2D/Objects" instance=ExtResource("9_wfn4l")]
-position = Vector2(-148, 49)
+[node name="PC01" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("12_3d0e1")]
+position = Vector2(-173, -11)
 
 [node name="Light" type="DirectionalLight2D" parent="."]
-color = Color(0.804654, 0.31707, 0.810577, 1)
+rotation = -3.92699
+scale = Vector2(2, 2)
+color = Color(0.252231, 0.286492, 0.58156, 1)
+blend_mode = 2
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 0.501961)
 shadow_filter = 1
 shadow_filter_smooth = 48.5
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("13_eyoga")
+stream = ExtResource("13_8p2f8")
 volume_db = 15.0
 pitch_scale = 0.5
 autoplay = true
 
 [node name="WorldCamera" parent="." instance=ExtResource("2_dgcku")]
-visible = false
-z_index = 1
-scale = Vector2(1.25, 1.25)
-zoom = Vector2(1.5, 1.5)
+z_index = 100
+position = Vector2(510, 289)
+
+[node name="Overlay Menues" parent="." instance=ExtResource("15_baxig")]
 
 [connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

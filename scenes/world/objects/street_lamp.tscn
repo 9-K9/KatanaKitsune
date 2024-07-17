@@ -15,8 +15,8 @@ polygon = PackedVector2Array(0, 64, -16, 72, -32, 64, -16, 56)
 [node name="PointLight2D" type="PointLight2D" parent="CollisionPolygon2D"]
 z_index = -1
 z_as_relative = false
-position = Vector2(25.4, -62)
-scale = Vector2(0.362891, 0.378906)
+position = Vector2(24.4, -50.5)
+scale = Vector2(0.6875, 0.667969)
 texture = ExtResource("2_k0ah5")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]

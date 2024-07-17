@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://ctglcak6gr3cj"]
 
 [ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_w16wb"]
-[ext_resource type="Texture2D" uid="uid://dr4v6rcwgubdy" path="res://assets/tilesets/isometric/buildings/building3/Building3_dir4.png" id="2_llg7m"]
+[ext_resource type="Texture2D" uid="uid://dcbkdtc237dpj" path="res://assets/tilesets/isometric/buildings/building3/Building3_dir1.png" id="2_03hj1"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_bfeqs"]
-polygon = PackedVector2Array(-244, -4, -248, -154, -272, -164, -272, -188, 8, -354, 312, -200, 312, -176, 28, -14, 32, 132)
+polygon = PackedVector2Array(-212, -14, -212, -166, -240, -178, -240, -200, 60, -352, 340, -238, 340, -214, 36, -62, 36, 110)
 
 [node name="Building3" type="StaticBody2D"]
 script = ExtResource("1_w16wb")
@@ -22,13 +22,13 @@ position = Vector2(8, -304)
 metadata/_edit_lock_ = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
-position = Vector2(-32, 0)
-polygon = PackedVector2Array(272, 98, 272, 122, 240, 138, 240, 304, -16, 428, -284, 298, -284, 152, -312, 136, -316, 112, -36, -54)
+position = Vector2(0, -12)
+polygon = PackedVector2Array(268, 72, 268, 94, 240, 110, 240, 284, -32, 422, -284, 298, -284, 144, -312, 132, -312, 110, -12, -42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(-4, -52)
-texture = ExtResource("2_llg7m")
+texture = ExtResource("2_03hj1")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

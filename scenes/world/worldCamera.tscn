@@ -1,45 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cigxiv0vim758"]
+[gd_scene load_steps=2 format=3 uid="uid://cigxiv0vim758"]
 
 [ext_resource type="Script" path="res://scripts/camera2D.gd" id="1_lklfr"]
-[ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_2ri44"]
-[ext_resource type="Texture2D" uid="uid://1udml63fvrn5" path="res://shaders/PerlinNoise.png" id="3_0q3bs"]
-[ext_resource type="Shader" path="res://shaders/crtretro.gdshader" id="4_fks1y"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqb01"]
-shader = ExtResource("2_2ri44")
-shader_parameter/zoom = 360.0
-shader_parameter/pDir = true
-shader_parameter/noWrap = true
-shader_parameter/displacementStrength = 0.01
-shader_parameter/displacementTexture = ExtResource("3_0q3bs")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_85r6i"]
-shader = ExtResource("4_fks1y")
-shader_parameter/overlay = true
-shader_parameter/scanlines_opacity = 0.4
-shader_parameter/scanlines_width = 0.25
-shader_parameter/grille_opacity = 0.3
-shader_parameter/resolution = Vector2(960, 540)
-shader_parameter/pixelate = true
-shader_parameter/roll = false
-shader_parameter/roll_speed = 8.0
-shader_parameter/roll_size = 15.0
-shader_parameter/roll_variation = 2.195
-shader_parameter/distort_intensity = 0.05
-shader_parameter/noise_opacity = 0.25
-shader_parameter/noise_speed = 5.0
-shader_parameter/static_noise_intensity = 0.25
-shader_parameter/aberration = 0.00200005
-shader_parameter/brightness = 2.0
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 1.0
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 2.0
-shader_parameter/vignette_opacity = 1.0
 
 [node name="Camera2D" type="Camera2D"]
 texture_filter = 1
-scale = Vector2(2, 2)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 drag_horizontal_enabled = true
@@ -48,26 +12,4 @@ editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource("1_lklfr")
 speed = 180
-metadata/_edit_lock_ = true
-
-[node name="Displace" type="ColorRect" parent="."]
-visible = false
-material = SubResource("ShaderMaterial_tqb01")
-offset_left = -480.0
-offset_top = -270.0
-offset_right = 480.0
-offset_bottom = 270.0
-
-[node name="CRT" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_85r6i")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -480.0
-offset_top = -270.0
-offset_right = 480.0
-offset_bottom = 270.0
-grow_horizontal = 2
-grow_vertical = 2
+metadata/_edit_group_ = true

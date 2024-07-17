@@ -3,7 +3,7 @@ extends Camera2D
 @export var speed : int = 250
 @export var bounding = Vector2(128,64)
 @onready var fearEffect = $displacementShader
-@onready var player : CharacterBody2D = $"../NavigationRegion2D/Objects/PC02"
+@onready var player : CharacterBody2D = $"../NavigationRegion2D/YSort Objects/PC01"
 @onready var shift_toogle : bool = false
 
 var screen_center = get_screen_center_position()

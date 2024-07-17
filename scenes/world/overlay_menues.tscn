@@ -1,0 +1,166 @@
+[gd_scene load_steps=11 format=3 uid="uid://mk0ja43ubaf2"]
+
+[ext_resource type="Texture2D" uid="uid://c7j17glsgti3q" path="res://pictures/menu/gameview/TVBlackBorder.png" id="1_150oy"]
+[ext_resource type="Texture2D" uid="uid://cv28ibyrcm4ky" path="res://pictures/menu/gameview/TVBack.png" id="3_ohdm8"]
+[ext_resource type="Shader" path="res://shaders/crtretro.gdshader" id="3_ykixb"]
+[ext_resource type="Texture2D" uid="uid://sqsoqvefj40j" path="res://pictures/menu/gameview/TVScreen.png" id="4_fnltr"]
+[ext_resource type="Texture2D" uid="uid://bemlad1gatca7" path="res://pictures/menu/gameview/TVFrame.png" id="5_070i1"]
+[ext_resource type="Texture2D" uid="uid://cj5m03snvqy4a" path="res://pictures/menu/titlescreen/TVSignal.png" id="6_xeddh"]
+[ext_resource type="Texture2D" uid="uid://puv788do3510" path="res://pictures/menu/gameview/TVGirl.png" id="7_dwv4v"]
+[ext_resource type="Texture2D" uid="uid://dvedcoyi07hj5" path="res://pictures/menu/gameview/StatusBlack.png" id="7_jcaiu"]
+[ext_resource type="Texture2D" uid="uid://csigu756kixfk" path="res://pictures/menu/gameview/StatusFrame.png" id="8_qrwp0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ume6"]
+shader = ExtResource("3_ykixb")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.25
+shader_parameter/scanlines_width = 0.025
+shader_parameter/grille_opacity = 0.0
+shader_parameter/resolution = Vector2(960, 540)
+shader_parameter/pixelate = true
+shader_parameter/roll = true
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.05
+shader_parameter/noise_opacity = 0.4
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.06
+shader_parameter/aberration = 0.03
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 1.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5
+
+[node name="Overlay Menues" type="CanvasLayer"]
+
+[node name="TVBlackBorder" type="TextureRect" parent="."]
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("1_150oy")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="TVBack" type="TextureRect" parent="."]
+visible = false
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("3_ohdm8")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="TVScreenOff" type="TextureRect" parent="."]
+visible = false
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("4_fnltr")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="CRT2" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_8ume6")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -272.0
+offset_top = -228.0
+offset_right = 272.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="TVFrame1" type="TextureRect" parent="."]
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("5_070i1")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="SideBannerLeft" type="TextureRect" parent="."]
+offset_right = 188.0
+offset_bottom = 593.0
+texture = ExtResource("6_xeddh")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 36.0
+offset_right = 184.0
+offset_bottom = 560.0
+
+[node name="FaceBox1" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="UISideBanner" type="TextureRect" parent="VBoxContainer/FaceBox1"]
+layout_mode = 2
+offset_right = 164.0
+offset_bottom = 164.0
+texture = ExtResource("7_jcaiu")
+expand_mode = 5
+
+[node name="UISideBanner2" type="TextureRect" parent="VBoxContainer/FaceBox1"]
+layout_mode = 2
+offset_right = 164.0
+offset_bottom = 164.0
+texture = ExtResource("8_qrwp0")
+expand_mode = 5
+
+[node name="FaceBox2" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="UISideBanner" type="TextureRect" parent="VBoxContainer/FaceBox2"]
+layout_mode = 2
+offset_top = 172.0
+offset_right = 164.0
+offset_bottom = 336.0
+texture = ExtResource("7_jcaiu")
+expand_mode = 5
+
+[node name="UISideBanner2" type="TextureRect" parent="VBoxContainer/FaceBox2"]
+layout_mode = 2
+offset_top = 172.0
+offset_right = 164.0
+offset_bottom = 336.0
+texture = ExtResource("8_qrwp0")
+expand_mode = 5
+
+[node name="FaceBox3" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="UISideBanner" type="TextureRect" parent="VBoxContainer/FaceBox3"]
+layout_mode = 2
+offset_top = 348.0
+offset_right = 164.0
+offset_bottom = 512.0
+texture = ExtResource("7_jcaiu")
+expand_mode = 5
+
+[node name="UISideBanner2" type="TextureRect" parent="VBoxContainer/FaceBox3"]
+layout_mode = 2
+offset_top = 346.0
+offset_right = 164.0
+offset_bottom = 510.0
+texture = ExtResource("8_qrwp0")
+expand_mode = 5
+
+[node name="SideBannerRight" type="TextureRect" parent="."]
+offset_left = 836.0
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("6_xeddh")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="TVGirl" type="TextureRect" parent="."]
+offset_right = 1024.0
+offset_bottom = 593.0
+texture = ExtResource("7_dwv4v")
+expand_mode = 1
+metadata/_edit_lock_ = true

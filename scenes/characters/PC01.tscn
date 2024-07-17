@@ -1499,21 +1499,21 @@ scale = Vector2(0.75, 0.46875)
 polygon = PackedVector2Array(4, -53, -6.66667, -47, -6.66667, 13, 4, 19, 14.6667, 13, 14.6667, -47)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-visible = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_h2vk1")
-position = Vector2(0, -90)
-scale = Vector2(0.65625, 0.683594)
+position = Vector2(2.5, -54)
+scale = Vector2(0.261719, 0.25)
 color = Color(1, 0.886275, 1, 1)
+energy = 0.25
 shadow_enabled = true
 shadow_filter = 1
 shadow_filter_smooth = 64.0
 texture = ExtResource("3_e87q4")
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
-visible = false
 texture_filter = 1
 color = Color(1, 0.87451, 1, 1)
+energy = 0.5
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 0.615686)
 shadow_filter = 1

@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var player = $NavigationRegion2D/Objects/PC02
+@onready var player = $"../NavigationRegion2D/YSort Objects/PC01"
 @onready var world_camera = $WorldCamera
 @onready var bgs = $AudioStreamPlayer2D
 

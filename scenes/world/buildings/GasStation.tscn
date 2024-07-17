@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://tqmw37vrndm4"]
 
 [ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_t0iks"]
-[ext_resource type="Texture2D" uid="uid://ci5vxbp1nrgge" path="res://assets/tilesets/isometric/buildings/gasStation/GasStation_dir1.png" id="2_gxbv4"]
+[ext_resource type="Texture2D" uid="uid://blvqv3pxajw5b" path="res://assets/tilesets/isometric/buildings/gasStation/GasStation_dir1.png" id="2_gxbv4"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_v600r"]
 polygon = PackedVector2Array(-332, 0, -332, -144, 8, -314, 132, -252, 132, -238, 176, -262, 348, -176, 348, -160, 8, 8, -160, -76, -160, -106, -208, -82, -208, 58)
