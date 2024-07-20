@@ -1,15 +1,32 @@
 extends StaticBody2D
 
-@onready var wall_sprite = $Sprite2D
-@onready var player_entered : bool = false
+
+@export var sideTexture : CompressedTexture2D
+@export var topTexture : CompressedTexture2D
+@export var faceTexture : CompressedTexture2D
 @export var enableModulate = false
+
+@onready var sidePolygon = $WallPolygonsCanvasMods/Polygon2D_Side
+@onready var topPolygon = $WallPolygonsCanvasMods/Polygon2D_Top
+@onready var facePolygon = $WallPolygonsCanvasMods/Polygon2D_Face
+@onready var wall_sprite = $WallPolygonsCanvasMods
+@onready var player_entered : bool = false
+
+func _ready():
+	if sideTexture:
+		sidePolygon.texture = sideTexture
+	if topTexture:
+		topPolygon.texture = topTexture
+	if faceTexture:
+		facePolygon.texture = faceTexture
+		
 
 func _process(delta):
 	if enableModulate:
 		if player_entered:
-			wall_sprite.self_modulate = Color(1,1,1,0.5)
+			wall_sprite.modulate = Color(1,1,1,0.5)
 		else:
-			wall_sprite.self_modulate = Color(0.648, 0.402, 0.321)
+			wall_sprite.modulate = Color(1,1,1,1)
 		
 func _on_area_2d_area_entered(area):
 	if area.is_in_group("player"):

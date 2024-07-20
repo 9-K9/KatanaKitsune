@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_d3fs0"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_b6hje"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="3_e87q4"]
-[ext_resource type="Texture2D" uid="uid://bleb28qotps70" path="res://assets/sprites/characters/pc01/dystopianGirl_Idle.png" id="4_mkydm"]
-[ext_resource type="Texture2D" uid="uid://bo88ls6inie7i" path="res://assets/sprites/characters/pc01/dystopianGirl_Run.png" id="5_dyg6r"]
-[ext_resource type="Texture2D" uid="uid://cjo8lsugcrjtp" path="res://assets/sprites/characters/pc01/dystopianGirl_Walk.png" id="6_c2hoq"]
+[ext_resource type="Texture2D" uid="uid://b250jb1iskbm0" path="res://assets/sprites/characters/pc01/dystopianGirl_Idle.png" id="4_mkydm"]
+[ext_resource type="Texture2D" uid="uid://c5lnjsysoigte" path="res://assets/sprites/characters/pc01/dystopianGirl_Run.png" id="5_dyg6r"]
+[ext_resource type="Texture2D" uid="uid://4k7taxds0hoc" path="res://assets/sprites/characters/pc01/dystopianGirl_Walk.png" id="6_c2hoq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2vk1"]
 shader = ExtResource("2_b6hje")
@@ -1529,6 +1529,7 @@ polygon = PackedVector2Array(-15, 45.1177, -47, 33, -47, -1, -15, -12.1059, 17, 
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
+debug_enabled = true
 debug_use_custom = true
 debug_path_custom_color = Color(1, 0, 1, 1)
 

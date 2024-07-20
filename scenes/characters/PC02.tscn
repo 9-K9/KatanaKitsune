@@ -3,11 +3,11 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_vf0m5"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_prgig"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="3_5oxmg"]
-[ext_resource type="Texture2D" uid="uid://e0mhhiwc6wld" path="res://assets/sprites/characters/pc02/dystopianGirl_Idle.png" id="4_qxarf"]
-[ext_resource type="Texture2D" uid="uid://bmfoeg0sthkxf" path="res://assets/sprites/characters/pc02/dystopianGirl_Run.png" id="5_rrnum"]
-[ext_resource type="Texture2D" uid="uid://c317j8euuyd2j" path="res://assets/sprites/characters/pc02/dystopianGirl_Walk.png" id="6_o6otv"]
+[ext_resource type="Texture2D" uid="uid://dn1nts46h43db" path="res://assets/sprites/characters/pc02/dystopianGirl_Idle.png" id="4_qxarf"]
+[ext_resource type="Texture2D" uid="uid://djw4paf1hf066" path="res://assets/sprites/characters/pc02/dystopianGirl_Run.png" id="5_rrnum"]
+[ext_resource type="Texture2D" uid="uid://cfqderw1r56ii" path="res://assets/sprites/characters/pc02/dystopianGirl_Walk.png" id="6_o6otv"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2vk1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_466l1"]
 shader = ExtResource("2_prgig")
 shader_parameter/zoom = 300.0
 shader_parameter/pDir = false
@@ -1500,20 +1500,20 @@ polygon = PackedVector2Array(4, -53, -6.66667, -47, -6.66667, 13, 4, 19, 14.6667
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 texture_filter = 1
-material = SubResource("ShaderMaterial_h2vk1")
-position = Vector2(-4.76837e-07, -32)
-scale = Vector2(0.65625, 0.683594)
+material = SubResource("ShaderMaterial_466l1")
+position = Vector2(2.5, -54)
+scale = Vector2(0.261719, 0.25)
 color = Color(1, 0.886275, 1, 1)
-energy = 0.15
+energy = 0.25
 shadow_enabled = true
 shadow_filter = 1
 shadow_filter_smooth = 64.0
 texture = ExtResource("3_5oxmg")
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
-visible = false
 texture_filter = 1
 color = Color(1, 0.87451, 1, 1)
+energy = 0.5
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 0.615686)
 shadow_filter = 1
