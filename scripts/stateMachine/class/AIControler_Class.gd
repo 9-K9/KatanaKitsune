@@ -1,9 +1,9 @@
 extends CharacterBody2D
-class_name PlayerClass
+class_name AI_Class
 
 @onready var gameManager = get_node("/root/Main")
-@export var speed: float = 2500.0
-@export var runSpeed: float = 5000.0
+@export var speed: int = 16
+@export var accel: int = 8
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var direction : Vector2 = Vector2.ZERO
@@ -12,8 +12,8 @@ class_name PlayerClass
 @onready var run_frame = 1
 @onready var animation_state = "%s_%s"%[player_state,facing_dir]
 
-func playerMovement(dt):	
-	direction = Input.get_vector("Left", "Right", "Up", "Down")
+func navigationControler():
+	direction = nav.get_next_path_position() - global_position
 	direction = direction.normalized()
 	var round_dir = round(direction)
 	
@@ -36,28 +36,26 @@ func playerMovement(dt):
 			facing_dir = "southEast"
 		_: #Default Return
 			pass
-	
 			
-	if direction == Vector2.ZERO:
+	if nav.is_navigation_finished():
 		run_frame = 1
 		player_state = "idle"
 		velocity = Vector2.ZERO
-		if Input.is_action_pressed("Attack"):
-			player_state = "attack"
-			
 	else:
 		run_frame = 2
 		player_state = "walk"
-		velocity = (direction * (speed * dt))
-		velocity.y = velocity.y/2
+		velocity = direction * speed 
 		if Input.is_action_pressed("Run"):
 			run_frame = 3
+			var speed_temp = speed * run_frame
+			var accel_temp = accel * run_frame
 			player_state = "run"
-			velocity = (direction * (runSpeed * dt))
-			velocity.y = velocity.y/2
+			velocity = direction * speed_temp
 	
-func playerAnimation():
+	animationState()
+	move_and_slide()
+	
+func animationState():
 	animation_state = "%s_%s"%[player_state,facing_dir]
 	animated_sprite.play(animation_state,run_frame)
-	print(animation_state)
-	move_and_slide()
+

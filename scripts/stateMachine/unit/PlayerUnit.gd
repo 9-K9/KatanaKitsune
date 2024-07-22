@@ -1,8 +1,19 @@
-extends PlayerClass
+extends PC_Class
+
+@export var walkSpeed : float = 5000.00
+@export var runSpeed : float = 10000.00
 
 func _physics_process(delta: float) -> void:
-	if gameManager.getState() == "game_play":
-		playerMovement(delta)
-		playerAnimation()
+	#control the player
+	match player_state:
+		"run":
+			playerControler(runSpeed,3,delta)
+		"walk":
+			playerControler(walkSpeed,2,delta)
+		"idle":
+			playerControler(0,1,delta)
+		"attack":
+			playerControler(0,2,delta)
 
-
+	
+	
