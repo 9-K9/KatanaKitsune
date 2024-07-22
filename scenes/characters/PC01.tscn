@@ -1,11 +1,13 @@
-[gd_scene load_steps=202 format=3 uid="uid://wpy5piyut3ay"]
+[gd_scene load_steps=204 format=3 uid="uid://wpy5piyut3ay"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_d3fs0"]
+[ext_resource type="Script" path="res://scripts/stateMachine/unit/PlayerUnit.gd" id="1_nwggt"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_b6hje"]
+[ext_resource type="Script" path="res://scripts/stateMachine/StateMachine.gd" id="2_wm63f"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="3_e87q4"]
 [ext_resource type="Texture2D" uid="uid://b250jb1iskbm0" path="res://assets/sprites/characters/pc01/dystopianGirl_Idle.png" id="4_mkydm"]
 [ext_resource type="Texture2D" uid="uid://c5lnjsysoigte" path="res://assets/sprites/characters/pc01/dystopianGirl_Run.png" id="5_dyg6r"]
 [ext_resource type="Texture2D" uid="uid://4k7taxds0hoc" path="res://assets/sprites/characters/pc01/dystopianGirl_Walk.png" id="6_c2hoq"]
+[ext_resource type="Script" path="res://scripts/stateMachine/State.gd" id="7_yjyft"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2vk1"]
 shader = ExtResource("2_b6hje")
@@ -1488,8 +1490,23 @@ animations = [{
 collision_layer = 2
 collision_mask = 3
 safe_margin = 1.0
-script = ExtResource("1_d3fs0")
-accel = 1
+script = ExtResource("1_nwggt")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+script = ExtResource("2_wm63f")
+current_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("7_yjyft")
+
+[node name="Walk" type="Node" parent="StateMachine"]
+script = ExtResource("7_yjyft")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("7_yjyft")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("7_yjyft")
 
 [node name="Area2D" type="Area2D" parent="." groups=["player"]]
 
@@ -1529,7 +1546,6 @@ polygon = PackedVector2Array(-15, 45.1177, -47, 33, -47, -1, -15, -12.1059, 17, 
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
-debug_enabled = true
 debug_use_custom = true
 debug_path_custom_color = Color(1, 0, 1, 1)
 

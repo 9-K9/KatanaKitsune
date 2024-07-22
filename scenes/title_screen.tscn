@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://bxrwgrturdtdt"]
 
-[ext_resource type="Script" path="res://scripts/title_screen.gd" id="1_qt58a"]
+[ext_resource type="Script" path="res://scripts/system/TitleScreen.gd" id="1_qt58a"]
 [ext_resource type="Texture2D" uid="uid://cj5m03snvqy4a" path="res://pictures/menu/titlescreen/TVSignal.png" id="2_fhde1"]
 [ext_resource type="Texture2D" uid="uid://cv28ibyrcm4ky" path="res://pictures/menu/gameview/TVBack.png" id="4_2u5id"]
 [ext_resource type="Shader" path="res://shaders/crtretro.gdshader" id="4_jb61l"]

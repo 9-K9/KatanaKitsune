@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://tqmw37vrndm4"]
 
-[ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_t0iks"]
+[ext_resource type="Script" path="res://scripts/system/SetSprite2D.gd" id="1_t0iks"]
 [ext_resource type="Texture2D" uid="uid://blvqv3pxajw5b" path="res://assets/tilesets/isometric/buildings/gasStation/GasStation_dir1.png" id="2_gxbv4"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_v600r"]

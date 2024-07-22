@@ -1,17 +1,16 @@
-[gd_scene load_steps=23 format=3 uid="uid://bskpg2w65u50i"]
+[gd_scene load_steps=22 format=3 uid="uid://bskpg2w65u50i"]
 
-[ext_resource type="Script" path="res://scripts/game.gd" id="1_14hch"]
+[ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_14hch"]
 [ext_resource type="Texture2D" uid="uid://cw3u4441mybio" path="res://assets/tilesets/isometric/ground/ground_corruption_shift1.png" id="2_1b0rv"]
 [ext_resource type="Texture2D" uid="uid://d3m8op47jdfrv" path="res://assets/tilesets/isometric/ground/ground_gunMetalRussia_shift13.png" id="3_dtruy"]
 [ext_resource type="Texture2D" uid="uid://wtgbn5d6ya1r" path="res://assets/tilesets/isometric/ground/ground_original_Shift0.png" id="4_0m8ie"]
 [ext_resource type="Texture2D" uid="uid://c7ivuq4q3vqyu" path="res://assets/tilesets/isometric/ground/ground_tyDimentia_shift1.png" id="5_jsnip"]
 [ext_resource type="Texture2D" uid="uid://bp4d84hu6p6iu" path="res://assets/tilesets/isometric/ground/ground_tyDistortion_shift7.png" id="6_xqcrw"]
 [ext_resource type="PackedScene" uid="uid://po7acsl64sc1" path="res://scenes/walls/wall_R.tscn" id="7_s8rb1"]
-[ext_resource type="Script" path="res://scripts/YsortPlayerSpawn.gd" id="7_vn0sn"]
-[ext_resource type="Texture2D" uid="uid://bry3sw5bxc2bu" path="res://assets/tilesets/isometric/objects/walls/textures/Rust.png" id="8_pp0r5"]
+[ext_resource type="Script" path="res://scripts/system/YsortPlayerSpawn.gd" id="7_vn0sn"]
+[ext_resource type="PackedScene" uid="uid://wpy5piyut3ay" path="res://scenes/characters/PC01.tscn" id="8_el0l4"]
 [ext_resource type="PackedScene" uid="uid://bwqgwm5ygqoyh" path="res://scenes/walls/wall_L.tscn" id="8_uo3s4"]
-[ext_resource type="Texture2D" uid="uid://rldew415oxwj" path="res://assets/tilesets/isometric/objects/walls/textures/Blood.png" id="9_xqdmn"]
-[ext_resource type="Texture2D" uid="uid://demmei78ijq8i" path="res://assets/tilesets/isometric/objects/walls/textures/Acid.png" id="10_swpf6"]
+[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/abomination.tscn" id="13_rrf5y"]
 [ext_resource type="AudioStream" uid="uid://dasqhlglsiig5" path="res://sound/bgs/Unknown02.ogg" id="14_ptlml"]
 [ext_resource type="PackedScene" uid="uid://cigxiv0vim758" path="res://scenes/world/worldCamera.tscn" id="15_cds2c"]
 [ext_resource type="PackedScene" uid="uid://mk0ja43ubaf2" path="res://scenes/world/overlay_menues.tscn" id="16_tlk75"]
@@ -3894,7 +3893,7 @@ sources/7 = SubResource("TileSetAtlasSource_byuiq")
 sources/8 = SubResource("TileSetAtlasSource_efdmi")
 sources/9 = SubResource("TileSetAtlasSource_m436d")
 
-[node name="Map01" type="Node2D"]
+[node name="Main" type="Node2D"]
 script = ExtResource("1_14hch")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
@@ -3910,156 +3909,88 @@ layer_0/tile_data = PackedInt32Array(-1, 655366, 3, 65535, 655366, 3, 131070, 65
 [node name="YSort Objects" type="Node2D" parent="NavigationRegion2D"]
 y_sort_enabled = true
 script = ExtResource("7_vn0sn")
+playerScene = ExtResource("8_el0l4")
 
 [node name="Walls" type="Node2D" parent="NavigationRegion2D/YSort Objects"]
 y_sort_enabled = true
 
 [node name="Wall_C" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(28, -192)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C7" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(409, 4)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C8" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(344, 36)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C9" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(279, 68)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C10" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(214, 100)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C11" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(149, 132)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C12" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(84, 164)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C2" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(-37, -160)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C3" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(-102, -128)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C4" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(-167, -96)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C5" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(-232, -64)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_C6" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("7_s8rb1")]
 position = Vector2(-297, -32)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(20, -188)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D2" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(85, -156)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D3" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(150, -124)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D4" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(215, -92)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D5" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(280, -60)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D6" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(345, -28)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D7" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-377, 0)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D8" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-312, 32)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D9" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-247, 64)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D10" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-182, 96)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D11" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-117, 128)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="Wall_D12" parent="NavigationRegion2D/YSort Objects/Walls" instance=ExtResource("8_uo3s4")]
 position = Vector2(-52, 160)
-sideTexture = ExtResource("9_xqdmn")
-topTexture = ExtResource("8_pp0r5")
-faceTexture = ExtResource("10_swpf6")
 
 [node name="SpawnPlayerMarker2D" type="Marker2D" parent="NavigationRegion2D/YSort Objects"]
-position = Vector2(24, -144)
+position = Vector2(-64, -56)
+
+[node name="Abomination" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("13_rrf5y")]
+position = Vector2(137, -54)
 
 [node name="Light" type="DirectionalLight2D" parent="."]
 rotation = -3.92699
@@ -4080,7 +4011,9 @@ autoplay = true
 [node name="WorldCamera" parent="." instance=ExtResource("15_cds2c")]
 z_index = 100
 position = Vector2(510, 289)
+zoom = Vector2(1.5, 1.5)
 
-[node name="Overlay Menues" parent="." instance=ExtResource("16_tlk75")]
+[node name="PauseMenu" parent="." instance=ExtResource("16_tlk75")]
+visible = false
 
 [connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]

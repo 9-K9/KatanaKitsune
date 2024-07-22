@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bwqgwm5ygqoyh"]
 
-[ext_resource type="Script" path="res://scripts/wallModulate.gd" id="1_4erap"]
-[ext_resource type="Texture2D" uid="uid://dpo6k1q8mm3le" path="res://assets/tilesets/isometric/objects/walls/textures/Metal.png" id="2_yhi07"]
+[ext_resource type="Script" path="res://scripts/system/WallsModulate.gd" id="1_4erap"]
+[ext_resource type="Texture2D" uid="uid://bnkcieqf7i6ux" path="res://assets/tilesets/isometric/objects/walls/textures/Metal.png" id="2_yhi07"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_a0qly"]
 polygon = PackedVector2Array(-8, -180, -16, -176, 48, -144, 56, -148)

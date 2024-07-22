@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dfa3fffkr1hip"]
 
-[ext_resource type="Script" path="res://scripts/setSprite2D.gd" id="1_1kqbe"]
+[ext_resource type="Script" path="res://scripts/system/SetSprite2D.gd" id="1_1kqbe"]
 [ext_resource type="Texture2D" uid="uid://r6ana5kuj87e" path="res://assets/tilesets/isometric/buildings/building4/Building4_dir1.png" id="2_gbr6q"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_bfeqs"]
