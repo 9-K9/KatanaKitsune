@@ -8,6 +8,7 @@ class_name PC_Class
 @onready var round_dir = round(direction)
 @onready var facing_dir: String = "southWest"
 @onready var player_state: String = "idle"
+@onready var action_timer : Timer = $ActionTimer
 @onready var animation_state = "%s_%s"%[player_state,facing_dir]
 
 #controls the player in game_play
@@ -27,15 +28,16 @@ func actionState():
 	direction = Input.get_vector("Left", "Right", "Up", "Down")	
 	direction = direction.normalized()
 	round_dir = round(direction)	
-	if direction == Vector2.ZERO:
-		player_state = "idle"
-	else:
-		player_state = "walk"
-		if Input.is_action_pressed("Run"):
-			player_state = "run"
-	
-	#State Machine Needed to Fix This
-	if Input.is_action_pressed("Attack"):
+	if action_timer.is_stopped():
+		if direction == Vector2.ZERO:
+			player_state = "idle"
+		elif direction != Vector2.ZERO:
+			player_state = "walk"
+			if Input.is_action_pressed("Run"):
+				player_state = "run"
+			
+	if Input.is_action_just_pressed("Attack"):
+		action_timer.start()
 		player_state = "attack"
 		
 	return player_state	

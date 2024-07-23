@@ -15,5 +15,5 @@ func _physics_process(delta: float) -> void:
 		"attack":
 			playerControler(0,2,delta)
 
-	
-	
+func _on_action_timer_timeout():
+	action_timer.stop()
