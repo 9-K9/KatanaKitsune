@@ -1,4 +1,4 @@
-[gd_scene load_steps=267 format=3 uid="uid://wpy5piyut3ay"]
+[gd_scene load_steps=269 format=3 uid="uid://wpy5piyut3ay"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/unit/PlayerUnit.gd" id="1_nwggt"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_b6hje"]
@@ -1973,9 +1973,15 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_pw1rk"]
+radius = 17.0294
+
+[sub_resource type="Curve" id="Curve_ns8hn"]
+min_value = -553.51
+_data = [Vector2(0.669118, 1), 0.0, 0.0, 0, 0]
+point_count = 1
+
 [node name="PC01" type="CharacterBody2D" groups=["player"]]
-collision_layer = 2
-collision_mask = 3
 safe_margin = 1.0
 script = ExtResource("1_nwggt")
 
@@ -2015,17 +2021,44 @@ position = Vector2(5.85937, -6.5717)
 scale = Vector2(0.390625, 0.458727)
 polygon = PackedVector2Array(-15, 45.1177, -47, 33, -47, -1, -15, -12.1059, 17, -0.0588198, 17, 33.0706)
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-path_postprocessing = 1
-debug_use_custom = true
-debug_path_custom_color = Color(1, 0, 1, 1)
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -30)
 sprite_frames = SubResource("SpriteFrames_kicbp")
 animation = &"idle_southWest"
 
 [node name="ActionTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(-32, 32)
+
+[node name="ActionArea" type="Area2D" parent="RayCast2D" groups=["weapon"]]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RayCast2D/ActionArea"]
+position = Vector2(-32, 33)
+shape = SubResource("CircleShape2D_pw1rk")
+
+[node name="Circle" type="Line2D" parent="RayCast2D/ActionArea/CollisionShape2D"]
+visible = false
+position = Vector2(32, -32)
+points = PackedVector2Array(-27, 17, -33, 16, -40, 18, -45, 22, -48, 28, -49, 34, -47, 41, -44, 45, -40, 48, -34, 50, -28, 50, -22, 47, -18, 43, -15, 37, -15, 29, -18, 23, -22, 19)
+closed = true
+width = 1.0
+width_curve = SubResource("Curve_ns8hn")
+default_color = Color(1, 0, 1, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+round_precision = 16
+antialiased = true
+
+[node name="Line2D" type="Line2D" parent="RayCast2D/ActionArea"]
+visible = false
+points = PackedVector2Array(0, 0, -32, 33)
+width = 1.0
+default_color = Color(1, 0, 0, 1)
+
 [connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]
+[connection signal="body_entered" from="RayCast2D/ActionArea" to="." method="_on_action_area_body_entered"]

@@ -59,3 +59,4 @@ func animationState():
 	animation_state = "%s_%s"%[player_state,facing_dir]
 	animated_sprite.play(animation_state,run_frame)
 
+

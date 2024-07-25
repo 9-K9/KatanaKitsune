@@ -1,9 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://ci2xfyyt30bpm"]
+[gd_scene load_steps=12 format=3 uid="uid://ci2xfyyt30bpm"]
 
 [ext_resource type="Texture2D" uid="uid://vyuln2ck1crt" path="res://assets/sprites/monsters/abomination/abomination_Idle.png" id="1_ma03q"]
 [ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="1_qbk6e"]
-[ext_resource type="Script" path="res://scripts/stateMachine/StateMachine.gd" id="2_e5eo5"]
-[ext_resource type="Script" path="res://scripts/stateMachine/State.gd" id="3_332cf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qrr4p"]
 atlas = ExtResource("1_ma03q")
@@ -69,31 +67,9 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Abomination" type="CharacterBody2D" groups=["enemies"]]
+[node name="enemy" type="CharacterBody2D" groups=["enemy"]]
+collision_layer = 3
 script = ExtResource("1_qbk6e")
-
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
-script = ExtResource("2_e5eo5")
-current_state = NodePath("Idle")
-
-[node name="Idle" type="Node" parent="StateMachine"]
-script = ExtResource("3_332cf")
-
-[node name="Walk" type="Node" parent="StateMachine"]
-script = ExtResource("3_332cf")
-
-[node name="Run" type="Node" parent="StateMachine"]
-script = ExtResource("3_332cf")
-
-[node name="Attack" type="Node" parent="StateMachine"]
-script = ExtResource("3_332cf")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -22)
-sprite_frames = SubResource("SpriteFrames_hpb1f")
-animation = &"Idle"
-autoplay = "Idle"
-frame_progress = 0.346562
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
@@ -101,3 +77,10 @@ frame_progress = 0.346562
 position = Vector2(2.69335, 1.53366)
 scale = Vector2(0.852823, 0.793269)
 polygon = PackedVector2Array(2, -8, -12, -8, -22, 1, -22, 10, -16, 18, 2, 18, 9, 10, 9, -1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -22)
+sprite_frames = SubResource("SpriteFrames_hpb1f")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.346562

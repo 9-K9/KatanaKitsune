@@ -1,8 +1,5 @@
 extends PC_Class
 
-@export var walkSpeed : float = 5000.00
-@export var runSpeed : float = 10000.00
-
 func _physics_process(delta: float) -> void:
 	#control the player
 	match player_state:
@@ -13,7 +10,15 @@ func _physics_process(delta: float) -> void:
 		"idle":
 			playerControler(0,1,delta)
 		"attack":
-			playerControler(0,2,delta)
+			playerControler(0,3,delta)
+
+
+			
+
 
 func _on_action_timer_timeout():
 	action_timer.stop()
+			
+func _on_action_area_body_entered(body):
+	if body.is_in_group("enemy"):
+		enemyBody = body

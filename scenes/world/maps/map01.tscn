@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://scripts/system/YsortPlayerSpawn.gd" id="7_vn0sn"]
 [ext_resource type="PackedScene" uid="uid://wpy5piyut3ay" path="res://scenes/characters/PC01.tscn" id="8_el0l4"]
 [ext_resource type="PackedScene" uid="uid://bwqgwm5ygqoyh" path="res://scenes/walls/wall_L.tscn" id="8_uo3s4"]
-[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/abomination.tscn" id="13_rrf5y"]
+[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="13_rrf5y"]
 [ext_resource type="AudioStream" uid="uid://dasqhlglsiig5" path="res://sound/bgs/Unknown02.ogg" id="14_ptlml"]
 [ext_resource type="PackedScene" uid="uid://cigxiv0vim758" path="res://scenes/world/worldCamera.tscn" id="15_cds2c"]
 [ext_resource type="PackedScene" uid="uid://mk0ja43ubaf2" path="res://scenes/world/overlay_menues.tscn" id="16_tlk75"]
@@ -3910,6 +3910,7 @@ layer_0/tile_data = PackedInt32Array(-1, 655366, 3, 65535, 655366, 3, 131070, 65
 y_sort_enabled = true
 script = ExtResource("7_vn0sn")
 playerScene = ExtResource("8_el0l4")
+enemyScene = ExtResource("13_rrf5y")
 
 [node name="Walls" type="Node2D" parent="NavigationRegion2D/YSort Objects"]
 y_sort_enabled = true
@@ -3989,8 +3990,8 @@ position = Vector2(-52, 160)
 [node name="SpawnPlayerMarker2D" type="Marker2D" parent="NavigationRegion2D/YSort Objects"]
 position = Vector2(-64, -56)
 
-[node name="Abomination" parent="NavigationRegion2D/YSort Objects" instance=ExtResource("13_rrf5y")]
-position = Vector2(137, -54)
+[node name="SpawnEnemyMarker2D" type="Marker2D" parent="NavigationRegion2D/YSort Objects"]
+position = Vector2(88, -56)
 
 [node name="Light" type="DirectionalLight2D" parent="."]
 rotation = -3.92699
