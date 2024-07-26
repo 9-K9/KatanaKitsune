@@ -8,3 +8,6 @@ func take_damage(amount: float) -> void:
 	print(health)
 	if health <= 0:
 		queue_free()
+		
+func _physics_process(delta):
+	pass

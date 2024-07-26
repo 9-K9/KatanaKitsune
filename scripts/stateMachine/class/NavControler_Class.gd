@@ -2,61 +2,54 @@ extends CharacterBody2D
 class_name AI_Class
 
 @onready var gameManager = get_node("/root/Main")
-@export var speed: int = 16
-@export var accel: int = 8
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var direction : Vector2 = Vector2.ZERO
 @onready var facing_dir: String = "southWest"
-@onready var player_state: String = "idle"
-@onready var run_frame = 1
-@onready var animation_state = "%s_%s"%[player_state,facing_dir]
+@onready var self_state: String = "idle"
+@onready var animation_state = "%s_%s"%[self_state,facing_dir]
 
-func navigationControler():
+func navigationControler(targetVector2,spd,dt,fps):
+	nav.target_position = targetVector2
 	direction = nav.get_next_path_position() - global_position
 	direction = direction.normalized()
 	var round_dir = round(direction)
-	
-	match round_dir:
-		Vector2(0,1):
-			facing_dir = "south"
-		Vector2(-1,1):
-			facing_dir = "southWest"
-		Vector2(-1,0):
-			facing_dir = "west"
-		Vector2(-1,-1):
-			facing_dir = "northWest"
-		Vector2(0,-1):
-			facing_dir = "north"
-		Vector2(1,-1):
-			facing_dir = "northEast"
-		Vector2(1,0):
-			facing_dir = "east"
-		Vector2(1,1):
-			facing_dir = "southEast"
-		_: #Default Return
-			pass
-			
+	facing_dir = directionState(round_dir)		
 	if nav.is_navigation_finished():
-		run_frame = 1
-		player_state = "idle"
+		self_state = "idle"
 		velocity = Vector2.ZERO
 	else:
-		run_frame = 2
-		player_state = "walk"
-		velocity = direction * speed 
+		self_state = "walk"
+		velocity = direction * (spd * dt)
 		if Input.is_action_pressed("Run"):
-			run_frame = 3
-			var speed_temp = speed * run_frame
-			var accel_temp = accel * run_frame
-			player_state = "run"
-			velocity = direction * speed_temp
-	
-	animationState()
+			self_state = "run"
+			velocity = direction * (spd * dt)
+	animationState(fps)
 	move_and_slide()
 	
-func animationState():
-	animation_state = "%s_%s"%[player_state,facing_dir]
-	animated_sprite.play(animation_state,run_frame)
+func directionState(rnd_dir):
+	var string_dir : String
+	match rnd_dir:
+		Vector2(0,1):
+			string_dir = "south"
+		Vector2(-1,1):
+			string_dir = "southWest"
+		Vector2(-1,0):
+			string_dir = "west"
+		Vector2(-1,-1):
+			string_dir = "northWest"
+		Vector2(0,-1):
+			string_dir = "north"
+		Vector2(1,-1):
+			string_dir = "northEast"
+		Vector2(1,0):
+			string_dir = "east"
+		Vector2(1,1):
+			string_dir = "southEast"
+	return string_dir
+		
+func animationState(fps):
+	animation_state = "%s_%s"%[self_state,facing_dir]
+	animated_sprite.play(animation_state,fps)
 
 

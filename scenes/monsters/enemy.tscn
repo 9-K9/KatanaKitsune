@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://ci2xfyyt30bpm"]
 
 [ext_resource type="Texture2D" uid="uid://vyuln2ck1crt" path="res://assets/sprites/monsters/abomination/abomination_Idle.png" id="1_ma03q"]
-[ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="1_qbk6e"]
+[ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="1_odyme"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qrr4p"]
 atlas = ExtResource("1_ma03q")
@@ -69,7 +69,7 @@ animations = [{
 
 [node name="enemy" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 3
-script = ExtResource("1_qbk6e")
+script = ExtResource("1_odyme")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 

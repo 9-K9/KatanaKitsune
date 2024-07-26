@@ -16,12 +16,17 @@ func _on_audio_stream_player_2d_finished():
 
 func _process(delta):
 	systemControls(gameState,delta)
+
 		
 func getState():
 	return gameState
 	
 func setState(stateString):
 	gameState = stateString
+	
+func getPlayerPosition():
+	if is_instance_valid(player):
+		return player.position
 	
 func systemControls(state,delta):
 	if Input.is_action_just_pressed("Pause") and state == "game_play":
@@ -31,7 +36,8 @@ func systemControls(state,delta):
 	if state == "game_title":
 		get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
 	gameTime = gameTime + delta
-	return gameTime
+	gameState = state
+
 	
 
 	

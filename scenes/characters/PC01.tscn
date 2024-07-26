@@ -1,12 +1,18 @@
-[gd_scene load_steps=269 format=3 uid="uid://wpy5piyut3ay"]
+[gd_scene load_steps=275 format=3 uid="uid://wpy5piyut3ay"]
 
-[ext_resource type="Script" path="res://scripts/stateMachine/unit/PlayerUnit.gd" id="1_nwggt"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_1c3pm"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_b6hje"]
+[ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_bwt3n"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="3_e87q4"]
+[ext_resource type="Script" path="res://scripts/stateMachine/class/playerClass.gd" id="3_fs70d"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/idle.gd" id="3_jx4h8"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/walk.gd" id="4_e7rn2"]
 [ext_resource type="Texture2D" uid="uid://b250jb1iskbm0" path="res://assets/sprites/characters/pc01/dystopianGirl_Idle.png" id="4_mkydm"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/run.gd" id="5_ama2c"]
 [ext_resource type="Texture2D" uid="uid://c5lnjsysoigte" path="res://assets/sprites/characters/pc01/dystopianGirl_Run.png" id="5_dyg6r"]
 [ext_resource type="Texture2D" uid="uid://wpndaeeajg5l" path="res://assets/sprites/characters/pc01/dystopianGirl_Attack.png" id="6_1fkop"]
 [ext_resource type="Texture2D" uid="uid://4k7taxds0hoc" path="res://assets/sprites/characters/pc01/dystopianGirl_Walk.png" id="6_c2hoq"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/attack.gd" id="6_g5jki"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2vk1"]
 shader = ExtResource("2_b6hje")
@@ -1983,7 +1989,26 @@ point_count = 1
 
 [node name="PC01" type="CharacterBody2D" groups=["player"]]
 safe_margin = 1.0
-script = ExtResource("1_nwggt")
+script = ExtResource("1_1c3pm")
+
+[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+script = ExtResource("2_bwt3n")
+current_state = NodePath("idle")
+
+[node name="characterState" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("3_fs70d")
+
+[node name="idle" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("3_jx4h8")
+
+[node name="walk" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("4_e7rn2")
+
+[node name="run" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("5_ama2c")
+
+[node name="attack" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("6_g5jki")
 
 [node name="Area2D" type="Area2D" parent="." groups=["player"]]
 
@@ -2041,7 +2066,6 @@ position = Vector2(-32, 33)
 shape = SubResource("CircleShape2D_pw1rk")
 
 [node name="Circle" type="Line2D" parent="RayCast2D/ActionArea/CollisionShape2D"]
-visible = false
 position = Vector2(32, -32)
 points = PackedVector2Array(-27, 17, -33, 16, -40, 18, -45, 22, -48, 28, -49, 34, -47, 41, -44, 45, -40, 48, -34, 50, -28, 50, -22, 47, -18, 43, -15, 37, -15, 29, -18, 23, -22, 19)
 closed = true
@@ -2055,10 +2079,9 @@ round_precision = 16
 antialiased = true
 
 [node name="Line2D" type="Line2D" parent="RayCast2D/ActionArea"]
-visible = false
 points = PackedVector2Array(0, 0, -32, 33)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
-[connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]
-[connection signal="body_entered" from="RayCast2D/ActionArea" to="." method="_on_action_area_body_entered"]
+[connection signal="timeout" from="ActionTimer" to="FiniteStateMachine/characterState" method="_on_action_timer_timeout"]
+[connection signal="body_entered" from="RayCast2D/ActionArea" to="FiniteStateMachine/characterState" method="_on_action_area_body_entered"]
