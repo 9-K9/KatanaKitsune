@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@onready var gameManager = $"."
+##Movement Variables
 @onready var direction: Vector2 = Vector2.ZERO
 @onready var facing_dir: String = "southWest"
 var speed : float = 0.0
@@ -7,7 +9,7 @@ var speed : float = 0.0
 @export var runSpeed : float = 10000.00
 @export var damage : float = 0.25 ##frame rate multiplies by 4
 
-
+##Ray Casting 
 @export_node_path("RayCast2D") var _rayCast2D: NodePath = "RayCast2D"
 @export_node_path("Line2D") var _debugRayCastCollision: NodePath = "RayCast2D/ActionArea/Line2D"
 @export_node_path("Line2D") var _debugCircleCastCollision: NodePath = "RayCast2D/ActionArea/CollisionShape2D/Circle"
@@ -70,12 +72,11 @@ func updateRayCast2D(str_dir):
 
 ##set raycast to direction of player to check interaction events
 func setRayCast2D(rnd_dir):
-		rayCast2D.target_position = rnd_dir * Vector2(32,32)
+		rayCast2D.target_position = rnd_dir * Vector2(32,16)
 		debugRayCastCollision.set_point_position(0, Vector2.ZERO)
 		debugRayCastCollision.set_point_position(1, rayCast2D.target_position)
 		rayCastCollision.position = rayCast2D.target_position
 		facing_dir = directionState(rnd_dir)
-		print(facing_dir)	
 		
 func _physics_process(delta):
 	if InputHandler():

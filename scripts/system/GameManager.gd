@@ -15,7 +15,7 @@ func _on_audio_stream_player_2d_finished():
 	bgs.play()
 
 func _process(delta):
-	systemControls(gameState,delta)
+	gameState = systemControls(gameState,delta)
 
 		
 func getState():
@@ -31,12 +31,12 @@ func getPlayerPosition():
 func systemControls(state,delta):
 	if Input.is_action_just_pressed("Pause") and state == "game_play":
 		state = "game_paused"
-	if Input.is_action_just_pressed("Pause") and state == "game_paused":
+	elif Input.is_action_just_pressed("Pause") and state == "game_paused":
 		state = "game_play"
-	if state == "game_title":
+	elif state == "game_title":
 		get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
 	gameTime = gameTime + delta
-	gameState = state
+	return state
 
 	
 

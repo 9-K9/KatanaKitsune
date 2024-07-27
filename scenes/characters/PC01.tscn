@@ -2056,13 +2056,13 @@ wait_time = 0.5
 one_shot = true
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-target_position = Vector2(-32, 32)
+target_position = Vector2(-32, 16)
 
 [node name="ActionArea" type="Area2D" parent="RayCast2D" groups=["weapon"]]
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RayCast2D/ActionArea"]
-position = Vector2(-32, 33)
+position = Vector2(-32, 16)
 shape = SubResource("CircleShape2D_pw1rk")
 
 [node name="Circle" type="Line2D" parent="RayCast2D/ActionArea/CollisionShape2D"]
@@ -2079,7 +2079,7 @@ round_precision = 16
 antialiased = true
 
 [node name="Line2D" type="Line2D" parent="RayCast2D/ActionArea"]
-points = PackedVector2Array(0, 0, -32, 33)
+points = PackedVector2Array(0, 0, -32, 16)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
