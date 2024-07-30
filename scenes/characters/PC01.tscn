@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_1c3pm"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="2_b6hje"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_bwt3n"]
+[ext_resource type="Script" path="res://scripts/stateMachine/class/playerStateClass.gd" id="3_287pl"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="3_e87q4"]
-[ext_resource type="Script" path="res://scripts/stateMachine/class/playerClass.gd" id="3_fs70d"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/idle.gd" id="3_jx4h8"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/walk.gd" id="4_e7rn2"]
 [ext_resource type="Texture2D" uid="uid://b250jb1iskbm0" path="res://assets/sprites/characters/pc01/dystopianGirl_Idle.png" id="4_mkydm"]
@@ -1990,13 +1990,15 @@ point_count = 1
 [node name="PC01" type="CharacterBody2D" groups=["player"]]
 safe_margin = 1.0
 script = ExtResource("1_1c3pm")
+_animatedSprite2D = NodePath("AnimatedSprite2D")
+_actionTimer = NodePath("ActionTimer")
 
 [node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
 script = ExtResource("2_bwt3n")
 current_state = NodePath("idle")
 
 [node name="characterState" type="Node" parent="FiniteStateMachine"]
-script = ExtResource("3_fs70d")
+script = ExtResource("3_287pl")
 
 [node name="idle" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("3_jx4h8")
@@ -2083,5 +2085,5 @@ points = PackedVector2Array(0, 0, -32, 16)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
-[connection signal="timeout" from="ActionTimer" to="FiniteStateMachine/characterState" method="_on_action_timer_timeout"]
-[connection signal="body_entered" from="RayCast2D/ActionArea" to="FiniteStateMachine/characterState" method="_on_action_area_body_entered"]
+[connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]
+[connection signal="body_entered" from="RayCast2D/ActionArea" to="." method="_on_action_area_body_entered"]

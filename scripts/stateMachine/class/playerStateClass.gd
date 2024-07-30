@@ -13,7 +13,6 @@ extends StateMachineState
 @onready var pc: CharacterBody2D = get_node(_CharacterBody2D)
 @onready var animated_sprite : AnimatedSprite2D = get_node(_animatedsprite2D)
 @onready var action_timer : Timer = get_node(_action_timer)
-@onready var enemyBody : CharacterBody2D = null
 	
 ##Handles Input and returns a state string
 func stateAnimation(state_to_animate,fps):
@@ -23,20 +22,13 @@ func stateAnimation(state_to_animate,fps):
 			
 ##attack enemy body when timer is nearly finished
 func playerAttack():
-	if is_instance_valid(enemyBody):
+	if is_instance_valid(pc.enemyBody):
 		##calculate attack damage out of 8 (0 to 7) on frame 3 (halfway)
 		if animated_sprite.frame == 3:
-			enemyBody.take_damage(pc.damage)
+			pc.enemyBody.take_damage(pc.damage)
 			return	
 					
 ##Math Functions		
 func round_to_dec(num, digit):
 	return round(num * pow(10.0, digit)) / pow(10.0, digit)
 	
-###Signals
-#func _on_action_area_body_entered(body):
-	#if body.is_in_group("enemy"):
-		#enemyBody = body
-
-#func _on_action_timer_timeout():
-	#action_timer.stop()
