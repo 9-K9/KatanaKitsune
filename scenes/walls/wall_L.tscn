@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwqgwm5ygqoyh"]
+[gd_scene load_steps=5 format=3 uid="uid://bwqgwm5ygqoyh"]
 
 [ext_resource type="Script" path="res://scripts/system/WallsModulate.gd" id="1_4erap"]
-[ext_resource type="Texture2D" uid="uid://bnkcieqf7i6ux" path="res://assets/tilesets/isometric/objects/walls/textures/Metal.png" id="2_yhi07"]
+[ext_resource type="Texture2D" uid="uid://8k8mx5jyv0yn" path="res://assets/tilesets/textures/white1b.png" id="2_am0tp"]
+[ext_resource type="Texture2D" uid="uid://bkcsr6lueenhq" path="res://assets/tilesets/textures/white1a.png" id="3_hb7u2"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_a0qly"]
 polygon = PackedVector2Array(-8, -180, -16, -176, 48, -144, 56, -148)
@@ -36,7 +37,7 @@ texture_repeat = 3
 position = Vector2(-8, 32)
 rotation = 3.14159
 scale = Vector2(1, -1)
-texture = ExtResource("2_yhi07")
+texture = ExtResource("2_am0tp")
 polygon = PackedVector2Array(-72, -60, -64, -55, -64, 32, -72, 28)
 
 [node name="Polygon2D_Top" type="Polygon2D" parent="WallPolygonsCanvasMods"]
@@ -46,7 +47,7 @@ texture_repeat = 3
 position = Vector2(-8, 32)
 rotation = 3.14159
 scale = Vector2(1, -1)
-texture = ExtResource("2_yhi07")
+texture = ExtResource("2_am0tp")
 polygon = PackedVector2Array(-72, -60, -64, -55, 0, -88, -8, -92)
 
 [node name="Polygon2D_Face" type="Polygon2D" parent="WallPolygonsCanvasMods"]
@@ -55,7 +56,7 @@ texture_repeat = 3
 position = Vector2(-8, 32)
 rotation = 3.14159
 scale = Vector2(1, -1)
-texture = ExtResource("2_yhi07")
+texture = ExtResource("3_hb7u2")
 polygon = PackedVector2Array(0, -88, -64, -56, -64, 32, 0, 0)
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
