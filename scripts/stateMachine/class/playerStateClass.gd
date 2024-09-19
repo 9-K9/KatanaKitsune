@@ -16,9 +16,10 @@ extends StateMachineState
 	
 ##Handles Input and returns a state string
 func stateAnimation(state_to_animate,fps):
+	fps = null #fps can be set in code or in the editor
 	var string_animation : String
 	string_animation = "%s_%s"%[state_to_animate,pc.facing_dir]
-	animated_sprite.play(string_animation,fps)
+	animated_sprite.play(string_animation) 
 			
 ##attack enemy body when timer is nearly finished
 func playerAttack():

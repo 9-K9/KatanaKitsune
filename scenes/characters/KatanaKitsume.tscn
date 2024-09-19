@@ -1105,7 +1105,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_east",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1134,7 +1134,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_north",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1163,7 +1163,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_northEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1192,7 +1192,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_northWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1221,7 +1221,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_south",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1250,7 +1250,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_southEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1279,7 +1279,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_southWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1308,7 +1308,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_west",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1569,7 +1569,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_east",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1598,7 +1598,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_north",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1627,7 +1627,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_northEast",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1656,7 +1656,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_northWest",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1685,7 +1685,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_south",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1714,7 +1714,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_southEast",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1743,7 +1743,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_southWest",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1772,7 +1772,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run_west",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1801,7 +1801,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1830,7 +1830,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1859,7 +1859,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1888,7 +1888,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1917,7 +1917,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1946,7 +1946,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1975,7 +1975,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -2004,7 +2004,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_west",
-"speed": 5.0
+"speed": 8.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pw1rk"]
