@@ -11,5 +11,4 @@ drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource("1_lklfr")
-speed = 180
 metadata/_edit_group_ = true

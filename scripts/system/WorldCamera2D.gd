@@ -1,10 +1,9 @@
 extends Camera2D
 
-@onready var player : CharacterBody2D = $"../NavigationRegion2D/YSort Objects/PC01"
-
-
+@export var player: CharacterBody2D
 
 func _ready():
+	print(player)
 	if is_instance_valid(player):
 		self.position = player.position 
 

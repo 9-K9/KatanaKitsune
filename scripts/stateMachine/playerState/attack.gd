@@ -24,5 +24,3 @@ func on_physics_process(delta):
 func on_exit():
 	pc.timerTimeOut = true
 	action_timer.stop()
-
-

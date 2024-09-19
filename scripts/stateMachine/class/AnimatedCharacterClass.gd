@@ -4,6 +4,8 @@ extends CharacterBody2D
 ##Movement Variables
 @onready var direction: Vector2 = Vector2.ZERO
 @onready var facing_dir: String = "southWest"
+@export var ray_w : int
+@export var ray_h : int
 var speed : float = 0.0
 @export var walkSpeed : float = 5000.00
 @export var runSpeed : float = 10000.00
@@ -65,11 +67,15 @@ func stateDirection(str_dir):
 	return vector_dir
 	
 func updateRayCast2D(str_dir):
+
 	setRayCast2D(stateDirection(str_dir)) 
 
 ##set raycast to direction of player to check interaction events
 func setRayCast2D(rnd_dir):
-		rayCast2D.target_position = rnd_dir * Vector2(32,16)
+		if directionState(rnd_dir) == "south" or directionState(rnd_dir) == "north":
+			rayCast2D.target_position = rnd_dir * Vector2(ray_w,ray_w)
+		else:
+			rayCast2D.target_position = rnd_dir * Vector2(ray_w,ray_h)
 		debugRayCastCollision.set_point_position(0, Vector2.ZERO)
 		debugRayCastCollision.set_point_position(1, rayCast2D.target_position)
 		rayCastCollision.position = rayCast2D.target_position

@@ -21,5 +21,3 @@ func on_physics_process(delta):
 		
 func on_exit():
 	pass
-
-

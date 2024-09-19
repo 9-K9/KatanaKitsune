@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var player = get_node("../NavigationRegion2D/YSort Objects/PC01")
+@onready var player = get_node("../NavigationRegion2D/YSort Objects/TileMap/PC01")
 @onready var world_camera = get_node("WorldCamera")
 @onready var bgs = get_node("AudioStreamPlayer2D")
 var gameState : String = ""

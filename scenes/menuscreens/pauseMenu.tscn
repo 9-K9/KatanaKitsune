@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2554ofdujy5r"]
+
+[ext_resource type="Script" path="res://scripts/system/PauseMenu.gd" id="1_8k1ei"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1_8k1ei")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 36.0
+offset_right = 184.0
+offset_bottom = 560.0
+
+[node name="Resume" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "RESUME"
+
+[node name="Items" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "ITEMS"
+
+[node name="Weapons" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "WEAPONS"
+
+[node name="Gear" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "GEAR"
+
+[node name="Skills" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "SKILLS"
+
+[node name="Psyche" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "PSYCHE"
+
+[node name="Social" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "SOCIAL"
+
+[node name="Jobs" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "JOBS"
+
+[node name="Crypto" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "CRYPTO"
+
+[node name="Meta" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "META"
+
+[node name="Map" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "MAP"
+
+[node name="Save" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "SAVE"
+
+[node name="Load" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "LOAD"
+
+[node name="Settings" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="Quit" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "QUIT"
+
+[connection signal="pressed" from="VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
