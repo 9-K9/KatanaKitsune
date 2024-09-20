@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://byer8ymbda1ld"]
+[gd_scene load_steps=6 format=4 uid="uid://byer8ymbda1ld"]
 
 [ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_l330b"]
 [ext_resource type="PackedScene" uid="uid://b6xc810cprx04" path="res://scenes/world/ysortmap.tscn" id="2_2foc2"]
@@ -10,25 +10,13 @@
 script = ExtResource("1_l330b")
 
 [node name="YSortMap" parent="." instance=ExtResource("2_2foc2")]
+position = Vector2(35, 186)
 
-[node name="Dark" parent="YSortMap/Lighting" index="0"]
-energy = 1.0
-
-[node name="MixBlue" parent="YSortMap/Lighting" index="2"]
-visible = false
+[node name="Walls" parent="YSortMap/TileMap" index="1"]
+tile_map_data = PackedByteArray("AADy//z/BwAAAAAAAAD1//X/BwAAAAAAAAD5/+7/BwAAAAAAAAAGAAkAAwAAAAAAAAADABAAAwAAAAAAAAAAABYABwAAAAAAAADy/wIAAQAAAAAAAAD8/xcAAQAAAAAAAAAJAAQAAwAAAAAAAAD7/+n/AwAAAAAAAAAJAP3/AQAAAAAAAAAGAPb/AQAAAAAAAAACAO//AQAAAAAAAAD//+j/AQAAAAAAAAA=")
 
 [node name="KatanaKitsume" parent="YSortMap" instance=ExtResource("3_34k5i")]
-position = Vector2(3, -11)
-
-[node name="PointLight2D" parent="YSortMap/KatanaKitsume" index="2"]
-energy = 1.0
-shadow_filter_smooth = 2.0
-
-[node name="DirectionalLight2D" parent="YSortMap/KatanaKitsume" index="3"]
-visible = false
-
-[node name="CollisionPolygon2D" parent="YSortMap/KatanaKitsume" index="5"]
-polygon = PackedVector2Array(-15, 49.2051, -86.68, 12.146, -15, -29.273, 56.68, 12.146)
+position = Vector2(-61, -18)
 
 [node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
@@ -39,4 +27,3 @@ player = NodePath("../YSortMap/KatanaKitsume")
 visible = false
 
 [editable path="YSortMap"]
-[editable path="YSortMap/KatanaKitsume"]
