@@ -2042,12 +2042,26 @@ script = ExtResource("6_i5lrg")
 [node name="attack" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("7_eykso")
 
-[node name="Area2D" type="Area2D" parent="." groups=["player"]]
+[node name="RoofChecker" type="Area2D" parent="." groups=["playerRoofCheck"]]
 
-[node name="WallChecker" type="CollisionPolygon2D" parent="Area2D"]
-position = Vector2(-9.60939, -25.0677)
-scale = Vector2(2.40234, 1.84896)
-polygon = PackedVector2Array(4, -53, -6.66667, -47, -6.66667, 13, 4, 19, 14.6667, 13, 14.6667, -47)
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoofChecker"]
+position = Vector2(-9.60939, -197.622)
+scale = Vector2(2.40234, 0.434028)
+polygon = PackedVector2Array(4.00001, -23.912, -6.66667, 13, 4.00001, 49.816, 14.6667, 13)
+
+[node name="WallChecker" type="Area2D" parent="." groups=["playerWallCheck"]]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="WallChecker"]
+position = Vector2(-9.60939, -5.62152)
+scale = Vector2(2.40234, 0.434028)
+polygon = PackedVector2Array(4.00001, -23.912, -6.66667, 13, 4.00001, 49.816, 14.6667, 13)
+
+[node name="PlayerHitBox" type="Area2D" parent="." groups=["player"]]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PlayerHitBox"]
+position = Vector2(-9.60939, -5.62152)
+scale = Vector2(2.40234, 0.434028)
+polygon = PackedVector2Array(4.00001, -466.28, -17.6455, -392.552, -17.6455, -23.912, 4.00001, 49.816, 25.6456, -23.912, 25.6456, -392.552)
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 texture_filter = 1
@@ -2074,7 +2088,7 @@ shadow_filter_smooth = 2.0
 occluder = SubResource("OccluderPolygon2D_0ac2c")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(0, 48, -64, 14, -64, -48, 0, -82, 64, -48, 64, 16)
+polygon = PackedVector2Array(0, 48, -64, 14, -64, -16, 64, -16, 64, 16)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-8, -90)
