@@ -1,40 +1,27 @@
-[gd_scene load_steps=45 format=4 uid="uid://byer8ymbda1ld"]
+[gd_scene load_steps=40 format=4 uid="uid://byer8ymbda1ld"]
 
 [ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_l330b"]
 [ext_resource type="PackedScene" uid="uid://b6xc810cprx04" path="res://scenes/world/ysortmap.tscn" id="2_2foc2"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsume.tscn" id="3_34k5i"]
-[ext_resource type="Texture2D" uid="uid://qj5yv3s5f6bf" path="res://assets/crocotile/isometrictiles/roofs/steampunk_roof01.png" id="3_mxqhr"]
 [ext_resource type="PackedScene" uid="uid://cigxiv0vim758" path="res://scenes/world/worldCamera.tscn" id="4_hxs4m"]
-[ext_resource type="Texture2D" uid="uid://bwl2q5cjanjqp" path="res://assets/crocotile/isometrictiles/roofs/steampunk_roof02.png" id="4_y74aq"]
 [ext_resource type="Texture2D" uid="uid://cbtyy10rufoos" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir1.png" id="5_315sy"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="5_kncb2"]
 [ext_resource type="Texture2D" uid="uid://d22ceptobo6wk" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir2.png" id="6_sg4jo"]
 [ext_resource type="Texture2D" uid="uid://ok8em0o1ee1" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir3.png" id="7_hy78y"]
 [ext_resource type="Texture2D" uid="uid://bshmb0t6keluh" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir4.png" id="8_leee2"]
-[ext_resource type="Texture2D" uid="uid://ps4mgvf13min" path="res://assets/crocotile/isometrictiles/roofs/steampunk_roof03.png" id="9_q8tyi"]
 [ext_resource type="Texture2D" uid="uid://bvu2a23qd1wgu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir5.png" id="10_hboqh"]
 [ext_resource type="Texture2D" uid="uid://c3jl5cv02yauq" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir6.png" id="11_d4hg0"]
 [ext_resource type="Texture2D" uid="uid://clexh2dd4pqt3" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir7.png" id="12_j8mpu"]
 [ext_resource type="Texture2D" uid="uid://beha2s4tdnhxc" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir8.png" id="13_17vds"]
-[ext_resource type="Texture2D" uid="uid://bya1aqjbgyygu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir1.png" id="14_fomvk"]
-[ext_resource type="Texture2D" uid="uid://dmunf13xbv1n0" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir2.png" id="15_tucdo"]
-[ext_resource type="Texture2D" uid="uid://cl2ou4tg5xtdm" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir3.png" id="16_ihf5y"]
-[ext_resource type="Texture2D" uid="uid://eyhpqw4txyax" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir4.png" id="17_h3bj0"]
-[ext_resource type="Texture2D" uid="uid://b6h3f3285ipys" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir5.png" id="18_s3fyx"]
-[ext_resource type="Texture2D" uid="uid://cmv701ug2ng0f" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir6.png" id="19_vlemw"]
-[ext_resource type="Texture2D" uid="uid://cgtvfiaw3g6g5" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir7.png" id="20_e1rv2"]
-[ext_resource type="Texture2D" uid="uid://bevgte5ev57ta" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_dir8.png" id="21_n7clm"]
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4bofe"]
-texture = ExtResource("3_mxqhr")
-texture_region_size = Vector2i(1480, 1480)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_krxs0"]
-texture = ExtResource("4_y74aq")
-texture_region_size = Vector2i(1480, 1480)
-0:0/0 = 0
-0:0/0/texture_origin = Vector2i(0, 48)
+[ext_resource type="Texture2D" uid="uid://bya1aqjbgyygu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir1.png" id="14_fomvk"]
+[ext_resource type="Texture2D" uid="uid://dmunf13xbv1n0" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir2.png" id="15_tucdo"]
+[ext_resource type="Texture2D" uid="uid://cl2ou4tg5xtdm" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir3.png" id="16_ihf5y"]
+[ext_resource type="Texture2D" uid="uid://eyhpqw4txyax" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir4.png" id="17_h3bj0"]
+[ext_resource type="Texture2D" uid="uid://b6h3f3285ipys" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir5.png" id="18_s3fyx"]
+[ext_resource type="Texture2D" uid="uid://cmv701ug2ng0f" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir6.png" id="19_vlemw"]
+[ext_resource type="Texture2D" uid="uid://cgtvfiaw3g6g5" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir7.png" id="20_e1rv2"]
+[ext_resource type="Texture2D" uid="uid://bevgte5ev57ta" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir8.png" id="21_n7clm"]
+[ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="22_04f0w"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ui3cb"]
 texture = ExtResource("5_315sy")
@@ -59,11 +46,6 @@ texture = ExtResource("8_leee2")
 texture_region_size = Vector2i(960, 960)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 144)
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jsaxj"]
-texture = ExtResource("9_q8tyi")
-texture_region_size = Vector2i(1480, 1480)
-0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yf3hd"]
 texture = ExtResource("10_hboqh")
@@ -140,9 +122,6 @@ texture_region_size = Vector2i(960, 960)
 [sub_resource type="TileSet" id="TileSet_lejh4"]
 tile_shape = 1
 tile_size = Vector2i(48, 24)
-sources/2 = SubResource("TileSetAtlasSource_4bofe")
-sources/3 = SubResource("TileSetAtlasSource_krxs0")
-sources/4 = SubResource("TileSetAtlasSource_jsaxj")
 sources/36 = SubResource("TileSetAtlasSource_ui3cb")
 sources/37 = SubResource("TileSetAtlasSource_sw864")
 sources/38 = SubResource("TileSetAtlasSource_eyu0k")
@@ -173,26 +152,40 @@ tile_map_data = PackedByteArray("AAD//wEAAAAAAAAAAAD//wAAAAAAAAAAAAD+/wEAAAAAAAA
 tile_map_data = PackedByteArray("AAAGAAkAAwAAAAAAAAADABAAAwAAAAAAAAAAABYABwAAAAAAAADy/wIAAQAAAAAAAAD1/wkAAQAAAAAAAAD8/xcAAQAAAAAAAAAJAAQAAwAAAAAAAAA=")
 
 [node name="CollisionPolygon2D" parent="YSortMap/TileMap/FrontWalls/WallsCheckPlayer" index="0"]
-polygon = PackedVector2Array(-239, 80, -240, 337, -72, 420, 430, 167, 429, -80, -67, 166)
+polygon = PackedVector2Array(-239, 80, -240, 337, -72, 420, 430, 167, 429, -80, -71, 138)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="YSortMap/TileMap/FrontWalls/WallsCheckPlayer" index="1"]
 position = Vector2(0, -1)
 polygon = PackedVector2Array(-387, 11, -387, 241, -408, 251, -575, 169, -579, -81)
 
 [node name="Roofs" parent="YSortMap/TileMap" index="4"]
+visible = false
 position = Vector2(20, 0)
-tile_map_data = PackedByteArray("AAD+/woAJAAAAAAAAAABAAMAJAAAAAAAAAAFAPz/JAAAAAAAAAAHAPf/JAAAAAAAAAD9/wsAJAAAAAAAAAAIAPb/JAAAAAAAAAAEAO//LAAAAAAAAAABAPb/LAAAAAAAAAD9//3/LAAAAAAAAAD6/wQALAAAAAAAAAD2//3/LAAAAAAAAAD6//b/LAAAAAAAAAD9/+//LAAAAAAAAAABAOj/LAAAAAAAAADz//b/KAAAAAAAAAD3/+7/KAAAAAAAAAD6/+f/KAAAAAAAAAD9/+H/KAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAHAPf/AgAAAAAAAAAEAP7/EAAAAAAAAAAAAAUAEAAAAAAAAAD9/wsABAAAAAAAAADz//b/DAAAAAAAAAD2//3/EgAAAAAAAAD6/wQAEgAAAAAAAAD2/+//FAAAAAAAAAD6/+j/FAAAAAAAAAD9/+L/DgAAAAAAAAAAAOn/FgAAAAAAAAAEAPD/FgAAAAAAAAD9//D/LAAAAAAAAAAAAPf/LAAAAAAAAAD5//f/LAAAAAAAAAD9//3/LAAAAAAAAAA=")
 
 [node name="RoofLayer2" type="TileMapLayer" parent="YSortMap/TileMap/Roofs" index="0"]
+visible = false
 z_index = 2
 z_as_relative = false
 y_sort_enabled = true
 position = Vector2(0, 6)
-tile_map_data = PackedByteArray("AAAEAN3/JAAAAAAAAAABAOT/JAAAAAAAAAD9/+v/JAAAAAAAAAD6//L/JAAAAAAAAAD2/+v/KAAAAAAAAAD6/+T/KAAAAAAAAAD9/93/KAAAAAAAAAABANb/KAAAAAAAAAA=")
 tile_set = SubResource("TileSet_lejh4")
+
+[node name="LightOccluder2D" parent="YSortMap/TileMap" index="5"]
+visible = false
+z_index = 100
+
+[node name="MixRed" parent="YSortMap/Lighting" index="3"]
+visible = true
 
 [node name="KatanaKitsume" parent="YSortMap" instance=ExtResource("3_34k5i")]
 position = Vector2(-61, -18)
+
+[node name="DirectionalLight2D" parent="YSortMap/KatanaKitsume" index="5"]
+visible = false
+
+[node name="LightOccluder2D" parent="YSortMap/KatanaKitsume" index="6"]
+visible = false
 
 [node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
@@ -202,4 +195,7 @@ player = NodePath("../YSortMap/KatanaKitsume")
 [node name="PauseMenu" parent="." instance=ExtResource("5_kncb2")]
 visible = false
 
+[node name="HUD" parent="." instance=ExtResource("22_04f0w")]
+
 [editable path="YSortMap"]
+[editable path="YSortMap/KatanaKitsume"]
