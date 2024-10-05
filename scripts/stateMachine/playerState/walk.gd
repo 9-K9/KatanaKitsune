@@ -13,7 +13,8 @@ func on_process(delta):
 		change_state("idle")
 	
 	if Input.is_action_just_pressed("Attack"):
-		change_state("attack")
+		pass
+		#change_state("attack")
 	
 # Called every physics frame when this state is active.
 func on_physics_process(delta):

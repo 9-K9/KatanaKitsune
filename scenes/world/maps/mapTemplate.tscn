@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_l330b"]
 [ext_resource type="PackedScene" uid="uid://b6xc810cprx04" path="res://scenes/world/ysortmap.tscn" id="2_2foc2"]
-[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsume.tscn" id="3_34k5i"]
+[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_34k5i"]
 [ext_resource type="PackedScene" uid="uid://cigxiv0vim758" path="res://scenes/world/worldCamera.tscn" id="4_hxs4m"]
 [ext_resource type="Texture2D" uid="uid://cbtyy10rufoos" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir1.png" id="5_315sy"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="5_kncb2"]
@@ -178,19 +178,13 @@ z_index = 100
 [node name="MixRed" parent="YSortMap/Lighting" index="3"]
 visible = true
 
-[node name="KatanaKitsume" parent="YSortMap" instance=ExtResource("3_34k5i")]
-position = Vector2(-61, -18)
-
-[node name="DirectionalLight2D" parent="YSortMap/KatanaKitsume" index="5"]
-visible = false
-
-[node name="LightOccluder2D" parent="YSortMap/KatanaKitsume" index="6"]
-visible = false
+[node name="KatanaKitsune" parent="YSortMap" instance=ExtResource("3_34k5i")]
+position = Vector2(-91, -6)
 
 [node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
 position = Vector2(506, 289)
-player = NodePath("../YSortMap/KatanaKitsume")
+player = NodePath("../YSortMap/KatanaKitsune")
 
 [node name="PauseMenu" parent="." instance=ExtResource("5_kncb2")]
 visible = false
@@ -198,4 +192,3 @@ visible = false
 [node name="HUD" parent="." instance=ExtResource("22_04f0w")]
 
 [editable path="YSortMap"]
-[editable path="YSortMap/KatanaKitsume"]
