@@ -13,8 +13,7 @@ func on_process(delta):
 		change_state("walk")
 		
 	if Input.is_action_just_pressed("Attack"):
-		pass
-		# change_state("attack")	
+		change_state("katanaDraw")	
 	
 func on_physics_process(delta):
 	pass

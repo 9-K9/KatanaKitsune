@@ -1,4 +1,4 @@
-[gd_scene load_steps=2310 format=3 uid="uid://crfws6oy432nx"]
+[gd_scene load_steps=2314 format=3 uid="uid://crfws6oy432nx"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_heltt"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_d8qwd"]
@@ -6,14 +6,18 @@
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/idle.gd" id="4_wm7im"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/walk.gd" id="5_85g7n"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/run.gd" id="6_i5lrg"]
-[ext_resource type="Script" path="res://scripts/stateMachine/playerState/attack.gd" id="7_eykso"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaDraw.gd" id="7_eykso"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaIdle.gd" id="8_eawx2"]
 [ext_resource type="Shader" path="res://shaders/displacement.gdshader" id="8_t33bn"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaWalk.gd" id="9_ddjfv"]
 [ext_resource type="Texture2D" uid="uid://deesubfxv42jv" path="res://assets/light.png" id="9_utneo"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaSeath.gd" id="10_akmgt"]
 [ext_resource type="Texture2D" uid="uid://dq6nbt77g2vi7" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir6.png" id="10_b7ing"]
 [ext_resource type="Texture2D" uid="uid://di1xfcfew5s2n" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir6.png" id="10_ffy61"]
 [ext_resource type="Texture2D" uid="uid://sbs5k3v6x457" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir1.png" id="10_io35y"]
 [ext_resource type="Texture2D" uid="uid://b7x250ksp5mfx" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir4.png" id="11_kae6a"]
 [ext_resource type="Texture2D" uid="uid://3ssiuy1wrbxj" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir4.png" id="11_lunh7"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaRun.gd" id="11_r8qym"]
 [ext_resource type="Texture2D" uid="uid://vg8ls1av08d4" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir5.png" id="12_okq11"]
 [ext_resource type="Texture2D" uid="uid://b4ulggiw6i1bk" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir5.png" id="12_w7e3o"]
 [ext_resource type="Texture2D" uid="uid://cqt0fp68jbmo5" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir3.png" id="13_bjyud"]
@@ -10755,7 +10759,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10784,7 +10788,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10813,7 +10817,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10842,7 +10846,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10871,7 +10875,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10900,7 +10904,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10929,7 +10933,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10958,7 +10962,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaDraw_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11683,7 +11687,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_east",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11712,7 +11716,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_north",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11741,7 +11745,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_northEast",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11770,7 +11774,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_northWest",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11799,7 +11803,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_south",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11828,7 +11832,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_southEast",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11857,7 +11861,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_southWest",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11886,7 +11890,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaRun_west",
-"speed": 5.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11915,7 +11919,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11944,7 +11948,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11973,7 +11977,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12002,7 +12006,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12031,7 +12035,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12060,7 +12064,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12089,7 +12093,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12118,7 +12122,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSeath_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -15865,8 +15869,20 @@ script = ExtResource("5_85g7n")
 [node name="run" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("6_i5lrg")
 
-[node name="attack" type="Node" parent="FiniteStateMachine"]
+[node name="katanaDraw" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("7_eykso")
+
+[node name="katanaIdle" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("8_eawx2")
+
+[node name="katanaWalk" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("9_ddjfv")
+
+[node name="katanaSeath" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("10_akmgt")
+
+[node name="katanaRun" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("11_r8qym")
 
 [node name="RoofChecker" type="Area2D" parent="." groups=["playerRoofCheck"]]
 
@@ -15921,13 +15937,13 @@ position = Vector2(-8, -83)
 sprite_frames = SubResource("SpriteFrames_kicbp")
 animation = &"idle_southWest"
 autoplay = "idle_southWest"
+frame_progress = 0.394079
 
 [node name="ActionTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-visible = false
 target_position = Vector2(-48, 24)
 
 [node name="ActionArea" type="Area2D" parent="RayCast2D" groups=["weapon"]]
