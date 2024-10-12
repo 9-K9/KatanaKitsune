@@ -1,4 +1,4 @@
-[gd_scene load_steps=2314 format=3 uid="uid://crfws6oy432nx"]
+[gd_scene load_steps=2337 format=3 uid="uid://crfws6oy432nx"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_heltt"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_d8qwd"]
@@ -18,41 +18,64 @@
 [ext_resource type="Texture2D" uid="uid://b7x250ksp5mfx" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir4.png" id="11_kae6a"]
 [ext_resource type="Texture2D" uid="uid://3ssiuy1wrbxj" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir4.png" id="11_lunh7"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaRun.gd" id="11_r8qym"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaBlock.gd" id="12_duwkr"]
 [ext_resource type="Texture2D" uid="uid://vg8ls1av08d4" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir5.png" id="12_okq11"]
 [ext_resource type="Texture2D" uid="uid://b4ulggiw6i1bk" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir5.png" id="12_w7e3o"]
 [ext_resource type="Texture2D" uid="uid://cqt0fp68jbmo5" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir3.png" id="13_bjyud"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaBlockCrouched.gd" id="13_shs7r"]
 [ext_resource type="Texture2D" uid="uid://bpqv7nax31vy2" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir3.png" id="13_st7dl"]
 [ext_resource type="Texture2D" uid="uid://21xucwgb036s" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir8.png" id="14_6jttx"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaCounterSlash.gd" id="14_og6el"]
 [ext_resource type="Texture2D" uid="uid://c16vragbnkb6u" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir8.png" id="14_wqdch"]
 [ext_resource type="Texture2D" uid="uid://chtinm74l7j8m" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir7.png" id="15_5qya4"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaChargeAttack.gd" id="15_hbfs8"]
 [ext_resource type="Texture2D" uid="uid://d16lrousxyr35" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir1.png" id="16_i6a3t"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaJump.gd" id="16_tylmo"]
 [ext_resource type="Texture2D" uid="uid://dvcwq8y864qhq" path="res://assets/sprites/characters/KatanaKitsune/sprites/Death/KatanaKitsume_Death_dir2.png" id="16_wh5ob"]
 [ext_resource type="Texture2D" uid="uid://cpr8utdycjj0n" path="res://assets/sprites/characters/KatanaKitsune/sprites/HighKick/KatanaKitsume_HighKick_dir2.png" id="17_1uu6x"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaKick.gd" id="17_58e8u"]
 [ext_resource type="Texture2D" uid="uid://dsocxpld0m0s1" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir6.png" id="17_pd202"]
 [ext_resource type="Texture2D" uid="uid://dadcw5ktxsah5" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir4.png" id="18_0wcdy"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaSlashStand.gd" id="18_7bwpx"]
 [ext_resource type="Texture2D" uid="uid://ba45r6na3jn2t" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir6.png" id="18_jakcd"]
 [ext_resource type="Texture2D" uid="uid://djt8by2i13rax" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir8.png" id="18_jlw3t"]
 [ext_resource type="Texture2D" uid="uid://78u2yj1hb0ik" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir7.png" id="18_kmiyh"]
 [ext_resource type="Texture2D" uid="uid://bpuc628s20ymx" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir4.png" id="19_3mp8x"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaSlashCrouched.gd" id="19_klbwu"]
 [ext_resource type="Texture2D" uid="uid://dsi8e8krhow0i" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir5.png" id="19_nqsi0"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/midKick.gd" id="20_76s6j"]
 [ext_resource type="Texture2D" uid="uid://dse24a5lp4w3x" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir1.png" id="20_cp722"]
 [ext_resource type="Texture2D" uid="uid://c2w7umpikjeog" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir5.png" id="20_dqpdi"]
 [ext_resource type="Texture2D" uid="uid://cbdcqbl7minkg" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir3.png" id="20_u4xdw"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/ninjaRun.gd" id="21_qhffj"]
 [ext_resource type="Texture2D" uid="uid://b3wxb52g7muot" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir3.png" id="21_vi0xv"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/slowRun.gd" id="22_mwvno"]
 [ext_resource type="Texture2D" uid="uid://cm2tli8ge28jm" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir8.png" id="22_rhqk6"]
 [ext_resource type="Texture2D" uid="uid://0qgwj75lxmtt" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir2.png" id="22_suk1s"]
 [ext_resource type="Texture2D" uid="uid://k5gtwt5ajl3k" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir7.png" id="23_0fkf1"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/roundKick.gd" id="23_7lnxy"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/runningJump.gd" id="24_01n3v"]
 [ext_resource type="Texture2D" uid="uid://bxo5aqmoy8pe8" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir1.png" id="24_oxxqt"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/seductiveDance.gd" id="25_1f1nf"]
 [ext_resource type="Texture2D" uid="uid://b8xb0sd5ydji0" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir2.png" id="25_ufm8y"]
 [ext_resource type="Texture2D" uid="uid://bcbo8l6a05pox" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir6.png" id="26_tece5"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/sittingFloor.gd" id="26_y2njc"]
 [ext_resource type="Texture2D" uid="uid://ctqkxog11hklg" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir4.png" id="27_drmxb"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/sittingChair.gd" id="27_k6cvj"]
 [ext_resource type="Texture2D" uid="uid://ddt53ykav3ayu" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir5.png" id="28_g3oq3"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/stealthWalk.gd" id="28_hro36"]
 [ext_resource type="Texture2D" uid="uid://c4rodbjb8jkvk" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir3.png" id="29_tcvab"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/stealthCrouch.gd" id="29_ykynl"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/stealthIdle.gd" id="30_ukwfu"]
 [ext_resource type="Texture2D" uid="uid://dm1n8dcna3ap" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir8.png" id="30_xbtph"]
 [ext_resource type="Texture2D" uid="uid://bc17n6vksetdh" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir7.png" id="31_i7243"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/highKick.gd" id="31_wmamh"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/forwardRoll.gd" id="32_krmav"]
 [ext_resource type="Texture2D" uid="uid://fq6hkp77ipfv" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir1.png" id="32_nmubl"]
 [ext_resource type="Texture2D" uid="uid://brobfhhk8xkf5" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsume_FastRun_dir2.png" id="33_nmtud"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/flair.gd" id="33_sjo8r"]
 [ext_resource type="Texture2D" uid="uid://dpxork126i7em" path="res://assets/sprites/characters/KatanaKitsune/sprites/ForwardRoll/KatanaKitsume_ForwardRoll_dir6.png" id="33_wpl5q"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/death.gd" id="34_cb7ou"]
 [ext_resource type="Texture2D" uid="uid://d3i7g5m06607c" path="res://assets/sprites/characters/KatanaKitsune/sprites/Walking/KatanaKitsume_Walking_dir6.png" id="34_f8cvb"]
 [ext_resource type="Texture2D" uid="uid://bv5al17iqv1u3" path="res://assets/sprites/characters/KatanaKitsune/sprites/ForwardRoll/KatanaKitsume_ForwardRoll_dir4.png" id="34_jhky3"]
 [ext_resource type="Texture2D" uid="uid://cvuuo3h54nrlh" path="res://assets/sprites/characters/KatanaKitsune/sprites/Walking/KatanaKitsume_Walking_dir4.png" id="35_q2mwq"]
@@ -15883,6 +15906,75 @@ script = ExtResource("10_akmgt")
 
 [node name="katanaRun" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("11_r8qym")
+
+[node name="katanaBlock" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("12_duwkr")
+
+[node name="katanaBlockCrouched" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("13_shs7r")
+
+[node name="katanaCounterSlash" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("14_og6el")
+
+[node name="katanaChargeAttack" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("15_hbfs8")
+
+[node name="katanaJump" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("16_tylmo")
+
+[node name="katanaKick" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("17_58e8u")
+
+[node name="katanaSlashStand" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("18_7bwpx")
+
+[node name="katanaSlashCrouched" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("19_klbwu")
+
+[node name="midKick" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("20_76s6j")
+
+[node name="ninjaRun" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("21_qhffj")
+
+[node name="slowRun" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("22_mwvno")
+
+[node name="roundKick" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("23_7lnxy")
+
+[node name="runningJump" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("24_01n3v")
+
+[node name="seductiveDance" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("25_1f1nf")
+
+[node name="sittingFloor" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("26_y2njc")
+
+[node name="sittingChair" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("27_k6cvj")
+
+[node name="stealthWalk" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("28_hro36")
+
+[node name="stealthCrouch" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("29_ykynl")
+
+[node name="stealthIdle" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("30_ukwfu")
+
+[node name="highKick" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("31_wmamh")
+
+[node name="forwardRoll" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("32_krmav")
+
+[node name="flair" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("33_sjo8r")
+
+[node name="death" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("34_cb7ou")
 
 [node name="RoofChecker" type="Area2D" parent="." groups=["playerRoofCheck"]]
 

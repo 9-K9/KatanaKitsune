@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=4 uid="uid://byer8ymbda1ld"]
+[gd_scene load_steps=42 format=4 uid="uid://byer8ymbda1ld"]
 
 [ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_l330b"]
 [ext_resource type="PackedScene" uid="uid://b6xc810cprx04" path="res://scenes/world/ysortmap.tscn" id="2_2foc2"]
@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://cgtvfiaw3g6g5" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir7.png" id="20_e1rv2"]
 [ext_resource type="Texture2D" uid="uid://bevgte5ev57ta" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir8.png" id="21_n7clm"]
 [ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="22_04f0w"]
+[ext_resource type="Script" path="res://scripts/system/debugPrint.gd" id="23_gly7c"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ui3cb"]
 texture = ExtResource("5_315sy")
@@ -139,6 +140,8 @@ sources/49 = SubResource("TileSetAtlasSource_wec2o")
 sources/50 = SubResource("TileSetAtlasSource_dvi30")
 sources/51 = SubResource("TileSetAtlasSource_grhva")
 
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_s4hlo"]
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_l330b")
 
@@ -168,7 +171,7 @@ tile_set = SubResource("TileSet_lejh4")
 
 [node name="CollisionPolygon2D" parent="YSortMap/TileMap/Roofs/RoofCheckPlayer" index="0"]
 position = Vector2(12, 6)
-polygon = PackedVector2Array(-208, -491, -764, -167, -96, 167, 526, -137)
+polygon = PackedVector2Array(-129, -486, -764, -167, -96, 167, 526, -137)
 
 [node name="LightOccluder2D" parent="YSortMap/TileMap" index="5"]
 visible = false
@@ -195,6 +198,23 @@ player = NodePath("../YSortMap/KatanaKitsune")
 visible = false
 
 [node name="HUD" parent="." instance=ExtResource("22_04f0w")]
+
+[node name="ControlDebug" type="CanvasLayer" parent="."]
+script = ExtResource("23_gly7c")
+
+[node name="TextureRect" type="TextureRect" parent="ControlDebug"]
+offset_left = 107.0
+offset_top = 13.0
+offset_right = 562.0
+offset_bottom = 52.0
+texture = SubResource("PlaceholderTexture2D_s4hlo")
+
+[node name="Label" type="Label" parent="ControlDebug"]
+offset_left = 114.0
+offset_top = 21.0
+offset_right = 532.0
+offset_bottom = 44.0
+text = "PRINT"
 
 [editable path="YSortMap"]
 [editable path="YSortMap/KatanaKitsune"]

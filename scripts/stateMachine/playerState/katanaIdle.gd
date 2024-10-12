@@ -12,7 +12,7 @@ func on_process(delta):
 	elif pc.InputHandler() != Vector2.ZERO:
 		change_state("katanaWalk")
 		
-	if Input.is_action_just_pressed("Attack"):
+	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaSeath")	
 	
 func on_physics_process(delta):
