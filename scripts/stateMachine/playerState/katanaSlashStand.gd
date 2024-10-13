@@ -1,26 +1,24 @@
-extends StateMachineState
-
+extends PlayerClass
 
 # Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
-
+func on_enter():
+	pc.speed = 0.0
+	pc.actionBlockInput = true
+	pc.timerTimeOut = false
+	action_timer.wait_time = 1
+	action_timer.start()
 
 # Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
+func on_process(delta):
+	stateAnimation("katanaSlashMid",8)
+		
+func on_physics_process(delta):
+	if action_timer.is_stopped():
+		pc.timerTimeOut = true
+		change_state("katanaIdle")
+		
 # Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.timerTimeOut = true
+	pc.actionBlockInput = false
+	action_timer.stop()

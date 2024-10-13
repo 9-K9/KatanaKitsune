@@ -9854,7 +9854,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"katanaBlockCrouched_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -9883,7 +9883,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"katanaBlockCrouched_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -9912,7 +9912,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaBlockCrouched_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -9941,7 +9941,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"katanaBlockCrouched_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -9970,7 +9970,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaBlockCrouched_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -9999,7 +9999,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaBlockCrouched_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10028,7 +10028,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaBlockCrouched_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -10057,7 +10057,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaBlockCrouched_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11478,7 +11478,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_east",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11507,7 +11507,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_north",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11536,7 +11536,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_northEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11565,7 +11565,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_northWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11594,7 +11594,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_south",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11623,7 +11623,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_southEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11652,7 +11652,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_southWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -11681,7 +11681,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaKick_west",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12174,7 +12174,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12203,7 +12203,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12232,7 +12232,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12261,7 +12261,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12290,7 +12290,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12319,7 +12319,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12348,7 +12348,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12377,7 +12377,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashCrouched_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12406,7 +12406,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12435,7 +12435,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12464,7 +12464,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12493,7 +12493,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12522,7 +12522,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12551,7 +12551,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12580,7 +12580,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12609,7 +12609,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaSlashMid_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12638,7 +12638,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12667,7 +12667,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12696,7 +12696,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12725,7 +12725,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12754,7 +12754,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12783,7 +12783,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12812,7 +12812,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12841,7 +12841,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"katanaWalk_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12870,7 +12870,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12899,7 +12899,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12928,7 +12928,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12957,7 +12957,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -12986,7 +12986,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13015,7 +13015,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13044,7 +13044,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13073,7 +13073,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"midKick_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13102,7 +13102,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_east",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13131,7 +13131,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_north",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13160,7 +13160,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_northEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13189,7 +13189,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_northWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13218,7 +13218,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_south",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13247,7 +13247,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_southEast",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13276,7 +13276,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_southWest",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13305,7 +13305,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"ninjaRun_west",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13334,7 +13334,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_east",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13363,7 +13363,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_north",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13392,7 +13392,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_northEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13421,7 +13421,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_northWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13450,7 +13450,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_south",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13479,7 +13479,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_southEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13508,7 +13508,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_southWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13537,7 +13537,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"roundKick_west",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13566,7 +13566,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_east",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13595,7 +13595,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_north",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13624,7 +13624,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_northEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13653,7 +13653,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_northWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13682,7 +13682,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_south",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13711,7 +13711,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_southEast",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13740,7 +13740,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_southWest",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -13769,7 +13769,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"runningJump_west",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -16029,7 +16029,6 @@ position = Vector2(-8, -83)
 sprite_frames = SubResource("SpriteFrames_kicbp")
 animation = &"idle_southWest"
 autoplay = "idle_southWest"
-frame_progress = 0.394079
 
 [node name="ActionTimer" type="Timer" parent="."]
 wait_time = 0.5

@@ -1,4 +1,3 @@
-class_name KatanaDrawState
 extends PlayerClass
 
 # Called when the state machine enters this state.

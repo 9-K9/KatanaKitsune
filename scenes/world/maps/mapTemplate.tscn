@@ -191,7 +191,12 @@ visible = false
 
 [node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
-position = Vector2(506, 289)
+offset = Vector2(0, 128)
+position_smoothing_speed = 32.0
+drag_left_margin = 0.5
+drag_top_margin = 0.25
+drag_right_margin = 0.5
+drag_bottom_margin = 0.25
 player = NodePath("../YSortMap/KatanaKitsune")
 
 [node name="PauseMenu" parent="." instance=ExtResource("5_kncb2")]

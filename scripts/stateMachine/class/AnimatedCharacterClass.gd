@@ -67,7 +67,6 @@ func stateDirection(str_dir):
 	return vector_dir
 	
 func updateRayCast2D(str_dir):
-
 	setRayCast2D(stateDirection(str_dir)) 
 
 ##set raycast to direction of player to check interaction events

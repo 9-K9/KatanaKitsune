@@ -1,4 +1,3 @@
-class_name IdleState
 extends PlayerClass
 
 func on_enter():
@@ -14,6 +13,8 @@ func on_process(delta):
 		
 	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaDraw")	
+	if Input.is_action_just_pressed("Attack"):
+		change_state("midKick")	
 	
 func on_physics_process(delta):
 	pass

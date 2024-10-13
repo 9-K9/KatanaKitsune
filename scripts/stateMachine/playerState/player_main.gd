@@ -5,6 +5,7 @@ extends AnimatedCharacterClass
 
 @onready var enemyBody : CharacterBody2D = null
 @onready var timerTimeOut : bool = false
+@onready var actionBlockInput : bool = false
 		
 func InputHandler():	
 	##movement based on players direciton from input
@@ -13,7 +14,7 @@ func InputHandler():
 	return round(direction)
 		
 func _physics_process(delta):
-	if InputHandler():
+	if InputHandler() and not(actionBlockInput):
 		facing_dir = directionState(InputHandler())
 		updateRayCast2D(facing_dir)
 		velocity = ((InputHandler() * speed) * delta)

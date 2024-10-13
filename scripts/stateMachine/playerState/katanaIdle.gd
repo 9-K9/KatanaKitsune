@@ -1,4 +1,3 @@
-class_name KatanaIdleState
 extends PlayerClass
 
 func on_enter():
@@ -14,6 +13,8 @@ func on_process(delta):
 		
 	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaSeath")	
+	if Input.is_action_just_pressed("Attack"):
+		change_state("katanaSlashStand")	
 	
 func on_physics_process(delta):
 	pass

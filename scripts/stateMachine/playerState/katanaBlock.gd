@@ -1,4 +1,4 @@
-extends StateMachineState
+extends PlayerClass
 
 
 # Called when the state machine enters this state.
