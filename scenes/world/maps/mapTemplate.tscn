@@ -186,9 +186,6 @@ visible = true
 [node name="KatanaKitsune" parent="YSortMap" instance=ExtResource("3_34k5i")]
 position = Vector2(-91, -6)
 
-[node name="DirectionalLight2D" parent="YSortMap/KatanaKitsune" index="5"]
-visible = false
-
 [node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
 offset = Vector2(0, 128)
