@@ -1,15 +1,15 @@
 extends PlayerClass
 
 
-
 # Called when the state machine enters this state.
 func on_enter() -> void:
-	pass
+	pc.speed = 0.0
+	pc.actionBlockInput = true
 
 
 # Called every frame when this state is active.
 func on_process(delta: float) -> void:
-	pass
+	stateAnimation("Death", 8)
 
 
 # Called every physics frame when this state is active.

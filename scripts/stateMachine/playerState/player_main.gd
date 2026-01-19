@@ -6,6 +6,15 @@ extends AnimatedCharacterClass
 @onready var enemyBody : CharacterBody2D = null
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
+@export var contact_damage: float = 10.0
+
+func _ready() -> void:
+	health = max_health
+	var hitbox = $CollisionChecker/PlayerHitBox
+	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
+
+func _on_death() -> void:
+	$FiniteStateMachine.change_state("death")
 		
 func InputHandler():	
 	##movement based on players direciton from input
@@ -30,3 +39,7 @@ func _on_action_area_body_entered(body):
 
 func _on_action_timer_timeout():
 	timerTimeOut = true
+
+func _on_player_hit_box_body_entered(body):
+	if body.is_in_group("enemy"):
+		take_damage(contact_damage)

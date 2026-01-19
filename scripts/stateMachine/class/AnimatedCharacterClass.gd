@@ -10,6 +10,11 @@ var speed : float = 0.0
 @export var walkSpeed : float = 5000.00
 @export var runSpeed : float = 10000.00
 @export var damage : float = 0.25 ##frame rate multiplies by 4
+##Health Variables
+@export var max_health: float = 100.0
+var health: float = 100.0
+var is_invincible: bool = false
+@export var invincibility_duration: float = 0.8
 ##Ray Casting 
 @export_node_path("AnimatedSprite2D") var _animatedSprite2D: NodePath = "../../AnimatedSprite2D"
 @export_node_path("Timer") var _actionTimer: NodePath = "../../ActionTimer"
@@ -79,3 +84,26 @@ func setRayCast2D(rnd_dir):
 		debugRayCastCollision.set_point_position(1, rayCast2D.target_position)
 		rayCastCollision.position = rayCast2D.target_position
 		facing_dir = directionState(rnd_dir)
+
+func take_damage(amount: float) -> void:
+	if is_invincible:
+		return
+	health -= amount
+	health = max(health, 0)
+	if health <= 0:
+		_on_death()
+	else:
+		_start_invincibility()
+
+func _start_invincibility() -> void:
+	is_invincible = true
+	# Visual feedback - flash the sprite
+	var tween = create_tween()
+	tween.tween_property(myAnimatedSprite2D, "modulate:a", 0.5, 0.1)
+	tween.tween_property(myAnimatedSprite2D, "modulate:a", 1.0, 0.1)
+	tween.set_loops(4)  # Flash 4 times over ~0.8s
+	await get_tree().create_timer(invincibility_duration).timeout
+	is_invincible = false
+
+func _on_death() -> void:
+	pass  # Override in subclass
