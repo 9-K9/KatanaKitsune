@@ -6,11 +6,8 @@ var inputString : String = ""
 func _ready() -> void:
 	printLabel.text = ""
 
-func _process(delta: float) -> void:
-	if inputString != "":
-		printLabel.text = inputString + " Button Is Pressed"
-	
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
+	var previous := inputString
 	if Input.is_action_pressed("Action"):
 		inputString = "Action"
 	elif Input.is_action_pressed("Attack"):
@@ -37,3 +34,8 @@ func _input(event: InputEvent) -> void:
 		inputString = "Down"
 	else:
 		inputString = ""
+
+	## Only touch the label when the value actually changed; this used to be
+	## rewritten every frame from _process, and never cleared on release.
+	if inputString != previous:
+		printLabel.text = "" if inputString.is_empty() else inputString + " Button Is Pressed"

@@ -1,7 +1,7 @@
 extends CharacterBody2D
 class_name AI_Class
 
-@onready var gameManager = get_node("/root/Main")
+@onready var gameManager = get_node_or_null("/root/Main")
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var direction : Vector2 = Vector2.ZERO
@@ -20,10 +20,8 @@ func navigationControler(targetVector2,spd,dt,fps):
 		velocity = Vector2.ZERO
 	else:
 		self_state = "walk"
-		velocity = direction * (spd * dt)
-		if Input.is_action_pressed("Run"):
-			self_state = "run"
-			velocity = direction * (spd * dt)
+		## No delta: move_and_slide() already integrates over the physics step.
+		velocity = direction * spd
 	animationState(fps)
 	move_and_slide()
 	

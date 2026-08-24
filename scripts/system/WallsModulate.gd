@@ -44,17 +44,18 @@ func _ready():
 		facePolygon["texture_scale"] = faceScale
 		facePolygon["texture_offset"] = faceOffset	
 
-func _process(delta):
+## Driven by the area signals rather than polled in _process: every wall in the
+## map ran this every frame, and the modulate only ever changes on enter/exit.
+func _apply_modulate():
 	if enableModulate:
-		if player_entered:
-			wall_sprite.modulate = Color(1,1,1,0.5)
-		else:
-			wall_sprite.modulate = Color(1,1,1,1)
-		
+		wall_sprite.modulate = Color(1, 1, 1, 0.5) if player_entered else Color(1, 1, 1, 1)
+
 func _on_area_2d_area_entered(area):
-	if area.is_in_group("player"):
+	if area.is_in_group("player") and not player_entered:
 		player_entered = true
+		_apply_modulate()
 
 func _on_area_2d_area_exited(area):
-	if area.is_in_group("player"):
+	if area.is_in_group("player") and player_entered:
 		player_entered = false
+		_apply_modulate()
