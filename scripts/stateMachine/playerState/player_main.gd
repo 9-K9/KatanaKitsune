@@ -1,8 +1,5 @@
 extends AnimatedCharacterClass
 
-@onready var gameManager = $"."
-
-
 @onready var enemyBody : CharacterBody2D = null
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
@@ -16,17 +13,23 @@ func _ready() -> void:
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
 		
-func InputHandler():	
+func InputHandler():
 	##movement based on players direciton from input
-	direction = Input.get_vector("Left", "Right", "Up", "Down")	
+	direction = Input.get_vector("Left", "Right", "Up", "Down")
 	direction = direction.normalized()
 	return round(direction)
-		
-func _physics_process(delta):
-	if InputHandler() and not(actionBlockInput):
-		facing_dir = directionState(InputHandler())
+
+func _physics_process(_delta):
+	## Sampled once per frame: InputHandler() was previously called three times
+	## per physics tick, and the state scripts call it twice more per frame.
+	var input_dir: Vector2 = InputHandler()
+	if input_dir != Vector2.ZERO and not actionBlockInput:
+		facing_dir = directionState(input_dir)
 		updateRayCast2D(facing_dir)
-		velocity = ((InputHandler() * speed) * delta)
+		## No delta here: move_and_slide() already integrates velocity over the
+		## physics step. Multiplying by delta as well made displacement scale
+		## with delta squared, so the character moved twice as fast at 30fps.
+		velocity = input_dir * speed
 		velocity.y = velocity.y / 2
 	else:
 		velocity = Vector2.ZERO

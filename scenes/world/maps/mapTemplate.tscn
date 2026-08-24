@@ -1,28 +1,28 @@
-[gd_scene load_steps=42 format=4 uid="uid://byer8ymbda1ld"]
+[gd_scene format=4 uid="uid://byer8ymbda1ld"]
 
-[ext_resource type="Script" path="res://scripts/system/GameManager.gd" id="1_l330b"]
+[ext_resource type="Script" uid="uid://jcrg15p8kj55" path="res://scripts/system/GameManager.gd" id="1_l330b"]
 [ext_resource type="PackedScene" uid="uid://b6xc810cprx04" path="res://scenes/world/ysortmap.tscn" id="2_2foc2"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_34k5i"]
 [ext_resource type="PackedScene" uid="uid://cigxiv0vim758" path="res://scenes/world/worldCamera.tscn" id="4_hxs4m"]
-[ext_resource type="Texture2D" uid="uid://cbtyy10rufoos" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir1.png" id="5_315sy"]
+[ext_resource type="Texture2D" uid="uid://bhrgrcsb0gj1j" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir1.png" id="5_315sy"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="5_kncb2"]
-[ext_resource type="Texture2D" uid="uid://d22ceptobo6wk" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir2.png" id="6_sg4jo"]
-[ext_resource type="Texture2D" uid="uid://ok8em0o1ee1" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir3.png" id="7_hy78y"]
-[ext_resource type="Texture2D" uid="uid://bshmb0t6keluh" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir4.png" id="8_leee2"]
-[ext_resource type="Texture2D" uid="uid://bvu2a23qd1wgu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir5.png" id="10_hboqh"]
-[ext_resource type="Texture2D" uid="uid://c3jl5cv02yauq" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir6.png" id="11_d4hg0"]
-[ext_resource type="Texture2D" uid="uid://clexh2dd4pqt3" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir7.png" id="12_j8mpu"]
-[ext_resource type="Texture2D" uid="uid://beha2s4tdnhxc" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir8.png" id="13_17vds"]
-[ext_resource type="Texture2D" uid="uid://bya1aqjbgyygu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir1.png" id="14_fomvk"]
-[ext_resource type="Texture2D" uid="uid://dmunf13xbv1n0" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir2.png" id="15_tucdo"]
-[ext_resource type="Texture2D" uid="uid://cl2ou4tg5xtdm" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir3.png" id="16_ihf5y"]
-[ext_resource type="Texture2D" uid="uid://eyhpqw4txyax" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir4.png" id="17_h3bj0"]
-[ext_resource type="Texture2D" uid="uid://b6h3f3285ipys" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir5.png" id="18_s3fyx"]
-[ext_resource type="Texture2D" uid="uid://cmv701ug2ng0f" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir6.png" id="19_vlemw"]
-[ext_resource type="Texture2D" uid="uid://cgtvfiaw3g6g5" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir7.png" id="20_e1rv2"]
-[ext_resource type="Texture2D" uid="uid://bevgte5ev57ta" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir8.png" id="21_n7clm"]
+[ext_resource type="Texture2D" uid="uid://b4rhp2eqlldb8" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir2.png" id="6_sg4jo"]
+[ext_resource type="Texture2D" uid="uid://thd0sbto2iys" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir3.png" id="7_hy78y"]
+[ext_resource type="Texture2D" uid="uid://w83xde56wuln" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir4.png" id="8_leee2"]
+[ext_resource type="Texture2D" uid="uid://ux50l1bdm45" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir5.png" id="10_hboqh"]
+[ext_resource type="Texture2D" uid="uid://cb60xou5oon22" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir6.png" id="11_d4hg0"]
+[ext_resource type="Texture2D" uid="uid://bevkian7rex2d" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir7.png" id="12_j8mpu"]
+[ext_resource type="Texture2D" uid="uid://b0x5ktbirsas" path="res://assets/crocotile/isometrictiles/roofs/modularRoofSlope_dir8.png" id="13_17vds"]
+[ext_resource type="Texture2D" uid="uid://dwoxcm47r0pb1" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir1.png" id="14_fomvk"]
+[ext_resource type="Texture2D" uid="uid://b7jnsbotteg0w" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir2.png" id="15_tucdo"]
+[ext_resource type="Texture2D" uid="uid://dtynbvltj5wi7" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir3.png" id="16_ihf5y"]
+[ext_resource type="Texture2D" uid="uid://8r6q0m66g4mp" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir4.png" id="17_h3bj0"]
+[ext_resource type="Texture2D" uid="uid://8bjvldj1yyhy" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir5.png" id="18_s3fyx"]
+[ext_resource type="Texture2D" uid="uid://cgmvgqlioybte" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir6.png" id="19_vlemw"]
+[ext_resource type="Texture2D" uid="uid://db302c6o2uevc" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir7.png" id="20_e1rv2"]
+[ext_resource type="Texture2D" uid="uid://cyhi2foob87eu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir8.png" id="21_n7clm"]
 [ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="22_04f0w"]
-[ext_resource type="Script" path="res://scripts/system/debugPrint.gd" id="23_gly7c"]
+[ext_resource type="Script" uid="uid://dq0qpqucxxeh6" path="res://scripts/system/debugPrint.gd" id="23_gly7c"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ui3cb"]
 texture = ExtResource("5_315sy")
@@ -142,10 +142,10 @@ sources/51 = SubResource("TileSetAtlasSource_grhva")
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_s4hlo"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=1328505513]
 script = ExtResource("1_l330b")
 
-[node name="YSortMap" parent="." instance=ExtResource("2_2foc2")]
+[node name="YSortMap" parent="." unique_id=1128965525 instance=ExtResource("2_2foc2")]
 position = Vector2(35, 186)
 
 [node name="FrontWalls" parent="YSortMap/TileMap" index="2"]
@@ -154,7 +154,7 @@ tile_map_data = PackedByteArray("AAAGAAkAAwAAAAAAAAADABAAAwAAAAAAAAAAABYABwAAAAA
 [node name="CollisionPolygon2D" parent="YSortMap/TileMap/FrontWalls/WallsCheckPlayer" index="0"]
 polygon = PackedVector2Array(-239, 80, -240, 337, -72, 420, 430, 167, 429, -80, -71, 138)
 
-[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="YSortMap/TileMap/FrontWalls/WallsCheckPlayer" index="1"]
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="YSortMap/TileMap/FrontWalls/WallsCheckPlayer" index="1" unique_id=440896174]
 position = Vector2(0, -1)
 polygon = PackedVector2Array(-387, 11, -387, 241, -408, 251, -575, 169, -579, -81)
 
@@ -162,7 +162,7 @@ polygon = PackedVector2Array(-387, 11, -387, 241, -408, 251, -575, 169, -579, -8
 position = Vector2(20, 0)
 tile_map_data = PackedByteArray("AAAHAPf/AgAAAAAAAAAEAP7/EAAAAAAAAAAAAAUAEAAAAAAAAAD9/wsABAAAAAAAAADz//b/DAAAAAAAAAD2//3/EgAAAAAAAAD6/wQAEgAAAAAAAAD2/+//FAAAAAAAAAD6/+j/FAAAAAAAAAD9/+L/DgAAAAAAAAAAAOn/FgAAAAAAAAAEAPD/FgAAAAAAAAD9//D/LAAAAAAAAAAAAPf/LAAAAAAAAAD5//f/LAAAAAAAAAD9//3/LAAAAAAAAAA=")
 
-[node name="RoofLayer2" type="TileMapLayer" parent="YSortMap/TileMap/Roofs" index="0"]
+[node name="RoofLayer2" type="TileMapLayer" parent="YSortMap/TileMap/Roofs" index="0" unique_id=506835062]
 z_index = 2
 z_as_relative = false
 y_sort_enabled = true
@@ -183,10 +183,13 @@ visible = false
 [node name="MixRed" parent="YSortMap/Lighting" index="3"]
 visible = true
 
-[node name="KatanaKitsune" parent="YSortMap" instance=ExtResource("3_34k5i")]
+[node name="KatanaKitsune" parent="YSortMap" unique_id=336643434 instance=ExtResource("3_34k5i")]
 position = Vector2(-91, -6)
 
-[node name="WorldCamera" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
+[node name="AnimationPlayer" parent="YSortMap/KatanaKitsune/AnimationManager" index="1"]
+autoplay = &"idle_southWest"
+
+[node name="WorldCamera" parent="." unique_id=860006559 node_paths=PackedStringArray("player") instance=ExtResource("4_hxs4m")]
 z_index = 100
 offset = Vector2(0, 128)
 position_smoothing_speed = 32.0
@@ -196,22 +199,22 @@ drag_right_margin = 0.5
 drag_bottom_margin = 0.25
 player = NodePath("../YSortMap/KatanaKitsune")
 
-[node name="PauseMenu" parent="." instance=ExtResource("5_kncb2")]
+[node name="PauseMenu" parent="." unique_id=1225691551 instance=ExtResource("5_kncb2")]
 visible = false
 
-[node name="HUD" parent="." instance=ExtResource("22_04f0w")]
+[node name="HUD" parent="." unique_id=1654072235 instance=ExtResource("22_04f0w")]
 
-[node name="ControlDebug" type="CanvasLayer" parent="."]
+[node name="ControlDebug" type="CanvasLayer" parent="." unique_id=1038008009]
 script = ExtResource("23_gly7c")
 
-[node name="TextureRect" type="TextureRect" parent="ControlDebug"]
+[node name="TextureRect" type="TextureRect" parent="ControlDebug" unique_id=1060754010]
 offset_left = 107.0
 offset_top = 13.0
 offset_right = 562.0
 offset_bottom = 52.0
 texture = SubResource("PlaceholderTexture2D_s4hlo")
 
-[node name="Label" type="Label" parent="ControlDebug"]
+[node name="Label" type="Label" parent="ControlDebug" unique_id=336059019]
 offset_left = 114.0
 offset_top = 21.0
 offset_right = 532.0

@@ -42,8 +42,13 @@ func _init() -> void:
 	time_per_event = ProjectSettings.get_setting('dialogic/text/autoskip_time_per_event', time_per_event)
 
 	if DialogicUtil.autoload().has_subsystem('History'):
-		DialogicUtil.autoload().History.visited_event.connect(_handle_seen_event)
-		DialogicUtil.autoload().History.unvisited_event.connect(_handle_unseen_event)
+		# post_install() calls _init() explicitly after construction has already
+		# run it, so guard the connections to keep this idempotent.
+		var history := DialogicUtil.autoload().History
+		if not history.visited_event.is_connected(_handle_seen_event):
+			history.visited_event.connect(_handle_seen_event)
+		if not history.unvisited_event.is_connected(_handle_unseen_event):
+			history.unvisited_event.connect(_handle_unseen_event)
 
 
 ## Called when Auto-Skip is enabled or disabled.

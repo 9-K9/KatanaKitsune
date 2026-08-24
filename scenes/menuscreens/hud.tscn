@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://daxauh6e5nu7i"]
 
-[ext_resource type="Texture2D" uid="uid://btajkxn70ejwo" path="res://assets/sprites/characters/KatanaKitsune/HUDicon.png" id="1_706o0"]
+[ext_resource type="Texture2D" uid="uid://jbcjg05repsb" path="res://assets/sprites/characters/KatanaKitsune/HUDicon.png" id="1_706o0"]
 
 [node name="HUD" type="CanvasLayer"]
 

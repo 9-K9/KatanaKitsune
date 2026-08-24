@@ -7,8 +7,11 @@ extends CharacterBody2D
 @export var ray_w : int
 @export var ray_h : int
 var speed : float = 0.0
-@export var walkSpeed : float = 5000.00
-@export var runSpeed : float = 10000.00
+## Speeds are in pixels/second. Previously these were ~60x larger because the
+## movement code multiplied by delta before move_and_slide() applied it again;
+## these values reproduce the old 60fps feel exactly (5000/60, 10000/60).
+@export var walkSpeed : float = 83.333
+@export var runSpeed : float = 166.667
 @export var damage : float = 0.25 ##frame rate multiplies by 4
 ##Health Variables
 @export var max_health: float = 100.0
