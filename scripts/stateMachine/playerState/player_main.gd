@@ -24,6 +24,7 @@ func InputHandler():
 	return round(direction)
 
 func _physics_process(_delta):
+	update_buffs()
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()

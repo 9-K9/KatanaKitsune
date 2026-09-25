@@ -24,6 +24,14 @@ var is_invincible: bool = false
 ## _on_death() again and restarted the death animation from the top.
 var is_dead: bool = false
 @export var invincibility_duration: float = 0.8
+
+## Timed power-ups picked up from breakables, keyed by Pickup.Kind.
+## Each entry is {"multiplier": float, "until": float} in seconds of game time.
+var buffs: Dictionary = {}
+## Base values the multipliers are applied to, captured before any buff lands.
+var _base_damage: float = 0.0
+var _base_walk: float = 0.0
+var _base_run: float = 0.0
 ##Ray Casting 
 @export_node_path("AnimatedSprite2D") var _animatedSprite2D: NodePath = "../../AnimatedSprite2D"
 @export_node_path("Timer") var _actionTimer: NodePath = "../../ActionTimer"
@@ -94,7 +102,67 @@ func setRayCast2D(rnd_dir):
 		rayCastCollision.position = rayCast2D.target_position
 		facing_dir = directionState(rnd_dir)
 
+## Grants (or refreshes) a timed power-up. `kind` is a Pickup.Kind.
+func grant_buff(kind: int, multiplier: float, duration: float) -> void:
+	_capture_base_stats()
+	buffs[kind] = {
+		"multiplier": multiplier,
+		"until": Time.get_ticks_msec() / 1000.0 + duration,
+	}
+	_apply_buffs()
+
+
+## Drops any power-up whose timer has run out. Cheap enough to poll, and it
+## keeps expiry off a pile of one-shot timers that would need cancelling on
+## death and on scene reload.
+func update_buffs() -> void:
+	if buffs.is_empty():
+		return
+	var now: float = Time.get_ticks_msec() / 1000.0
+	var expired: Array = []
+	for kind in buffs:
+		if now >= buffs[kind]["until"]:
+			expired.append(kind)
+	if expired.is_empty():
+		return
+	for kind in expired:
+		buffs.erase(kind)
+	_apply_buffs()
+
+
+func has_buff(kind: int) -> bool:
+	return buffs.has(kind)
+
+
+func _capture_base_stats() -> void:
+	if _base_damage > 0.0:
+		return
+	_base_damage = damage
+	_base_walk = walkSpeed
+	_base_run = runSpeed
+
+
+## Recomputed from the base values every time rather than multiplied in place,
+## so a buff picked up twice cannot stack its multiplier permanently.
+func _apply_buffs() -> void:
+	if _base_damage <= 0.0:
+		return
+	damage = _base_damage * _buff_multiplier(Pickup.Kind.DAMAGE)
+	walkSpeed = _base_walk * _buff_multiplier(Pickup.Kind.SPEED)
+	runSpeed = _base_run * _buff_multiplier(Pickup.Kind.SPEED)
+
+
+func _buff_multiplier(kind: int) -> float:
+	return buffs[kind]["multiplier"] if buffs.has(kind) else 1.0
+
+
 func take_damage(amount: float) -> void:
+	## A ward soaks the hit entirely rather than reducing it, so the player can
+	## see it working.
+	if has_buff(Pickup.Kind.WARD):
+		buffs.erase(Pickup.Kind.WARD)
+		_start_invincibility()
+		return
 	if is_invincible or is_dead:
 		return
 	health -= amount

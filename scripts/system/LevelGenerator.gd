@@ -104,20 +104,42 @@ func _carve_corridor(layout: Layout, from: Vector2i, to: Vector2i) -> void:
 			layout.floor_cells[Vector2i(to.x + w, y)] = true
 
 
+## Tile indices in the PixelLab building kit, by the role its placement rules
+## give them. The kit is packed 8 to a row, so index -> atlas coords is
+## Vector2i(i % 8, i / 8).
+const KIT_FLOOR := 0
+const KIT_SIDE := {"N": 1, "E": 2, "S": 3, "W": 4}
+const KIT_OUTER_CORNER := {"NE": 9, "SE": 10, "SW": 11, "NW": 12}
+const KIT_OUTER_MULTI := {"NS": 54, "EW": 55, "NES": 49, "NEW": 50,
+	"NSW": 51, "ESW": 52, "NESW": 53}
+const KIT_PILLAR := 31
+const KIT_COLS := 8
+
+## Grid directions, named to match the kit's rule vocabulary.
+const DIRS := {
+	"N": Vector2i(0, -1),
+	"E": Vector2i(1, 0),
+	"S": Vector2i(0, 1),
+	"W": Vector2i(-1, 0),
+}
+
+
+static func kit_atlas(index: int) -> Vector2i:
+	return Vector2i(index % KIT_COLS, index / KIT_COLS)
+
+
 ## Paints `layout` onto the map's layers. `ground` gets a floor tile per walkable
-## cell; `walls` gets a tile on every cell that touches the floor but is not part
-## of it, which is where the tileset's own collision comes from.
-func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer,
-		floor_source: int, floor_atlas: Vector2i,
-		wall_source: int, wall_atlas: Vector2i) -> void:
+## cell; `walls` gets the wall piece whose open sides face the floor, which is
+## also where the tileset's collision comes from.
+func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer, source_id: int) -> void:
 	ground.clear()
 	walls.clear()
 
 	for cell in layout.floor_cells:
-		ground.set_cell(cell, floor_source, floor_atlas)
+		ground.set_cell(cell, source_id, kit_atlas(KIT_FLOOR))
 
 	## The wall ring: every neighbour of a floor cell that is not itself floor.
-	## Includes diagonals so corners are sealed and nothing can slip through.
+	## Diagonals are included so corners are sealed and nothing slips through.
 	var ring: Dictionary = {}
 	for cell in layout.floor_cells:
 		for dy in range(-1, 2):
@@ -125,5 +147,27 @@ func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer,
 				var n: Vector2i = cell + Vector2i(dx, dy)
 				if not layout.floor_cells.has(n):
 					ring[n] = true
+
 	for cell in ring:
-		walls.set_cell(cell, wall_source, wall_atlas)
+		walls.set_cell(cell, source_id, kit_atlas(_wall_piece(layout, cell)))
+
+
+## Picks the kit piece for a wall cell from which of its four sides open onto
+## floor. A cell with no open side is interior rock and gets a pillar.
+func _wall_piece(layout: Layout, cell: Vector2i) -> int:
+	var open := ""
+	for name in ["N", "E", "S", "W"]:
+		if layout.floor_cells.has(cell + DIRS[name]):
+			open += name
+
+	match open.length():
+		0:
+			return KIT_PILLAR
+		1:
+			return KIT_SIDE[open]
+		2:
+			if KIT_OUTER_CORNER.has(open):
+				return KIT_OUTER_CORNER[open]
+			return KIT_OUTER_MULTI.get(open, KIT_PILLAR)
+		_:
+			return KIT_OUTER_MULTI.get(open, KIT_PILLAR)
