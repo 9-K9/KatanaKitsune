@@ -20,6 +20,11 @@ var _changing_scene: bool = false
 func _ready():
 	if is_instance_valid(world_camera):
 		world_camera.visible = true
+	## Deliberately left pausable. This script sits on the map's root node, so
+	## PROCESS_MODE_ALWAYS here would cascade to the player, the monsters and
+	## everything else, and the pause would do nothing at all. The pause key is
+	## read by PauseMenu instead, which can always process without dragging the
+	## rest of the map along with it.
 	gameState = "game_play"
 
 func _on_audio_stream_player_2d_finished():
@@ -27,7 +32,9 @@ func _on_audio_stream_player_2d_finished():
 		bgs.play()
 
 func _process(delta):
-	gameState = systemControls(gameState, delta)
+	## Routed through setState rather than assigned, or the pause toggle would
+	## change the state without ever reaching the code that pauses the tree.
+	setState(systemControls(gameState, delta))
 
 func getState():
 	return gameState
@@ -36,10 +43,11 @@ func setState(stateString):
 	if gameState == stateString:
 		return
 	gameState = stateString
-	## Freeze the world behind the Game Over screen, or the monsters carry on
-	## clawing at Akane's corpse while the player reads it. The screen itself
-	## runs with PROCESS_MODE_ALWAYS so its buttons still work.
-	get_tree().paused = (gameState == "game_over")
+	## Freeze the world whenever a menu is up. Without this the pause menu was
+	## cosmetic: Akane still swung at the mouse behind it and the monsters could
+	## walk up and kill her while the player read the menu. The menus themselves
+	## run with PROCESS_MODE_ALWAYS so their buttons stay live.
+	get_tree().paused = (gameState == "game_over" or gameState == "game_paused")
 
 func getPlayerPosition() -> Vector2:
 	if is_instance_valid(player):
@@ -51,12 +59,9 @@ func systemControls(state, delta):
 	## so the pause key cannot be used to un-die.
 	if state == "game_over":
 		return state
-	if Input.is_action_just_pressed("Pause"):
-		if state == "game_play":
-			state = "game_paused"
-		elif state == "game_paused":
-			state = "game_play"
-	elif state == "game_title" and not _changing_scene:
+	## The Pause key itself is handled by PauseMenu: this function stops running
+	## the moment the tree pauses, so it could never have un-paused the game.
+	if state == "game_title" and not _changing_scene:
 		_changing_scene = true
 		if ResourceLoader.exists(TITLE_SCENE):
 			get_tree().change_scene_to_file(TITLE_SCENE)
