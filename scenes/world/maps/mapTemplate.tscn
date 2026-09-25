@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://db302c6o2uevc" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir7.png" id="20_e1rv2"]
 [ext_resource type="Texture2D" uid="uid://cyhi2foob87eu" path="res://assets/crocotile/isometrictiles/roofs/modularRoofBlock_rusticBrick_dir8.png" id="21_n7clm"]
 [ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="22_04f0w"]
+[ext_resource type="PackedScene" uid="uid://cq8gk2mvxr4n7" path="res://scenes/menuscreens/gameOver.tscn" id="24_gover"]
 [ext_resource type="Script" uid="uid://dq0qpqucxxeh6" path="res://scripts/system/debugPrint.gd" id="23_gly7c"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ui3cb"]
@@ -204,7 +205,10 @@ visible = false
 
 [node name="HUD" parent="." unique_id=1654072235 instance=ExtResource("22_04f0w")]
 
+[node name="GameOver" parent="." instance=ExtResource("24_gover")]
+
 [node name="ControlDebug" type="CanvasLayer" parent="." unique_id=1038008009]
+visible = false
 script = ExtResource("23_gly7c")
 
 [node name="TextureRect" type="TextureRect" parent="ControlDebug" unique_id=1060754010]

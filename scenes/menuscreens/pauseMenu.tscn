@@ -1,75 +1,113 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2554ofdujy5r"]
+[gd_scene load_steps=3 format=3 uid="uid://b2554ofdujy5r"]
 
 [ext_resource type="Script" path="res://scripts/system/PauseMenu.gd" id="1_8k1ei"]
+[ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
 
 [node name="PauseMenu" type="CanvasLayer"]
+layer = 5
 script = ExtResource("1_8k1ei")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 20.0
-offset_top = 36.0
-offset_right = 184.0
-offset_bottom = 560.0
+[node name="Fade" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.03, 0.02, 0.03, 0.6)
 
-[node name="Resume" type="Button" parent="VBoxContainer"]
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("2_theme")
+
+[node name="Panel" type="PanelContainer" parent="Center"]
 layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Center/Panel/Margin"]
+custom_minimum_size = Vector2(196, 0)
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Resume" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "RESUME"
 
-[node name="Items" type="Button" parent="VBoxContainer"]
+[node name="Items" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "ITEMS"
 
-[node name="Weapons" type="Button" parent="VBoxContainer"]
+[node name="Weapons" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "WEAPONS"
 
-[node name="Gear" type="Button" parent="VBoxContainer"]
+[node name="Gear" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "GEAR"
 
-[node name="Skills" type="Button" parent="VBoxContainer"]
+[node name="Skills" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "SKILLS"
 
-[node name="Psyche" type="Button" parent="VBoxContainer"]
+[node name="Psyche" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "PSYCHE"
 
-[node name="Social" type="Button" parent="VBoxContainer"]
+[node name="Social" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "SOCIAL"
 
-[node name="Jobs" type="Button" parent="VBoxContainer"]
+[node name="Jobs" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "JOBS"
 
-[node name="Crypto" type="Button" parent="VBoxContainer"]
+[node name="Crypto" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "CRYPTO"
 
-[node name="Meta" type="Button" parent="VBoxContainer"]
+[node name="Meta" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "META"
 
-[node name="Map" type="Button" parent="VBoxContainer"]
+[node name="Map" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "MAP"
 
-[node name="Save" type="Button" parent="VBoxContainer"]
+[node name="Save" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "SAVE"
 
-[node name="Load" type="Button" parent="VBoxContainer"]
+[node name="Load" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "LOAD"
 
-[node name="Settings" type="Button" parent="VBoxContainer"]
+[node name="Settings" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "SETTINGS"
 
-[node name="Quit" type="Button" parent="VBoxContainer"]
+[node name="Quit" type="Button" parent="Center/Panel/Margin/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "QUIT"
 
-[connection signal="pressed" from="VBoxContainer/Resume" to="." method="_on_resume_pressed"]
-[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="Center/Panel/Margin/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

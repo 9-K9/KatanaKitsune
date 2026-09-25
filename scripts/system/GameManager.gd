@@ -33,7 +33,13 @@ func getState():
 	return gameState
 
 func setState(stateString):
+	if gameState == stateString:
+		return
 	gameState = stateString
+	## Freeze the world behind the Game Over screen, or the monsters carry on
+	## clawing at Akane's corpse while the player reads it. The screen itself
+	## runs with PROCESS_MODE_ALWAYS so its buttons still work.
+	get_tree().paused = (gameState == "game_over")
 
 func getPlayerPosition() -> Vector2:
 	if is_instance_valid(player):
@@ -41,6 +47,10 @@ func getPlayerPosition() -> Vector2:
 	return Vector2.ZERO
 
 func systemControls(state, delta):
+	## Death is terminal: only the Game Over screen's own buttons get out of it,
+	## so the pause key cannot be used to un-die.
+	if state == "game_over":
+		return state
 	if Input.is_action_just_pressed("Pause"):
 		if state == "game_play":
 			state = "game_paused"
