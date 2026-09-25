@@ -35,10 +35,10 @@ class Layout:
 
 ## Rooms are placed one per cell of this grid, jittered inside it.
 @export var grid: Vector2i = Vector2i(3, 3)
-@export var room_min: Vector2i = Vector2i(7, 7)
-@export var room_max: Vector2i = Vector2i(13, 11)
+@export var room_min: Vector2i = Vector2i(9, 9)
+@export var room_max: Vector2i = Vector2i(16, 14)
 ## Spacing between grid cells, in tiles. Must exceed room_max or rooms collide.
-@export var cell_size: Vector2i = Vector2i(18, 16)
+@export var cell_size: Vector2i = Vector2i(22, 20)
 ## Corridors are this many tiles wide. Three keeps Akane's collision box clear
 ## of both walls at once.
 @export var corridor_width: int = 3
@@ -108,21 +108,18 @@ func _carve_corridor(layout: Layout, from: Vector2i, to: Vector2i) -> void:
 ## give them. The kit is packed 8 to a row, so index -> atlas coords is
 ## Vector2i(i % 8, i / 8).
 const KIT_FLOOR := 0
-const KIT_SIDE := {"N": 1, "E": 2, "S": 3, "W": 4}
-const KIT_OUTER_CORNER := {"NE": 9, "SE": 10, "SW": 11, "NW": 12}
-const KIT_OUTER_MULTI := {"NS": 54, "EW": 55, "NES": 49, "NEW": 50,
-	"NSW": 51, "ESW": 52, "NESW": 53}
-const KIT_PILLAR := 31
+## Interchangeable flagstone variants, so a big room is not one repeated tile.
+const KIT_FLOOR_VARIANTS := [0, 56, 57]
+## Walls all round: a solid block with no open face. Used for every wall cell.
+##
+## The kit's single-face slabs (1-4) and L-corners (9-12) would give prettier
+## edges, but they are thin, and any cell whose mapping is wrong leaves a gap
+## the player can see through — or walk through. The first attempt fell back to
+## the pillar piece for cells that only touch floor diagonally and the whole
+## ring came out as a picket fence. A solid block reads as a proper dungeon
+## wall and cannot gap.
+const KIT_WALL := 53
 const KIT_COLS := 8
-
-## Grid directions, named to match the kit's rule vocabulary.
-const DIRS := {
-	"N": Vector2i(0, -1),
-	"E": Vector2i(1, 0),
-	"S": Vector2i(0, 1),
-	"W": Vector2i(-1, 0),
-}
-
 
 static func kit_atlas(index: int) -> Vector2i:
 	return Vector2i(index % KIT_COLS, index / KIT_COLS)
@@ -131,12 +128,16 @@ static func kit_atlas(index: int) -> Vector2i:
 ## Paints `layout` onto the map's layers. `ground` gets a floor tile per walkable
 ## cell; `walls` gets the wall piece whose open sides face the floor, which is
 ## also where the tileset's collision comes from.
-func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer, source_id: int) -> void:
+func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer, source_id: int,
+		seed_value: int = 0) -> void:
 	ground.clear()
 	walls.clear()
 
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
 	for cell in layout.floor_cells:
-		ground.set_cell(cell, source_id, kit_atlas(KIT_FLOOR))
+		var variant: int = KIT_FLOOR_VARIANTS[rng.randi_range(0, KIT_FLOOR_VARIANTS.size() - 1)]
+		ground.set_cell(cell, source_id, kit_atlas(variant))
 
 	## The wall ring: every neighbour of a floor cell that is not itself floor.
 	## Diagonals are included so corners are sealed and nothing slips through.
@@ -149,25 +150,4 @@ func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer, source_id:
 					ring[n] = true
 
 	for cell in ring:
-		walls.set_cell(cell, source_id, kit_atlas(_wall_piece(layout, cell)))
-
-
-## Picks the kit piece for a wall cell from which of its four sides open onto
-## floor. A cell with no open side is interior rock and gets a pillar.
-func _wall_piece(layout: Layout, cell: Vector2i) -> int:
-	var open := ""
-	for name in ["N", "E", "S", "W"]:
-		if layout.floor_cells.has(cell + DIRS[name]):
-			open += name
-
-	match open.length():
-		0:
-			return KIT_PILLAR
-		1:
-			return KIT_SIDE[open]
-		2:
-			if KIT_OUTER_CORNER.has(open):
-				return KIT_OUTER_CORNER[open]
-			return KIT_OUTER_MULTI.get(open, KIT_PILLAR)
-		_:
-			return KIT_OUTER_MULTI.get(open, KIT_PILLAR)
+		walls.set_cell(cell, source_id, kit_atlas(KIT_WALL))

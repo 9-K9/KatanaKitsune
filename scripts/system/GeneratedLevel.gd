@@ -35,7 +35,7 @@ func _ready() -> void:
 	var gen := LevelGenerator.new()
 	layout = gen.generate(level_seed)
 	## Source 0 is the only source in dungeonKit.tres.
-	gen.paint(layout, ground, walls, 0)
+	gen.paint(layout, ground, walls, 0, level_seed)
 
 	_populate()
 
