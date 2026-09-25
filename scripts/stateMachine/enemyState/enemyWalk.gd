@@ -1,10 +1,6 @@
 extends EnemyState
 
 ## Chases the player and decides when to swing.
-##
-## Steering is direct rather than navigated: the maps have no baked
-## NavigationRegion2D, so a NavigationAgent2D would hand back the monster's own
-## position and it would never move.
 
 
 func on_physics_process(_delta: float) -> void:
@@ -13,6 +9,8 @@ func on_physics_process(_delta: float) -> void:
 		change_state("idle")
 		return
 
+	## Face where the player actually is, but walk where the path says: looking
+	## at a corridor corner while chasing reads as the monster losing interest.
 	var to_player: Vector2 = enemy.direction_to_player()
 	enemy.face(to_player)
 
@@ -26,5 +24,6 @@ func on_physics_process(_delta: float) -> void:
 			enemy.play_loop("idle")
 		return
 
-	enemy.move_towards(to_player, enemy.move_speed)
+	var step: Vector2 = enemy.chase_direction()
+	enemy.move_towards(step if step != Vector2.ZERO else to_player, enemy.move_speed)
 	enemy.play_loop("walk")

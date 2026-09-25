@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbrz4k8nxw2pt"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/brazier.png" id="1_t"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_b"]
+points = PackedVector2Array(-14, 0, 0, -7, 14, 0, 0, 7)
+
+[node name="Brazier" type="StaticBody2D"]
+collision_layer = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -14)
+texture = ExtResource("1_t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ConvexPolygonShape2D_b")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(0, -26)
+color = Color(1, 0.65, 0.3, 1)
+energy = 0.9
+texture_scale = 2.0

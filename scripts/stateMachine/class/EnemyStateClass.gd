@@ -43,6 +43,8 @@ var is_dead: bool = false
 var _player: CharacterBody2D = null
 var _flash_tween: Tween = null
 var _attack_ready_at_ms: int = 0
+var _nav_checked: bool = false
+var _nav_usable: bool = false
 
 
 func _ready() -> void:
@@ -81,11 +83,50 @@ func distance_to_player() -> float:
 
 
 ## Unit vector pointing at the player on screen, or ZERO when there is none.
+## This is the straight line, used for facing and for aiming a swing.
 func direction_to_player() -> Vector2:
 	var target := player()
 	if target == null:
 		return Vector2.ZERO
 	return (target.global_position - global_position).normalized()
+
+
+## The direction to actually walk in. Follows a navigated path where the map
+## has one, so the monster rounds corners instead of grinding along a wall.
+##
+## Falls back to the straight line when there is no baked navigation — the
+## hand-built maps have none, and this same scene is used in both.
+func chase_direction() -> Vector2:
+	var target := player()
+	if target == null:
+		return Vector2.ZERO
+	var direct: Vector2 = (target.global_position - global_position).normalized()
+	if not _navigation_available():
+		return direct
+
+	nav.target_position = target.global_position
+	if nav.is_navigation_finished():
+		return direct
+	var step: Vector2 = nav.get_next_path_position() - global_position
+	## Standing almost exactly on the next waypoint makes the normalised
+	## direction meaningless; keep walking the straight line for a frame.
+	if step.length() < 1.0:
+		return direct
+	return step.normalized()
+
+
+## Cached because it only changes when a map is loaded, and the answer is a
+## server round-trip.
+func _navigation_available() -> bool:
+	if _nav_checked:
+		return _nav_usable
+	_nav_checked = true
+	if not is_instance_valid(nav):
+		_nav_usable = false
+		return false
+	var map: RID = nav.get_navigation_map()
+	_nav_usable = map.is_valid() and NavigationServer2D.map_get_regions(map).size() > 0
+	return _nav_usable
 
 
 ## Points the sprite along `dir`. Facing is taken from the unforeshortened

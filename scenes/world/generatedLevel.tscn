@@ -4,12 +4,17 @@
 [ext_resource type="TileSet" path="res://assets/sprites/tiles/dungeonKit.tres" id="2_kit"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="5_urn"]
+[ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="6_chest"]
+[ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="7_statue"]
+[ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="8_brazier"]
 
 [node name="GeneratedLevel" type="Node2D" node_paths=PackedStringArray()]
 y_sort_enabled = true
 script = ExtResource("1_gen")
 player_scene = ExtResource("3_player")
 enemy_scenes = Array[PackedScene]([ExtResource("4_enemy")])
+prop_scenes = Array[PackedScene]([ExtResource("5_urn"), ExtResource("5_urn"), ExtResource("6_chest"), ExtResource("7_statue"), ExtResource("8_brazier")])
 
 [node name="TileMap" type="Node2D" parent="."]
 y_sort_enabled = true
