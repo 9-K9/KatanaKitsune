@@ -7,10 +7,12 @@ func on_enter():
 	pc.timerTimeOut = false
 	action_timer.wait_time = 1
 	action_timer.start()
+	beginAttack()
 
 # Called every frame when this state is active.
 func on_process(delta):
 	stateAnimation("katanaSlashCrouched",8)
+	playerAttack()
 		
 func on_physics_process(delta):
 	if action_timer.is_stopped():

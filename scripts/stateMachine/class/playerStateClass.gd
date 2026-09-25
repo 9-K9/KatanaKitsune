@@ -13,7 +13,10 @@ extends StateMachineState
 @onready var pc: CharacterBody2D = get_node(_CharacterBody2D)
 @onready var animated_sprite : AnimatedSprite2D = get_node(_animatedsprite2D)
 @onready var action_timer : Timer = get_node(_action_timer)
-	
+
+## True once the current swing has already dealt its damage.
+var _swing_connected: bool = false
+
 ##Handles Input and returns a state string
 func stateAnimation(state_to_animate,fps):
 	fps = null #fps can be set in code or in the editor
@@ -21,15 +24,21 @@ func stateAnimation(state_to_animate,fps):
 	string_animation = "%s_%s"%[state_to_animate,pc.facing_dir]
 	animated_sprite.play(string_animation) 
 			
-##attack enemy body when timer is nearly finished
-func playerAttack():
+## Arms the next swing. Call from an attack state's on_enter.
+func beginAttack():
+	_swing_connected = false
+
+##attack enemy body when the swing reaches its hit frame
+func playerAttack(hit_frame: int = 3):
+	## on_process runs many times per animation frame, so without this guard a
+	## single swing landed once per rendered frame the clip sat on hit_frame.
+	if _swing_connected or animated_sprite.frame < hit_frame:
+		return
+	_swing_connected = true
 	if is_instance_valid(pc.enemyBody):
-		##calculate attack damage out of 8 (0 to 7) on frame 3 (halfway)
-		if animated_sprite.frame == 3:
-			pc.enemyBody.take_damage(pc.damage)
-			return	
-					
-##Math Functions		
+		pc.enemyBody.take_damage(pc.damage)
+
+##Math Functions
 func round_to_dec(num, digit):
 	return round(num * pow(10.0, digit)) / pow(10.0, digit)
 	

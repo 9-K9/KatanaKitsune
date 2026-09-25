@@ -1,6 +1,7 @@
-[gd_scene load_steps=215 format=4 uid="uid://b6xc810cprx04"]
+[gd_scene load_steps=216 format=4 uid="uid://b6xc810cprx04"]
 
 [ext_resource type="Script" path="res://scripts/system/YsortPlayerSpawn.gd" id="1_00tkk"]
+[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="1_npc01"]
 [ext_resource type="Texture2D" uid="uid://ckr0vt8iluh1i" path="res://assets/crocotile/isometrictiles/grounds/checkeredFloorIsometric_dir1.png" id="2_5k551"]
 [ext_resource type="Texture2D" uid="uid://1bqu4e3j644v" path="res://assets/crocotile/isometrictiles/blocks/grassBlock_dir1.png" id="3_4qe7w"]
 [ext_resource type="Texture2D" uid="uid://dwg6y3557f070" path="res://assets/crocotile/isometrictiles/walls/rusticBrickWall_dir1.png" id="3_6otn2"]
@@ -814,6 +815,7 @@ polygon = PackedVector2Array(-744, 80, -744, -174, -72, 162, 576, -160, 576, 96,
 [node name="YSortMap" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_00tkk")
+npcScene = ExtResource("1_npc01")
 
 [node name="TileMap" type="Node2D" parent="."]
 y_sort_enabled = true

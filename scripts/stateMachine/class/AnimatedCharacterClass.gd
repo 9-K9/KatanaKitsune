@@ -12,11 +12,17 @@ var speed : float = 0.0
 ## these values reproduce the old 60fps feel exactly (5000/60, 10000/60).
 @export var walkSpeed : float = 83.333
 @export var runSpeed : float = 166.667
-@export var damage : float = 0.25 ##frame rate multiplies by 4
+## Damage one katana swing deals. Each swing now lands exactly once (see
+## PlayerClass.playerAttack), where it used to fire on every rendered frame the
+## clip sat on the hit frame — hence the old 0.25 "frame rate multiplies by 4".
+@export var damage : float = 25.0
 ##Health Variables
 @export var max_health: float = 100.0
 var health: float = 100.0
 var is_invincible: bool = false
+## Latched on the killing blow. Without it every later hit on the corpse ran
+## _on_death() again and restarted the death animation from the top.
+var is_dead: bool = false
 @export var invincibility_duration: float = 0.8
 ##Ray Casting 
 @export_node_path("AnimatedSprite2D") var _animatedSprite2D: NodePath = "../../AnimatedSprite2D"
@@ -89,11 +95,12 @@ func setRayCast2D(rnd_dir):
 		facing_dir = directionState(rnd_dir)
 
 func take_damage(amount: float) -> void:
-	if is_invincible:
+	if is_invincible or is_dead:
 		return
 	health -= amount
 	health = max(health, 0)
 	if health <= 0:
+		is_dead = true
 		_on_death()
 	else:
 		_start_invincibility()
