@@ -3,4 +3,7 @@
 *.pixelover
 *.crocotile
 *.glb
-*.import
+
+# .import sidecars are meant to be committed: they hold each asset's UID, and
+# without them a fresh clone re-imports with new UIDs and every ext_resource
+# reference into that asset breaks.
