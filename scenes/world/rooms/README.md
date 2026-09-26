@@ -62,8 +62,10 @@ apart. Screen-relative names cannot be misread.
 Rooms only connect to orthogonal neighbours, so corridors are always straight —
 isometric tiles cannot be rotated, so corners would need their own prefabs.
 
-- `CorridorX.tscn` — runs along tile +X, carries `Door_W` and `Door_E`
-- `CorridorY.tscn` — runs along tile +Y, carries `Door_N` and `Door_S`
+- `CorridorDownRight.tscn` — runs down-right on screen (tile +X), carries
+  `Door_UpLeft` and `Door_DownRight`
+- `CorridorDownLeft.tscn` — runs down-left on screen (tile +Y), carries
+  `Door_UpRight` and `Door_DownLeft`
 
 Same layer structure as a room. Pick whatever fixed length tiles evenly for the
 walls; the generator repeats the prefab to span a gap.
