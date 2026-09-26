@@ -22,17 +22,21 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Dialogic="*uid://cgjs1ipn4vrsk"
+Dialogic="*uid://ds2q0uclmolvu"
+CheatManager="*res://scripts/system/CheatManager.gd"
 
 [dialogic]
 
 directories/dch_directory={}
 directories/dtl_directory={
-"timeline": "res://dialogue/_test/timeline.dtl"
+"mummyKitsune_taunt": "res://dialogue/enemies/mummyKitsune_taunt.dtl",
+"timeline": "res://dialogue/_test/timeline.dtl",
+"undeadRonin_taunt": "res://dialogue/enemies/undeadRonin_taunt.dtl"
 }
 layout/style_list=[]
 layout/default_style=""
 glossary/default_case_sensitive=true
+layout/style_directory={}
 
 [display]
 

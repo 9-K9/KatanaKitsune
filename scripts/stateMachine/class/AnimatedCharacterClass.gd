@@ -157,6 +157,8 @@ func _buff_multiplier(kind: int) -> float:
 
 
 func take_damage(amount: float) -> void:
+	if CheatManager.immortality_enabled:
+		return
 	## A ward soaks the hit entirely rather than reducing it, so the player can
 	## see it working.
 	if has_buff(Pickup.Kind.WARD):

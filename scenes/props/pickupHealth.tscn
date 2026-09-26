@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bh1lth7pkq3xa"]
 
 [ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/health_charm.png" id="2_t"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/health_potion.png" id="2_t"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
 radius = 20.0

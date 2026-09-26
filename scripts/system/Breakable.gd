@@ -18,21 +18,39 @@ extends StaticBody2D
 @export var max_health: float = 25.0
 ## Chests are meant to feel worth hitting, so they always drop.
 @export var always_drops: bool = false
+@export var break_texture: Texture2D
+@export_range(1, 8, 1) var break_frames: int = 4
+@export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
 
-const HIT_FLASH: Color = Color(1.6, 1.3, 1.1, 1.0)
+const HIT_FLASH_SHADER := """
+shader_type canvas_item;
+uniform float flash_amount : hint_range(0.0, 1.0) = 0.0;
+void fragment() {
+	vec4 source = texture(TEXTURE, UV) * COLOR;
+	COLOR = vec4(mix(source.rgb, vec3(1.0), flash_amount), source.a);
+}
+"""
 
 @onready var sprite: Sprite2D = $Sprite2D
 
 var health: float = 0.0
 var _broken: bool = false
 var _flash_tween: Tween = null
+var _flash_material: ShaderMaterial
+var _drop_spawned: bool = false
 
 
 func _ready() -> void:
 	health = max_health
+	add_to_group("breakable")
 	## Nudge each prop off the exact tile centre so a room full of urns does not
 	## read as a grid.
 	sprite.rotation = 0.0
+	var shader := Shader.new()
+	shader.code = HIT_FLASH_SHADER
+	_flash_material = ShaderMaterial.new()
+	_flash_material.shader = shader
+	sprite.material = _flash_material
 
 
 func take_damage(amount: float) -> void:
@@ -47,9 +65,14 @@ func take_damage(amount: float) -> void:
 func _flash() -> void:
 	if is_instance_valid(_flash_tween):
 		_flash_tween.kill()
-	sprite.modulate = HIT_FLASH
+	_flash_material.set_shader_parameter("flash_amount", 1.0)
 	_flash_tween = create_tween()
-	_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
+	_flash_tween.tween_method(_set_flash_amount, 1.0, 0.0, 0.16)
+
+
+func _set_flash_amount(amount: float) -> void:
+	if is_instance_valid(_flash_material):
+		_flash_material.set_shader_parameter("flash_amount", amount)
 
 
 func _break() -> void:
@@ -59,13 +82,36 @@ func _break() -> void:
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
 
-	_drop()
+	if is_instance_valid(_flash_tween):
+		_flash_tween.kill()
+	_set_flash_amount(0.0)
 
-	var shatter := create_tween()
-	shatter.set_parallel(true)
-	shatter.tween_property(sprite, "modulate:a", 0.0, 0.25)
-	shatter.tween_property(sprite, "scale", sprite.scale * 1.25, 0.25)
-	shatter.chain().tween_callback(queue_free)
+	if break_texture != null:
+		sprite.texture = break_texture
+		sprite.hframes = break_frames
+		sprite.frame = 0
+		for frame_index in break_frames:
+			sprite.frame = frame_index
+			if frame_index == mini(2, break_frames - 1):
+				_drop_once()
+			await get_tree().create_timer(break_frame_time, false).timeout
+	else:
+		_drop_once()
+
+	_drop_once()
+	var fade := create_tween()
+	fade.set_parallel(true)
+	fade.tween_property(sprite, "modulate:a", 0.0, 0.32)
+	fade.tween_property(sprite, "position:y", sprite.position.y - 3.0, 0.32)
+	await fade.finished
+	queue_free()
+
+
+func _drop_once() -> void:
+	if _drop_spawned:
+		return
+	_drop_spawned = true
+	_drop()
 
 
 func _drop() -> void:

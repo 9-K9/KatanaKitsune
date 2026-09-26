@@ -1,56 +1,93 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0tn7kxq2wvl5"]
+[gd_scene load_steps=5 format=3 uid="uid://b0tn7kxq2wvl5"]
 
 [ext_resource type="Script" path="res://scripts/system/TitleScreen.gd" id="1_title"]
 [ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/crest_gameover.png" id="3_crest"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover.png" id="4_cover"]
 
 [node name="TitleScreen" type="Node2D"]
 script = ExtResource("1_title")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Background" type="ColorRect" parent="UI"]
+[node name="Background" type="TextureRect" parent="UI"]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.05, 0.04, 0.05, 1)
+mouse_filter = 2
+texture = ExtResource("4_cover")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="Center" type="CenterContainer" parent="UI"]
-anchors_preset = 15
-anchor_right = 1.0
+[node name="LeftShade" type="ColorRect" parent="UI"]
+anchors_preset = 9
+anchor_right = 0.4
 anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.015, 0.012, 0.02, 0.38)
+
+[node name="SafeArea" type="MarginContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 0.4
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = 40.0
+offset_right = -36.0
+offset_bottom = -40.0
 theme = ExtResource("2_theme")
 
-[node name="VBox" type="VBoxContainer" parent="UI/Center"]
+[node name="VBox" type="VBoxContainer" parent="UI/SafeArea"]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Crest" type="TextureRect" parent="UI/Center/VBox"]
-custom_minimum_size = Vector2(0, 160)
+[node name="Crest" type="TextureRect" parent="UI/SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 116)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("3_crest")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Title" type="Label" parent="UI/Center/VBox"]
+[node name="Title" type="Label" parent="UI/SafeArea/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.72, 0.42, 1)
-theme_override_font_sizes/font_size = 48
-text = "KATANA KITSUNE"
+theme_override_colors/font_color = Color(0.93, 0.78, 0.42, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.02, 0.02, 0.95)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 40
+text = "KATANA\nKITSUNE"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="UI/Center/VBox"]
-custom_minimum_size = Vector2(0, 24)
+[node name="Tagline" type="Label" parent="UI/SafeArea/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.48, 1)
+theme_override_font_sizes/font_size = 14
+text = "BLADE OF THE NINE TAILS"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="UI/SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="NewGame" type="Button" parent="UI/Center/VBox"]
+[node name="NewGame" type="Button" parent="UI/SafeArea/VBox"]
+custom_minimum_size = Vector2(320, 46)
 layout_mode = 2
 text = "NEW GAME"
 
-[node name="Quit" type="Button" parent="UI/Center/VBox"]
+[node name="Quit" type="Button" parent="UI/SafeArea/VBox"]
+custom_minimum_size = Vector2(320, 46)
 layout_mode = 2
 text = "QUIT"
 
-[connection signal="pressed" from="UI/Center/VBox/NewGame" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="UI/Center/VBox/Quit" to="." method="_on_quit_pressed"]
+[node name="Credit" type="Label" parent="UI/SafeArea/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48, 0.43, 0.42, 1)
+theme_override_font_sizes/font_size = 10
+text = "A KATANA KITSUNE ADVENTURE"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="UI/SafeArea/VBox/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="UI/SafeArea/VBox/Quit" to="." method="_on_quit_pressed"]
