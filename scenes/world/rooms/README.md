@@ -40,14 +40,22 @@ adding door markers is the quickest way to a first large room.
 ## Door markers
 
 Put the marker on the **floor tile just inside the wall opening**, and leave a
-gap in the wall there. Names are tile-space directions, not screen directions:
+gap in the wall there.
 
-| Marker   | Tile direction | On screen |
-| -------- | -------------- | --------- |
-| `Door_N` | -Y             | up-right  |
-| `Door_S` | +Y             | down-left |
-| `Door_E` | +X             | down-right|
-| `Door_W` | -X             | up-left   |
+Names are **what the door looks like on screen**, so there is nothing to work
+out and nothing to get backwards. Stand in the room, look at the opening, and
+name it after the direction you would walk to leave through it:
+
+| Marker           | On screen  | (tile axis, for reference) |
+| ---------------- | ---------- | -------------------------- |
+| `Door_UpRight`   | up-right   | -Y                         |
+| `Door_DownLeft`  | down-left  | +Y                         |
+| `Door_DownRight` | down-right | +X                         |
+| `Door_UpLeft`    | up-left    | -X                         |
+
+Compass names were tried first and dropped: in isometric, "north" reads as
+either -Y in tile space or straight up on screen, and those are 45 degrees
+apart. Screen-relative names cannot be misread.
 
 ## Corridors
 
