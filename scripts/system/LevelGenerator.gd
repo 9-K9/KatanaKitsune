@@ -35,10 +35,10 @@ class Layout:
 
 ## Rooms are placed one per cell of this grid, jittered inside it.
 @export var grid: Vector2i = Vector2i(3, 3)
-@export var room_min: Vector2i = Vector2i(9, 9)
-@export var room_max: Vector2i = Vector2i(16, 14)
+@export var room_min: Vector2i = Vector2i(16, 16)
+@export var room_max: Vector2i = Vector2i(24, 24)
 ## Spacing between grid cells, in tiles. Must exceed room_max or rooms collide.
-@export var cell_size: Vector2i = Vector2i(22, 20)
+@export var cell_size: Vector2i = Vector2i(32, 32)
 ## Corridors are this many tiles wide. Three keeps Akane's collision box clear
 ## of both walls at once.
 @export var corridor_width: int = 3
@@ -120,7 +120,11 @@ const FLOOR_SOURCES := [0]
 ## sprites use, and only the four that align with the tile axes are usable for
 ## room edges — dir2/dir6 render edge-on and dir4/dir8 face-on, which are the
 ## screen-aligned diagonals.
-const WALL_SEGMENT_CELLS := 4
+## A plane's collision spans x -96..+96, and one cell steps 24px horizontally,
+## so each wall covers 8 cells along its axis and is CENTRED on the cell it is
+## given rather than starting there. Placing them as if they started at the cell
+## left them scattered half a plane off every edge.
+const WALL_SEGMENT_CELLS := 8
 const WALL_SOUTH_WEST := 1   ## closes the +Y edge
 const WALL_NORTH_WEST := 3   ## closes the -X edge
 const WALL_NORTH_EAST := 5   ## closes the -Y edge
@@ -165,9 +169,18 @@ func _wall_edge(layout: Layout, room: Room, outward: Vector2i, source: int,
 		start.y = rect.end.y - 1
 
 	var span: int = rect.size.y if outward.x != 0 else rect.size.x
+	var half: int = WALL_SEGMENT_CELLS / 2
 	var i: int = 0
 	while i < span:
-		var cell: Vector2i = start + along * i
-		if not layout.floor_cells.has(cell + outward):
+		## Anchor on the middle of this run, since the plane centres on its cell.
+		var cell: Vector2i = start + along * (i + half)
+		## Gate on the run's own cells: if any of them opens onto floor this is a
+		## doorway, and walling it would seal the room off from its corridor.
+		var open := false
+		for k in range(i, mini(i + WALL_SEGMENT_CELLS, span)):
+			if layout.floor_cells.has(start + along * k + outward):
+				open = true
+				break
+		if not open:
 			layer.set_cell(cell, source, Vector2i(0, 0))
 		i += WALL_SEGMENT_CELLS
