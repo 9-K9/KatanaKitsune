@@ -10,6 +10,7 @@ var default_style := ""
 
 var premade_style_parts := {}
 
+@onready var StyleList: ItemList = %StyleList
 
 
 #region EDITOR MANAGEMENT
@@ -28,7 +29,7 @@ func _register() -> void:
 	alternative_text = "Change the look of the dialog in your game"
 
 
-func _open(extra_info:Variant = null) -> void:
+func _open(_extra_info:Variant = null) -> void:
 	load_style_list()
 
 
@@ -41,6 +42,8 @@ func _close() -> void:
 
 
 func _ready() -> void:
+	if get_parent() is SubViewport:
+		return
 	collect_styles()
 
 	setup_ui()
@@ -57,7 +60,6 @@ func collect_styles() -> void:
 	var style_list: Array = ProjectSettings.get_setting('dialogic/layout/style_list', [])
 	for style in style_list:
 		if ResourceLoader.exists(style):
-			var style_res := load(style)
 			if style != null:
 				styles.append(ResourceLoader.load(style, "DialogicStyle"))
 			else:
@@ -84,13 +86,18 @@ func save_style() -> void:
 func add_style(file_path:String, style:DialogicStyle, inherits:DialogicStyle= null) -> void:
 	style.resource_path = file_path
 	style.inherits = inherits
-	if style.layers.is_empty() and style.inherits != null:
-		for l in style.get_layer_list():
-			style.add_layer('', {})
+
+	if style.layer_list.is_empty() and style.inherits_anything():
+		for id in style.get_layer_inherited_list():
+			style.add_layer('', {}, id)
+
 	ResourceSaver.save(style, file_path)
+
 	styles.append(style)
+
 	if len(styles) == 1:
 		default_style = style.resource_path
+
 	save_style_list()
 	load_style_list()
 	select_style(style)
@@ -120,8 +127,9 @@ func realize_style() -> void:
 
 	select_style(current_style)
 
-
 #endregion
+
+
 #region USER INTERFACE
 ################################################################################
 
@@ -135,48 +143,56 @@ func setup_ui() -> void:
 	%TestStyleButton.icon = get_theme_icon("PlayCustom", "EditorIcons")
 	%MakeDefaultButton.icon = get_theme_icon("Favorites", "EditorIcons")
 
-	%StyleList.item_selected.connect(_on_stylelist_selected)
+	StyleList.item_selected.connect(_on_stylelist_selected)
 	%AddButton.get_popup().index_pressed.connect(_on_AddStyleMenu_selected)
 	%AddButton.about_to_popup.connect(_on_AddStyleMenu_about_to_popup)
 	%InheritanceButton.get_popup().index_pressed.connect(_on_inheritance_index_pressed)
-	%StyleList.set_drag_forwarding(_on_stylelist_drag, _on_stylelist_can_drop, _on_style_list_drop)
+	StyleList.set_drag_forwarding(_on_stylelist_drag, _on_stylelist_can_drop, _on_style_list_drop)
 	%StyleView.hide()
 	%NoStyleView.show()
+
 
 func load_style_list() -> void:
 	var latest: String = DialogicUtil.get_editor_setting('latest_layout_style', 'Default')
 
-	%StyleList.clear()
+	StyleList.clear()
 	var idx := 0
 	for style in styles:
-		%StyleList.add_item(style.name, get_theme_icon("PopupMenu", "EditorIcons"))
+		# TODO remove when going Beta
+		style.update_from_pre_alpha16()
+		StyleList.add_item(style.name, get_theme_icon("PopupMenu", "EditorIcons"))
+		StyleList.set_item_tooltip(idx, style.resource_path)
+		StyleList.set_item_metadata(idx, style)
+
 		if style.resource_path == default_style:
-			%StyleList.set_item_icon_modulate(idx, get_theme_color("warning_color", "Editor"))
+			StyleList.set_item_icon_modulate(idx, get_theme_color("warning_color", "Editor"))
+		if style.resource_path.begins_with("res://addons/dialogic"):
+			StyleList.set_item_icon_modulate(idx, get_theme_color("property_color_z", "Editor"))
+			StyleList.set_item_tooltip(idx, "This is a default style. Only edit it if you know what you are doing!")
+			StyleList.set_item_custom_bg_color(idx, get_theme_color("property_color_z", "Editor").lerp(get_theme_color("dark_color_3", "Editor"), 0.8))
 		if style.name == latest:
-			%StyleList.select(idx)
+			StyleList.select(idx)
 			load_style(style)
-		%StyleList.set_item_tooltip(idx, style.resource_path)
-		%StyleList.set_item_metadata(idx, style)
 		idx += 1
 
 	if len(styles) == 0:
 		%StyleView.hide()
 		%NoStyleView.show()
 
-	elif !%StyleList.is_anything_selected():
-		%StyleList.select(0)
-		load_style(%StyleList.get_item_metadata(0))
+	elif !StyleList.is_anything_selected():
+		StyleList.select(0)
+		load_style(StyleList.get_item_metadata(0))
 
 
 func _on_stylelist_selected(index:int) -> void:
-	load_style(%StyleList.get_item_metadata(index))
+	load_style(StyleList.get_item_metadata(index))
 
 
 func select_style(style:DialogicStyle) -> void:
 	DialogicUtil.set_editor_setting('latest_layout_style', style.name)
-	for idx in range(%StyleList.item_count):
-		if %StyleList.get_item_metadata(idx) == style:
-			%StyleList.select(idx)
+	for idx in range(StyleList.item_count):
+		if StyleList.get_item_metadata(idx) == style:
+			StyleList.select(idx)
 			return
 
 
@@ -211,7 +227,7 @@ func load_style(style:DialogicStyle) -> void:
 
 
 func _on_AddStyleMenu_about_to_popup() -> void:
-	%AddButton.get_popup().set_item_disabled(3, not %StyleList.is_anything_selected())
+	%AddButton.get_popup().set_item_disabled(3, not StyleList.is_anything_selected())
 
 
 func _on_AddStyleMenu_selected(index:int) -> void:
@@ -236,7 +252,7 @@ func _on_AddStyleMenu_selected(index:int) -> void:
 			"Select folder for new style")
 
 	if index == 3:
-		if %StyleList.get_selected_items().is_empty():
+		if StyleList.get_selected_items().is_empty():
 			return
 		find_parent('EditorView').godot_file_dialog(
 			add_style_undoable.bind(DialogicStyle.new(), current_style),
@@ -264,8 +280,8 @@ func add_style_undoable(file_path:String, style:DialogicStyle, inherits:Dialogic
 	DialogicUtil.set_editor_setting('latest_layout_style', style.name)
 
 
-func _on_duplicate_button_pressed():
-	if !%StyleList.is_anything_selected():
+func _on_duplicate_button_pressed() -> void:
+	if !StyleList.is_anything_selected():
 		return
 	find_parent('EditorView').godot_file_dialog(
 		add_style_undoable.bind(current_style.clone(), null),
@@ -274,8 +290,8 @@ func _on_duplicate_button_pressed():
 		"Select folder for new style")
 
 
-func _on_remove_button_pressed():
-	if !%StyleList.is_anything_selected():
+func _on_remove_button_pressed() -> void:
+	if !StyleList.is_anything_selected():
 		return
 
 	if current_style.name == default_style:
@@ -286,17 +302,17 @@ func _on_remove_button_pressed():
 	load_style_list()
 
 
-func _on_edit_name_button_pressed():
+func _on_edit_name_button_pressed() -> void:
 	%LayoutStyleName.grab_focus()
 	%LayoutStyleName.select_all()
 
 
-func _on_layout_style_name_text_submitted(new_text:String) -> void:
+func _on_layout_style_name_text_submitted(_new_text:String) -> void:
 	_on_layout_style_name_focus_exited()
 
 
-func _on_layout_style_name_focus_exited():
-	var new_name :String= %LayoutStyleName.text.strip_edges()
+func _on_layout_style_name_focus_exited() -> void:
+	var new_name: String = %LayoutStyleName.text.strip_edges()
 	if new_name == current_style.name:
 		return
 
@@ -310,20 +326,18 @@ func _on_layout_style_name_focus_exited():
 	load_style_list()
 
 
-func _on_make_default_button_pressed():
+func _on_make_default_button_pressed() -> void:
 	default_style = current_style.resource_path
 	save_style_list()
 	load_style_list()
 
 
 
-func _on_test_style_button_pressed():
-	var dialogic_plugin := DialogicUtil.get_dialogic_plugin()
-
+func _on_test_style_button_pressed() -> void:
 	# Save the current opened timeline
 	DialogicUtil.set_editor_setting('current_test_style', current_style.name)
 
-	DialogicUtil.get_dialogic_plugin().get_editor_interface().play_custom_scene("res://addons/dialogic/Editor/TimelineEditor/test_timeline_scene.tscn")
+	EditorInterface.play_custom_scene("res://addons/dialogic/Editor/TimelineEditor/test_timeline_scene.tscn")
 	await get_tree().create_timer(3).timeout
 	DialogicUtil.set_editor_setting('current_test_style', '')
 
@@ -335,7 +349,7 @@ func _on_inheritance_index_pressed(index:int) -> void:
 
 
 func _on_start_styling_button_pressed() -> void:
-	var new_style := DialogicUtil.get_fallback_style().clone()
+	var new_style := DialogicStylesUtil.get_fallback_style().clone()
 
 	find_parent('EditorView').godot_file_dialog(
 		add_style_undoable.bind(new_style),
@@ -346,11 +360,11 @@ func _on_start_styling_button_pressed() -> void:
 
 #endregion
 
-func _on_stylelist_drag(vector:Vector2) -> Variant:
+func _on_stylelist_drag(_vector:Vector2) -> Variant:
 	return null
 
 
-func _on_stylelist_can_drop(at_position: Vector2, data: Variant) -> bool:
+func _on_stylelist_can_drop(_at_position: Vector2, data: Variant) -> bool:
 	if not data is Dictionary:
 		return false
 	if not data.get('type', 's') == 'files':
@@ -363,7 +377,7 @@ func _on_stylelist_can_drop(at_position: Vector2, data: Variant) -> bool:
 
 	return false
 
-func _on_style_list_drop(at_position: Vector2, data: Variant) -> void:
+func _on_style_list_drop(_at_position: Vector2, data: Variant) -> void:
 	for file in data.files:
 		var style := load(file)
 		if style is DialogicStyle:
@@ -388,4 +402,3 @@ func _get_new_name(base_name:String) -> String:
 	return new_name
 
 #endregion
-

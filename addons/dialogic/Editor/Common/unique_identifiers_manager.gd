@@ -9,6 +9,8 @@ func _ready() -> void:
 	%TabB.text = "Unique Identifiers"
 	%TabB.icon = get_theme_icon("CryptoKey", "EditorIcons")
 
+	%Search.right_icon = get_theme_icon("Search", "EditorIcons")
+
 	owner.get_parent().visibility_changed.connect(func(): if is_visible_in_tree(): open())
 
 	%RenameNotification.add_theme_color_override("font_color", get_theme_color("warning_color", "Editor"))
@@ -48,7 +50,7 @@ func fill_table() -> void:
 
 func _on_identifier_table_item_edited() -> void:
 	var item: TreeItem = %IdentifierTable.get_edited()
-	var new_identifier : String = item.get_text(1)
+	var new_identifier: String = item.get_text(1)
 
 
 	if new_identifier == item.get_metadata(1):

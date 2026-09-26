@@ -9,15 +9,17 @@ signal close_requested
 ## Simple history that stores limited information
 ## Used for the history display
 var simple_history_enabled := false
-var simple_history_content : Array[Dictionary] = []
+var simple_history_save := false
+@export var simple_history_content : Array[Dictionary] = []
 signal simple_history_changed
 
 ## Whether to keep a history of every Dialogic event encountered.
 var full_event_history_enabled := false
+var full_event_history_save := false
 
 ## The full history of all Dialogic events encountered.
 ## Requires [member full_event_history_enabled] to be true.
-var full_event_history_content := []
+@export var full_event_history_content: Array[String] = []
 
 ## Emitted if a new event has been inserted into the full event history.
 signal full_event_history_changed
@@ -63,12 +65,10 @@ var save_visited_history_on_save := false:
 ## Starts and stops the connection to the [subsystem Save] subsystem's [signal saved] signal.
 func _update_saved_connection(to_connect: bool) -> void:
 	if to_connect:
-
 		if not DialogicUtil.autoload().Save.saved.is_connected(_on_save):
-			var _result := DialogicUtil.autoload().Save.saved.connect(_on_save)
+			DialogicUtil.autoload().Save.saved.connect(_on_save)
 
 	else:
-
 		if DialogicUtil.autoload().Save.saved.is_connected(_on_save):
 			DialogicUtil.autoload().Save.saved.disconnect(_on_save)
 
@@ -80,8 +80,10 @@ func _ready() -> void:
 	dialogic.event_handled.connect(store_full_event)
 	dialogic.event_handled.connect(_check_seen)
 
-	simple_history_enabled = ProjectSettings.get_setting('dialogic/history/simple_history_enabled', simple_history_enabled )
+	simple_history_enabled = ProjectSettings.get_setting('dialogic/history/simple_history_enabled', simple_history_enabled)
+	simple_history_save = ProjectSettings.get_setting('dialogic/history/simple_history_save', simple_history_save)
 	full_event_history_enabled = ProjectSettings.get_setting('dialogic/history/full_history_enabled', full_event_history_enabled)
+	full_event_history_save = ProjectSettings.get_setting('dialogic/history/full_history_save', full_event_history_save)
 	visited_event_history_enabled = ProjectSettings.get_setting('dialogic/history/visited_event_history_enabled', visited_event_history_enabled)
 
 
@@ -96,9 +98,21 @@ func _on_save(info: Dictionary) -> void:
 		save_visited_history()
 
 
-func post_install() -> void:
+func _post_install() -> void:
 	save_visited_history_on_autosave = ProjectSettings.get_setting('dialogic/history/save_on_autosave', save_visited_history_on_autosave)
 	save_visited_history_on_save = ProjectSettings.get_setting('dialogic/history/save_on_save', save_visited_history_on_save)
+
+
+func _clear_state(clear_flag := DialogicGameHandler.ClearFlags.FULL_CLEAR) -> void:
+	if clear_flag != DialogicGameHandler.ClearFlags.FULL_CLEAR:
+		return
+
+	simple_history_content = []
+	full_event_history_content = []
+
+
+func _load_state(_load_flag := LoadFlags.FULL_LOAD) -> void:
+	pass
 
 
 func open_history() -> void:
@@ -115,9 +129,9 @@ func close_history() -> void:
 ####################################################################################################
 
 func store_simple_history_entry(text:String, event_type:String, extra_info := {}) -> void:
-	if !simple_history_enabled: return
-	extra_info['text'] = text
-	extra_info['event_type'] = event_type
+	if not simple_history_enabled: return
+	extra_info["text"] = text
+	extra_info["event_type"] = event_type
 	simple_history_content.append(extra_info)
 	simple_history_changed.emit()
 
@@ -133,8 +147,8 @@ func get_simple_history() -> Array:
 
 ## Called on each event.
 func store_full_event(event: DialogicEvent) -> void:
-	if !full_event_history_enabled: return
-	full_event_history_content.append(event)
+	if not full_event_history_enabled: return
+	full_event_history_content.append(event.to_text())
 	full_event_history_changed.emit()
 
 
@@ -161,18 +175,19 @@ func _get_event_key(event_index: int, timeline_path: String) -> String:
 	return event_key
 
 
-# Called if a Text event marks an unvisited Text event as visited.
-func mark_event_as_visited(_event: DialogicEvent) -> void:
-	if !visited_event_history_enabled:
+## Called if an event is marked as visited.
+func mark_event_as_visited(event_index := dialogic.current_event_idx, timeline := dialogic.current_timeline) -> void:
+	if not visited_event_history_enabled:
 		return
 
-	var event_key := _current_event_key()
+	var event_key := _get_event_key(event_index, timeline.resource_path)
 
-	visited_event_history_content[event_key] = dialogic.current_event_idx
+	visited_event_history_content[event_key] = event_index
 
-# Called on each event, but we filter for Text events.
+
+## Called on each event, but we filter for Text events.
 func _check_seen(event: DialogicEvent) -> void:
-	if !visited_event_history_enabled:
+	if not visited_event_history_enabled:
 		return
 
 	# At this point, we only care about Text events.

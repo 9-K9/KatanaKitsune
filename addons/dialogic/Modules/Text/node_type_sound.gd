@@ -21,20 +21,23 @@ enum Modes {INTERRUPT, OVERLAP, AWAIT}
 ## Allows changing the volume by a random value from (volume - volume_variance) to (volume + volume_variance)
 @export_range(0, 10, 0.01) var volume_variance := 0.0
 ## Characters that don't increase the 'characters_since_last_sound' variable, useful for the space or fullstop
-@export var ignore_characters:String = ' .,'
+@export var ignore_characters: String = ' .,'
 
 var characters_since_last_sound: int = 0
-var base_pitch :float = pitch_scale
-var base_volume :float = volume_db
+var base_pitch: float = pitch_scale
+var base_volume: float = volume_db
 var RNG := RandomNumberGenerator.new()
 
 var current_overwrite_data := {}
 
-func _ready():
+func _ready() -> void:
 	# add to necessary group
 	add_to_group('dialogic_type_sounds')
 
-	if !Engine.is_editor_hint() and get_parent() is DialogicNode_DialogText:
+	if not Engine.is_editor_hint() and get_parent() is DialogicNode_DialogText:
+		if bus == "Master":
+			bus = ProjectSettings.get_setting("dialogic/audio/type_sound_bus", "Master")
+
 		get_parent().started_revealing_text.connect(_on_started_revealing_text)
 		get_parent().continued_revealing_text.connect(_on_continued_revealing_text)
 		get_parent().finished_revealing_text.connect(_on_finished_revealing_text)
@@ -77,7 +80,7 @@ func _on_continued_revealing_text(new_character:String) -> void:
 
 	characters_since_last_sound = 0
 
-	var audio_player : AudioStreamPlayer = self
+	var audio_player: AudioStreamPlayer = self
 	if current_overwrite_data.get('mode', mode) == Modes.OVERLAP:
 		audio_player = AudioStreamPlayer.new()
 		audio_player.bus = bus
@@ -89,7 +92,7 @@ func _on_continued_revealing_text(new_character:String) -> void:
 	audio_player.stream = current_overwrite_data.get('sounds', sounds)[RNG.randi_range(0, current_overwrite_data.get('sounds', sounds).size() - 1)]
 
 	#choose a random pitch and volume
-	audio_player.pitch_scale = max(0, current_overwrite_data.get('pitch_base', base_pitch) + current_overwrite_data.get('pitch_variance', pitch_variance) * RNG.randf_range(-1.0, 1.0))
+	audio_player.pitch_scale = max(0.0001, current_overwrite_data.get('pitch_base', base_pitch) + current_overwrite_data.get('pitch_variance', pitch_variance) * RNG.randf_range(-1.0, 1.0))
 	audio_player.volume_db = current_overwrite_data.get('volume_base', base_volume) + current_overwrite_data.get('volume_variance',volume_variance) * RNG.randf_range(-1.0, 1.0)
 
 	#play the sound
@@ -112,13 +115,13 @@ func _on_finished_revealing_text() -> void:
 func load_overwrite(dictionary:Dictionary) -> void:
 	current_overwrite_data = dictionary
 	if dictionary.has('sound_path'):
-		current_overwrite_data['sounds'] = load_sounds_from_path(dictionary.sound_path)
+		current_overwrite_data['sounds'] = DialogicNode_TypeSounds.load_sounds_from_path(dictionary.sound_path)
 
 
 static func load_sounds_from_path(path:String) -> Array[AudioStream]:
 	if path.get_extension().to_lower() in ['mp3', 'wav', 'ogg'] and load(path) is AudioStream:
 		return [load(path)]
-	var _sounds :Array[AudioStream]= []
+	var _sounds: Array[AudioStream] = []
 	for file in DialogicUtil.listdir(path, true, false, true, true):
 		if !file.ends_with('.import'):
 			continue
@@ -129,7 +132,7 @@ static func load_sounds_from_path(path:String) -> Array[AudioStream]:
 
 ############# USER INTERFACE ###################################################
 
-func _get_configuration_warnings():
+func _get_configuration_warnings() -> PackedStringArray:
 	if not get_parent() is DialogicNode_DialogText:
 		return ["This should be the child of a DialogText node!"]
 	return []

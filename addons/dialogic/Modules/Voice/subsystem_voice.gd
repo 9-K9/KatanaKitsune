@@ -44,12 +44,12 @@ var voice_player := AudioStreamPlayer.new()
 ####################################################################################################
 
 ## Stops the current voice from playing.
-func pause() -> void:
+func _pause() -> void:
 	voice_player.stream_paused = true
 
 
 ## Resumes a paused voice.
-func resume() -> void:
+func _resume() -> void:
 	voice_player.stream_paused = false
 
 #endregion
@@ -66,8 +66,7 @@ func _ready() -> void:
 ## Whether the current event is a text event and has a voice
 ## event before it.
 func is_voiced(index: int) -> bool:
-	if dialogic.current_timeline_events[index] is DialogicTextEvent:
-
+	if index > 0 and dialogic.current_timeline_events[index] is DialogicTextEvent:
 		if dialogic.current_timeline_events[index-1] is DialogicVoiceEvent:
 			return true
 

@@ -26,9 +26,12 @@ const AUTO_SAVE_SETTINGS := "dialogic/save/autosave"
 ## The project settings key for the auto-save mode settings.
 const AUTO_SAVE_MODE_SETTINGS := "dialogic/save/autosave_mode"
 
+## The project settings key for the auto-save delay settings.
+const AUTO_SAVE_TIME_SETTINGS := "dialogic/save/autosave_delay"
+
 ## Temporarily stores a taken screen capture when using [take_slot_image()].
 enum ThumbnailMode {NONE, TAKE_AND_STORE, STORE_ONLY}
-var latest_thumbnail : Image = null
+var latest_thumbnail: Image = null
 
 
 ## The different types of auto-save triggers.
@@ -66,15 +69,28 @@ var autosave_mode := AutoSaveMode.ON_TIMELINE_JUMPS
 ## `AutoSaveMode.ON_TIMER`.
 var autosave_time := 60:
 	set(timer_time):
+		autosave_time = timer_time
 		autosave_timer.wait_time = timer_time
 
+
+var _debug_save_as_tres := false
 
 #region STATE
 ####################################################################################################
 
 ## Built-in, called by DialogicGameHandler.
-func clear_game_state(_clear_flag := DialogicGameHandler.ClearFlags.FULL_CLEAR) -> void:
+func _clear_state(_clear_flag := DialogicGameHandler.ClearFlags.FULL_CLEAR) -> void:
 	_make_sure_slot_dir_exists()
+
+
+## Built-in, called by DialogicGameHandler.
+func _pause() -> void:
+	autosave_timer.paused = true
+
+
+## Built-in, called by DialogicGameHandler.
+func _resume() -> void:
+	autosave_timer.paused = false
 
 #endregion
 
@@ -96,6 +112,11 @@ func save(slot_name := "", is_autosave := false, thumbnail_mode := ThumbnailMode
 		slot_name = get_default_slot()
 
 	set_latest_slot(slot_name)
+
+	if _debug_save_as_tres:
+		var save_path := SAVE_SLOTS_DIR.path_join(slot_name).path_join('state.tres')
+		ResourceSaver.save(dialogic.get_full_state(), save_path)
+		return OK
 
 	var save_error := save_file(slot_name, 'state.txt', dialogic.get_full_state())
 
@@ -131,10 +152,17 @@ func load(slot_name := "") -> Error:
 	if set_latest_error:
 		push_error("[Dialogic Error]: Failed to store latest slot to global info. Error %d '%s'" % [set_latest_error, error_string(set_latest_error)])
 
-	var state: Dictionary = load_file(slot_name, 'state.txt', {})
+	if _debug_save_as_tres:
+		var save_path := SAVE_SLOTS_DIR.path_join(slot_name).path_join('state.tres')
+		var tres_state: DialogicSaveState = ResourceLoader.load(save_path)
+		dialogic.load_full_state(tres_state)
+		return OK
+
+
+	var state: DialogicSaveState = load_file(slot_name, 'state.txt', {})
 	dialogic.load_full_state(state)
 
-	if state.is_empty():
+	if not state:
 		return FAILED
 	else:
 		return OK
@@ -159,16 +187,18 @@ func save_file(slot_name: String, file_name: String, data: Variant) -> Error:
 	if !has_slot(slot_name):
 		add_empty_slot(slot_name)
 
+
+	var save_path := SAVE_SLOTS_DIR.path_join(slot_name).path_join(file_name)
 	var encryption_password := get_encryption_password()
 	var file: FileAccess
 
 	if encryption_password.is_empty():
-		file = FileAccess.open(SAVE_SLOTS_DIR.path_join(slot_name).path_join(file_name), FileAccess.WRITE)
+		file = FileAccess.open(save_path, FileAccess.WRITE)
 	else:
-		file = FileAccess.open_encrypted_with_pass(SAVE_SLOTS_DIR.path_join(slot_name).path_join(file_name), FileAccess.WRITE, encryption_password)
+		file = FileAccess.open_encrypted_with_pass(save_path, FileAccess.WRITE, encryption_password)
 
 	if file:
-		file.store_var(data)
+		file.store_var(data, true)
 		return OK
 	else:
 		var error := FileAccess.get_open_error()
@@ -184,7 +214,6 @@ func load_file(slot_name: String, file_name: String, default: Variant) -> Varian
 	if slot_name.is_empty(): slot_name = get_default_slot()
 
 	var path := get_slot_path(slot_name).path_join(file_name)
-	print("trying to load ", path)
 	if FileAccess.file_exists(path):
 		var encryption_password := get_encryption_password()
 		var file: FileAccess
@@ -195,10 +224,9 @@ func load_file(slot_name: String, file_name: String, default: Variant) -> Varian
 			file = FileAccess.open_encrypted_with_pass(path, FileAccess.READ, encryption_password)
 
 		if file:
-			return file.get_var()
+			return file.get_var(true)
 		else:
 			push_error(FileAccess.get_open_error())
-	print("Does not exist!")
 	return default
 
 
@@ -347,7 +375,7 @@ func get_default_slot() -> String:
 
 ## Returns the latest slot or empty if nothing was saved yet
 func get_latest_slot() -> String:
-	var latest_slot: String = ""
+	var latest_slot := ""
 
 	if Engine.get_main_loop().has_meta('dialogic_latest_saved_slot'):
 		latest_slot = Engine.get_main_loop().get_meta('dialogic_latest_saved_slot', '')
@@ -465,19 +493,20 @@ func _ready() -> void:
 
 	autosave_enabled = ProjectSettings.get_setting(AUTO_SAVE_SETTINGS, autosave_enabled)
 	autosave_mode = ProjectSettings.get_setting(AUTO_SAVE_MODE_SETTINGS, autosave_mode)
+	autosave_time = ProjectSettings.get_setting(AUTO_SAVE_TIME_SETTINGS, autosave_time)
 
 	_result = dialogic.event_handled.connect(_on_dialogic_event_handled)
 	_result = dialogic.timeline_started.connect(_on_start_or_end_autosave)
 	_result = dialogic.timeline_ended.connect(_on_start_or_end_autosave)
 
-	_on_autosave_timer_timeout()
+	if autosave_enabled:
+		autosave_timer.start(autosave_time)
 
 
 func _on_autosave_timer_timeout() -> void:
 	if autosave_mode == AutoSaveMode.ON_TIMER:
 		perform_autosave()
 
-	autosave_time = ProjectSettings.get_setting('dialogic/save/autosave_delay', autosave_time)
 	autosave_timer.start(autosave_time)
 
 

@@ -2,17 +2,16 @@
 extends EditorPlugin
 
 ## Preload the main panel scene
-const MainPanel := preload("res://addons/dialogic/Editor/editor_main.tscn")
+const MainPanel: PackedScene = preload("uid://de6yhw4r8jqb3")
 const PLUGIN_NAME := "Dialogic"
 const PLUGIN_HANDLER_PATH := "res://addons/dialogic/Core/DialogicGameHandler.gd"
-const PLUGIN_ICON_PATH := "res://addons/dialogic/Editor/Images/plugin-icon.svg"
+const PLUGIN_ICON_PATH := "uid://dybg3l5pwetne"
+const PLUGIN_INSPECTOR_PATH := "uid://bok1je25mskp7"
+const EDITOR_EXPORT_PLUGIN := "uid://daxhncrord5lp"
 
 ## References used by various other scripts to quickly reference these things
 var editor_view: Control  # the root of the dialogic editor
-
-
-## Signal emitted if godot wants us to save
-signal dialogic_save
+var inspector_plugin: EditorInspectorPlugin = null
 
 
 ## Initialization
@@ -24,37 +23,35 @@ func _init() -> void:
 ################################################################################
 
 ## Activation & Editor Setup
-func _enable_plugin():
-	add_autoload_singleton(PLUGIN_NAME, PLUGIN_HANDLER_PATH)
+func _enable_plugin() -> void:
 	add_dialogic_default_action()
 
 
-func _disable_plugin():
+func _disable_plugin() -> void:
 	remove_autoload_singleton(PLUGIN_NAME)
 
 
 func _enter_tree() -> void:
+	add_autoload_singleton(PLUGIN_NAME, PLUGIN_HANDLER_PATH)
+
 	editor_view = MainPanel.instantiate()
 	editor_view.plugin_reference = self
-	editor_view.hide()
-	get_editor_interface().get_editor_main_screen().add_child(editor_view)
+	EditorInterface.get_editor_main_screen().add_child(editor_view)
 	_make_visible(false)
 
-	# Auto-update the singleton path for alpha users
-	# TODO remove at some point during beta or later
-	remove_autoload_singleton(PLUGIN_NAME)
-	add_autoload_singleton(PLUGIN_NAME, PLUGIN_HANDLER_PATH)
+	var export_plugin : EditorExportPlugin = load(EDITOR_EXPORT_PLUGIN).new()
+	add_export_plugin(export_plugin)
+
+	inspector_plugin = load(PLUGIN_INSPECTOR_PATH).new()
+	add_inspector_plugin(inspector_plugin)
 
 
 func _exit_tree() -> void:
 	if editor_view:
-		# _enter_tree() parents this to the editor main screen, not the bottom
-		# panel, so remove it from where it actually lives.
-		var parent := editor_view.get_parent()
-		if parent:
-			parent.remove_child(editor_view)
 		editor_view.queue_free()
 
+	if inspector_plugin:
+		remove_inspector_plugin(inspector_plugin)
 
 #endregion
 
@@ -70,7 +67,7 @@ func _get_plugin_name() -> String:
 	return PLUGIN_NAME
 
 
-func _get_plugin_icon():
+func _get_plugin_icon() -> Texture2D:
 	return load(PLUGIN_ICON_PATH)
 
 #endregion
@@ -86,7 +83,7 @@ func _make_visible(visible:bool) -> void:
 
 	if editor_view.get_parent() is Window:
 		if visible:
-			get_editor_interface().set_main_screen_editor("Script")
+			EditorInterface.set_main_screen_editor("Script")
 			editor_view.show()
 			editor_view.get_parent().grab_focus()
 	else:
@@ -131,7 +128,7 @@ func _editor_view_and_manager_exist() -> bool:
 ## Special Setup/Updates
 ## Methods that adds a dialogic_default_action if non exists
 func add_dialogic_default_action() -> void:
-	if ProjectSettings.has_setting('input/dialogic_default_action'):
+	if ProjectSettings.has_setting("input/dialogic_default_action"):
 		return
 
 	var input_enter: InputEventKey = InputEventKey.new()
@@ -147,7 +144,12 @@ func add_dialogic_default_action() -> void:
 	var input_controller: InputEventJoypadButton = InputEventJoypadButton.new()
 	input_controller.button_index = JOY_BUTTON_A
 
-	ProjectSettings.set_setting('input/dialogic_default_action', {'deadzone':0.5, 'events':[input_enter, input_left_click, input_space, input_x, input_controller]})
+	ProjectSettings.set_setting("input/dialogic_default_action", {"deadzone":0.5, "events":[input_enter, input_left_click, input_space, input_x, input_controller]})
 	ProjectSettings.save()
+
+# Create cache when project is compiled
+func _build() -> bool:
+	DialogicResourceUtil.update()
+	return true
 
 #endregion

@@ -8,45 +8,42 @@ extends DialogicEvent
 ### Settings
 
 ## The time in seconds that the event will stop before continuing.
-var time: float = 1.0
+@export var time: float = 1.0
 ## If true the text box will be hidden while the event waits.
-var hide_text: bool = true
+@export var hide_text := true
+## If true the wait can be skipped with user input
+@export var skippable := false
 
 
-################################################################################
-## 						EXECUTE
+#region EXECUTE
 ################################################################################
 
 func _execute() -> void:
-	var final_wait_time := time
+	await dialogic.Wait.update_wait(time, hide_text, skippable)
 
-	if dialogic.Inputs.auto_skip.enabled:
-		var time_per_event: float = dialogic.Inputs.auto_skip.time_per_event
-		final_wait_time = min(time, time_per_event)
-
-	if hide_text and dialogic.has_subsystem("Text"):
-		dialogic.Text.update_dialog_text('')
-		dialogic.Text.hide_textbox()
-	dialogic.current_state = dialogic.States.WAITING
-	await dialogic.get_tree().create_timer(time, false, DialogicUtil.is_physics_timer()).timeout
+	if dialogic.Animations.is_animating():
+		dialogic.Animations.stop_animation()
 	dialogic.current_state = dialogic.States.IDLE
 
 	finish()
 
+#endregion
 
-################################################################################
-## 						INITIALIZE
+
+#region INITIALIZE
 ################################################################################
 
 func _init() -> void:
 	event_name = "Wait"
+	event_description = "Waits a given amount of time. Can hide the textbox and be skippable."
 	set_default_color('Color5')
 	event_category = "Flow"
 	event_sorting_index = 11
 
+#endregion
 
-################################################################################
-## 						SAVING/LOADING
+
+#region SAVING/LOADING
 ################################################################################
 
 func get_shortcode() -> String:
@@ -58,15 +55,20 @@ func get_shortcode_parameters() -> Dictionary:
 		#param_name : property_info
 		"time" 		:  {"property": "time", 		"default": 1},
 		"hide_text" :  {"property": "hide_text", 	"default": true},
+		"skippable" :  {"property": "skippable", 	"default": false},
 	}
 
+#endregion
 
-################################################################################
-## 						EDITOR REPRESENTATION
+
+#region EDITOR REPRESENTATION
 ################################################################################
 
-func build_event_editor():
-	add_header_edit('time', ValueType.NUMBER, {'left_text':'Wait', 'autofocus':true, 'min':0})
+func build_event_editor() -> void:
+	add_header_edit('time', ValueType.NUMBER, {'left_text':'Wait', 'autofocus':true, 'min':0.1})
 	add_header_label('seconds', 'time != 1')
 	add_header_label('second', 'time == 1')
 	add_body_edit('hide_text', ValueType.BOOL, {'left_text':'Hide text box:'})
+	add_body_edit('skippable', ValueType.BOOL, {'left_text':'Skippable:'})
+
+#endregion
