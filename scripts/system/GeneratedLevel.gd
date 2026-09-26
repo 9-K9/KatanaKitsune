@@ -81,7 +81,7 @@ func _populate() -> void:
 		## The start room is left clear so the player is not swung at before
 		## they have taken a step.
 		if room != layout.start_room:
-			_fill(room, enemy_scenes,
+			_fill_corners(room, enemy_scenes,
 				_rng.randi_range(enemies_per_room.x, enemies_per_room.y) + extra)
 		_fill(room, prop_scenes, _rng.randi_range(props_per_room.x, props_per_room.y))
 
@@ -126,6 +126,32 @@ func _place_traps() -> void:
 		trap.phase_offset = _rng.randf() * trap.period
 		contents.add_child(trap)
 		trap.global_position = tile_to_world(cell)
+
+
+## Same as _fill, but stands things in the room's corners instead of scattering
+## them. Corners are shuffled so the occupied ones vary between rooms, and a
+## room asked for more than four falls back to random spots for the remainder.
+func _fill_corners(room: LevelGenerator.Room, pool: Array[PackedScene], count: int) -> void:
+	if pool.is_empty():
+		return
+	var spots: Array[Vector2i] = room.corners()
+	## Fisher-Yates off the level RNG, so a given seed still rebuilds identically.
+	for i in range(spots.size() - 1, 0, -1):
+		var j: int = _rng.randi_range(0, i)
+		var tmp: Vector2i = spots[i]
+		spots[i] = spots[j]
+		spots[j] = tmp
+
+	for i in count:
+		var scene: PackedScene = pool[_rng.randi_range(0, pool.size() - 1)]
+		if scene == null:
+			continue
+		var thing := scene.instantiate()
+		contents.add_child(thing)
+		if i < spots.size():
+			thing.global_position = tile_to_world(spots[i])
+		else:
+			thing.global_position = tile_to_world(room.spot(_rng))
 
 
 func _fill(room: LevelGenerator.Room, pool: Array[PackedScene], count: int) -> void:

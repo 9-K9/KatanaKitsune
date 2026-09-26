@@ -23,8 +23,27 @@ func InputHandler():
 	direction = direction.normalized()
 	return round(direction)
 
+## Interacting with a monster makes it say its piece before it will fight.
+## Checked here rather than in the individual states so every way of starting a
+## swing routes through the same place — the katana states each read the attack
+## inputs themselves, and duplicating this across them would drift.
+const PROVOKE_ACTIONS: PackedStringArray = ["Action", "Attack", "Katana"]
+
+
+func _try_provoke_target() -> void:
+	if not is_instance_valid(enemyBody):
+		return
+	if not enemyBody.has_method("provoke"):
+		return
+	for action in PROVOKE_ACTIONS:
+		if Input.is_action_just_pressed(action):
+			enemyBody.provoke()
+			return
+
+
 func _physics_process(_delta):
 	update_buffs()
+	_try_provoke_target()
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()

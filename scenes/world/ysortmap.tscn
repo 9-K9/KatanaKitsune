@@ -852,7 +852,7 @@ z_as_relative = false
 polygon = PackedVector2Array(-744, -172, -744, 82, -72, 420, 576, 96, 576, -158, -68, 164)
 
 [node name="SpawnNPCMarker2D" type="Marker2D" parent="TileMap"]
-position = Vector2(69, -12)
+position = Vector2(-546, -124)
 
 [node name="Roofs" type="TileMapLayer" parent="TileMap"]
 z_index = 1
@@ -946,4 +946,4 @@ position = Vector2(0, -20)
 position = Vector2(-30, -55)
 
 [node name="TestRonin" parent="." instance=ExtResource("t_undeadRonin")]
-position = Vector2(40, 45)
+position = Vector2(378, -115)

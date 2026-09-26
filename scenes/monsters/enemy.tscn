@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="enemy_script"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="fsm"]
+[ext_resource type="Script" path="res://scripts/components/TauntComponent.gd" id="taunt_component"]
 [ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyIdle.gd" id="st_idle"]
+[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyAlert.gd" id="st_alert"]
+[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyTaunt.gd" id="st_taunt"]
 [ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyWalk.gd" id="st_walk"]
 [ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyAttack.gd" id="st_attack"]
 [ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyHurt.gd" id="st_hurt"]
@@ -2191,12 +2194,22 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
 show_percentage = false
 
+[node name="TauntComponent" type="Node" parent="."]
+script = ExtResource("taunt_component")
+timeline = "res://dialogue/enemies/mummyKitsune_taunt.dtl"
+
 [node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
 script = ExtResource("fsm")
-current_state = NodePath("idle")
+current_state = NodePath("alert")
 
 [node name="idle" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("st_idle")
+
+[node name="alert" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("st_alert")
+
+[node name="taunt" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("st_taunt")
 
 [node name="walk" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("st_walk")

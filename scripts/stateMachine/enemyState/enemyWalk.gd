@@ -6,7 +6,10 @@ extends EnemyState
 func on_physics_process(_delta: float) -> void:
 	var distance: float = enemy.distance_to_player()
 	if distance > enemy.lose_interest_range:
-		change_state("idle")
+		## Back to standing guard and scanning, not to a dead idle. The monster
+		## has already said its line, so `alert` will re-engage on sight rather
+		## than waiting to be provoked a second time.
+		change_state("alert")
 		return
 
 	## Face where the player actually is, but walk where the path says: looking

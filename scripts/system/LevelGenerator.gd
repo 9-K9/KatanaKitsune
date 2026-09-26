@@ -24,6 +24,24 @@ class Room:
 		return Vector2i(
 			rng.randi_range(rect.position.x + 1, rect.end.x - 2),
 			rng.randi_range(rect.position.y + 1, rect.end.y - 2))
+	## The four inside corners, clockwise from the top-left. `inset` is in tiles
+	## and is clamped so it can never cross the middle of a small room.
+	##
+	## Monsters stand here rather than anywhere in the room so the player always
+	## has open floor between them and the first one they meet — the taunt needs
+	## somewhere to happen.
+	func corners(inset: int = 2) -> Array[Vector2i]:
+		var limit: int = mini(inset, mini(rect.size.x, rect.size.y) / 2 - 1)
+		limit = maxi(limit, 1)
+		var lo: Vector2i = rect.position + Vector2i(limit, limit)
+		var hi: Vector2i = rect.end - Vector2i(limit + 1, limit + 1)
+		var out: Array[Vector2i] = [
+			Vector2i(lo.x, lo.y),
+			Vector2i(hi.x, lo.y),
+			Vector2i(hi.x, hi.y),
+			Vector2i(lo.x, hi.y),
+		]
+		return out
 
 
 class Layout:

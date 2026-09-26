@@ -39,6 +39,8 @@ var is_dead: bool = false
 
 @onready var health_bar: ProgressBar = get_node_or_null("HealthBar")
 @onready var state_machine: FiniteStateMachine = get_node_or_null("FiniteStateMachine")
+## Optional. A monster without one simply never taunts and fights on sight.
+@onready var taunt: TauntComponent = get_node_or_null("TauntComponent")
 
 var _player: CharacterBody2D = null
 var _flash_tween: Tween = null
@@ -189,6 +191,48 @@ func strike(reach: float = 1.35) -> void:
 		return
 	if target.has_method("take_damage"):
 		target.take_damage(attack_damage)
+	_strike_breakables(reach)
+
+
+## Enemy swings may smash props caught in the same attack radius. This query
+## runs only on the attack animation's hit frame; walking into a prop cannot
+## damage it.
+func _strike_breakables(reach: float) -> void:
+	var shape := CircleShape2D.new()
+	shape.radius = attack_range * reach
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = Transform2D(0.0, global_position)
+	query.collision_mask = 2
+	query.exclude = [get_rid()]
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
+		var body = hit.get("collider")
+		if is_instance_valid(body) and body.is_in_group("breakable") and body.has_method("take_damage"):
+			body.take_damage(attack_damage)
+
+
+## Called when the player interacts with this monster — an Action press or the
+## start of a swing. Returns true if that provocation started a taunt, so the
+## caller knows the monster is now busy talking.
+##
+## Safe to call every frame; the component latches after the first success.
+func provoke() -> bool:
+	if is_dead or not is_instance_valid(taunt):
+		return false
+	if not taunt.provoke():
+		return false
+	_change_state("taunt")
+	return true
+
+
+## Whether this monster is past its dialogue and free to fight. True for
+## monsters that never had a line in the first place.
+func taunt_done() -> bool:
+	if not is_instance_valid(taunt):
+		return true
+	return taunt.has_spoken and not taunt.is_speaking
 
 
 func take_damage(amount: float) -> void:
@@ -199,8 +243,13 @@ func take_damage(amount: float) -> void:
 	_flash()
 	if health <= 0.0:
 		_change_state("death")
-	else:
-		_change_state("hurt")
+		return
+	## A hit landed mid-sentence still hurts, but must not knock the monster
+	## into `hurt` — that would leave the dialogue running with nothing waiting
+	## on it, and the monster would never reach its fighting states.
+	if is_instance_valid(taunt) and taunt.is_speaking:
+		return
+	_change_state("hurt")
 
 
 ## Drops the corpse out of collision immediately so it stops blocking movement
