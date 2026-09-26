@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://dch5t3nwqa8vb"]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest.png" id="2_t"]
+[ext_resource type="PackedScene" uid="uid://c0pwr8mzv4nyq" path="res://scenes/props/pickupPower.tscn" id="3_l"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_p"]
+points = PackedVector2Array(-16, 0, 0, -8, 16, 0, 0, 8)
+
+[node name="breakableChest" type="StaticBody2D" groups=["breakable"]]
+collision_layer = 3
+script = ExtResource("1_s")
+loot_scene = ExtResource("3_l")
+max_health = 40.0
+always_drops = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -14)
+texture = ExtResource("2_t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ConvexPolygonShape2D_p")

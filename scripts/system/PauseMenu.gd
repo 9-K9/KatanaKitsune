@@ -4,10 +4,23 @@ var game_paused : bool = false
 ## if the map root is renamed or the scene is run on its own.
 @onready var gameManager = get_parent()
 
+func _ready():
+	## The tree is paused while this menu is up, so it has to keep processing
+	## or its own buttons would be dead.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 func _process(_delta):
 	if not is_instance_valid(gameManager) or not gameManager.has_method("getState"):
 		return
-	var should_show: bool = gameManager.getState() == "game_paused"
+	var state: String = gameManager.getState()
+	## Owns the pause toggle because this node keeps processing while the tree
+	## is frozen; GameManager stops dead the instant the pause takes effect.
+	## Death is excluded so the key cannot be used to un-die.
+	if state != "game_over" and Input.is_action_just_pressed("Pause"):
+		gameManager.setState("game_play" if state == "game_paused" else "game_paused")
+		state = gameManager.getState()
+
+	var should_show: bool = state == "game_paused"
 	if should_show != visible:
 		visible = should_show
 
@@ -15,4 +28,7 @@ func _on_resume_pressed():
 	gameManager.setState("game_play")
 
 func _on_quit_pressed():
+	## Leaving the map has to lift the pause too, or the title screen loads
+	## into a frozen tree.
+	get_tree().paused = false
 	gameManager.setState("game_title")

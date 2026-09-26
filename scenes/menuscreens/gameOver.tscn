@@ -1,0 +1,88 @@
+[gd_scene load_steps=5 format=3 uid="uid://cq8gk2mvxr4n7"]
+
+[ext_resource type="Script" path="res://scripts/system/GameOver.gd" id="1_go"]
+[ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/crest_gameover.png" id="3_crest"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/panel_lacquer.png" id="4_panel"]
+
+[node name="GameOver" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_go")
+
+[node name="Fade" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.02, 0.03, 0.82)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="Panel" type="NinePatchRect" parent="Center"]
+custom_minimum_size = Vector2(420, 400)
+layout_mode = 2
+texture = ExtResource("4_panel")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = 30.0
+offset_right = -36.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Crest" type="TextureRect" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+texture = ExtResource("3_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.17, 0.16, 1)
+theme_override_font_sizes/font_size = 40
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.52, 0.34, 1)
+theme_override_font_sizes/font_size = 14
+text = "the clan remains unavenged"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Retry" type="Button" parent="Center/Panel/VBox/Buttons"]
+layout_mode = 2
+text = "TRY AGAIN"
+
+[node name="Title2" type="Button" parent="Center/Panel/VBox/Buttons"]
+layout_mode = 2
+text = "TITLE SCREEN"
+
+[connection signal="pressed" from="Center/Panel/VBox/Buttons/Retry" to="." method="_on_retry_pressed"]
+[connection signal="pressed" from="Center/Panel/VBox/Buttons/Title2" to="." method="_on_title_pressed"]

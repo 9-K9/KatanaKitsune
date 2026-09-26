@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bh1lth7pkq3xa"]
+
+[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/health_charm.png" id="2_t"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p"]
+radius = 20.0
+
+[node name="pickupHealth" type="Area2D"]
+collision_mask = 1
+monitorable = false
+script = ExtResource("1_s")
+kind = 0
+amount = 35.0
+duration = 0.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("2_t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_p")

@@ -1,6 +1,14 @@
-[gd_scene load_steps=215 format=4 uid="uid://b6xc810cprx04"]
+[gd_scene load_steps=216 format=4 uid="uid://b6xc810cprx04"]
 
 [ext_resource type="Script" path="res://scripts/system/YsortPlayerSpawn.gd" id="1_00tkk"]
+[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="1_npc01"]
+[ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="t_breakableUrn"]
+[ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="t_breakableChest"]
+[ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="t_breakableStatue"]
+[ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="t_brazier"]
+[ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="t_spikeTrap"]
+[ext_resource type="PackedScene" uid="uid://bh1lth7pkq3xa" path="res://scenes/props/pickupHealth.tscn" id="t_pickupHealth"]
+[ext_resource type="PackedScene" uid="uid://drn8k4pwxvq7s" path="res://scenes/monsters/undeadRonin.tscn" id="t_undeadRonin"]
 [ext_resource type="Texture2D" uid="uid://ckr0vt8iluh1i" path="res://assets/crocotile/isometrictiles/grounds/checkeredFloorIsometric_dir1.png" id="2_5k551"]
 [ext_resource type="Texture2D" uid="uid://1bqu4e3j644v" path="res://assets/crocotile/isometrictiles/blocks/grassBlock_dir1.png" id="3_4qe7w"]
 [ext_resource type="Texture2D" uid="uid://dwg6y3557f070" path="res://assets/crocotile/isometrictiles/walls/rusticBrickWall_dir1.png" id="3_6otn2"]
@@ -814,6 +822,7 @@ polygon = PackedVector2Array(-744, 80, -744, -174, -72, 162, 576, -160, 576, 96,
 [node name="YSortMap" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_00tkk")
+npcScene = ExtResource("1_npc01")
 
 [node name="TileMap" type="Node2D" parent="."]
 y_sort_enabled = true
@@ -917,3 +926,24 @@ attenuation = 0.420448
 [connection signal="area_entered" from="TileMap/Roofs/RoofCheckPlayer" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="TileMap/Roofs/RoofCheckPlayer" to="." method="_on_area_2d_area_exited"]
 [connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]
+
+[node name="TestUrn" parent="." instance=ExtResource("t_breakableUrn")]
+position = Vector2(-40, 10)
+
+[node name="TestChest" parent="." instance=ExtResource("t_breakableChest")]
+position = Vector2(-140, 20)
+
+[node name="TestStatue" parent="." instance=ExtResource("t_breakableStatue")]
+position = Vector2(-60, 60)
+
+[node name="TestBrazier" parent="." instance=ExtResource("t_brazier")]
+position = Vector2(-120, -40)
+
+[node name="TestTrap" parent="." instance=ExtResource("t_spikeTrap")]
+position = Vector2(0, -20)
+
+[node name="TestHealth" parent="." instance=ExtResource("t_pickupHealth")]
+position = Vector2(-30, -55)
+
+[node name="TestRonin" parent="." instance=ExtResource("t_undeadRonin")]
+position = Vector2(40, 45)

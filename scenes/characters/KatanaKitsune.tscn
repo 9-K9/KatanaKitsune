@@ -8512,7 +8512,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ufm8q")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_east",
 "speed": 5.0
 }, {
@@ -8541,7 +8541,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gndby")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_north",
 "speed": 5.0
 }, {
@@ -8570,7 +8570,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gp2rf")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_northEast",
 "speed": 5.0
 }, {
@@ -8599,7 +8599,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oikee")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_northWest",
 "speed": 5.0
 }, {
@@ -8628,7 +8628,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0y5c5")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_south",
 "speed": 5.0
 }, {
@@ -8657,7 +8657,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_k461f")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_southEast",
 "speed": 5.0
 }, {
@@ -8686,7 +8686,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_okx05")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_southWest",
 "speed": 5.0
 }, {
@@ -8715,7 +8715,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_du6y4")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_west",
 "speed": 5.0
 }, {
@@ -24482,7 +24482,7 @@ wait_time = 0.5
 one_shot = true
 
 [node name="PlayerCollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(0, 48, -64, 14, -64, -16, 64, -16, 64, 16)
+polygon = PackedVector2Array(-24, 0, 0, -12, 24, 0, 0, 12)
 
 [connection signal="body_entered" from="CollisionChecker/RayCast2D/ActionArea" to="." method="_on_action_area_body_entered"]
 [connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]

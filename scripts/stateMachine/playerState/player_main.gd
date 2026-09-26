@@ -9,6 +9,10 @@ func _ready() -> void:
 	health = max_health
 	var hitbox = $CollisionChecker/PlayerHitBox
 	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
+	## Only body_entered is wired in the scene. Without the matching exit the
+	## last enemy walked past stays targeted forever, so katana swings kept
+	## landing on a monster that was no longer anywhere near the blade.
+	$CollisionChecker/RayCast2D/ActionArea.body_exited.connect(_on_action_area_body_exited)
 
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
@@ -20,6 +24,7 @@ func InputHandler():
 	return round(direction)
 
 func _physics_process(_delta):
+	update_buffs()
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()
@@ -38,6 +43,11 @@ func _physics_process(_delta):
 func _on_action_area_body_entered(body):
 	if body.is_in_group("enemy"):
 		enemyBody = body
+
+
+func _on_action_area_body_exited(body):
+	if body == enemyBody:
+		enemyBody = null
 
 
 func _on_action_timer_timeout():
