@@ -24,7 +24,8 @@ extends Node2D
 @export var trap_density: float = 0.06
 
 @onready var ground: TileMapLayer = $TileMap/Ground
-@onready var walls: TileMapLayer = $TileMap/Walls
+@onready var back_walls: TileMapLayer = $TileMap/BackWalls
+@onready var front_walls: TileMapLayer = $TileMap/FrontWalls
 @onready var contents: Node2D = $Contents
 
 ## How deep the run has gone. Drives difficulty and is shown on the HUD.
@@ -56,8 +57,7 @@ func _build() -> void:
 	_rng.seed = level_seed
 	var gen := LevelGenerator.new()
 	layout = gen.generate(level_seed)
-	## Source 0 is the only source in dungeonKit.tres.
-	gen.paint(layout, ground, walls, 0, level_seed)
+	gen.paint(layout, ground, back_walls, front_walls, level_seed)
 	_populate()
 
 

@@ -64,8 +64,8 @@ func generate(seed_value: int) -> Layout:
 
 	for slot in placed:
 		var size := Vector2i(
-			rng.randi_range(room_min.x, room_max.x),
-			rng.randi_range(room_min.y, room_max.y))
+			_snap(rng.randi_range(room_min.x, room_max.x)),
+			_snap(rng.randi_range(room_min.y, room_max.y)))
 		var origin := Vector2i(slot.x * cell_size.x, slot.y * cell_size.y)
 		## Jitter inside the cell, keeping the room clear of the next cell over.
 		origin += Vector2i(
@@ -87,6 +87,11 @@ func generate(seed_value: int) -> Layout:
 	return layout
 
 
+## Rounds up to the wall stride.
+func _snap(n: int) -> int:
+	return int(ceil(float(n) / WALL_SEGMENT_CELLS)) * WALL_SEGMENT_CELLS
+
+
 func _carve_rect(layout: Layout, rect: Rect2i) -> void:
 	for y in range(rect.position.y, rect.end.y):
 		for x in range(rect.position.x, rect.end.x):
@@ -104,50 +109,65 @@ func _carve_corridor(layout: Layout, from: Vector2i, to: Vector2i) -> void:
 			layout.floor_cells[Vector2i(to.x + w, y)] = true
 
 
-## Tile indices in the PixelLab building kit, by the role its placement rules
-## give them. The kit is packed 8 to a row, so index -> atlas coords is
-## Vector2i(i % 8, i / 8).
-const KIT_FLOOR := 0
-## Interchangeable flagstone variants, so a big room is not one repeated tile.
-const KIT_FLOOR_VARIANTS := [0, 56, 57]
-## Walls all round: a solid block with no open face. Used for every wall cell.
+## Crocotile floor sources, all interchangeable checkered flagstone.
+const FLOOR_SOURCES := [0]
+
+## Crocotile wall sources, by which edge of a room they close.
 ##
-## The kit's single-face slabs (1-4) and L-corners (9-12) would give prettier
-## edges, but they are thin, and any cell whose mapping is wrong leaves a gap
-## the player can see through — or walk through. The first attempt fell back to
-## the pillar piece for cells that only touch floor diagonally and the whole
-## ring came out as a picket fence. A solid block reads as a proper dungeon
-## wall and cannot gap.
-const KIT_WALL := 53
-const KIT_COLS := 8
+## These are not one-cell pieces: each is a single tile spanning 5x16 atlas
+## cells, drawing a 4-cell-wide, ~350px-tall wall plane with its collision
+## already authored. They come in the same dir1..dir8 rotation the character
+## sprites use, and only the four that align with the tile axes are usable for
+## room edges — dir2/dir6 render edge-on and dir4/dir8 face-on, which are the
+## screen-aligned diagonals.
+const WALL_SEGMENT_CELLS := 4
+const WALL_SOUTH_WEST := 1   ## closes the +Y edge
+const WALL_NORTH_WEST := 3   ## closes the -X edge
+const WALL_NORTH_EAST := 5   ## closes the -Y edge
+const WALL_SOUTH_EAST := 7   ## closes the +X edge
 
-static func kit_atlas(index: int) -> Vector2i:
-	return Vector2i(index % KIT_COLS, index / KIT_COLS)
 
-
-## Paints `layout` onto the map's layers. `ground` gets a floor tile per walkable
-## cell; `walls` gets the wall piece whose open sides face the floor, which is
-## also where the tileset's collision comes from.
-func paint(layout: Layout, ground: TileMapLayer, walls: TileMapLayer, source_id: int,
-		seed_value: int = 0) -> void:
+## Paints `layout` onto the map. Floor goes on `ground`; walls are split across
+## `back_walls` and `front_walls` so the near edges can be faded when the player
+## walks behind them, exactly as the hand-built map does.
+func paint(layout: Layout, ground: TileMapLayer, back_walls: TileMapLayer,
+		front_walls: TileMapLayer, seed_value: int = 0) -> void:
 	ground.clear()
-	walls.clear()
+	back_walls.clear()
+	front_walls.clear()
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	for cell in layout.floor_cells:
-		var variant: int = KIT_FLOOR_VARIANTS[rng.randi_range(0, KIT_FLOOR_VARIANTS.size() - 1)]
-		ground.set_cell(cell, source_id, kit_atlas(variant))
+		var src: int = FLOOR_SOURCES[rng.randi_range(0, FLOOR_SOURCES.size() - 1)]
+		ground.set_cell(cell, src, Vector2i(0, 0))
 
-	## The wall ring: every neighbour of a floor cell that is not itself floor.
-	## Diagonals are included so corners are sealed and nothing slips through.
-	var ring: Dictionary = {}
-	for cell in layout.floor_cells:
-		for dy in range(-1, 2):
-			for dx in range(-1, 2):
-				var n: Vector2i = cell + Vector2i(dx, dy)
-				if not layout.floor_cells.has(n):
-					ring[n] = true
+	for room in layout.rooms:
+		_wall_edge(layout, room, Vector2i(0, -1), WALL_NORTH_EAST, back_walls)
+		_wall_edge(layout, room, Vector2i(-1, 0), WALL_NORTH_WEST, back_walls)
+		_wall_edge(layout, room, Vector2i(0, 1), WALL_SOUTH_WEST, front_walls)
+		_wall_edge(layout, room, Vector2i(1, 0), WALL_SOUTH_EAST, front_walls)
 
-	for cell in ring:
-		walls.set_cell(cell, source_id, kit_atlas(KIT_WALL))
+
+## Runs along one edge of a room in 4-cell strides, dropping a wall plane on each
+## stride whose outward neighbour is not floor. Strides that open onto floor are
+## left bare, which is what turns a corridor junction into a doorway rather than
+## a wall the player has to walk through.
+func _wall_edge(layout: Layout, room: Room, outward: Vector2i, source: int,
+		layer: TileMapLayer) -> void:
+	var rect: Rect2i = room.rect
+	## The row or column of floor cells that sits against this edge.
+	var along := Vector2i(absi(outward.y), absi(outward.x))
+	var start: Vector2i = rect.position
+	if outward.x > 0:
+		start.x = rect.end.x - 1
+	if outward.y > 0:
+		start.y = rect.end.y - 1
+
+	var span: int = rect.size.y if outward.x != 0 else rect.size.x
+	var i: int = 0
+	while i < span:
+		var cell: Vector2i = start + along * i
+		if not layout.floor_cells.has(cell + outward):
+			layer.set_cell(cell, source, Vector2i(0, 0))
+		i += WALL_SEGMENT_CELLS

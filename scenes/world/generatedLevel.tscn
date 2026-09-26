@@ -1,7 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://dqv3n8kylr2ma"]
 
 [ext_resource type="Script" path="res://scripts/system/GeneratedLevel.gd" id="1_gen"]
-[ext_resource type="TileSet" path="res://assets/sprites/tiles/dungeonKit.tres" id="2_kit"]
+[ext_resource type="TileSet" path="res://assets/sprites/tiles/crocotileGround.tres" id="2_kit"]
+[ext_resource type="TileSet" path="res://assets/sprites/tiles/crocotileWalls.tres" id="2_walls"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="4_enemy"]
 [ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="5_urn"]
@@ -29,9 +30,13 @@ z_index = -1
 z_as_relative = false
 tile_set = ExtResource("2_kit")
 
-[node name="Walls" type="TileMapLayer" parent="TileMap"]
+[node name="BackWalls" type="TileMapLayer" parent="TileMap"]
 y_sort_enabled = true
-tile_set = ExtResource("2_kit")
+tile_set = ExtResource("2_walls")
+
+[node name="FrontWalls" type="TileMapLayer" parent="TileMap"]
+y_sort_enabled = true
+tile_set = ExtResource("2_walls")
 
 [node name="Contents" type="Node2D" parent="."]
 y_sort_enabled = true
