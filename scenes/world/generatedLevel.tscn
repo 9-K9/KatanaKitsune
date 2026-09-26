@@ -8,12 +8,14 @@
 [ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="6_chest"]
 [ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="7_statue"]
 [ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="8_brazier"]
+[ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="9_trap"]
 
 [node name="GeneratedLevel" type="Node2D" node_paths=PackedStringArray()]
 y_sort_enabled = true
 script = ExtResource("1_gen")
 player_scene = ExtResource("3_player")
 enemy_scenes = Array[PackedScene]([ExtResource("4_enemy")])
+trap_scene = ExtResource("9_trap")
 prop_scenes = Array[PackedScene]([ExtResource("5_urn"), ExtResource("5_urn"), ExtResource("6_chest"), ExtResource("7_statue"), ExtResource("8_brazier")])
 
 [node name="TileMap" type="Node2D" parent="."]

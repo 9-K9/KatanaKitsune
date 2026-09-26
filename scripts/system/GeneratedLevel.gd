@@ -13,11 +13,14 @@ extends Node2D
 @export var player_scene: PackedScene = null
 @export var enemy_scenes: Array[PackedScene] = []
 @export var prop_scenes: Array[PackedScene] = []
+@export var trap_scene: PackedScene = null
 
 @export_group("Density")
 ## Enemies per room, excluding the room the player starts in.
 @export var enemies_per_room: Vector2i = Vector2i(1, 3)
 @export var props_per_room: Vector2i = Vector2i(2, 5)
+## Fraction of corridor tiles that become spike traps.
+@export var trap_density: float = 0.06
 
 @onready var ground: TileMapLayer = $TileMap/Ground
 @onready var walls: TileMapLayer = $TileMap/Walls
@@ -59,6 +62,36 @@ func _populate() -> void:
 		if room != layout.start_room:
 			_fill(room, enemy_scenes, _rng.randi_range(enemies_per_room.x, enemies_per_room.y))
 		_fill(room, prop_scenes, _rng.randi_range(props_per_room.x, props_per_room.y))
+
+	_place_traps()
+
+
+## Traps go in corridors, never in rooms: a corridor is the one place the player
+## cannot simply walk around them, which is what makes them a decision rather
+## than scenery. Neighbours are staggered along the cycle so a run of traps
+## rolls as a wave instead of firing as one slab.
+func _place_traps() -> void:
+	if trap_scene == null:
+		return
+	var in_room: Dictionary = {}
+	for room in layout.rooms:
+		for y in range(room.rect.position.y, room.rect.end.y):
+			for x in range(room.rect.position.x, room.rect.end.x):
+				in_room[Vector2i(x, y)] = true
+
+	var corridor: Array[Vector2i] = []
+	for cell in layout.floor_cells:
+		if not in_room.has(cell):
+			corridor.append(cell)
+	corridor.sort()
+
+	var wanted: int = int(corridor.size() * trap_density)
+	for i in wanted:
+		var cell: Vector2i = corridor[_rng.randi_range(0, corridor.size() - 1)]
+		var trap = trap_scene.instantiate()
+		trap.phase_offset = _rng.randf() * trap.period
+		contents.add_child(trap)
+		trap.global_position = tile_to_world(cell)
 
 
 func _fill(room: LevelGenerator.Room, pool: Array[PackedScene], count: int) -> void:
