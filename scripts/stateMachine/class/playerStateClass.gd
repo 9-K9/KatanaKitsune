@@ -35,17 +35,17 @@ func playerAttack(hit_frame: int = 3):
 	if _swing_connected or animated_sprite.frame < hit_frame:
 		return
 	_swing_connected = true
-	## Resolve targets from the live sword overlap on the actual hit frame.
-	## This avoids stale cached enemies and makes every breakable in blade range
-	## respond consistently while ordinary body contact remains harmless.
-	var action_area := pc.get_node_or_null("CollisionChecker/RayCast2D/ActionArea") as Area2D
-	if action_area == null:
+	## Targets come from the live blade overlap on the actual hit frame, so a
+	## monster that has already backed off is not hit and every breakable in
+	## range responds. Ordinary body contact is still harmless.
+	##
+	## Asked of the character rather than resolved here: a state should not know
+	## where the player keeps its hitboxes, and this used to re-walk a hardcoded
+	## node path on every swing.
+	if not pc.has_method("blade_targets"):
 		return
-	for body in action_area.get_overlapping_bodies():
-		if not is_instance_valid(body) or not body.has_method("take_damage"):
-			continue
-		if body.is_in_group("enemy") or body.is_in_group("breakable"):
-			body.take_damage(pc.damage)
+	for body in pc.blade_targets():
+		body.take_damage(pc.damage)
 
 ##Math Functions
 func round_to_dec(num, digit):

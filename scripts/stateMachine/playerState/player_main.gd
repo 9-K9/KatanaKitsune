@@ -1,18 +1,56 @@
 extends AnimatedCharacterClass
 
-@onready var enemyBody : CharacterBody2D = null
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
 @export var contact_damage: float = 10.0
+
+## What the blade is currently over. Resolved once — the attack code used to
+## re-look this up by string path on every swing.
+@onready var action_area: Area2D = $CollisionChecker/RayCast2D/ActionArea
+
+## Things a katana swing is allowed to damage. Ordinary body contact is not a
+## hit, so this is only ever consulted on an attack's hit frame.
+const HITTABLE_GROUPS: PackedStringArray = ["enemy", "breakable"]
 
 func _ready() -> void:
 	health = max_health
 	var hitbox = $CollisionChecker/PlayerHitBox
 	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
-	## Only body_entered is wired in the scene. Without the matching exit the
-	## last enemy walked past stays targeted forever, so katana swings kept
-	## landing on a monster that was no longer anywhere near the blade.
-	$CollisionChecker/RayCast2D/ActionArea.body_exited.connect(_on_action_area_body_exited)
+
+
+## Everything inside the blade right now that can take a hit.
+##
+## The single answer to "what am I aiming at". Targeting used to be resolved
+## two different ways — a cached enemyBody kept in sync by Area2D signals, and
+## a separate live overlap query inside playerAttack — which could disagree,
+## and the cache only ever held one body.
+func blade_targets() -> Array[Node2D]:
+	var found: Array[Node2D] = []
+	if not is_instance_valid(action_area):
+		return found
+	for body in action_area.get_overlapping_bodies():
+		if not is_instance_valid(body) or not body.has_method("take_damage"):
+			continue
+		for group in HITTABLE_GROUPS:
+			if body.is_in_group(group):
+				found.append(body)
+				break
+	return found
+
+
+## The monster a non-attack interaction applies to: the nearest one in the
+## blade. Breakables are skipped — only monsters have anything to say.
+func current_target() -> Node2D:
+	var best: Node2D = null
+	var best_distance: float = INF
+	for body in blade_targets():
+		if not body.is_in_group("enemy"):
+			continue
+		var distance: float = global_position.distance_squared_to(body.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = body
+	return best
 
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
@@ -31,14 +69,21 @@ const PROVOKE_ACTIONS: PackedStringArray = ["Action", "Attack", "Katana"]
 
 
 func _try_provoke_target() -> void:
-	if not is_instance_valid(enemyBody):
+	## Input first: it is a handful of dictionary lookups, against an overlap
+	## query that runs every physics frame otherwise. On all but the few frames
+	## an attack actually starts, this returns here.
+	if not _provoke_pressed():
 		return
-	if not enemyBody.has_method("provoke"):
-		return
+	var target := current_target()
+	if target != null and target.has_method("provoke"):
+		target.provoke()
+
+
+func _provoke_pressed() -> bool:
 	for action in PROVOKE_ACTIONS:
 		if Input.is_action_just_pressed(action):
-			enemyBody.provoke()
-			return
+			return true
+	return false
 
 
 func _physics_process(_delta):
@@ -58,16 +103,6 @@ func _physics_process(_delta):
 	else:
 		velocity = Vector2.ZERO
 	move_and_slide()
-
-func _on_action_area_body_entered(body):
-	if body.is_in_group("enemy"):
-		enemyBody = body
-
-
-func _on_action_area_body_exited(body):
-	if body == enemyBody:
-		enemyBody = null
-
 
 func _on_action_timer_timeout():
 	timerTimeOut = true
