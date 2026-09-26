@@ -8,13 +8,29 @@ Finds signal connections that have gone stale.
 
 ```bash
 # every scene under scenes/
-godot --headless --script res://tools/check_scene_connections.gd
+tools/check-connections.sh
 
 # or just the ones you touched
-godot --headless --script res://tools/check_scene_connections.gd -- scenes/title_screen.tscn
+tools/check-connections.sh scenes/title_screen.tscn
 ```
 
 Exits non-zero if anything is broken, so it works as a pre-commit gate.
+
+The wrapper locates Godot itself — `godot` is usually not on PATH, since the
+engine ships as a bare versioned binary. It checks `$GODOT`, then PATH, then
+searches your home directory for `Godot_v4*_linux.x86_64`. Point it somewhere
+specific with:
+
+```bash
+GODOT=/path/to/godot tools/check-connections.sh
+```
+
+To invoke the engine directly instead:
+
+```bash
+~/Godot/Godot_v4.7.2-stable_linux.x86_64 --headless \
+  --script res://tools/check_scene_connections.gd
+```
 
 ### Why
 
