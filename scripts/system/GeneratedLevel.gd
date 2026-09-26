@@ -14,6 +14,7 @@ extends Node2D
 @export var enemy_scenes: Array[PackedScene] = []
 @export var prop_scenes: Array[PackedScene] = []
 @export var trap_scene: PackedScene = null
+@export var exit_scene: PackedScene = null
 
 @export_group("Density")
 ## Enemies per room, excluding the room the player starts in.
@@ -26,20 +27,37 @@ extends Node2D
 @onready var walls: TileMapLayer = $TileMap/Walls
 @onready var contents: Node2D = $Contents
 
+## How deep the run has gone. Drives difficulty and is shown on the HUD.
+var depth: int = 1
 var layout: LevelGenerator.Layout = null
 var _rng := RandomNumberGenerator.new()
+var _player: Node2D = null
 
 
 func _ready() -> void:
 	if randomise_seed:
 		level_seed = randi()
-	_rng.seed = level_seed
+	_build()
 
+
+## Regenerates the floor in place rather than reloading the scene. Akane keeps
+## her health, her buffs and her state machine across the descent, which a
+## scene reload would throw away.
+func descend() -> void:
+	depth += 1
+	level_seed = _rng.randi()
+	for child in contents.get_children():
+		if child != _player:
+			child.queue_free()
+	_build()
+
+
+func _build() -> void:
+	_rng.seed = level_seed
 	var gen := LevelGenerator.new()
 	layout = gen.generate(level_seed)
 	## Source 0 is the only source in dungeonKit.tres.
 	gen.paint(layout, ground, walls, 0, level_seed)
-
 	_populate()
 
 
@@ -50,20 +68,36 @@ func tile_to_world(cell: Vector2i) -> Vector2:
 
 
 func _populate() -> void:
-	var player: Node2D = null
-	if player_scene != null:
-		player = player_scene.instantiate()
-		contents.add_child(player)
-		player.global_position = tile_to_world(layout.start_room.centre())
+	## Spawned once and carried down; on later floors it is only moved.
+	if _player == null and player_scene != null:
+		_player = player_scene.instantiate()
+		contents.add_child(_player)
+	if is_instance_valid(_player):
+		_player.global_position = tile_to_world(layout.start_room.centre())
 
+	## Each floor down adds roughly one more monster per room.
+	var extra: int = depth - 1
 	for room in layout.rooms:
 		## The start room is left clear so the player is not swung at before
 		## they have taken a step.
 		if room != layout.start_room:
-			_fill(room, enemy_scenes, _rng.randi_range(enemies_per_room.x, enemies_per_room.y))
+			_fill(room, enemy_scenes,
+				_rng.randi_range(enemies_per_room.x, enemies_per_room.y) + extra)
 		_fill(room, prop_scenes, _rng.randi_range(props_per_room.x, props_per_room.y))
 
 	_place_traps()
+	_place_exit()
+
+
+func _place_exit() -> void:
+	if exit_scene == null:
+		return
+	var stairs = exit_scene.instantiate()
+	contents.add_child(stairs)
+	stairs.global_position = tile_to_world(layout.exit_room.centre())
+	## Deferred: descend() frees the whole floor and repaints the tilemaps, and
+	## the signal fires from inside body_entered, mid-physics.
+	stairs.descended.connect(descend, CONNECT_DEFERRED)
 
 
 ## Traps go in corridors, never in rooms: a corridor is the one place the player

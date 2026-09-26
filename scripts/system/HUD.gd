@@ -7,6 +7,7 @@ extends CanvasLayer
 ## Inset from the bar frame's edges to the lacquer cavity the fill sits in.
 const FILL_INSET: Vector2 = Vector2(9, 8)
 
+@onready var depth_label: Label = $Depth
 @onready var fill: ColorRect = $Bar/Fill
 @onready var bar: TextureRect = $Bar
 
@@ -42,3 +43,14 @@ func _process(delta: float) -> void:
 	_shown = ratio if _shown < 0.0 else move_toward(_shown, ratio, delta * 1.2)
 	fill.size.x = _fill_width * _shown
 	fill.color = Color(0.78, 0.17, 0.16) if _shown > 0.3 else Color(0.9, 0.35, 0.12)
+	_show_depth()
+
+
+## Only the generated levels have a depth; the hand-built maps leave this blank.
+func _show_depth() -> void:
+	var level = get_tree().current_scene
+	if level == null or not ("depth" in level):
+		return
+	var text: String = "FLOOR %d" % level.depth
+	if depth_label.text != text:
+		depth_label.text = text
