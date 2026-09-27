@@ -84,6 +84,15 @@ func distance_to_player() -> float:
 	return ground_distance_to(target.global_position)
 
 
+## detection_range scaled by how well hidden she is, so sneaking and crouching
+## actually shorten the range a monster wakes up at.
+func effective_detection() -> float:
+	var target := player()
+	if target != null and target.has_method("stealth_ratio"):
+		return detection_range * target.stealth_ratio()
+	return detection_range
+
+
 ## Unit vector pointing at the player on screen, or ZERO when there is none.
 ## This is the straight line, used for facing and for aiming a swing.
 func direction_to_player() -> Vector2:

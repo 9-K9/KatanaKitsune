@@ -1,27 +1,20 @@
 extends PlayerClass
 
+## Idle flourish. Plays out and returns to idle; any input cuts it short.
 
+func on_enter():
+	pc.speed = 0.0
+	action_timer.wait_time = 3.0
+	action_timer.start()
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+func on_process(_delta):
+	stateAnimation("flair", 10)
+	if pc.InputHandler() != Vector2.ZERO or Input.is_action_just_pressed("Attack"):
+		change_state("idle")
 
+func on_physics_process(_delta):
+	if action_timer.is_stopped():
+		change_state("idle")
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	action_timer.stop()

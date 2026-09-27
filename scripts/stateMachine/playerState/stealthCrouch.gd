@@ -1,26 +1,19 @@
 extends PlayerClass
 
+## Flat against the floor. The quietest she gets, and she cannot move.
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+func on_enter():
+	pc.speed = 0.0
+	pc.stealthed = true
+	pc.crouched = true
 
+func on_process(_delta):
+	stateAnimation("stealthCrouch", 2)
+	if Input.is_action_just_pressed("Defend") or pc.InputHandler() != Vector2.ZERO:
+		change_state("stealthIdle")
+	if Input.is_action_just_pressed("Stealth"):
+		change_state("idle")
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.stealthed = false
+	pc.crouched = false

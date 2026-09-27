@@ -1,26 +1,22 @@
-extends StateMachineState
+extends PlayerClass
 
+## Braced low. Blocks the same but cannot be pushed as easily.
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+func on_enter():
+	pc.speed = 0.0
+	pc.blocking = true
+	pc.crouched = true
+	pc.actionBlockInput = true
 
+func on_process(_delta):
+	stateAnimation("katanaBlockCrouched", 4)
+	if not Input.is_action_pressed("Defend"):
+		change_state("katanaIdle")
+		return
+	if pc.parry_ready:
+		change_state("katanaCounterSlash")
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.blocking = false
+	pc.crouched = false
+	pc.actionBlockInput = false

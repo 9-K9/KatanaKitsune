@@ -1,27 +1,33 @@
 extends PlayerClass
 
+## Dodge roll. Carries her a fixed distance and cannot be cancelled, so spending
+## it is a commitment; she is untouchable for most of it.
 
+const ROLL_TIME: float = 0.55
+const ROLL_SPEED: float = 240.0
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+var _heading: Vector2 = Vector2.ZERO
 
+func on_enter():
+	pc.actionBlockInput = true
+	## Rolls the way she is facing if she is standing still.
+	var input: Vector2 = pc.InputHandler()
+	_heading = input if input != Vector2.ZERO else pc.stateDirection(pc.facing_dir)
+	pc.is_invincible = true
+	action_timer.wait_time = ROLL_TIME
+	action_timer.start()
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
+func on_process(_delta):
+	stateAnimation("forwardRoll", 12)
 
+func on_physics_process(_delta):
+	pc.velocity = _heading.normalized() * ROLL_SPEED
+	pc.velocity.y *= 0.5
+	pc.move_and_slide()
+	if action_timer.is_stopped():
+		change_state("katanaIdle" if pc.katana_drawn else "idle")
 
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.is_invincible = false
+	pc.actionBlockInput = false
+	action_timer.stop()

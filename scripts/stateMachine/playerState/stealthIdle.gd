@@ -1,27 +1,23 @@
 extends PlayerClass
 
+## Crouched and still. Monsters notice her at half range while she is in stealth
+## — see PlayerClass.stealth_ratio, which EnemyBase multiplies its detection by.
 
+func on_enter():
+	pc.speed = 0.0
+	pc.stealthed = true
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+func on_process(_delta):
+	stateAnimation("stealthIdle", 1)
+	if Input.is_action_just_pressed("Stealth"):
+		change_state("idle")
+		return
+	if pc.InputHandler() != Vector2.ZERO:
+		change_state("stealthWalk")
+	if Input.is_action_just_pressed("Defend"):
+		change_state("stealthCrouch")
+	if Input.is_action_just_pressed("Katana"):
+		change_state("katanaDraw")
 
-
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.stealthed = false

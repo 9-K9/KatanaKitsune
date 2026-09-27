@@ -34,7 +34,7 @@ func on_enter() -> void:
 func on_physics_process(delta: float) -> void:
 	enemy.stop()
 
-	var range_to_notice: float = notice_range if notice_range > 0.0 else enemy.detection_range
+	var range_to_notice: float = notice_range if notice_range > 0.0 else enemy.effective_detection()
 	var distance: float = enemy.distance_to_player()
 
 	if distance <= range_to_notice:

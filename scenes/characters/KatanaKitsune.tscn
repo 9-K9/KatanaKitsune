@@ -14777,7 +14777,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_uuc5s")
 }],
 "loop": true,
-"name": &"sneakWalk_east",
+"name": &"stealthWalk_east",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14806,7 +14806,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_yimje")
 }],
 "loop": true,
-"name": &"sneakWalk_north",
+"name": &"stealthWalk_north",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14835,7 +14835,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_wskts")
 }],
 "loop": true,
-"name": &"sneakWalk_northEast",
+"name": &"stealthWalk_northEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14864,7 +14864,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_w2fjj")
 }],
 "loop": true,
-"name": &"sneakWalk_northWest",
+"name": &"stealthWalk_northWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14893,7 +14893,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_lxcap")
 }],
 "loop": true,
-"name": &"sneakWalk_south",
+"name": &"stealthWalk_south",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14922,7 +14922,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_pcox7")
 }],
 "loop": true,
-"name": &"sneakWalk_southEast",
+"name": &"stealthWalk_southEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14951,7 +14951,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_mci1y")
 }],
 "loop": true,
-"name": &"sneakWalk_southWest",
+"name": &"stealthWalk_southWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -14980,7 +14980,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_6jj0d")
 }],
 "loop": true,
-"name": &"sneakWalk_west",
+"name": &"stealthWalk_west",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15009,7 +15009,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_45my2")
 }],
 "loop": true,
-"name": &"stealthToCrouch_east",
+"name": &"stealthCrouch_east",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15038,7 +15038,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_0odjn")
 }],
 "loop": true,
-"name": &"stealthToCrouch_north",
+"name": &"stealthCrouch_north",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15067,7 +15067,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_vbmi8")
 }],
 "loop": true,
-"name": &"stealthToCrouch_northEast",
+"name": &"stealthCrouch_northEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15096,7 +15096,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_k5om2")
 }],
 "loop": true,
-"name": &"stealthToCrouch_northWest",
+"name": &"stealthCrouch_northWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15125,7 +15125,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_thwcn")
 }],
 "loop": true,
-"name": &"stealthToCrouch_south",
+"name": &"stealthCrouch_south",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15154,7 +15154,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_3xmo2")
 }],
 "loop": true,
-"name": &"stealthToCrouch_southEast",
+"name": &"stealthCrouch_southEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15183,7 +15183,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_30ac4")
 }],
 "loop": true,
-"name": &"stealthToCrouch_southWest",
+"name": &"stealthCrouch_southWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15212,7 +15212,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_bww3j")
 }],
 "loop": true,
-"name": &"stealthToCrouch_west",
+"name": &"stealthCrouch_west",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15241,7 +15241,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_qex3w")
 }],
 "loop": true,
-"name": &"steathIdle_east",
+"name": &"stealthIdle_east",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15270,7 +15270,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_1jty8")
 }],
 "loop": true,
-"name": &"steathIdle_north",
+"name": &"stealthIdle_north",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15299,7 +15299,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_4j7wp")
 }],
 "loop": true,
-"name": &"steathIdle_northEast",
+"name": &"stealthIdle_northEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15328,7 +15328,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_aahyr")
 }],
 "loop": true,
-"name": &"steathIdle_northWest",
+"name": &"stealthIdle_northWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15357,7 +15357,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_apffk")
 }],
 "loop": true,
-"name": &"steathIdle_south",
+"name": &"stealthIdle_south",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15386,7 +15386,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_e7uen")
 }],
 "loop": true,
-"name": &"steathIdle_southEast",
+"name": &"stealthIdle_southEast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15415,7 +15415,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_3x3y2")
 }],
 "loop": true,
-"name": &"steathIdle_southWest",
+"name": &"stealthIdle_southWest",
 "speed": 5.0
 }, {
 "frames": [{
@@ -15444,7 +15444,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_6mwyc")
 }],
 "loop": true,
-"name": &"steathIdle_west",
+"name": &"stealthIdle_west",
 "speed": 5.0
 }, {
 "frames": [{
@@ -22302,7 +22302,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_east"]
+"values": [&"stealthWalk_east"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22332,7 +22332,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_north"]
+"values": [&"stealthWalk_north"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22362,7 +22362,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_northEast"]
+"values": [&"stealthWalk_northEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22392,7 +22392,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_northWest"]
+"values": [&"stealthWalk_northWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22422,7 +22422,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_south"]
+"values": [&"stealthWalk_south"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22452,7 +22452,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_southEast"]
+"values": [&"stealthWalk_southEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22482,7 +22482,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_southWest"]
+"values": [&"stealthWalk_southWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22512,7 +22512,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"sneakWalk_west"]
+"values": [&"stealthWalk_west"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22542,7 +22542,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_east"]
+"values": [&"stealthIdle_east"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22572,7 +22572,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_north"]
+"values": [&"stealthIdle_north"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22602,7 +22602,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_northEast"]
+"values": [&"stealthIdle_northEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22632,7 +22632,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_northWest"]
+"values": [&"stealthIdle_northWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22662,7 +22662,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_south"]
+"values": [&"stealthIdle_south"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22692,7 +22692,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_southEast"]
+"values": [&"stealthIdle_southEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22722,7 +22722,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_southWest"]
+"values": [&"stealthIdle_southWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22752,7 +22752,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"steathIdle_west"]
+"values": [&"stealthIdle_west"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22781,7 +22781,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_east"]
+"values": [&"stealthCrouch_east"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22810,7 +22810,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_north"]
+"values": [&"stealthCrouch_north"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22839,7 +22839,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_northEast"]
+"values": [&"stealthCrouch_northEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22868,7 +22868,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_northWest"]
+"values": [&"stealthCrouch_northWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22897,7 +22897,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_south"]
+"values": [&"stealthCrouch_south"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22926,7 +22926,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_southEast"]
+"values": [&"stealthCrouch_southEast"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22955,7 +22955,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_southWest"]
+"values": [&"stealthCrouch_southWest"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -22984,7 +22984,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"stealthToCrouch_west"]
+"values": [&"stealthCrouch_west"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -24283,6 +24283,7 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="katanaBlockCrouched" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("13_shs7r")
+_animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="katanaCounterSlash" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("14_og6el")

@@ -23,6 +23,20 @@ var is_invincible: bool = false
 ## Latched on the killing blow. Without it every later hit on the corpse ran
 ## _on_death() again and restarted the death animation from the top.
 var is_dead: bool = false
+
+## Set by the states that own them, read by anything that cares.
+## Stealth halves how far a monster notices her from; blocking cuts damage; the
+## parry window opens the counter-slash.
+var stealthed: bool = false
+var crouched: bool = false
+var blocking: bool = false
+var katana_drawn: bool = false
+var parry_ready: bool = false
+var block_opened_at: int = 0
+## Damage let through while guarding.
+@export var block_soak: float = 0.25
+## A hit landing within this many ms of raising the guard is a parry.
+@export var parry_window_ms: int = 350
 @export var invincibility_duration: float = 0.8
 
 ## Timed power-ups picked up from breakables, keyed by Pickup.Kind.
@@ -167,6 +181,13 @@ func take_damage(amount: float) -> void:
 		return
 	if is_invincible or is_dead:
 		return
+	if blocking:
+		## A hit taken just after the guard went up is a parry: no damage, and
+		## it arms the counter. Later hits are merely soaked.
+		if Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
+			parry_ready = true
+			return
+		amount *= block_soak
 	health -= amount
 	health = max(health, 0)
 	if health <= 0:
@@ -187,3 +208,11 @@ func _start_invincibility() -> void:
 
 func _on_death() -> void:
 	pass  # Override in subclass
+
+
+## Multiplier monsters apply to their detection range when looking for her.
+## Crouched is quieter than merely sneaking, which is quieter than walking.
+func stealth_ratio() -> float:
+	if crouched:
+		return 0.3
+	return 0.5 if stealthed else 1.0

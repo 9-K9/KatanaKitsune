@@ -2,6 +2,7 @@ extends PlayerClass
 
 # Called when the state machine enters this state.
 func on_enter():
+	pc.katana_drawn = true
 	pc.speed = 0.0
 	pc.timerTimeOut = false
 	action_timer.wait_time = 0.75

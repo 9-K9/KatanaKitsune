@@ -20,5 +20,11 @@ func on_process(delta):
 func on_physics_process(delta):
 	pass
 	
+func _extra_transitions():
+	## Held Run long enough to break into a sprint.
+	if Input.is_action_pressed("Run") and pc.InputHandler() != Vector2.ZERO:
+		if Input.is_action_just_pressed("Jump"):
+			change_state("runningJump")
+
 func on_exit():
 	pass

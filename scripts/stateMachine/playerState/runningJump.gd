@@ -1,27 +1,30 @@
 extends PlayerClass
 
+## A leap out of a run. Longer than the standing hop because it keeps the speed
+## she already had.
 
+const LEAP_TIME: float = 0.6
+const LEAP_SPEED: float = 300.0
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+var _heading: Vector2 = Vector2.ZERO
 
+func on_enter():
+	pc.actionBlockInput = true
+	var input: Vector2 = pc.InputHandler()
+	_heading = input if input != Vector2.ZERO else pc.stateDirection(pc.facing_dir)
+	action_timer.wait_time = LEAP_TIME
+	action_timer.start()
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
+func on_process(_delta):
+	stateAnimation("runningJump", 10)
 
+func on_physics_process(_delta):
+	pc.velocity = _heading.normalized() * LEAP_SPEED
+	pc.velocity.y *= 0.5
+	pc.move_and_slide()
+	if action_timer.is_stopped():
+		change_state("run")
 
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.actionBlockInput = false
+	action_timer.stop()

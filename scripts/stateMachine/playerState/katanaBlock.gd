@@ -1,26 +1,25 @@
 extends PlayerClass
 
+## Guard up. Held, not toggled: releasing Defend drops straight back to idle.
+## Incoming damage is cut while pc.blocking is set — see AnimatedCharacterClass.
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
+func on_enter():
+	pc.speed = 0.0
+	pc.blocking = true
+	pc.actionBlockInput = true
+	pc.block_opened_at = Time.get_ticks_msec()
 
+func on_process(_delta):
+	stateAnimation("katanaBlock", 4)
+	if not Input.is_action_pressed("Defend"):
+		change_state("katanaIdle")
+		return
+	if pc.InputHandler() != Vector2.ZERO:
+		change_state("katanaBlockCrouched")
+	## A hit taken inside the parry window opens the riposte.
+	if pc.parry_ready:
+		change_state("katanaCounterSlash")
 
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_exit():
+	pc.blocking = false
+	pc.actionBlockInput = false

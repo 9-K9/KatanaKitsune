@@ -14,7 +14,11 @@ func on_process(delta):
 	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaDraw")	
 	if Input.is_action_just_pressed("Attack"):
-		change_state("midKick")	
+		change_state("midKick")
+	if Input.is_action_just_pressed("Stealth"):
+		change_state("stealthIdle")
+	if Input.is_action_just_pressed("Dodge"):
+		change_state("forwardRoll")
 	
 func on_physics_process(delta):
 	pass

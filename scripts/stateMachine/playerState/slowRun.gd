@@ -1,27 +1,16 @@
 extends PlayerClass
 
+## A jog. Sits between walk and run, used when she is hurt badly enough that
+## sprinting is off the table.
 
+func on_enter():
+	pc.speed = pc.walkSpeed * 1.3
 
-# Called when the state machine enters this state.
-func on_enter() -> void:
-	pass
-
-
-# Called every frame when this state is active.
-func on_process(delta: float) -> void:
-	pass
-
-
-# Called every physics frame when this state is active.
-func on_physics_process(delta: float) -> void:
-	pass
-
-
-# Called when there is an input event while this state is active.
-func on_input(event: InputEvent) -> void:
-	pass
-
-
-# Called when the state machine exits this state.
-func on_exit() -> void:
-	pass
+func on_process(_delta):
+	stateAnimation("slowRun", 8)
+	if pc.InputHandler() == Vector2.ZERO:
+		change_state("idle")
+	elif not Input.is_action_pressed("Run"):
+		change_state("walk")
+	if Input.is_action_just_pressed("Katana"):
+		change_state("katanaDraw")
