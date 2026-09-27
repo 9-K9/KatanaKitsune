@@ -75,6 +75,16 @@ func chair_underfoot() -> Node2D:
 	for chair in pc.get_tree().get_nodes_in_group("chair"):
 		if not (chair is Node2D):
 			continue
+		## Overlap first where a chair offers one. A shape she stands inside has
+		## no isometric squash to compensate for, which is what the distance
+		## check kept getting wrong — 140 units of ground reach is only about 70
+		## pixels up or down the screen, and a chair a little below her fell out
+		## of it while still looking underfoot.
+		var zone := (chair as Node2D).get_node_or_null("SitZone") as Area2D
+		if zone != null:
+			if zone.overlaps_body(pc):
+				return chair
+			continue
 		## Ground distance, not screen distance. The map is drawn 2:1, so a chair
 		## the same distance away up the screen would otherwise read as twice as
 		## close as one to the side.
