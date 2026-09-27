@@ -9,6 +9,10 @@ func on_enter():
 
 func on_process(_delta):
 	stateAnimation("stealthIdle", 1)
+	## Striking from cover is the stealth attack, wherever she is hidden.
+	if Input.is_action_just_pressed("Attack"):
+		change_state("flair")
+		return
 	if Input.is_action_just_pressed("Stealth"):
 		change_state("idle")
 		return

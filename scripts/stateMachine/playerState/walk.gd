@@ -7,7 +7,7 @@ func on_enter():
 func on_process(delta):	
 	stateAnimation("walk",2)
 	if pc.InputHandler() != Vector2.ZERO and Input.is_action_pressed("Run"):
-		change_state("run")
+		change_state("slowRun" if winded() else "run")
 	elif pc.InputHandler() == Vector2.ZERO:
 		change_state("idle")
 	

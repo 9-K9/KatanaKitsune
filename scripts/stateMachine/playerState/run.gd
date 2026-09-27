@@ -3,8 +3,15 @@ extends PlayerClass
 ## Running burns stamina. Run it dry and she drops to a jog, so a long chase
 ## costs her the speed to get out of the next one.
 
+## A reversal only counts once she is actually up to speed; before that her
+## facing is still catching up to the stick and every start would skid.
+const TURN_GRACE: float = 0.3
+
+var _held: float = 0.0
+
 func on_enter():
 	pc.speed = pc.runSpeed
+	_held = 0.0
 
 # Called every frame when this state is active.
 func on_process(delta):
@@ -17,13 +24,15 @@ func on_process(delta):
 		change_state("idle")
 		return
 
+	_held += delta
 	pc.drain_stamina(pc.run_drain, delta)
 	if winded():
 		change_state("slowRun")
 		return
 
 	## Reversing at speed plants a skid-turn rather than snapping round a frame.
-	if pc.stateDirection(pc.facing_dir).normalized().dot(input.normalized()) < -0.65:
+	if _held >= TURN_GRACE \
+			and pc.stateDirection(pc.facing_dir).normalized().dot(input.normalized()) < -0.65:
 		change_state("switchDirections")
 		return
 

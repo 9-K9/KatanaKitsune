@@ -22,7 +22,7 @@ func on_process(_delta):
 func on_physics_process(_delta):
 	if action_timer.is_stopped():
 		## Straight back into cover, still hidden.
-		change_state("stealthCrouch")
+		change_state("stealthIdle")
 
 func on_exit():
 	pc.damage = _base_damage
