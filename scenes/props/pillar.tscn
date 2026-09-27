@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cp1l1ard0ngeo"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/pillar.png" id="1_pillar"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_pil"]
+points = PackedVector2Array(-22, 0, 0, -11, 22, 0, 0, 11)
+
+[node name="Pillar" type="StaticBody2D"]
+collision_layer = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -144)
+scale = Vector2(2, 2)
+texture = ExtResource("1_pillar")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ConvexPolygonShape2D_pil")

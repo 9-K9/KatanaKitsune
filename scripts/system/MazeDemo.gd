@@ -3,14 +3,19 @@ extends Node2D
 ## Walkable demo: tiles room_A across the diamond lattice, knocks walls out to
 ## make a maze, and drops the player in with a camera that follows.
 ##
-## Placement matches RoomStackTest — every half-step position on the lattice, so
-## the rooms interlock rather than sitting on a checkerboard.
+## Rooms sit on the isometric lattice, each neighbour half a room across and
+## half a room down, so their diamonds interlock exactly — see
+## _lattice_position. Openings are knocked through from both sides, which turns
+## a run of rooms into one continuous space rather than a corridor.
 
 @export var room_scene: PackedScene = null
 @export var player_scene: PackedScene = null
 @export var enemy_scenes: Array[PackedScene] = []
 @export var prop_scenes: Array[PackedScene] = []
 @export var exit_scene: PackedScene = null
+## Stood at the ends of every opening and spaced across it, so a knocked-out
+## wall reads as a deliberate colonnade instead of a severed run of stone.
+@export var pillar_scene: PackedScene = null
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -21,6 +26,8 @@ extends Node2D
 @export_group("Population")
 @export var enemies_per_room: Vector2i = Vector2i(0, 2)
 @export var props_per_room: Vector2i = Vector2i(1, 3)
+## Columns spaced between the two that flank each opening.
+@export var pillars_per_opening: int = 3
 
 @export_group("Atmosphere")
 ## Near-black, so the player's lantern and the braziers do the lighting.
@@ -29,8 +36,9 @@ extends Node2D
 @export var lantern_colour: Color = Color(1.0, 0.82, 0.55)
 
 const SIDES: Array[String] = ["NE", "NW", "SE", "SW"]
-## Which lattice step each side faces. Derived by eye from the rendered lattice;
-## if a passage ever lines up with solid stone, this is the table to correct.
+## Which lattice step each side faces. This follows from the isometric transform
+## rather than from looking at a render: +x moves right and down, which is SE,
+## and +y moves left and down, which is SW.
 const NEIGHBOUR := {
 	"NE": Vector2i(0, -1),
 	"SW": Vector2i(0, 1),
@@ -90,6 +98,7 @@ func _build() -> void:
 			_rooms[cell] = room
 
 	_carve()
+	_place_pillars()
 	_spawn_player(step)
 	_populate(step)
 	_place_exit()
@@ -295,6 +304,62 @@ func _spawn_player(step: Vector2) -> void:
 
 
 ## One whole room along each isometric axis, in pixels.
+## Stands a pillar at each end of every opening, and spaces more across it.
+##
+## Knocking a wall out leaves the runs either side of it stopping in mid-air,
+## showing their cut faces. Framing the gap with columns reads as architecture
+## that was always meant to have an opening there, rather than a wall someone
+## removed — and it costs a prop instead of a new tile set and door logic.
+##
+## The opening's own wall layer is disabled but still holds its tiles, so it
+## describes exactly where the gap is; no geometry has to be inferred.
+## Closest two columns may stand. Each footprint is 44 across and she is 66, so
+## this leaves at least 106 of clear floor to walk through.
+const MIN_GAP: float = 150.0
+
+
+func _place_pillars() -> void:
+	if pillar_scene == null:
+		return
+	## Both rooms either side of an opening describe the same gap, so each would
+	## otherwise stand its own column there. Spacing is enforced by distance and
+	## not by snapping to a grid: a grid still lets two columns land a few pixels
+	## apart, and anything tighter than MIN_GAP is a doorway she cannot fit
+	## through — her collision diamond is 66 across and a column's is 44.
+	var placed: Array[Vector2] = []
+	for cell in _rooms:
+		var room: Node2D = _rooms[cell]
+		if not room.has_method("open_sides"):
+			continue
+		for side in room.open_sides():
+			var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+			if layer == null:
+				continue
+			var cells: Array[Vector2i] = layer.get_used_cells()
+			if cells.is_empty():
+				continue
+			## Along the gap, so "first" and "last" are its two ends.
+			cells.sort_custom(func(a, b): return a.x + a.y < b.x + b.y)
+			var wanted: Array[int] = [0, cells.size() - 1]
+			var stride: int = maxi(int(cells.size() / float(pillars_per_opening + 1)), 1)
+			for i in range(stride, cells.size() - 1, stride):
+				wanted.append(i)
+			for i in wanted:
+				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i]))
+				var crowded := false
+				for other in placed:
+					if other.distance_to(world) < MIN_GAP:
+						crowded = true
+						break
+				if crowded:
+					continue
+				placed.append(world)
+				var pillar := pillar_scene.instantiate()
+				pillar.name = "Pillar_%d_%d_%s_%d" % [cell.x, cell.y, side, i]
+				add_child(pillar)
+				(pillar as Node2D).global_position = world
+
+
 ## Where a grid cell sits on screen.
 ##
 ## The isometric lattice, not a grid of half-steps. A room's footprint is a
