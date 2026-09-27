@@ -136,9 +136,7 @@ func _place_exit() -> void:
 
 	var stairs = exit_scene.instantiate()
 	add_child(stairs)
-	var ground := (_rooms[far] as Node2D).get_node("TileMap/Ground") as TileMapLayer
-	stairs.global_position = ground.to_global(ground.map_to_local(
-		ground.get_used_rect().position + ground.get_used_rect().size / 2))
+	stairs.global_position = _room_centre(far)
 	## Deferred: descend() frees the whole floor and the signal fires from
 	## inside body_entered, mid-physics.
 	stairs.descended.connect(descend, CONNECT_DEFERRED)
@@ -283,6 +281,18 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 			walls[other][back] = false
 
 
+## The world position of the middle of a room's floor.
+func _room_centre(cell: Vector2i) -> Vector2:
+	var room := _rooms.get(cell) as Node2D
+	if room == null:
+		return Vector2.ZERO
+	var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
+	if ground == null:
+		return room.global_position
+	var used := ground.get_used_rect()
+	return ground.to_global(ground.map_to_local(used.position + used.size / 2))
+
+
 func _spawn_player(step: Vector2) -> void:
 	if player_scene == null:
 		return
@@ -292,10 +302,11 @@ func _spawn_player(step: Vector2) -> void:
 		player = player_scene.instantiate()
 		add_child(player)
 		_player = player
-	## Middle of the lattice, so there is maze in every direction.
-	player.global_position = Vector2(
-		step.x * 0.5 * (grid.x - 1) * 0.5,
-		step.y * 0.5 * (grid.y - 1) * 0.5)
+	## The middle room, standing on the centre of its floor. This used to work
+	## the position out from the old half-step formula, and was never updated
+	## when the lattice was corrected — so she was dropped at a point that
+	## belonged to no room, which is why she started against a wall.
+	player.global_position = _room_centre(Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2))
 
 	if player.has_node("FollowCamera"):
 		return
