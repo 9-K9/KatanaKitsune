@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dqv3n8kylr2ma"]
+[gd_scene load_steps=5 format=3 uid="uid://dqv3n8kylr2ma"]
 
 [ext_resource type="Script" path="res://scripts/system/GeneratedLevel.gd" id="1_gen"]
 [ext_resource type="TileSet" path="res://assets/sprites/tiles/crocotileGround.tres" id="2_kit"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="9_trap"]
 [ext_resource type="PackedScene" uid="uid://cxt5st4rsdn8w" path="res://scenes/props/exitStairs.tscn" id="10_exit"]
 [ext_resource type="PackedScene" uid="uid://drn8k4pwxvq7s" path="res://scenes/monsters/undeadRonin.tscn" id="11_ronin"]
+[ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="9_chair"]
 
 [node name="GeneratedLevel" type="Node2D" node_paths=PackedStringArray()]
 y_sort_enabled = true
@@ -20,7 +21,7 @@ player_scene = ExtResource("3_player")
 enemy_scenes = Array[PackedScene]([ExtResource("4_enemy"), ExtResource("4_enemy"), ExtResource("11_ronin")])
 trap_scene = ExtResource("9_trap")
 exit_scene = ExtResource("10_exit")
-prop_scenes = Array[PackedScene]([ExtResource("5_urn"), ExtResource("5_urn"), ExtResource("6_chest"), ExtResource("7_statue"), ExtResource("8_brazier")])
+prop_scenes = Array[PackedScene]([ExtResource("5_urn"), ExtResource("5_urn"), ExtResource("6_chest"), ExtResource("7_statue"), ExtResource("8_brazier"), ExtResource("9_chair")])
 
 [node name="TileMap" type="Node2D" parent="."]
 y_sort_enabled = true

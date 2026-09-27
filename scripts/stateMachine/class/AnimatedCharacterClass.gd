@@ -39,6 +39,59 @@ var block_opened_at: int = 0
 @export var parry_window_ms: int = 350
 @export var invincibility_duration: float = 0.8
 
+##Stamina Variables
+## Running spends it, standing still returns it. Empty, she can only manage a
+## jog — so a long chase costs her the speed to get out of the next one.
+@export var max_stamina: float = 100.0
+var stamina: float = 100.0
+## Per second while moving. A sprint costs more than the jog it outpaces.
+@export var run_drain: float = 16.0
+@export var sprint_drain: float = 26.0
+@export var stamina_regen: float = 22.0
+## Nothing comes back for a moment after spending, so tapping Run cannot be used
+## to dodge the cost of holding it.
+@export var stamina_regen_delay: float = 0.8
+## Below this there is not enough left to break into a run.
+@export var stamina_floor: float = 4.0
+## Health recovered per second while sitting.
+@export var rest_regen: float = 7.0
+
+var _stamina_rested_for: float = 0.0
+
+
+## Spends at a rate, for states holding a cost open across frames.
+func drain_stamina(per_second: float, delta: float) -> void:
+	stamina = maxf(stamina - per_second * delta, 0.0)
+	_stamina_rested_for = 0.0
+
+
+## Takes a lump sum, and reports whether she could afford it at all.
+func spend_stamina(amount: float) -> bool:
+	if stamina < amount:
+		return false
+	stamina -= amount
+	_stamina_rested_for = 0.0
+	return true
+
+
+## Called every physics frame. Draining resets the rest timer, so a state that
+## is spending suppresses regen without having to coordinate with this.
+func recover_stamina(delta: float) -> void:
+	_stamina_rested_for += delta
+	if _stamina_rested_for >= stamina_regen_delay:
+		stamina = minf(stamina + stamina_regen * delta, max_stamina)
+
+
+## Too spent to run.
+func winded() -> bool:
+	return stamina <= stamina_floor
+
+
+## Sitting mends her, slowly enough that stopping is a real choice.
+func rest(delta: float) -> void:
+	health = minf(health + rest_regen * delta, max_health)
+
+
 ## Timed power-ups picked up from breakables, keyed by Pickup.Kind.
 ## Each entry is {"multiplier": float, "until": float} in seconds of game time.
 var buffs: Dictionary = {}

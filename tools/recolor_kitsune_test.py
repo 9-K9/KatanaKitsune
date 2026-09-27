@@ -10,6 +10,13 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/sprites/characters/KatanaKitsune"
 OUTPUT = ROOT / "assets/sprites/characters/_tests/AzureKitsune"
+TEST_ANIMATIONS = (
+    "IdleStanding",
+    "Walking",
+    "KatanaIdle",
+    "KatanaSlashMid",
+    "Death",
+)
 
 
 def recolor_pixel(
@@ -112,12 +119,12 @@ def recolor(source: Path, destination: Path) -> None:
 
 
 def main() -> None:
-    idle_source = SOURCE / "sprites/IdleStanding"
-    idle_output = OUTPUT / "sprites/IdleStanding"
-
-    for source in sorted(idle_source.glob("*.png")):
-        destination_name = source.name.replace("KatanaKitsume", "AzureKitsune")
-        recolor(source, idle_output / destination_name)
+    for animation in TEST_ANIMATIONS:
+        animation_source = SOURCE / "sprites" / animation
+        animation_output = OUTPUT / "sprites" / animation
+        for source in sorted(animation_source.glob("*.png")):
+            destination_name = source.name.replace("KatanaKitsume", "AzureKitsune")
+            recolor(source, animation_output / destination_name)
 
     recolor(SOURCE / "HUDicon.png", OUTPUT / "HUDicon.png")
 

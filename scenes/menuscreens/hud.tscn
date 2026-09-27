@@ -43,11 +43,25 @@ offset_right = 272.0
 offset_bottom = 21.0
 color = Color(0.78, 0.17, 0.16, 1)
 
+[node name="Stamina" type="TextureRect" parent="."]
+offset_left = 138.0
+offset_top = 74.0
+offset_right = 359.0
+offset_bottom = 97.0
+texture = ExtResource("4_bar")
+
+[node name="Fill" type="ColorRect" parent="Stamina"]
+offset_left = 9.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 15.0
+color = Color(0.45, 0.62, 0.36, 1)
+
 [node name="Depth" type="Label" parent="."]
 offset_left = 140.0
-offset_top = 74.0
+offset_top = 100.0
 offset_right = 420.0
-offset_bottom = 96.0
+offset_bottom = 122.0
 theme = ExtResource("5_theme")
 theme_override_colors/font_color = Color(0.6, 0.52, 0.34, 1)
 theme_override_font_sizes/font_size = 13

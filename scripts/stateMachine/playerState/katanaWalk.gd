@@ -20,5 +20,8 @@ func on_process(delta):
 func on_physics_process(delta):
 	pass
 		
+	if Input.is_action_just_pressed("Jump"):
+		change_state("katanaJump")
+
 func on_exit():
 	pass

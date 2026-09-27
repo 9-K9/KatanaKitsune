@@ -1,4 +1,4 @@
-[gd_scene load_steps=2743 format=3 uid="uid://crfws6oy432nx"]
+[gd_scene load_steps=2744 format=3 uid="uid://crfws6oy432nx"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_heltt"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_d8qwd"]
@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://dtj3kr8ldqilx" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir6.png" id="17_pd202"]
 [ext_resource type="Texture2D" uid="uid://3fblmxnuasha" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir4.png" id="18_0wcdy"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/katanaSlashStand.gd" id="18_7bwpx"]
+[ext_resource type="Script" path="res://scripts/stateMachine/playerState/switchDirections.gd" id="257_swdir"]
 [ext_resource type="Texture2D" uid="uid://h3w15ffymsgw" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsume_IdleStanding_dir6.png" id="18_jakcd"]
 [ext_resource type="Texture2D" uid="uid://rw8w2qjueydw" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir8.png" id="18_jlw3t"]
 [ext_resource type="Texture2D" uid="uid://b7rwp1d4yoojb" path="res://assets/sprites/characters/KatanaKitsune/sprites/Flair/KatanaKitsume_Flair_dir7.png" id="18_kmiyh"]
@@ -8976,7 +8977,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6u3pc")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_east",
 "speed": 5.0
 }, {
@@ -9005,7 +9006,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_30pus")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_north",
 "speed": 5.0
 }, {
@@ -9034,7 +9035,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_1fl0s")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_northEast",
 "speed": 5.0
 }, {
@@ -9063,7 +9064,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_imsij")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_northWest",
 "speed": 5.0
 }, {
@@ -9092,7 +9093,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lpedf")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_south",
 "speed": 5.0
 }, {
@@ -9121,7 +9122,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_weq6c")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_southEast",
 "speed": 5.0
 }, {
@@ -9150,7 +9151,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dhnux")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_southWest",
 "speed": 5.0
 }, {
@@ -9179,7 +9180,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dyw11")
 }],
-"loop": true,
+"loop": false,
 "name": &"flair_west",
 "speed": 5.0
 }, {
@@ -9208,7 +9209,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8thm0")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_east",
 "speed": 5.0
 }, {
@@ -9237,7 +9238,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_e5j1d")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_north",
 "speed": 5.0
 }, {
@@ -9266,7 +9267,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_huegm")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_northEast",
 "speed": 5.0
 }, {
@@ -9295,7 +9296,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7ypsb")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_northWest",
 "speed": 5.0
 }, {
@@ -9324,7 +9325,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nvshu")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_south",
 "speed": 5.0
 }, {
@@ -9353,7 +9354,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_miful")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_southEast",
 "speed": 5.0
 }, {
@@ -9382,7 +9383,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_eqcf6")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_southWest",
 "speed": 5.0
 }, {
@@ -9411,7 +9412,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_q2i3w")
 }],
-"loop": true,
+"loop": false,
 "name": &"forwardRoll_west",
 "speed": 5.0
 }, {
@@ -10600,7 +10601,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_vh3ij")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_east",
 "speed": 5.0
 }, {
@@ -10629,7 +10630,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_y0nk1")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_north",
 "speed": 5.0
 }, {
@@ -10658,7 +10659,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oh6c8")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_northEast",
 "speed": 5.0
 }, {
@@ -10687,7 +10688,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wdxl8")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_northWest",
 "speed": 5.0
 }, {
@@ -10716,7 +10717,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_eg5xb")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_south",
 "speed": 5.0
 }, {
@@ -10745,7 +10746,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g0sep")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_southEast",
 "speed": 5.0
 }, {
@@ -10774,7 +10775,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_sfdhe")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_southWest",
 "speed": 5.0
 }, {
@@ -10803,7 +10804,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bijc2")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaCounterSlash_west",
 "speed": 5.0
 }, {
@@ -11296,7 +11297,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_t4vqr")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_east",
 "speed": 5.0
 }, {
@@ -11325,7 +11326,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ut2td")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_north",
 "speed": 5.0
 }, {
@@ -11354,7 +11355,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_uoc0k")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_northEast",
 "speed": 5.0
 }, {
@@ -11383,7 +11384,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_e0m0q")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_northWest",
 "speed": 5.0
 }, {
@@ -11412,7 +11413,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_n03qj")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_south",
 "speed": 5.0
 }, {
@@ -11441,7 +11442,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lbw4s")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_southEast",
 "speed": 5.0
 }, {
@@ -11470,7 +11471,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0boe3")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_southWest",
 "speed": 5.0
 }, {
@@ -11499,7 +11500,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_twe6u")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaJump_west",
 "speed": 5.0
 }, {
@@ -12456,7 +12457,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2c5ya")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_east",
 "speed": 8.0
 }, {
@@ -12485,7 +12486,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wotut")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_north",
 "speed": 8.0
 }, {
@@ -12514,7 +12515,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dlubr")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_northEast",
 "speed": 8.0
 }, {
@@ -12543,7 +12544,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l6lap")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_northWest",
 "speed": 8.0
 }, {
@@ -12572,7 +12573,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_vqb40")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_south",
 "speed": 8.0
 }, {
@@ -12601,7 +12602,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_fnigs")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_southEast",
 "speed": 8.0
 }, {
@@ -12630,7 +12631,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_waorv")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_southWest",
 "speed": 8.0
 }, {
@@ -12659,7 +12660,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0pp2k")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaSlashMid_west",
 "speed": 8.0
 }, {
@@ -13616,7 +13617,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2uwq7")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_east",
 "speed": 12.0
 }, {
@@ -13645,7 +13646,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ddatc")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_north",
 "speed": 12.0
 }, {
@@ -13674,7 +13675,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_o2ci0")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_northEast",
 "speed": 12.0
 }, {
@@ -13703,7 +13704,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_fsvyw")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_northWest",
 "speed": 12.0
 }, {
@@ -13732,7 +13733,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ksqu6")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_south",
 "speed": 12.0
 }, {
@@ -13761,7 +13762,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_h1iwd")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_southEast",
 "speed": 12.0
 }, {
@@ -13790,7 +13791,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_iux7v")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_southWest",
 "speed": 12.0
 }, {
@@ -13819,7 +13820,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_da4c0")
 }],
-"loop": true,
+"loop": false,
 "name": &"runningJump_west",
 "speed": 12.0
 }, {
@@ -13848,7 +13849,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_idhf8")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_east",
 "speed": 5.0
 }, {
@@ -13877,7 +13878,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3anp3")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_north",
 "speed": 5.0
 }, {
@@ -13906,7 +13907,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_vy8sj")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_northEast",
 "speed": 5.0
 }, {
@@ -13935,7 +13936,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g3h61")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_northWest",
 "speed": 5.0
 }, {
@@ -13964,7 +13965,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g0ohb")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_south",
 "speed": 5.0
 }, {
@@ -13993,7 +13994,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_q8k10")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_southEast",
 "speed": 5.0
 }, {
@@ -14022,7 +14023,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ox8v8")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_southWest",
 "speed": 5.0
 }, {
@@ -14051,7 +14052,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hmlms")
 }],
-"loop": true,
+"loop": false,
 "name": &"seductiveDance_west",
 "speed": 5.0
 }, {
@@ -15472,7 +15473,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_30b80")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_east",
 "speed": 5.0
 }, {
@@ -15501,7 +15502,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jhht4")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_north",
 "speed": 5.0
 }, {
@@ -15530,7 +15531,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nbrdh")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_northEast",
 "speed": 5.0
 }, {
@@ -15559,7 +15560,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8rsv4")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_northWest",
 "speed": 5.0
 }, {
@@ -15588,7 +15589,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7mhlw")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_south",
 "speed": 5.0
 }, {
@@ -15617,7 +15618,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2m8im")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_southEast",
 "speed": 5.0
 }, {
@@ -15646,7 +15647,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lcyqa")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_southWest",
 "speed": 5.0
 }, {
@@ -15675,7 +15676,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_yep6r")
 }],
-"loop": true,
+"loop": false,
 "name": &"switchDirections_west",
 "speed": 5.0
 }, {
@@ -24299,6 +24300,10 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="katanaKick" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("17_58e8u")
+_animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
+
+[node name="switchDirections" type="Node" parent="FiniteStateMachine"]
+script = ExtResource("257_swdir")
 _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="katanaSlashStand" type="Node" parent="FiniteStateMachine"]

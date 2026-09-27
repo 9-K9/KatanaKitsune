@@ -19,5 +19,8 @@ func on_process(_delta):
 	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaDraw")
 
+	if Input.is_action_just_pressed("Jump"):
+		change_state("forwardRoll")
+
 func on_exit():
 	pc.stealthed = false

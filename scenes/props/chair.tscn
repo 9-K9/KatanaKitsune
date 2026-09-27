@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cha1rp2ropkk8"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chair.png" id="1_chair"]
+
+[node name="Chair" type="Node2D" groups=["chair"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -20)
+texture = ExtResource("1_chair")

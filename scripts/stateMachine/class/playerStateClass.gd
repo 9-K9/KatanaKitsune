@@ -22,8 +22,49 @@ func stateAnimation(state_to_animate,fps):
 	fps = null #fps can be set in code or in the editor
 	var string_animation : String
 	string_animation = "%s_%s"%[state_to_animate,pc.facing_dir]
-	animated_sprite.play(string_animation) 
-			
+	## Undoes any rate a one-shot state left behind. Looping states call this
+	## every frame, so the rate is back to normal as soon as one is entered.
+	animated_sprite.speed_scale = 1.0
+	animated_sprite.play(string_animation)
+
+## How long a clip actually runs, in seconds, for the way she is facing.
+##
+## One-shot states used to carry hardcoded durations, and every one was shorter
+## than its art: the roll ended after 0.55s of a 1.6s clip, so two thirds of the
+## frames never showed. Ask the SpriteFrames instead of guessing.
+func clip_length(clip: String) -> float:
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	var anim := "%s_%s" % [clip, pc.facing_dir]
+	if frames == null or not frames.has_animation(anim):
+		return 0.0
+	var fps: float = frames.get_animation_speed(anim)
+	if fps <= 0.0:
+		return 0.0
+	var total := 0.0
+	for i in frames.get_frame_count(anim):
+		total += frames.get_frame_duration(anim, i)
+	return total / fps
+
+## Plays a clip once and returns how long it will take, so the state can end when
+## the art ends. `rate` speeds it up without editing the SpriteFrames — the roll
+## and hop are drawn at a stately 5fps, far too slow to read as evasive.
+func play_oneshot(clip: String, rate: float = 1.0) -> float:
+	animated_sprite.speed_scale = rate
+	animated_sprite.play("%s_%s" % [clip, pc.facing_dir])
+	return clip_length(clip) / rate
+
+## Too spent to run. Stamina lives on the character; this is just the shorthand.
+func winded() -> bool:
+	return pc.winded()
+
+## A chair she is standing over, if any. Matched by group rather than collision
+## so a chair is a sprite with a marker on it, not a physics body in her way.
+func chair_underfoot() -> Node2D:
+	for chair in pc.get_tree().get_nodes_in_group("chair"):
+		if chair is Node2D and pc.global_position.distance_to(chair.global_position) <= 30.0:
+			return chair
+	return null
+
 ## Arms the next swing. Call from an attack state's on_enter.
 func beginAttack():
 	_swing_connected = false

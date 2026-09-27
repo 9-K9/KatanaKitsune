@@ -88,6 +88,9 @@ func _provoke_pressed() -> bool:
 
 func _physics_process(_delta):
 	update_buffs()
+	## Unconditional: the running states call drain_stamina, which resets the rest
+	## timer, so spending and recovering cannot both apply in the same frame.
+	recover_stamina(_delta)
 	_try_provoke_target()
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.

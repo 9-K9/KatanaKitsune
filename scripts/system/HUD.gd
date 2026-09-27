@@ -10,16 +10,22 @@ const FILL_INSET: Vector2 = Vector2(9, 8)
 @onready var depth_label: Label = $Depth
 @onready var fill: ColorRect = $Bar/Fill
 @onready var bar: TextureRect = $Bar
+@onready var stamina_fill: ColorRect = $Stamina/Fill
+@onready var stamina_bar: TextureRect = $Stamina
 
 var _player: CharacterBody2D = null
 var _fill_width: float = 0.0
 var _shown: float = -1.0
+var _stamina_width: float = 0.0
 
 
 func _ready() -> void:
 	_fill_width = bar.size.x - FILL_INSET.x * 2.0
 	fill.position = FILL_INSET
 	fill.size = Vector2(_fill_width, bar.size.y - FILL_INSET.y * 2.0)
+	_stamina_width = stamina_bar.size.x - FILL_INSET.x * 2.0
+	stamina_fill.position = FILL_INSET
+	stamina_fill.size = Vector2(_stamina_width, stamina_bar.size.y - FILL_INSET.y * 2.0)
 
 
 func player() -> CharacterBody2D:
@@ -54,3 +60,9 @@ func _show_depth() -> void:
 	var text: String = "FLOOR %d" % level.depth
 	if depth_label.text != text:
 		depth_label.text = text
+	## Stamina tracks the real value with no easing: she needs to see it empty the
+	## moment the sprint stops, because that is when she loses the speed.
+	var winded: bool = target.has_method("winded") and target.winded()
+	var spare: float = clampf(target.stamina / maxf(target.max_stamina, 1.0), 0.0, 1.0)
+	stamina_fill.size.x = _stamina_width * spare
+	stamina_fill.color = Color(0.55, 0.34, 0.16) if winded else Color(0.45, 0.62, 0.36)

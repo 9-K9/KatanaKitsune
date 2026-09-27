@@ -13,6 +13,15 @@ func on_process(_delta):
 		return
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("stealthIdle")
+		return
+
+	## Running while hidden is the ninja run, provided she has the wind for it.
+	if Input.is_action_pressed("Run") and not winded():
+		change_state("ninjaRun")
+		return
+
+	if Input.is_action_just_pressed("Jump"):
+		change_state("forwardRoll")
 	if Input.is_action_just_pressed("Katana"):
 		change_state("katanaDraw")
 
