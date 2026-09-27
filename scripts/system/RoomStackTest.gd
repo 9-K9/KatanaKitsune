@@ -70,7 +70,12 @@ func _rebuild() -> void:
 			var room := room_scene.instantiate()
 			room.name = "Room_%d_%d" % [ix, iy]
 			holder.add_child(room)
-			room.position = Vector2(step.x * ix, step.y * iy)
+			## Diamond lattice. A room is a rhombus on screen, so neighbours
+			## sit half a room right and half a room down — the NE/SE/SW/NW
+			## move — and every half-step position is filled. Stepping a whole
+			## width and height instead spaces them like a checkerboard and
+			## leaves a room-shaped hole between every four.
+			room.position = Vector2(step.x * ix * 0.5, step.y * iy * 0.5)
 			if not keep_lighting:
 				var light: Node = room.get_node_or_null("Lighting")
 				if light:
