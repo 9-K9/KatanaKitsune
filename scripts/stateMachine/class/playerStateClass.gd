@@ -62,7 +62,11 @@ func winded() -> bool:
 ## Reach was 30px, which her own collision diamond is more than twice as wide
 ## as — she could be standing squarely on a chair with her origin too far from
 ## its centre to count, so resting could effectively never be triggered.
-const CHAIR_REACH: float = 90.0
+## Measured along the ground, which doubles the vertical component to undo the
+## 2:1 squash — so this is about 70px of tolerance up or down the screen and 140
+## to the side. At 90 it was only 45px vertically, tight enough that she could
+## look like she was standing on a chair and still not reach it.
+const CHAIR_REACH: float = 140.0
 
 
 func chair_underfoot() -> Node2D:
@@ -74,13 +78,21 @@ func chair_underfoot() -> Node2D:
 		## Ground distance, not screen distance. The map is drawn 2:1, so a chair
 		## the same distance away up the screen would otherwise read as twice as
 		## close as one to the side.
-		var offset: Vector2 = (chair as Node2D).global_position - pc.global_position
+		var seat_position := _chair_position(chair as Node2D)
+		var offset: Vector2 = seat_position - pc.global_position
 		offset.y /= 0.5
 		var distance: float = offset.length()
 		if distance <= CHAIR_REACH and distance < nearest_distance:
 			nearest_distance = distance
 			nearest = chair
 	return nearest
+
+
+func _chair_position(chair: Node2D) -> Vector2:
+	if chair.has_method("get_sit_position"):
+		return chair.get_sit_position()
+	var anchor := chair.get_node_or_null("SitAnchor") as Node2D
+	return anchor.global_position if anchor != null else chair.global_position
 
 ## Arms the next swing. Call from an attack state's on_enter.
 func beginAttack():
