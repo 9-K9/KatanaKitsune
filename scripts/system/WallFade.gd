@@ -27,6 +27,8 @@ const SPRITE_HEIGHT: float = 360.0
 var _player: CharacterBody2D = null
 var _shader: ShaderMaterial = null
 var _covered: bool = false
+## Ground-line gradient per tile source, worked out once.
+var _slopes: Dictionary = {}
 
 
 func _ready() -> void:
@@ -75,23 +77,50 @@ func _is_covering(world_pos: Vector2) -> bool:
 				return true
 
 			var tile: Vector2 = map_to_local(cell)
-			## A wall plane is ~240px wide and ~350px tall. Anything further off
-			## than that cannot be drawn over her however it sorts, and without
-			## this the scan kept finding some other wall further down the room
-			## and reporting her as covered while she stood in the open.
-			if absf(tile.x - local.x) > SPRITE_HALF_WIDTH:
+			var offset: float = local.x - tile.x
+			## A wall plane is ~240px wide. Past that it cannot be drawn over
+			## her however it sorts, and without this the scan kept finding
+			## another wall further down the room and calling her covered while
+			## she stood in the open.
+			if absf(offset) > SPRITE_HALF_WIDTH:
 				continue
-			var sort_y: float = _sort_y(cell)
-			if sort_y - local.y > SPRITE_HEIGHT:
+
+			## Follow the plane instead of treating it as a rectangle. A wall
+			## runs along a tile axis, so its ground line rises or falls as it
+			## goes; comparing against the cell's single sort value made a wall
+			## she was running alongside look like one she was standing behind.
+			var line_y: float = _sort_y(cell) + offset * _slope(cell)
+			if line_y - local.y > SPRITE_HEIGHT:
 				continue
-			## Sorts in front of her, so it is drawn over her. Compared against
-			## the tile's real sort point, not its cell origin: these walls sit
-			## up to 132px below the cell they occupy, so the cell origin is not
-			## where Godot sorts them, and the two answers disagree exactly
-			## along the bottom edge of a wall, which is where it matters.
-			if sort_y > local.y:
+			## The stone at her x sorts in front of her, so it covers her.
+			if line_y > local.y:
 				return true
 	return false
+
+
+## Gradient of a wall's ground line, read off its own collision polygon rather
+## than assumed, so each of the eight directions gets its own answer.
+func _slope(cell: Vector2i) -> float:
+	var source_id: int = get_cell_source_id(cell)
+	if _slopes.has(source_id):
+		return _slopes[source_id]
+
+	var slope: float = 0.0
+	var source := tile_set.get_source(source_id) as TileSetAtlasSource
+	if source != null:
+		var data: TileData = source.get_tile_data(get_cell_atlas_coords(cell),
+			get_cell_alternative_tile(cell))
+		if data != null and data.get_collision_polygons_count(0) > 0:
+			var points := data.get_collision_polygon_points(0, 0)
+			## The footprint's longest edge runs along the wall.
+			var best: float = 0.0
+			for i in points.size():
+				var edge: Vector2 = points[(i + 1) % points.size()] - points[i]
+				if edge.length() > best and absf(edge.x) > 1.0:
+					best = edge.length()
+					slope = edge.y / edge.x
+	_slopes[source_id] = slope
+	return slope
 
 
 ## Where Godot sorts the tile in this cell, in layer-local space.

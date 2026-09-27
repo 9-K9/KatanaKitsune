@@ -838,6 +838,15 @@ shader_parameter/rise = 86.0
 shader_parameter/softness = 0.55
 shader_parameter/min_alpha = 0.18
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wallfade_back"]
+shader = ExtResource("1_wfsh")
+shader_parameter/player_world = Vector2(0, 0)
+shader_parameter/behind = 0.0
+shader_parameter/extents = Vector2(52, 105)
+shader_parameter/rise = 86.0
+shader_parameter/softness = 0.55
+shader_parameter/min_alpha = 0.18
+
 [node name="YSortMap" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_00tkk")
@@ -855,7 +864,7 @@ tile_set = SubResource("TileSet_prmkq")
 
 [node name="BackWalls" type="TileMapLayer" parent="TileMap"]
 y_sort_enabled = true
-material = SubResource("ShaderMaterial_wallfade")
+material = SubResource("ShaderMaterial_wallfade_back")
 script = ExtResource("1_wfsc")
 tile_map_data = PackedByteArray("AADy//z/BwAAAAAAAAD1//X/BwAAAAAAAAD5/+7/BwAAAAAAAAD7/+n/AwAAAAAAAAAJAP3/AQAAAAAAAAAGAPb/AQAAAAAAAAACAO//AQAAAAAAAAD//+j/AQAAAAAAAAA=")
 tile_set = SubResource("TileSet_tjlhk")
