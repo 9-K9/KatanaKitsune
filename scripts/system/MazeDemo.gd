@@ -78,7 +78,7 @@ func _build() -> void:
 			var room = room_scene.instantiate()
 			room.name = "Room_%d_%d" % [ix, iy]
 			add_child(room)
-			room.position = Vector2(step.x * ix * 0.5, step.y * iy * 0.5)
+			room.position = _lattice_position(cell, step)
 			## Every room carries a CanvasModulate; several stacked just fight.
 			var light: Node = room.get_node_or_null("Lighting")
 			if light:
@@ -295,6 +295,24 @@ func _spawn_player(step: Vector2) -> void:
 
 
 ## One whole room along each isometric axis, in pixels.
+## Where a grid cell sits on screen.
+##
+## The isometric lattice, not a grid of half-steps. A room's footprint is a
+## diamond, and diamonds only interlock when each neighbour sits half a width
+## across AND half a height down — moving in one axis alone slides a room
+## halfway over its neighbour, which is what used to happen here.
+##
+## In tile terms this is exactly one room per step: +ix advances the room's own
+## cell block by its width, +iy by its height, so floors abut with no seam and
+## no shared cells. That also derives NEIGHBOUR rather than leaving it read off
+## a render — +ix goes right and down (SE), +iy goes left and down (SW), and
+## their negatives are NW and NE.
+func _lattice_position(cell: Vector2i, step: Vector2) -> Vector2:
+	return Vector2(
+		float(cell.x - cell.y) * step.x * 0.5,
+		float(cell.x + cell.y) * step.y * 0.5)
+
+
 func _lattice_step() -> Vector2:
 	var probe = room_scene.instantiate()
 	var ground := probe.get_node_or_null("TileMap/Ground") as TileMapLayer
@@ -309,8 +327,12 @@ func _lattice_step() -> Vector2:
 			umax = maxi(umax, c.x - c.y)
 			vmin = mini(vmin, c.x + c.y)
 			vmax = maxi(vmax, c.x + c.y)
+		## The diamond's full screen width and height: the span between the
+		## outermost tile centres, plus the one whole tile hanging off each end.
+		## This used to add a single tile rather than two, so every room was
+		## measured one tile short and the lattice pulled itself inwards.
 		step = Vector2(
-			float(umax - umin + 1) * ground.tile_set.tile_size.x * 0.5,
-			float(vmax - vmin + 1) * ground.tile_set.tile_size.y * 0.5)
+			float(umax - umin + 2) * ground.tile_set.tile_size.x * 0.5,
+			float(vmax - vmin + 2) * ground.tile_set.tile_size.y * 0.5)
 	probe.free()
 	return step

@@ -24488,6 +24488,6 @@ wait_time = 0.5
 one_shot = true
 
 [node name="PlayerCollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-24, 0, 0, -12, 24, 0, 0, 12)
+polygon = PackedVector2Array(-33, 0, 0, -17, 33, 0, 0, 17)
 
 [connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]

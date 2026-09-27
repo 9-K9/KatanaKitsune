@@ -249,7 +249,9 @@ func take_damage(amount: float) -> void:
 		return
 	health = maxf(health - amount, 0.0)
 	_refresh_health_bar()
-	_flash()
+	## The killing blow gets the longer hold, so a one-shot does not look like
+	## the monster was never hit at all.
+	_flash(health <= 0.0)
 	if health <= 0.0:
 		_change_state("death")
 		return
@@ -285,12 +287,53 @@ func _change_state(state_name: String) -> void:
 		state_machine.change_state(state_name)
 
 
-func _flash() -> void:
+## Reaction to being hit: a blown-out flash, a recoil away from the blade, and a
+## squash that springs back.
+##
+## A tint fading over 0.18s was all there used to be, which on a dark sprite in a
+## dark dungeon is close to invisible — and a killing blow swapped straight to
+## the death clip in the same frame, so a one-shot backstab read as the monster
+## blinking out of existence. The recoil moves the sprite, not the body, so it
+## cannot shove a monster through a wall.
+const RECOIL_PIXELS: float = 22.0
+const RECOIL_TIME: float = 0.13
+## Well above white, so a hit reads even against lantern light.
+const HIT_BLOWOUT: Color = Color(2.6, 1.5, 1.5, 1.0)
+
+
+func _flash(fatal: bool = false) -> void:
 	if is_instance_valid(_flash_tween):
 		_flash_tween.kill()
-	animated_sprite.modulate = HIT_FLASH
+	if not is_instance_valid(animated_sprite):
+		return
+
+	var rest_offset: Vector2 = animated_sprite.offset
+	var rest_scale: Vector2 = animated_sprite.scale
+
+	## Away from whoever is swinging, with the isometric squash applied so the
+	## kick travels along the floor rather than straight across the screen.
+	var away := Vector2(0.0, -1.0)
+	var target := player()
+	if target != null:
+		var d: Vector2 = global_position - target.global_position
+		if d.length_squared() > 0.001:
+			away = d.normalized()
+	away.y *= 0.5
+
+	animated_sprite.modulate = HIT_BLOWOUT
+	animated_sprite.offset = rest_offset + away * RECOIL_PIXELS
+	animated_sprite.scale = rest_scale * Vector2(1.18, 0.86)
+
 	_flash_tween = create_tween()
-	_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.18)
+	_flash_tween.set_parallel(true)
+	## A kill holds the white longer; the death clip takes over from there, and
+	## the hold is what sells the moment.
+	_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE,
+			0.34 if fatal else 0.2)
+	_flash_tween.tween_property(animated_sprite, "offset", rest_offset, RECOIL_TIME) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_flash_tween.tween_property(animated_sprite, "scale", rest_scale, RECOIL_TIME) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _refresh_health_bar() -> void:
