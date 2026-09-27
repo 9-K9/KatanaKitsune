@@ -2200,7 +2200,7 @@ timeline = "res://dialogue/enemies/mummyKitsune_taunt.dtl"
 
 [node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
 script = ExtResource("fsm")
-current_state = NodePath("alert")
+current_state = NodePath("idle")
 
 [node name="idle" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("st_idle")

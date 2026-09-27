@@ -84,8 +84,62 @@ func distance_to_player() -> float:
 	return ground_distance_to(target.global_position)
 
 
-## detection_range scaled by how well hidden she is, so sneaking and crouching
-## actually shorten the range a monster wakes up at.
+## Stone blocks sight. Walls sit on physics layer 1, and the ray runs between
+## the two feet positions, which after the y-sort fix are both on the ground —
+## so it crosses the same floor the characters walk on.
+const WALL_MASK: int = 1
+## How long a monster keeps hunting after losing sight of her.
+@export var memory_seconds: float = 3.0
+
+var _last_seen_ms: int = -100000
+var _sight_checked_ms: int = -100000
+var _sight_cached: bool = false
+## Where she was standing when last seen, so a monster can press on to it.
+var last_known: Vector2 = Vector2.ZERO
+
+
+## Can this monster actually see her? Range first because it is cheap, then a
+## ray, and the answer is held briefly so a crowd of monsters does not each cast
+## every frame.
+func sees_player() -> bool:
+	var now: int = Time.get_ticks_msec()
+	if now - _sight_checked_ms < 120:
+		return _sight_cached
+	_sight_checked_ms = now
+	_sight_cached = _look_for_player()
+	if _sight_cached:
+		_last_seen_ms = now
+		var target := player()
+		if target != null:
+			last_known = target.global_position
+	return _sight_cached
+
+
+func _look_for_player() -> bool:
+	var target := player()
+	if target == null or is_dead:
+		return false
+	## effective_detection already scales with how hidden she is — crouched is
+	## 0.3 of the range, katana drawn is 1.5.
+	if ground_distance_to(target.global_position) > effective_detection():
+		return false
+	var space := get_world_2d().direct_space_state
+	var query := PhysicsRayQueryParameters2D.create(
+			global_position, target.global_position, WALL_MASK)
+	## Without excluding these two the ray stops on whoever cast it. Other
+	## monsters are left in deliberately: one standing in a doorway blocks the
+	## view through it, which is the same rule the walls follow.
+	query.exclude = [get_rid(), target.get_rid()]
+	return space.intersect_ray(query).is_empty()
+
+
+## Seconds since she was last actually seen.
+func seconds_since_seen() -> float:
+	return float(Time.get_ticks_msec() - _last_seen_ms) / 1000.0
+
+
+## detection_range scaled by how well hidden she is, so crouching, sneaking and
+## drawing the katana each change the range a monster wakes up at.
 func effective_detection() -> float:
 	var target := player()
 	if target != null and target.has_method("stealth_ratio"):
@@ -254,11 +308,6 @@ func take_damage(amount: float) -> void:
 	_flash(health <= 0.0)
 	if health <= 0.0:
 		_change_state("death")
-		return
-	## A hit landed mid-sentence still hurts, but must not knock the monster
-	## into `hurt` — that would leave the dialogue running with nothing waiting
-	## on it, and the monster would never reach its fighting states.
-	if is_instance_valid(taunt) and taunt.is_speaking:
 		return
 	_change_state("hurt")
 

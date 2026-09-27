@@ -66,37 +66,11 @@ func InputHandler():
 	direction = direction.normalized()
 	return round(direction)
 
-## Interacting with a monster makes it say its piece before it will fight.
-## Checked here rather than in the individual states so every way of starting a
-## swing routes through the same place — the katana states each read the attack
-## inputs themselves, and duplicating this across them would drift.
-const PROVOKE_ACTIONS: PackedStringArray = ["Action", "Attack", "Katana"]
-
-
-func _try_provoke_target() -> void:
-	## Input first: it is a handful of dictionary lookups, against an overlap
-	## query that runs every physics frame otherwise. On all but the few frames
-	## an attack actually starts, this returns here.
-	if not _provoke_pressed():
-		return
-	var target := current_target()
-	if target != null and target.has_method("provoke"):
-		target.provoke()
-
-
-func _provoke_pressed() -> bool:
-	for action in PROVOKE_ACTIONS:
-		if Input.is_action_just_pressed(action):
-			return true
-	return false
-
-
 func _physics_process(_delta):
 	update_buffs()
 	## Unconditional: the running states call drain_stamina, which resets the rest
 	## timer, so spending and recovering cannot both apply in the same frame.
 	recover_stamina(_delta)
-	_try_provoke_target()
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()

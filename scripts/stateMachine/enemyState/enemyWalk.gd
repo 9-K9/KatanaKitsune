@@ -1,19 +1,18 @@
 extends EnemyState
 
-## Chases the player and decides when to swing.
+## Hunting her. Holds this state only while she is actually in sight; the moment
+## she is not, it hands over to `alert`, which keeps looking for a few seconds
+## before giving up.
 
 
 func on_physics_process(_delta: float) -> void:
-	var distance: float = enemy.distance_to_player()
-	if distance > enemy.lose_interest_range:
-		## Back to standing guard and scanning, not to a dead idle. The monster
-		## has already said its line, so `alert` will re-engage on sight rather
-		## than waiting to be provoked a second time.
+	if not enemy.sees_player():
 		change_state("alert")
 		return
 
-	## Face where the player actually is, but walk where the path says: looking
-	## at a corridor corner while chasing reads as the monster losing interest.
+	var distance: float = enemy.distance_to_player()
+	## Face where she actually is, but walk where the path says: staring at a
+	## corner while rounding it reads as the monster losing interest.
 	var to_player: Vector2 = enemy.direction_to_player()
 	enemy.face(to_player)
 
@@ -21,8 +20,8 @@ func on_physics_process(_delta: float) -> void:
 		if enemy.attack_off_cooldown():
 			change_state("attack")
 		else:
-			## In range but still recovering. Hold position rather than shoving
-			## the player around while the claws reset.
+			## In range but still recovering. Holds position rather than shoving
+			## her around while the claws reset.
 			enemy.stop()
 			enemy.play_loop("idle")
 		return

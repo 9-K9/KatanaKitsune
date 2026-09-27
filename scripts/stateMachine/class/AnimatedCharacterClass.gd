@@ -266,6 +266,11 @@ func _on_death() -> void:
 ## Multiplier monsters apply to their detection range when looking for her.
 ## Crouched is quieter than merely sneaking, which is quieter than walking.
 func stealth_ratio() -> float:
+	## Drawn steel catches what light there is, so she is seen from furthest away
+	## with the katana out and from closest flat against the floor. That makes
+	## sheathing a real decision rather than a formality.
 	if crouched:
 		return 0.3
-	return 0.5 if stealthed else 1.0
+	if stealthed:
+		return 0.5
+	return 1.5 if katana_drawn else 1.0
