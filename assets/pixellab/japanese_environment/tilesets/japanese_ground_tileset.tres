@@ -1,0 +1,264 @@
+[gd_resource type="TileSet" load_steps=65 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_0.png" id="1_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_1.png" id="2_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_2.png" id="3_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_3.png" id="4_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_4.png" id="5_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_5.png" id="6_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_6.png" id="7_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_7.png" id="8_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_8.png" id="9_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_9.png" id="10_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_10.png" id="11_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_11.png" id="12_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_12.png" id="13_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_13.png" id="14_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_14.png" id="15_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_15.png" id="16_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_0.png" id="17_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_1.png" id="18_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_2.png" id="19_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_3.png" id="20_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_4.png" id="21_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_5.png" id="22_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_6.png" id="23_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_7.png" id="24_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_8.png" id="25_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_9.png" id="26_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_10.png" id="27_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_11.png" id="28_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_12.png" id="29_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_13.png" id="30_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_14.png" id="31_jground"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_15.png" id="32_jground"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_0"]
+texture = ExtResource("1_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_1"]
+texture = ExtResource("2_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_2"]
+texture = ExtResource("3_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_3"]
+texture = ExtResource("4_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_4"]
+texture = ExtResource("5_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_5"]
+texture = ExtResource("6_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_6"]
+texture = ExtResource("7_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_7"]
+texture = ExtResource("8_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_8"]
+texture = ExtResource("9_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_9"]
+texture = ExtResource("10_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_10"]
+texture = ExtResource("11_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_11"]
+texture = ExtResource("12_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_12"]
+texture = ExtResource("13_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_13"]
+texture = ExtResource("14_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_14"]
+texture = ExtResource("15_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_15"]
+texture = ExtResource("16_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_16"]
+texture = ExtResource("17_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_17"]
+texture = ExtResource("18_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_18"]
+texture = ExtResource("19_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_19"]
+texture = ExtResource("20_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_20"]
+texture = ExtResource("21_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_21"]
+texture = ExtResource("22_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_22"]
+texture = ExtResource("23_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_23"]
+texture = ExtResource("24_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_24"]
+texture = ExtResource("25_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_25"]
+texture = ExtResource("26_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_26"]
+texture = ExtResource("27_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_27"]
+texture = ExtResource("28_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_28"]
+texture = ExtResource("29_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_29"]
+texture = ExtResource("30_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_30"]
+texture = ExtResource("31_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jground_31"]
+texture = ExtResource("32_jground")
+texture_region_size = Vector2i(48, 48)
+use_texture_padding = false
+0:0/0 = 0
+
+[resource]
+tile_shape = 1
+tile_layout = 0
+tile_size = Vector2i(48, 24)
+sources/0 = SubResource("TileSetAtlasSource_jground_0")
+sources/1 = SubResource("TileSetAtlasSource_jground_1")
+sources/2 = SubResource("TileSetAtlasSource_jground_2")
+sources/3 = SubResource("TileSetAtlasSource_jground_3")
+sources/4 = SubResource("TileSetAtlasSource_jground_4")
+sources/5 = SubResource("TileSetAtlasSource_jground_5")
+sources/6 = SubResource("TileSetAtlasSource_jground_6")
+sources/7 = SubResource("TileSetAtlasSource_jground_7")
+sources/8 = SubResource("TileSetAtlasSource_jground_8")
+sources/9 = SubResource("TileSetAtlasSource_jground_9")
+sources/10 = SubResource("TileSetAtlasSource_jground_10")
+sources/11 = SubResource("TileSetAtlasSource_jground_11")
+sources/12 = SubResource("TileSetAtlasSource_jground_12")
+sources/13 = SubResource("TileSetAtlasSource_jground_13")
+sources/14 = SubResource("TileSetAtlasSource_jground_14")
+sources/15 = SubResource("TileSetAtlasSource_jground_15")
+sources/16 = SubResource("TileSetAtlasSource_jground_16")
+sources/17 = SubResource("TileSetAtlasSource_jground_17")
+sources/18 = SubResource("TileSetAtlasSource_jground_18")
+sources/19 = SubResource("TileSetAtlasSource_jground_19")
+sources/20 = SubResource("TileSetAtlasSource_jground_20")
+sources/21 = SubResource("TileSetAtlasSource_jground_21")
+sources/22 = SubResource("TileSetAtlasSource_jground_22")
+sources/23 = SubResource("TileSetAtlasSource_jground_23")
+sources/24 = SubResource("TileSetAtlasSource_jground_24")
+sources/25 = SubResource("TileSetAtlasSource_jground_25")
+sources/26 = SubResource("TileSetAtlasSource_jground_26")
+sources/27 = SubResource("TileSetAtlasSource_jground_27")
+sources/28 = SubResource("TileSetAtlasSource_jground_28")
+sources/29 = SubResource("TileSetAtlasSource_jground_29")
+sources/30 = SubResource("TileSetAtlasSource_jground_30")
+sources/31 = SubResource("TileSetAtlasSource_jground_31")
+

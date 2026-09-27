@@ -195,7 +195,7 @@ func _light() -> void:
 	lamp.texture_scale = lantern_radius
 	## Sits at her torso. Her origin is now her feet, so this is measured up
 	## from the ground rather than out from the middle of her.
-	lamp.position = Vector2(0, -95)
+	lamp.position = Vector2(0, -40)
 	player.add_child(lamp)
 
 

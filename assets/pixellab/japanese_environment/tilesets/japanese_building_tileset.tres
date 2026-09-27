@@ -1,0 +1,472 @@
+[gd_resource type="TileSet" load_steps=117 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_0.png" id="1_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_1.png" id="2_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_2.png" id="3_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_3.png" id="4_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_4.png" id="5_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_5.png" id="6_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_6.png" id="7_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_7.png" id="8_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_8.png" id="9_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_9.png" id="10_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_10.png" id="11_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_11.png" id="12_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_12.png" id="13_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_13.png" id="14_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_14.png" id="15_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_15.png" id="16_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_16.png" id="17_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_17.png" id="18_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_18.png" id="19_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_19.png" id="20_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_20.png" id="21_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_21.png" id="22_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_22.png" id="23_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_23.png" id="24_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_24.png" id="25_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_25.png" id="26_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_26.png" id="27_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_27.png" id="28_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_28.png" id="29_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_29.png" id="30_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_30.png" id="31_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_31.png" id="32_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_32.png" id="33_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_33.png" id="34_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_34.png" id="35_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_35.png" id="36_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_36.png" id="37_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_37.png" id="38_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_38.png" id="39_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_39.png" id="40_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_40.png" id="41_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_41.png" id="42_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_42.png" id="43_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_43.png" id="44_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_44.png" id="45_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_45.png" id="46_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_46.png" id="47_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_47.png" id="48_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_48.png" id="49_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_49.png" id="50_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_50.png" id="51_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_51.png" id="52_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_52.png" id="53_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_53.png" id="54_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_54.png" id="55_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_55.png" id="56_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_56.png" id="57_jbuild"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/building_kit/feudal_Japanese_timber-and-plaster_architecture_d_57.png" id="58_jbuild"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_0"]
+texture = ExtResource("1_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_1"]
+texture = ExtResource("2_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_2"]
+texture = ExtResource("3_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_3"]
+texture = ExtResource("4_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_4"]
+texture = ExtResource("5_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_5"]
+texture = ExtResource("6_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_6"]
+texture = ExtResource("7_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_7"]
+texture = ExtResource("8_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_8"]
+texture = ExtResource("9_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_9"]
+texture = ExtResource("10_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_10"]
+texture = ExtResource("11_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_11"]
+texture = ExtResource("12_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_12"]
+texture = ExtResource("13_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_13"]
+texture = ExtResource("14_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_14"]
+texture = ExtResource("15_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_15"]
+texture = ExtResource("16_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_16"]
+texture = ExtResource("17_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_17"]
+texture = ExtResource("18_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_18"]
+texture = ExtResource("19_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_19"]
+texture = ExtResource("20_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_20"]
+texture = ExtResource("21_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_21"]
+texture = ExtResource("22_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_22"]
+texture = ExtResource("23_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_23"]
+texture = ExtResource("24_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_24"]
+texture = ExtResource("25_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_25"]
+texture = ExtResource("26_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_26"]
+texture = ExtResource("27_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_27"]
+texture = ExtResource("28_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_28"]
+texture = ExtResource("29_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_29"]
+texture = ExtResource("30_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_30"]
+texture = ExtResource("31_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_31"]
+texture = ExtResource("32_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_32"]
+texture = ExtResource("33_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_33"]
+texture = ExtResource("34_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_34"]
+texture = ExtResource("35_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_35"]
+texture = ExtResource("36_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_36"]
+texture = ExtResource("37_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_37"]
+texture = ExtResource("38_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_38"]
+texture = ExtResource("39_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_39"]
+texture = ExtResource("40_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_40"]
+texture = ExtResource("41_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_41"]
+texture = ExtResource("42_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_42"]
+texture = ExtResource("43_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_43"]
+texture = ExtResource("44_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_44"]
+texture = ExtResource("45_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_45"]
+texture = ExtResource("46_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_46"]
+texture = ExtResource("47_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_47"]
+texture = ExtResource("48_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_48"]
+texture = ExtResource("49_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_49"]
+texture = ExtResource("50_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_50"]
+texture = ExtResource("51_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_51"]
+texture = ExtResource("52_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_52"]
+texture = ExtResource("53_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_53"]
+texture = ExtResource("54_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_54"]
+texture = ExtResource("55_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_55"]
+texture = ExtResource("56_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_56"]
+texture = ExtResource("57_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jbuild_57"]
+texture = ExtResource("58_jbuild")
+texture_region_size = Vector2i(76, 110)
+use_texture_padding = false
+0:0/0 = 0
+
+[resource]
+tile_shape = 1
+tile_layout = 0
+tile_size = Vector2i(48, 24)
+sources/0 = SubResource("TileSetAtlasSource_jbuild_0")
+sources/1 = SubResource("TileSetAtlasSource_jbuild_1")
+sources/2 = SubResource("TileSetAtlasSource_jbuild_2")
+sources/3 = SubResource("TileSetAtlasSource_jbuild_3")
+sources/4 = SubResource("TileSetAtlasSource_jbuild_4")
+sources/5 = SubResource("TileSetAtlasSource_jbuild_5")
+sources/6 = SubResource("TileSetAtlasSource_jbuild_6")
+sources/7 = SubResource("TileSetAtlasSource_jbuild_7")
+sources/8 = SubResource("TileSetAtlasSource_jbuild_8")
+sources/9 = SubResource("TileSetAtlasSource_jbuild_9")
+sources/10 = SubResource("TileSetAtlasSource_jbuild_10")
+sources/11 = SubResource("TileSetAtlasSource_jbuild_11")
+sources/12 = SubResource("TileSetAtlasSource_jbuild_12")
+sources/13 = SubResource("TileSetAtlasSource_jbuild_13")
+sources/14 = SubResource("TileSetAtlasSource_jbuild_14")
+sources/15 = SubResource("TileSetAtlasSource_jbuild_15")
+sources/16 = SubResource("TileSetAtlasSource_jbuild_16")
+sources/17 = SubResource("TileSetAtlasSource_jbuild_17")
+sources/18 = SubResource("TileSetAtlasSource_jbuild_18")
+sources/19 = SubResource("TileSetAtlasSource_jbuild_19")
+sources/20 = SubResource("TileSetAtlasSource_jbuild_20")
+sources/21 = SubResource("TileSetAtlasSource_jbuild_21")
+sources/22 = SubResource("TileSetAtlasSource_jbuild_22")
+sources/23 = SubResource("TileSetAtlasSource_jbuild_23")
+sources/24 = SubResource("TileSetAtlasSource_jbuild_24")
+sources/25 = SubResource("TileSetAtlasSource_jbuild_25")
+sources/26 = SubResource("TileSetAtlasSource_jbuild_26")
+sources/27 = SubResource("TileSetAtlasSource_jbuild_27")
+sources/28 = SubResource("TileSetAtlasSource_jbuild_28")
+sources/29 = SubResource("TileSetAtlasSource_jbuild_29")
+sources/30 = SubResource("TileSetAtlasSource_jbuild_30")
+sources/31 = SubResource("TileSetAtlasSource_jbuild_31")
+sources/32 = SubResource("TileSetAtlasSource_jbuild_32")
+sources/33 = SubResource("TileSetAtlasSource_jbuild_33")
+sources/34 = SubResource("TileSetAtlasSource_jbuild_34")
+sources/35 = SubResource("TileSetAtlasSource_jbuild_35")
+sources/36 = SubResource("TileSetAtlasSource_jbuild_36")
+sources/37 = SubResource("TileSetAtlasSource_jbuild_37")
+sources/38 = SubResource("TileSetAtlasSource_jbuild_38")
+sources/39 = SubResource("TileSetAtlasSource_jbuild_39")
+sources/40 = SubResource("TileSetAtlasSource_jbuild_40")
+sources/41 = SubResource("TileSetAtlasSource_jbuild_41")
+sources/42 = SubResource("TileSetAtlasSource_jbuild_42")
+sources/43 = SubResource("TileSetAtlasSource_jbuild_43")
+sources/44 = SubResource("TileSetAtlasSource_jbuild_44")
+sources/45 = SubResource("TileSetAtlasSource_jbuild_45")
+sources/46 = SubResource("TileSetAtlasSource_jbuild_46")
+sources/47 = SubResource("TileSetAtlasSource_jbuild_47")
+sources/48 = SubResource("TileSetAtlasSource_jbuild_48")
+sources/49 = SubResource("TileSetAtlasSource_jbuild_49")
+sources/50 = SubResource("TileSetAtlasSource_jbuild_50")
+sources/51 = SubResource("TileSetAtlasSource_jbuild_51")
+sources/52 = SubResource("TileSetAtlasSource_jbuild_52")
+sources/53 = SubResource("TileSetAtlasSource_jbuild_53")
+sources/54 = SubResource("TileSetAtlasSource_jbuild_54")
+sources/55 = SubResource("TileSetAtlasSource_jbuild_55")
+sources/56 = SubResource("TileSetAtlasSource_jbuild_56")
+sources/57 = SubResource("TileSetAtlasSource_jbuild_57")
+

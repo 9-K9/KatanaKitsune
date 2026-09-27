@@ -2183,7 +2183,7 @@ attack_cooldown = 1.4
 polygon = PackedVector2Array(-32, 0, -22, -13, 0, -17, 22, -13, 32, 0, 22, 13, 0, 17, -22, 13)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -228)
+position = Vector2(0, -72)
 sprite_frames = SubResource("SpriteFrames_mummy")
 animation = &"idle_southWest"
 autoplay = "idle_southWest"

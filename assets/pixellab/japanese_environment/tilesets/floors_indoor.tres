@@ -1,0 +1,122 @@
+[gd_resource type="TileSet" load_steps=33 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_0.png" id="0_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_1.png" id="1_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_10.png" id="2_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_11.png" id="3_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_12.png" id="4_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_13.png" id="5_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_14.png" id="6_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_15.png" id="7_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_2.png" id="8_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_3.png" id="9_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_4.png" id="10_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_5.png" id="11_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_6.png" id="12_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_7.png" id="13_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_8.png" id="14_t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/floors/A_coordinated_feudal_Japanese_isometric_floor_coll_9.png" id="15_t"]
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_0"]
+texture = ExtResource("0_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_1"]
+texture = ExtResource("1_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_2"]
+texture = ExtResource("2_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_3"]
+texture = ExtResource("3_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_4"]
+texture = ExtResource("4_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_5"]
+texture = ExtResource("5_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_6"]
+texture = ExtResource("6_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_7"]
+texture = ExtResource("7_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_8"]
+texture = ExtResource("8_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_9"]
+texture = ExtResource("9_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_10"]
+texture = ExtResource("10_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_11"]
+texture = ExtResource("11_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_12"]
+texture = ExtResource("12_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_13"]
+texture = ExtResource("13_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_14"]
+texture = ExtResource("14_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_15"]
+texture = ExtResource("15_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[resource]
+; Indoor floors: tatami, hinoki, dojo boards, stone, gravel, moss.
+; 2:1 diamond on the same 48x24 grid the rest of the game uses.
+tile_shape = 1
+tile_layout = 0
+tile_offset_axis = 0
+tile_size = Vector2i(48, 24)
+sources/0 = SubResource("Atlas_0")
+sources/1 = SubResource("Atlas_1")
+sources/2 = SubResource("Atlas_2")
+sources/3 = SubResource("Atlas_3")
+sources/4 = SubResource("Atlas_4")
+sources/5 = SubResource("Atlas_5")
+sources/6 = SubResource("Atlas_6")
+sources/7 = SubResource("Atlas_7")
+sources/8 = SubResource("Atlas_8")
+sources/9 = SubResource("Atlas_9")
+sources/10 = SubResource("Atlas_10")
+sources/11 = SubResource("Atlas_11")
+sources/12 = SubResource("Atlas_12")
+sources/13 = SubResource("Atlas_13")
+sources/14 = SubResource("Atlas_14")
+sources/15 = SubResource("Atlas_15")
