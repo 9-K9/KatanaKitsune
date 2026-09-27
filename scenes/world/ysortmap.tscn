@@ -831,8 +831,7 @@ polygon = PackedVector2Array(-744, 80, -744, -174, -72, 162, 576, -160, 576, 96,
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wallfade"]
 shader = ExtResource("1_wfsh")
-shader_parameter/player_world = Vector2(0, 0)
-shader_parameter/behind = 0.0
+shader_parameter/subject_count = 0
 shader_parameter/extents = Vector2(52, 105)
 shader_parameter/rise = 86.0
 shader_parameter/softness = 0.55
@@ -840,8 +839,7 @@ shader_parameter/min_alpha = 0.18
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wallfade_back"]
 shader = ExtResource("1_wfsh")
-shader_parameter/player_world = Vector2(0, 0)
-shader_parameter/behind = 0.0
+shader_parameter/subject_count = 0
 shader_parameter/extents = Vector2(52, 105)
 shader_parameter/rise = 86.0
 shader_parameter/softness = 0.55
