@@ -37,7 +37,9 @@ const FOLDER_ALIAS := {
 	"RuningJump": "runningJump", "SwitchDirectionIdle": "switchDirections",
 }
 
-var chosen: int = 0
+## Vermilion Phoenix, the red one. Index 1, not 0 — the order here follows the
+## elemental cycle the art was generated in, which starts on Wood.
+var chosen: int = 1
 
 ## Textures are shared between many frames, so loading each one once turns
 ## ~2000 lookups into ~256 loads.
