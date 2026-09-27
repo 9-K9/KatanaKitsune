@@ -59,11 +59,28 @@ func winded() -> bool:
 
 ## A chair she is standing over, if any. Matched by group rather than collision
 ## so a chair is a sprite with a marker on it, not a physics body in her way.
+## Reach was 30px, which her own collision diamond is more than twice as wide
+## as — she could be standing squarely on a chair with her origin too far from
+## its centre to count, so resting could effectively never be triggered.
+const CHAIR_REACH: float = 90.0
+
+
 func chair_underfoot() -> Node2D:
+	var nearest: Node2D = null
+	var nearest_distance: float = INF
 	for chair in pc.get_tree().get_nodes_in_group("chair"):
-		if chair is Node2D and pc.global_position.distance_to(chair.global_position) <= 30.0:
-			return chair
-	return null
+		if not (chair is Node2D):
+			continue
+		## Ground distance, not screen distance. The map is drawn 2:1, so a chair
+		## the same distance away up the screen would otherwise read as twice as
+		## close as one to the side.
+		var offset: Vector2 = (chair as Node2D).global_position - pc.global_position
+		offset.y /= 0.5
+		var distance: float = offset.length()
+		if distance <= CHAIR_REACH and distance < nearest_distance:
+			nearest_distance = distance
+			nearest = chair
+	return nearest
 
 ## Arms the next swing. Call from an attack state's on_enter.
 func beginAttack():
