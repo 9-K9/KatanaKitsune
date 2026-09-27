@@ -9,9 +9,11 @@ extends Node2D
 @export var room_scene: PackedScene = null
 @export var player_scene: PackedScene = null
 @export var grid: Vector2i = Vector2i(4, 4)
+## Roofs make the layout unreadable while testing; off by default here.
+@export var show_roofs: bool = false
 @export var maze_seed: int = 0
 ## Chance an interior wall is knocked through. Higher is more open.
-@export_range(0.0, 1.0) var openness: float = 0.55
+@export_range(0.0, 1.0) var openness: float = 0.35
 
 const SIDES: Array[String] = ["NE", "NW", "SE", "SW"]
 ## Which lattice step each side faces. Derived by eye from the rendered lattice;
@@ -45,31 +47,74 @@ func _ready() -> void:
 			var light: Node = room.get_node_or_null("Lighting")
 			if light:
 				light.free()
+			if not show_roofs:
+				var roofs: Node = room.get_node_or_null("TileMap/Roofs")
+				if roofs:
+					roofs.queue_free()
 			_rooms[cell] = room
 
 	_carve()
 	_spawn_player(step)
 
 
-## Knocks out walls between neighbours. A wall is only opened if the room on the
-## other side opens its matching wall too, or one side stays solid and the
-## passage is blocked from exactly one direction.
+## Carves the maze. A randomised depth-first spanning tree first, so every room
+## is reachable from every other, then extra walls knocked through on top to add
+## loops and open the place up.
+##
+## Purely random walls left rooms sealed off with no way in, which read as a
+## maze that was simply too tight.
 func _carve() -> void:
+	var walls: Dictionary = {}          ## Vector2i cell -> {side: closed}
+	for cell in _rooms:
+		walls[cell] = {}
+		for side in SIDES:
+			walls[cell][side] = true
+
+	## Spanning tree.
+	var visited: Dictionary = {Vector2i.ZERO: true}
+	var stack: Array[Vector2i] = [Vector2i.ZERO]
+	while stack.size() > 0:
+		var cell: Vector2i = stack[-1]
+		var options: Array[String] = []
+		for side in SIDES:
+			var other: Vector2i = cell + NEIGHBOUR[side]
+			if _rooms.has(other) and not visited.has(other):
+				options.append(side)
+		if options.is_empty():
+			stack.pop_back()
+			continue
+		var side: String = options[_rng.randi_range(0, options.size() - 1)]
+		var next: Vector2i = cell + NEIGHBOUR[side]
+		_open_pair(walls, cell, side)
+		visited[next] = true
+		stack.append(next)
+
+	## Extra openings for loops, so it is not a pure tree with one route.
+	for cell in _rooms:
+		for side in SIDES:
+			if not _rooms.has(cell + NEIGHBOUR[side]):
+				continue
+			if _rng.randf() < openness:
+				_open_pair(walls, cell, side)
+
 	for cell in _rooms:
 		var room = _rooms[cell]
 		if not room.has_method("set_side"):
 			continue
 		for side in SIDES:
-			var other: Vector2i = cell + NEIGHBOUR[side]
-			if not _rooms.has(other):
-				## Outer edge: keep the maze sealed.
-				room.set_side(side, true)
-				continue
-			## Deterministic per wall pair, so both rooms agree without one
-			## having to look up what the other already decided.
-			var pair := Vector2i(mini(cell.x, other.x), mini(cell.y, other.y))
-			var h: int = hash([pair, cell + other, maze_seed])
-			room.set_side(side, float(h % 1000) / 1000.0 > openness)
+			room.set_side(side, walls[cell][side])
+
+
+## Opens a wall from both sides. A shared wall is two layers, one in each room,
+## and leaving the other closed blocks the passage from one direction only.
+func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
+	var other: Vector2i = cell + NEIGHBOUR[side]
+	if not walls.has(other):
+		return
+	walls[cell][side] = false
+	for back in SIDES:
+		if other + NEIGHBOUR[back] == cell:
+			walls[other][back] = false
 
 
 func _spawn_player(step: Vector2) -> void:
