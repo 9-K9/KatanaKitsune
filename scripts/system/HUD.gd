@@ -49,6 +49,12 @@ func _process(delta: float) -> void:
 	_shown = ratio if _shown < 0.0 else move_toward(_shown, ratio, delta * 1.2)
 	fill.size.x = _fill_width * _shown
 	fill.color = Color(0.78, 0.17, 0.16) if _shown > 0.3 else Color(0.9, 0.35, 0.12)
+	## Stamina tracks the real value with no easing: she needs to see it empty the
+	## moment the sprint stops, because that is when she loses the speed.
+	var winded: bool = target.has_method("winded") and target.winded()
+	var spare: float = clampf(target.stamina / maxf(target.max_stamina, 1.0), 0.0, 1.0)
+	stamina_fill.size.x = _stamina_width * spare
+	stamina_fill.color = Color(0.55, 0.34, 0.16) if winded else Color(0.45, 0.62, 0.36)
 	_show_depth()
 
 
@@ -60,9 +66,3 @@ func _show_depth() -> void:
 	var text: String = "FLOOR %d" % level.depth
 	if depth_label.text != text:
 		depth_label.text = text
-	## Stamina tracks the real value with no easing: she needs to see it empty the
-	## moment the sprint stops, because that is when she loses the speed.
-	var winded: bool = target.has_method("winded") and target.winded()
-	var spare: float = clampf(target.stamina / maxf(target.max_stamina, 1.0), 0.0, 1.0)
-	stamina_fill.size.x = _stamina_width * spare
-	stamina_fill.color = Color(0.55, 0.34, 0.16) if winded else Color(0.45, 0.62, 0.36)
