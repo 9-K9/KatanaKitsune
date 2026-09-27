@@ -3,14 +3,14 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/props/pillar.png" id="1_pillar"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_pil"]
-points = PackedVector2Array(-22, 0, 0, -11, 22, 0, 0, 11)
+points = PackedVector2Array(-22, 100, 0, 89, 22, 100, 0, 111)
 
 [node name="Pillar" type="StaticBody2D"]
 collision_layer = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-position = Vector2(0, -160)
+position = Vector2(0, -44)
 scale = Vector2(2, 2)
 texture = ExtResource("1_pillar")
 

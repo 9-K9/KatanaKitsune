@@ -332,6 +332,9 @@ func _spawn_player(step: Vector2) -> void:
 ## Closest two columns may stand. Each footprint is 44 across and she is 66, so
 ## this leaves at least 106 of clear floor to walk through.
 const MIN_GAP: float = 150.0
+## How far a character's node origin sits above their feet. Props have to match
+## it or the two sort against each other by different rules.
+const SORT_LIFT: float = 100.0
 
 
 ## Where a wall tile's stone actually stands, relative to the cell it occupies.
@@ -390,6 +393,11 @@ func _place_pillars() -> void:
 			for i in wanted:
 				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i])
 						+ _wall_footprint(layer, cells[i]) * pillar_wall_bias)
+				## The column's origin sits SORT_LIFT above its base so it sorts
+				## on the same footing as the characters, whose origins sit that
+				## far above their feet. Placing it that much higher leaves the
+				## stone itself exactly where it was.
+				world.y -= SORT_LIFT
 				var crowded := false
 				for other in placed:
 					if other.distance_to(world) < MIN_GAP:
