@@ -1,55 +1,163 @@
 extends CanvasLayer
 
-## Game Over screen. Shows itself when the map's GameManager enters the
-## "game_over" state, which the player's death state sets once the collapse
-## animation has played out.
+## Death, then a choice. A countdown from ten with CONTINUE under it; taking it
+## goes back to the aspect select, letting it run out goes to GAME OVER.
+##
+## Watches the player directly rather than asking a GameManager for a state.
+## The maze's root is its generator, so on the level the game actually starts on
+## there is no manager to ask — the same thing that left pause doing nothing.
 
-## get_parent() rather than an absolute "/root/Main" path, matching PauseMenu,
-## so this keeps working if the map root is renamed.
-@onready var gameManager = get_parent()
+@export var countdown_from: int = 10
+## How long GAME OVER sits there before returning to the title on its own.
+@export var game_over_seconds: float = 4.0
+
+const SELECT := "res://scenes/menuscreens/characterSelect.tscn"
+const TITLE := "res://scenes/title_screen.tscn"
+const FADE_IN: float = 0.6
+
 @onready var fade: ColorRect = $Fade
 @onready var panel: Control = $Center
 
-const FADE_IN: float = 0.6
+var _player: CharacterBody2D = null
+var _counting: bool = false
+var _left: float = 0.0
+var _expired: bool = false
+var _expired_for: float = 0.0
+var _countdown_label: Label = null
+var _over_layer: ColorRect = null
+var _over_label: Label = null
 
 
 func _ready() -> void:
 	visible = false
 	## The tree is paused while this is up, so everything here has to keep
-	## processing or the buttons would be dead.
+	## processing or the buttons and the clock would be dead.
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_build_countdown()
+	_build_game_over()
 
 
-func _process(_delta: float) -> void:
-	if not is_instance_valid(gameManager) or not gameManager.has_method("getState"):
+func _process(delta: float) -> void:
+	if _expired:
+		_tick_game_over(delta)
 		return
-	var should_show: bool = gameManager.getState() == "game_over"
-	if should_show and not visible:
-		_show()
-	elif not should_show and visible:
-		visible = false
+	if not _counting:
+		if _is_dead():
+			_begin()
+		return
+
+	_left -= delta
+	var shown: int = maxi(int(ceil(_left)), 0)
+	if _countdown_label != null:
+		_countdown_label.text = str(shown)
+	if _left <= 0.0:
+		_to_game_over()
 
 
-func _show() -> void:
+func _is_dead() -> bool:
+	if not is_instance_valid(_player):
+		for node in get_tree().get_nodes_in_group("player"):
+			if node is CharacterBody2D:
+				_player = node
+				break
+	return is_instance_valid(_player) and "is_dead" in _player and _player.is_dead
+
+
+func _begin() -> void:
+	_counting = true
+	_left = float(countdown_from)
 	visible = true
+	get_tree().paused = true
 	fade.modulate.a = 0.0
 	panel.modulate.a = 0.0
 	var tween := create_tween()
 	## The tree is paused by the time this runs, which stops an ordinary tween
 	## dead and would leave the whole screen sitting at alpha 0.
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_parallel(true)
 	tween.tween_property(fade, "modulate:a", 1.0, FADE_IN)
-	tween.tween_property(panel, "modulate:a", 1.0, FADE_IN * 0.5)
-	$Center/Panel/VBox/Buttons/Retry.grab_focus()
+	tween.tween_property(panel, "modulate:a", 1.0, FADE_IN)
 
 
+## Taking the continue. Back to the aspect select rather than straight into a
+## fresh floor, so a death is a chance to change your mind about who you are.
+## Named for the button the scene already wires to it.
 func _on_retry_pressed() -> void:
-	## Unpause before reloading: the paused flag survives a scene change and
-	## would leave the fresh map frozen.
-	get_tree().paused = false
-	get_tree().reload_current_scene()
+	_on_continue_pressed()
 
 
 func _on_title_pressed() -> void:
 	get_tree().paused = false
-	gameManager.setState("game_title")
+	get_tree().change_scene_to_file(TITLE)
+
+
+func _on_continue_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(SELECT)
+
+
+func _to_game_over() -> void:
+	_counting = false
+	_expired = true
+	_expired_for = 0.0
+	panel.visible = false
+	fade.visible = false
+	if _over_layer != null:
+		_over_layer.visible = true
+
+
+## Black with white text. Any key moves on; so does waiting.
+func _tick_game_over(delta: float) -> void:
+	_expired_for += delta
+	if _expired_for >= game_over_seconds or _any_key():
+		_expired = false
+		get_tree().paused = false
+		get_tree().change_scene_to_file(TITLE)
+
+
+func _any_key() -> bool:
+	## Ignores the first moment, or the keypress that ran the clock out would
+	## skip straight past the screen it just opened.
+	if _expired_for < 0.35:
+		return false
+	return Input.is_anything_pressed()
+
+
+## Built in code so the existing scene file keeps working untouched.
+func _build_countdown() -> void:
+	var box := get_node_or_null("Center/Panel/VBox")
+	if box == null:
+		return
+	_countdown_label = Label.new()
+	_countdown_label.text = str(countdown_from)
+	_countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_countdown_label.add_theme_font_size_override("font_size", 64)
+	_countdown_label.add_theme_color_override("font_color", Color(1, 0.87, 0.57))
+	_countdown_label.add_theme_color_override("font_outline_color", Color(0.22, 0.045, 0.045))
+	_countdown_label.add_theme_constant_override("outline_size", 6)
+	## Above the buttons, so the clock and the way out read as one thing.
+	var buttons := get_node_or_null("Center/Panel/VBox/Buttons")
+	box.add_child(_countdown_label)
+	if buttons != null:
+		box.move_child(_countdown_label, buttons.get_index())
+
+
+func _build_game_over() -> void:
+	_over_layer = ColorRect.new()
+	_over_layer.name = "GameOverBlack"
+	_over_layer.color = Color.BLACK
+	_over_layer.anchor_right = 1.0
+	_over_layer.anchor_bottom = 1.0
+	_over_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_over_layer.visible = false
+	add_child(_over_layer)
+
+	_over_label = Label.new()
+	_over_label.text = "GAME OVER"
+	_over_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_over_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_over_label.anchor_right = 1.0
+	_over_label.anchor_bottom = 1.0
+	_over_label.add_theme_font_size_override("font_size", 72)
+	_over_label.add_theme_color_override("font_color", Color.WHITE)
+	_over_layer.add_child(_over_label)

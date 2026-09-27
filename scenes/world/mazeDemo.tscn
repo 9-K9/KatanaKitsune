@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmaze7kq2wvn3"]
+[gd_scene load_steps=8 format=3 uid="uid://cmaze7kq2wvn3"]
 
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="10_chair"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="13_pausemenu"]
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
+[ext_resource type="PackedScene" uid="1000" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
 
 [node name="MazeDemo" type="Node2D"]
 y_sort_enabled = true
@@ -44,3 +45,5 @@ grow_horizontal = 0
 script = ExtResource("10_radar")
 
 [node name="PauseMenu" parent="." instance=ExtResource("13_pausemenu")]
+
+[node name="GameOver" parent="." instance=ExtResource("14_gover")]
