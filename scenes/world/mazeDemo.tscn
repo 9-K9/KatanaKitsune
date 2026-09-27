@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmaze7kq2wvn3"]
+
+[ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
+[ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
+[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
+
+[node name="MazeDemo" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_maze")
+room_scene = ExtResource("2_room")
+player_scene = ExtResource("3_player")
+grid = Vector2i(4, 4)
+maze_seed = 12345
+
+[node name="HUD" type="CanvasLayer" parent="."]
