@@ -1,6 +1,8 @@
 [gd_scene load_steps=216 format=4 uid="uid://b6xc810cprx04"]
 
 [ext_resource type="Script" path="res://scripts/system/YsortPlayerSpawn.gd" id="1_00tkk"]
+[ext_resource type="Shader" path="res://shaders/wallFade.gdshader" id="1_wfsh"]
+[ext_resource type="Script" path="res://scripts/system/WallFade.gd" id="1_wfsc"]
 [ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="1_npc01"]
 [ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="t_breakableUrn"]
 [ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="t_breakableChest"]
@@ -819,6 +821,14 @@ sources/23 = SubResource("TileSetAtlasSource_oy44y")
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_03fdn"]
 polygon = PackedVector2Array(-744, 80, -744, -174, -72, 162, 576, -160, 576, 96, -72, 420)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wallfade"]
+shader = ExtResource("1_wfsh")
+shader_parameter/player_world = Vector2(0, 0)
+shader_parameter/radius = 70.0
+shader_parameter/softness = 90.0
+shader_parameter/min_alpha = 0.22
+shader_parameter/behind_bias = 24.0
+
 [node name="YSortMap" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_00tkk")
@@ -841,6 +851,8 @@ tile_set = SubResource("TileSet_tjlhk")
 
 [node name="FrontWalls" type="TileMapLayer" parent="TileMap"]
 y_sort_enabled = true
+material = SubResource("ShaderMaterial_wallfade")
+script = ExtResource("1_wfsc")
 tile_map_data = PackedByteArray("AAAGAAkAAwAAAAAAAAADABAAAwAAAAAAAAAAABYABwAAAAAAAADy/wIAAQAAAAAAAAD1/wkAAQAAAAAAAAD5/xAAAQAAAAAAAAD8/xcAAQAAAAAAAAAJAAQAAwAAAAAAAAA=")
 tile_set = SubResource("TileSet_tjlhk")
 

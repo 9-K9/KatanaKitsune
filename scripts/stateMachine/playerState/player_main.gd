@@ -108,5 +108,9 @@ func _on_action_timer_timeout():
 	timerTimeOut = true
 
 func _on_player_hit_box_body_entered(body):
-	if body.is_in_group("enemy"):
-		take_damage(contact_damage)
+	## Deliberately does nothing now. Monsters damage Akane from the hit frame of
+	## their attack animation (EnemyBase.strike), which is telegraphed and can be
+	## read and dodged. Contact damage predates that AI and meant simply brushing
+	## past a monster — or walking into one still taunting — cost 10 health with
+	## no wind-up to react to.
+	pass

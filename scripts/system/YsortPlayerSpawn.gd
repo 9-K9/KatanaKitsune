@@ -49,9 +49,12 @@ func _on_area_2d_area_exited(area):
 	if area.is_in_group("playerRoofCheck"):
 		tileRoof.visible = true
 #Check Front Walls Area
-func _on_walls_check_player_area_entered(area):
-	if area.is_in_group("playerWallCheck"):
-		tileFrontWalls.modulate = Color("black",0.5)
-func _on_walls_check_player_area_exited(area):
-	if area.is_in_group("playerWallCheck"):
-		tileFrontWalls.modulate = Color("white",1.0)
+## Superseded by wallFade.gdshader on the FrontWalls layer, which fades only the
+## stretch of wall actually covering the player. These handlers dimmed every
+## front wall at once and only fired inside one hand-drawn polygon, so standing
+## anywhere else left the player hidden behind solid stone. Kept as no-ops
+## because the scene still connects to them.
+func _on_walls_check_player_area_entered(_area):
+	pass
+func _on_walls_check_player_area_exited(_area):
+	pass
