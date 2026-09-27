@@ -42,12 +42,14 @@ func _on_audio_stream_player_2d_finished():
 
 ## Control Visibility and Modulation when player group enter area2d
 # Check Roof Area
-func _on_area_2d_area_entered(area):
-	if area.is_in_group("playerRoofCheck"):
-		tileRoof.visible = false
-func _on_area_2d_area_exited(area):
-	if area.is_in_group("playerRoofCheck"):
-		tileRoof.visible = true
+## Superseded by WallFade.gd in HIDE mode on the Roofs layer, which asks the
+## tilemap whether anything is actually overhead. This fired off a hand-drawn
+## polygon that only covered part of the map, so the roof stayed solid
+## everywhere else. Kept as no-ops because the scene still connects to them.
+func _on_area_2d_area_entered(_area):
+	pass
+func _on_area_2d_area_exited(_area):
+	pass
 #Check Front Walls Area
 ## Superseded by wallFade.gdshader on the FrontWalls layer, which fades only the
 ## stretch of wall actually covering the player. These handlers dimmed every
