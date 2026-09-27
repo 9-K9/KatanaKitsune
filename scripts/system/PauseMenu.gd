@@ -11,6 +11,11 @@ func _ready():
 	## The tree is paused while this menu is up, so it has to keep processing
 	## or its own buttons would be dead.
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	## The same cover the title screen shows, so pausing frames the character
+	## rather than a flat wash over the level.
+	var art := get_node_or_null("Cover")
+	if art != null:
+		art.texture = load(PowerState.cover_path())
 	_show_main_menu()
 	_sync_immortality_label()
 

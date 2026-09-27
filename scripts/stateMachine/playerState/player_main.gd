@@ -14,6 +14,11 @@ const HITTABLE_GROUPS: PackedStringArray = ["enemy", "breakable"]
 
 func _ready() -> void:
 	health = max_health
+	## Repaint into the chosen aspect. Only the sheets behind each frame change,
+	## so every animation, region and timing is untouched.
+	var sprite := get_node_or_null("AnimationManager/AnimatedSprite2D")
+	if sprite != null:
+		PowerState.apply_to(sprite)
 	var hitbox = $CollisionChecker/PlayerHitBox
 	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
 

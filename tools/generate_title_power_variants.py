@@ -106,7 +106,34 @@ def clothing_mask(image: Image.Image) -> np.ndarray:
             for nx in range(max(0, x - 1), min(image.width, x + 2)):
                 if candidates[ny, nx] and not selected[ny, nx]:
                     queue.append((nx, ny))
-    return selected
+
+    # Tight garment-only regions recover disconnected cel-shading islands such
+    # as the diagonal sash and sleeve folds without reaching the shrine.
+    tight_image = Image.new("L", image.size, 0)
+    tight_draw = ImageDraw.Draw(tight_image)
+    tight_regions = (
+        ((790, 355), (895, 320), (1055, 385), (1045, 505), (925, 525), (805, 465)),
+        ((1015, 285), (1295, 270), (1375, 365), (1335, 535), (1215, 610), (1035, 535), (970, 375)),
+        ((1270, 290), (1395, 315), (1470, 490), (1450, 645), (1390, 720), (1320, 685), (1285, 515)),
+        ((1080, 285), (1160, 300), (1285, 590), (1210, 660), (1140, 475)),
+        ((735, 665), (955, 635), (1020, 750), (915, 790), (750, 765)),
+    )
+    for polygon in tight_regions:
+        tight_draw.polygon([(round(x * sx), round(y * sy)) for x, y in polygon], fill=255)
+    tight = np.asarray(tight_image) > 0
+    result = selected | (candidates & tight)
+
+    # Remove two red background islands close to the raised sleeve: the torii
+    # pillar behind her shoulder and a maple cluster beside her hand.
+    exclude_image = Image.new("L", image.size, 0)
+    exclude_draw = ImageDraw.Draw(exclude_image)
+    exclude_regions = (
+        ((930, 0), (1025, 0), (1025, 360), (930, 360)),
+        ((810, 285), (930, 285), (1015, 350), (970, 405), (865, 395)),
+    )
+    for polygon in exclude_regions:
+        exclude_draw.polygon([(round(x * sx), round(y * sy)) for x, y in polygon], fill=255)
+    return result & ~(np.asarray(exclude_image) > 0)
 
 
 def apply_palette(image: Image.Image, mask: np.ndarray, ramp: tuple[tuple[int, int, int], tuple[int, int, int]]) -> Image.Image:

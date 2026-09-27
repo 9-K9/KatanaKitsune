@@ -5,12 +5,21 @@ extends Node2D
 ## The playable level. mapTemplate is the hand-built single room kept for
 ## testing; the maze is the actual first level.
 const FIRST_MAP := "res://scenes/world/mazeDemo.tscn"
+const SELECT := "res://scenes/menuscreens/characterSelect.tscn"
+
+
+func _ready() -> void:
+	## The cover follows whichever aspect is chosen, so quitting to the title
+	## shows the character actually being played rather than a fixed image.
+	var background := get_node_or_null("UI/Background")
+	if background != null:
+		background.texture = load(PowerState.cover_path())
 
 
 func _on_new_game_pressed():
 	## A Game Over leaves the tree paused if the player quits to title from it.
 	get_tree().paused = false
-	get_tree().change_scene_to_file(FIRST_MAP)
+	get_tree().change_scene_to_file(SELECT)
 
 
 func _on_quit_pressed():

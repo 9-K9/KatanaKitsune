@@ -13,3 +13,7 @@
 # cannot happen by accident, whoever or whatever is doing the staging.
 # To commit something from here, move it out of _tests/ first.
 assets/sprites/characters/_tests/
+
+# Python bytecode from the sprite-generation tools. Regenerated on every run and
+# machine-specific, so it has no business in the history.
+__pycache__/
