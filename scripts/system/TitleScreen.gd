@@ -2,9 +2,9 @@ extends Node2D
 
 ## Title screen. GameManager sends the player here on "game_title".
 
-## The playable map. Used to point at map01.tscn, which does not exist — the
-## only map in the project is the template one the game boots into.
-const FIRST_MAP := "res://scenes/world/maps/mapTemplate.tscn"
+## The playable level. mapTemplate is the hand-built single room kept for
+## testing; the maze is the actual first level.
+const FIRST_MAP := "res://scenes/world/mazeDemo.tscn"
 
 
 func _on_new_game_pressed():
