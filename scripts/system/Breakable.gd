@@ -21,6 +21,8 @@ extends StaticBody2D
 @export var break_texture: Texture2D
 @export_range(1, 8, 1) var break_frames: int = 4
 @export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
+## Keep the final broken sprite instead of fading and freeing the prop.
+@export var persist_broken: bool = false
 
 const HIT_FLASH_SHADER := """
 shader_type canvas_item;
@@ -99,6 +101,9 @@ func _break() -> void:
 		_drop_once()
 
 	_drop_once()
+	if persist_broken:
+		sprite.frame = break_frames - 1
+		return
 	var fade := create_tween()
 	fade.set_parallel(true)
 	fade.tween_property(sprite, "modulate:a", 0.0, 0.32)

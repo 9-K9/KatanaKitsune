@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/sake_barrel.png" id="2_intact"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/sake_barrel_broken.png" id="3_broken"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
+points = PackedVector2Array(-15, 0, 0, -8, 15, 0, 0, 8)
+
+[node name="SakeBarrel" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_script")
+max_health = 20.0
+break_texture = ExtResource("3_broken")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -32)
+texture = ExtResource("2_intact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ConvexPolygonShape2D_prop")
+
