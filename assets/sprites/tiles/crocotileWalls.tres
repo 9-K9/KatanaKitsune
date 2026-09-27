@@ -15,6 +15,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 56
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-96, -54, -96, 48, 72, 132, 96, 120, 96, 36)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mqb3s"]
@@ -23,6 +24,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 69
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, 144, -24, 144, -24, -6, 24, -6)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_604q7"]
@@ -31,6 +33,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 56
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(96, -54, 96, 48, -72, 132, -96, 120, -96, 36)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ne7h2"]
@@ -39,6 +42,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 42
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-120, 102, -120, -18, 120, -18, 120, 102)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qodtn"]
@@ -47,6 +51,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 56
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-96, -54, -96, 48, 72, 132, 96, 120, 96, 36)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u55nu"]
@@ -55,6 +60,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 69
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, 144, -24, 144, -24, -6, 24, -6)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k6ckb"]
@@ -63,6 +69,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 56
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(96, -54, 96, 48, -72, 132, -96, 120, -96, 36)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vjvu0"]
@@ -71,6 +78,7 @@ texture_region_size = Vector2i(48, 24)
 0:0/size_in_atlas = Vector2i(5, 16)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 48)
+0:0/0/y_sort_origin = 42
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-120, 102, -120, -18, 120, -18, 120, 102)
 
 [resource]

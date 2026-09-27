@@ -19,6 +19,11 @@ enum Mode { FADE, HIDE }
 ## tight radius misses the very wall that is standing in front of her.
 @export var search_radius: int = 8
 
+## Rough extent of one wall plane, used to reject tiles too far off to be
+## drawn over her whatever their sort order says.
+const SPRITE_HALF_WIDTH: float = 130.0
+const SPRITE_HEIGHT: float = 360.0
+
 var _player: CharacterBody2D = null
 var _shader: ShaderMaterial = null
 var _covered: bool = false
@@ -68,10 +73,36 @@ func _is_covering(world_pos: Vector2) -> bool:
 				continue
 			if mode == Mode.HIDE:
 				return true
-			## Sorts in front of her, so it is drawn over her.
-			if map_to_local(cell).y > local.y:
+
+			var tile: Vector2 = map_to_local(cell)
+			## A wall plane is ~240px wide and ~350px tall. Anything further off
+			## than that cannot be drawn over her however it sorts, and without
+			## this the scan kept finding some other wall further down the room
+			## and reporting her as covered while she stood in the open.
+			if absf(tile.x - local.x) > SPRITE_HALF_WIDTH:
+				continue
+			var sort_y: float = _sort_y(cell)
+			if sort_y - local.y > SPRITE_HEIGHT:
+				continue
+			## Sorts in front of her, so it is drawn over her. Compared against
+			## the tile's real sort point, not its cell origin: these walls sit
+			## up to 132px below the cell they occupy, so the cell origin is not
+			## where Godot sorts them, and the two answers disagree exactly
+			## along the bottom edge of a wall, which is where it matters.
+			if sort_y > local.y:
 				return true
 	return false
+
+
+## Where Godot sorts the tile in this cell, in layer-local space.
+func _sort_y(cell: Vector2i) -> float:
+	var base: float = map_to_local(cell).y
+	var source := tile_set.get_source(get_cell_source_id(cell)) as TileSetAtlasSource
+	if source == null:
+		return base
+	var data: TileData = source.get_tile_data(get_cell_atlas_coords(cell),
+		get_cell_alternative_tile(cell))
+	return base if data == null else base + data.y_sort_origin
 
 
 func _find_player() -> CharacterBody2D:
