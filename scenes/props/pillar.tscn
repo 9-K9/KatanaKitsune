@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/props/pillar.png" id="1_pillar"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_pil"]
-points = PackedVector2Array(-22, 100, 0, 89, 22, 100, 0, 111)
+points = PackedVector2Array(-56, 0, 0, -28, 56, 0, 0, 28)
 
 [node name="Pillar" type="StaticBody2D"]
 collision_layer = 3
