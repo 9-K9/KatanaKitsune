@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="7_chest"]
 [ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="8_statue"]
 [ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="9_brazier"]
+[ext_resource type="PackedScene" uid="uid://cxt5st4rsdn8w" path="res://scenes/props/exitStairs.tscn" id="12_exit"]
 [ext_resource type="Script" path="res://scripts/system/Radar.gd" id="10_radar"]
 [ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="11_hud"]
 
@@ -20,6 +21,7 @@ player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
 maze_seed = 12345
 enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"), ExtResource("5_ronin")])
+exit_scene = ExtResource("12_exit")
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier")])
 
 [node name="HUD" parent="." instance=ExtResource("11_hud")]

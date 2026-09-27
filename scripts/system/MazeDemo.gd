@@ -10,6 +10,7 @@ extends Node2D
 @export var player_scene: PackedScene = null
 @export var enemy_scenes: Array[PackedScene] = []
 @export var prop_scenes: Array[PackedScene] = []
+@export var exit_scene: PackedScene = null
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -39,14 +40,37 @@ const NEIGHBOUR := {
 
 var _rng := RandomNumberGenerator.new()
 var _rooms: Dictionary = {}
+## How deep the run has gone. HUD reads this; each floor adds monsters.
+var depth: int = 1
+var _player: Node2D = null
 
 
 func _ready() -> void:
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
 		return
-	_rng.seed = maze_seed if maze_seed != 0 else randi()
+	if maze_seed == 0:
+		maze_seed = randi()
+	_build()
 
+
+## Next floor. Rebuilds around the player rather than reloading the scene, so
+## she keeps her health, her buffs and her state machine across the descent —
+## a reload would construct a fresh one and throw all of that away.
+func descend() -> void:
+	depth += 1
+	maze_seed = _rng.randi()
+	for child in get_children():
+		## The player, the gloom and the HUD layers outlive a floor.
+		if child == _player or child is CanvasLayer or child is CanvasModulate:
+			continue
+		child.queue_free()
+	_rooms.clear()
+	_build()
+
+
+func _build() -> void:
+	_rng.seed = maze_seed
 	var step := _lattice_step()
 	for iy in grid.y:
 		for ix in grid.x:
@@ -68,7 +92,42 @@ func _ready() -> void:
 	_carve()
 	_spawn_player(step)
 	_populate(step)
+	_place_exit()
 	_light()
+
+
+## The stairs go in whichever room is furthest from the start, measured through
+## the maze rather than across it, so the exit is a walk and not a room away.
+func _place_exit() -> void:
+	if exit_scene == null:
+		return
+	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	var far: Vector2i = start
+	var best: int = -1
+	var seen: Dictionary = {start: 0}
+	var queue: Array[Vector2i] = [start]
+	while queue.size() > 0:
+		var cell: Vector2i = queue.pop_front()
+		if seen[cell] > best:
+			best = seen[cell]
+			far = cell
+		var room = _rooms.get(cell)
+		if room == null or not room.has_method("open_sides"):
+			continue
+		for side in room.open_sides():
+			var next: Vector2i = cell + NEIGHBOUR[side]
+			if _rooms.has(next) and not seen.has(next):
+				seen[next] = seen[cell] + 1
+				queue.append(next)
+
+	var stairs = exit_scene.instantiate()
+	add_child(stairs)
+	var ground := (_rooms[far] as Node2D).get_node("TileMap/Ground") as TileMapLayer
+	stairs.global_position = ground.to_global(ground.map_to_local(
+		ground.get_used_rect().position + ground.get_used_rect().size / 2))
+	## Deferred: descend() frees the whole floor and the signal fires from
+	## inside body_entered, mid-physics.
+	stairs.descended.connect(descend, CONNECT_DEFERRED)
 
 
 ## Drops monsters and breakables into the rooms. The room the player starts in
@@ -78,7 +137,7 @@ func _populate(step: Vector2) -> void:
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
 		if not enemy_scenes.is_empty() and cell != start:
-			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y)
+			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) + depth - 1
 			for i in n:
 				_place(here, enemy_scenes[_rng.randi_range(0, enemy_scenes.size() - 1)])
 		if not prop_scenes.is_empty():
@@ -107,13 +166,14 @@ func _place(room: Node2D, scene: PackedScene) -> void:
 ## Drops the whole floor into gloom and gives the player a lantern, so the maze
 ## is lit by what she carries rather than being evenly visible everywhere.
 func _light() -> void:
-	var tint := CanvasModulate.new()
-	tint.name = "Gloom"
-	tint.color = gloom
-	add_child(tint)
+	if not has_node("Gloom"):
+		var tint := CanvasModulate.new()
+		tint.name = "Gloom"
+		tint.color = gloom
+		add_child(tint)
 
 	var player := _player_body()
-	if player == null:
+	if player == null or player.has_node("Lantern"):
 		return
 	var lamp := PointLight2D.new()
 	lamp.name = "Lantern"
@@ -212,13 +272,19 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 func _spawn_player(step: Vector2) -> void:
 	if player_scene == null:
 		return
-	var player = player_scene.instantiate()
-	add_child(player)
+	## Spawned once and carried down; later floors only move her.
+	var player := _player
+	if player == null:
+		player = player_scene.instantiate()
+		add_child(player)
+		_player = player
 	## Middle of the lattice, so there is maze in every direction.
 	player.global_position = Vector2(
 		step.x * 0.5 * (grid.x - 1) * 0.5,
 		step.y * 0.5 * (grid.y - 1) * 0.5)
 
+	if player.has_node("FollowCamera"):
+		return
 	var cam := Camera2D.new()
 	cam.name = "FollowCamera"
 	player.add_child(cam)
