@@ -6,27 +6,27 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_btn"]
 bg_color = Color(0.075, 0.055, 0.085, 0.94)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
 border_color = Color(0.72, 0.52, 0.24, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_btn_hover"]
 bg_color = Color(0.28, 0.075, 0.075, 0.96)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
 border_color = Color(0.96, 0.78, 0.4, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [node name="CharacterSelect" type="Control"]
 layout_mode = 3
@@ -53,108 +53,125 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0.03, 0.02, 0.04, 0.72)
+color = Color(0.03, 0.02, 0.04, 0.66)
 
-[node name="Layout" type="HBoxContainer" parent="."]
+[node name="PreviewHolder" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 620.0
+mouse_filter = 2
+
+[node name="Preview" type="AnimatedSprite2D" parent="PreviewHolder"]
+texture_filter = 1
+position = Vector2(300, 398)
+scale = Vector2(3.4, 3.4)
+
+[node name="ClipName" type="Label" parent="PreviewHolder"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = 32.0
-offset_right = -40.0
-offset_bottom = -32.0
-theme_override_constants/separation = 28
-
-[node name="PreviewPanel" type="VBoxContainer" parent="Layout"]
-custom_minimum_size = Vector2(360, 0)
-layout_mode = 2
-theme_override_constants/separation = 6
-alignment = 1
-
-[node name="Preview" type="AnimatedSprite2D" parent="Layout/PreviewPanel"]
-texture_filter = 1
-position = Vector2(180, 250)
-scale = Vector2(0.62, 0.62)
-
-[node name="ClipName" type="Label" parent="Layout/PreviewPanel"]
-custom_minimum_size = Vector2(0, 460)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.6, 0.38, 1)
-theme_override_font_sizes/font_size = 12
+offset_top = -76.0
+theme_override_colors/font_color = Color(0.85, 0.72, 0.45, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.02, 0.05, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 22
 text = ""
 horizontal_alignment = 1
-vertical_alignment = 2
 
-[node name="Right" type="VBoxContainer" parent="Layout"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
+[node name="Right" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -900.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
+theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Heading" type="Label" parent="Layout/Right"]
+[node name="Heading" type="Label" parent="Right"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.56, 0.28, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85, 0.6, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.02, 0.05, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 24
 text = "◆  CHOOSE YOUR ASPECT  ◆"
 horizontal_alignment = 1
 
-[node name="SchemeName" type="Label" parent="Layout/Right"]
+[node name="SchemeName" type="Label" parent="Right"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.87, 0.57, 1)
 theme_override_colors/font_outline_color = Color(0.22, 0.045, 0.045, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_shadow_color = Color(0.035, 0.025, 0.08, 1)
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_font_sizes/font_size = 62
 text = "JADE DRAGON"
 horizontal_alignment = 1
 
-[node name="Element" type="Label" parent="Layout/Right"]
+[node name="Element" type="Label" parent="Right"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.7, 0.38, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.94, 0.74, 0.42, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.02, 0.05, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 26
 text = "◆  WOOD  ◆"
 horizontal_alignment = 1
 
-[node name="Icons" type="GridContainer" parent="Layout/Right"]
+[node name="Icons" type="GridContainer" parent="Right"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
 columns = 6
 
-[node name="Note" type="Label" parent="Layout/Right"]
+[node name="Note" type="Label" parent="Right"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.56, 0.48, 0.5, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.68, 0.58, 0.58, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.02, 0.05, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 16
 text = "APPEARANCE ONLY — NO EFFECT ON PLAY"
 horizontal_alignment = 1
 
-[node name="Buttons" type="HBoxContainer" parent="Layout/Right"]
+[node name="Buttons" type="HBoxContainer" parent="Right"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 14
+theme_override_constants/separation = 26
 
-[node name="Back" type="Button" parent="Layout/Right/Buttons"]
-custom_minimum_size = Vector2(160, 38)
+[node name="Back" type="Button" parent="Right/Buttons"]
+custom_minimum_size = Vector2(240, 62)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.78, 0.45, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBox_btn")
 theme_override_styles/hover = SubResource("StyleBox_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBox_btn_hover")
 theme_override_styles/focus = SubResource("StyleBox_btn_hover")
 text = "◆   BACK   ◆"
 
-[node name="Confirm" type="Button" parent="Layout/Right/Buttons"]
-custom_minimum_size = Vector2(220, 38)
+[node name="Confirm" type="Button" parent="Right/Buttons"]
+custom_minimum_size = Vector2(320, 62)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.78, 0.45, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBox_btn")
 theme_override_styles/hover = SubResource("StyleBox_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBox_btn_hover")
 theme_override_styles/focus = SubResource("StyleBox_btn_hover")
 text = "◆   BEGIN   ◆"
 
-[connection signal="pressed" from="Layout/Right/Buttons/Back" to="." method="_on_back_pressed"]
-[connection signal="pressed" from="Layout/Right/Buttons/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="Right/Buttons/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Right/Buttons/Confirm" to="." method="_on_confirm_pressed"]

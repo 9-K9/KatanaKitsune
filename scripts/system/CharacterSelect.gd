@@ -14,11 +14,14 @@ const SHOWCASE: Array[String] = [
 const SECONDS_PER_CLIP: float = 1.6
 const DIRECTION := "southEast"
 
-@onready var preview: AnimatedSprite2D = $Layout/PreviewPanel/Preview
-@onready var icons: GridContainer = $Layout/Right/Icons
-@onready var scheme_name: Label = $Layout/Right/SchemeName
-@onready var element: Label = $Layout/Right/Element
-@onready var clip_label: Label = $Layout/PreviewPanel/ClipName
+## The preview is a Node2D, so it sits in a plain Control rather than a
+## container — containers do not lay out Node2D children, which left it pinned
+## tiny in the corner.
+@onready var preview: AnimatedSprite2D = $PreviewHolder/Preview
+@onready var icons: GridContainer = $Right/Icons
+@onready var scheme_name: Label = $Right/SchemeName
+@onready var element: Label = $Right/Element
+@onready var clip_label: Label = $PreviewHolder/ClipName
 @onready var cover: TextureRect = $Cover
 
 var _highlighted: int = 0
@@ -46,7 +49,7 @@ func _build_icons() -> void:
 		button.texture_normal = load(PowerState.icon_path(i))
 		button.ignore_texture_size = true
 		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		button.custom_minimum_size = Vector2(72, 72)
+		button.custom_minimum_size = Vector2(124, 124)
 		button.tooltip_text = "%s — %s" % [PowerState.info(i)["element"], PowerState.info(i)["name"]]
 		button.pressed.connect(_show.bind(i))
 		icons.add_child(button)
