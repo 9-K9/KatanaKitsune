@@ -19,6 +19,8 @@ extends Node2D
 ## One is always placed beside the spawn. Resting only happens at a chair, so
 ## leaving it to the random prop pool meant a floor could offer nowhere to rest.
 @export var chair_scene: PackedScene = null
+## Chairs dropped on open floor beyond the one beside the spawn.
+@export var extra_chairs: int = 3
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -285,17 +287,31 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 			walls[other][back] = false
 
 
-## A chair within sight of where she starts, so resting can be tried without
-## hunting the floor for one.
+## Chairs to rest at: one beside the spawn, and a few more out on open floor so
+## resting is something you can plan a route around rather than stumble onto.
+## They go at room centres, which is the one spot guaranteed clear of the walls.
 func _place_starting_chair() -> void:
 	if chair_scene == null or _player == null:
 		return
+	## Beside the spawn, off to one side so she does not begin standing on it.
+	_add_chair(_player.global_position + Vector2(150.0, 75.0), "StartingChair")
+
+	## And in a scattering of other rooms, skipping the one she starts in.
+	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	var elsewhere: Array[Vector2i] = []
+	for cell in _rooms:
+		if cell != start:
+			elsewhere.append(cell)
+	elsewhere.shuffle()
+	for i in mini(extra_chairs, elsewhere.size()):
+		_add_chair(_room_centre(elsewhere[i]), "Chair_%d_%d" % [elsewhere[i].x, elsewhere[i].y])
+
+
+func _add_chair(where: Vector2, named: String) -> void:
 	var chair := chair_scene.instantiate()
-	chair.name = "StartingChair"
+	chair.name = named
 	add_child(chair)
-	## Off to one side, far enough not to be stood on at spawn but inside the
-	## same room. Squashed 2:1 like every other ground offset.
-	(chair as Node2D).global_position = _player.global_position + Vector2(150.0, 75.0)
+	(chair as Node2D).global_position = where
 
 
 ## The world position of the middle of a room's floor.
