@@ -928,22 +928,22 @@ attenuation = 0.420448
 [connection signal="finished" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_finished"]
 
 [node name="TestUrn" parent="." instance=ExtResource("t_breakableUrn")]
-position = Vector2(-40, 10)
+position = Vector2(-216, -12)
 
 [node name="TestChest" parent="." instance=ExtResource("t_breakableChest")]
-position = Vector2(-140, 20)
+position = Vector2(-240, 0)
 
 [node name="TestStatue" parent="." instance=ExtResource("t_breakableStatue")]
-position = Vector2(-60, 60)
+position = Vector2(48, 0)
 
 [node name="TestBrazier" parent="." instance=ExtResource("t_brazier")]
-position = Vector2(-120, -40)
+position = Vector2(-96, -48)
 
 [node name="TestTrap" parent="." instance=ExtResource("t_spikeTrap")]
-position = Vector2(0, -20)
+position = Vector2(72, 36)
 
 [node name="TestHealth" parent="." instance=ExtResource("t_pickupHealth")]
-position = Vector2(-30, -55)
+position = Vector2(-360, 36)
 
 [node name="TestRonin" parent="." instance=ExtResource("t_undeadRonin")]
-position = Vector2(378, -115)
+position = Vector2(-360, -60)
