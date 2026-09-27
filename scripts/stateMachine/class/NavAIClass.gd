@@ -25,6 +25,20 @@ func navigationControler(targetVector2,spd,dt,fps):
 	animationState(fps)
 	move_and_slide()
 	
+## The inverse of directionState: the unit vector a named facing points along.
+## Lives here beside its counterpart because the monsters need it to work out
+## what is in front of them, and AI_Class does not inherit the player's copy.
+const FACING_VECTORS := {
+	"south": Vector2(0, 1), "southWest": Vector2(-1, 1), "west": Vector2(-1, 0),
+	"northWest": Vector2(-1, -1), "north": Vector2(0, -1),
+	"northEast": Vector2(1, -1), "east": Vector2(1, 0), "southEast": Vector2(1, 1),
+}
+
+
+func stateDirection(str_dir: String) -> Vector2:
+	return FACING_VECTORS.get(str_dir, Vector2.ZERO)
+
+
 func directionState(rnd_dir):
 	var string_dir : String
 	match rnd_dir:

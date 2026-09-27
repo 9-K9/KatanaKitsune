@@ -90,6 +90,14 @@ func distance_to_player() -> float:
 const WALL_MASK: int = 1
 ## How long a monster keeps hunting after losing sight of her.
 @export var memory_seconds: float = 3.0
+## How wide a monster's view is, in degrees. Vision is a cone rather than a
+## circle so that getting behind one is worth doing — which is the whole point
+## of a stealth system.
+@export var vision_arc_degrees: float = 130.0
+## Inside this it notices her regardless of which way it is looking. Without it
+## she could stand on a monster's toes unseen, which reads as broken rather than
+## as stealthy.
+@export var aware_radius: float = 95.0
 
 var _last_seen_ms: int = -100000
 var _sight_checked_ms: int = -100000
@@ -121,7 +129,11 @@ func _look_for_player() -> bool:
 		return false
 	## effective_detection already scales with how hidden she is — crouched is
 	## 0.3 of the range, katana drawn is 1.5.
-	if ground_distance_to(target.global_position) > effective_detection():
+	var distance: float = ground_distance_to(target.global_position)
+	if distance > effective_detection():
+		return false
+	## Outside the close-range awareness she has to be in front of it.
+	if distance > aware_radius and not _within_arc(target.global_position):
 		return false
 	var space := get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(
@@ -131,6 +143,24 @@ func _look_for_player() -> bool:
 	## view through it, which is the same rule the walls follow.
 	query.exclude = [get_rid(), target.get_rid()]
 	return space.intersect_ray(query).is_empty()
+
+
+## Is `point` inside the cone this monster is looking down?
+func _within_arc(point: Vector2) -> bool:
+	var facing: Vector2 = stateDirection(facing_dir)
+	if facing == Vector2.ZERO:
+		return true
+	## Both vectors get the squash undone, or the cone would be far wider
+	## looking up and down the screen than across it.
+	var to_target: Vector2 = point - global_position
+	to_target.y /= ISO_Y_SCALE
+	facing.y /= ISO_Y_SCALE
+	if to_target.length_squared() < 1.0:
+		return true
+	## angle_to is signed, so the magnitude is what matters — a target 90 degrees
+	## to the left is as visible as one 90 degrees to the right.
+	var half: float = deg_to_rad(vision_arc_degrees) * 0.5
+	return absf(to_target.normalized().angle_to(facing.normalized())) <= half
 
 
 ## Seconds since she was last actually seen.
