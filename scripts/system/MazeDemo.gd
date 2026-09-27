@@ -16,6 +16,9 @@ extends Node2D
 ## Stood at the ends of every opening and spaced across it, so a knocked-out
 ## wall reads as a deliberate colonnade instead of a severed run of stone.
 @export var pillar_scene: PackedScene = null
+## One is always placed beside the spawn. Resting only happens at a chair, so
+## leaving it to the random prop pool meant a floor could offer nowhere to rest.
+@export var chair_scene: PackedScene = null
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -105,6 +108,7 @@ func _build() -> void:
 	_carve()
 	_place_pillars()
 	_spawn_player(step)
+	_place_starting_chair()
 	_populate(step)
 	_place_exit()
 	_light()
@@ -279,6 +283,19 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 	for back in SIDES:
 		if other + NEIGHBOUR[back] == cell:
 			walls[other][back] = false
+
+
+## A chair within sight of where she starts, so resting can be tried without
+## hunting the floor for one.
+func _place_starting_chair() -> void:
+	if chair_scene == null or _player == null:
+		return
+	var chair := chair_scene.instantiate()
+	chair.name = "StartingChair"
+	add_child(chair)
+	## Off to one side, far enough not to be stood on at spawn but inside the
+	## same room. Squashed 2:1 like every other ground offset.
+	(chair as Node2D).global_position = _player.global_position + Vector2(150.0, 75.0)
 
 
 ## The world position of the middle of a room's floor.

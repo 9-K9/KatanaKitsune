@@ -28,6 +28,7 @@ enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"
 exit_scene = ExtResource("12_exit")
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair")])
 pillar_scene = ExtResource("11_pillar")
+chair_scene = ExtResource("10_chair")
 
 [node name="HUD" parent="." instance=ExtResource("11_hud")]
 
