@@ -77,16 +77,30 @@ func _rebuild() -> void:
 					light.free()
 
 
-## One whole footprint along each tile axis, in pixels.
+## One whole footprint along each ISOMETRIC axis, in pixels.
+##
+## Measured on u = x-y and v = x+y, the screen's own axes, rather than on the
+## tile rect. An isometric room is a diamond in tile coordinates, so stepping by
+## its tile bounding box lands neighbours corner-to-corner and leaves diagonal
+## gaps. Stepping along u and v moves a whole room screen-right or screen-down,
+## which is how these rooms actually abut.
 func _footprint_step() -> Vector2:
 	var probe := room_scene.instantiate()
 	var ground := probe.get_node_or_null("TileMap/Ground") as TileMapLayer
 	var step := Vector2.ZERO
 	if ground != null:
-		var size: Vector2i = ground.get_used_rect().size + spacing
-		var origin: Vector2 = ground.map_to_local(Vector2i.ZERO)
+		var umin := 1 << 30
+		var umax := -(1 << 30)
+		var vmin := 1 << 30
+		var vmax := -(1 << 30)
+		for c in ground.get_used_cells():
+			umin = mini(umin, c.x - c.y)
+			umax = maxi(umax, c.x - c.y)
+			vmin = mini(vmin, c.x + c.y)
+			vmax = maxi(vmax, c.x + c.y)
+		## Half a tile wide and half a tile tall per unit of u and v.
 		step = Vector2(
-			ground.map_to_local(Vector2i(size.x, 0)).x - origin.x,
-			ground.map_to_local(Vector2i(0, size.y)).y - origin.y)
+			float(umax - umin + 1 + spacing.x) * ground.tile_set.tile_size.x * 0.5,
+			float(vmax - vmin + 1 + spacing.y) * ground.tile_set.tile_size.y * 0.5)
 	probe.free()
 	return step
