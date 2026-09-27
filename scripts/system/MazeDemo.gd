@@ -28,6 +28,11 @@ extends Node2D
 @export var props_per_room: Vector2i = Vector2i(1, 3)
 ## Columns spaced between the two that flank each opening.
 @export var pillars_per_opening: int = 3
+## Nudges the columns along the wall's own footprint offset. 1.0 puts them on
+## the centre of the stone; higher settles them further onto the wall line.
+## Scaling rather than adding keeps the sideways part flipping per side, which a
+## fixed nudge would not — the walls lean opposite ways on opposite sides.
+@export_range(0.5, 2.5, 0.05) var pillar_wall_bias: float = 1.25
 
 @export_group("Atmosphere")
 ## Near-black, so the player's lantern and the braziers do the lighting.
@@ -373,7 +378,7 @@ func _place_pillars() -> void:
 				wanted.append(i)
 			for i in wanted:
 				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i])
-						+ _wall_footprint(layer, cells[i]))
+						+ _wall_footprint(layer, cells[i]) * pillar_wall_bias)
 				var crowded := false
 				for other in placed:
 					if other.distance_to(world) < MIN_GAP:
