@@ -3,6 +3,14 @@
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="4_mummy"]
+[ext_resource type="PackedScene" uid="uid://drn8k4pwxvq7s" path="res://scenes/monsters/undeadRonin.tscn" id="5_ronin"]
+[ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="6_urn"]
+[ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="7_chest"]
+[ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="8_statue"]
+[ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="9_brazier"]
+[ext_resource type="Script" path="res://scripts/system/Radar.gd" id="10_radar"]
+[ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="11_hud"]
 
 [node name="MazeDemo" type="Node2D"]
 y_sort_enabled = true
@@ -11,5 +19,20 @@ room_scene = ExtResource("2_room")
 player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
 maze_seed = 12345
+enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"), ExtResource("5_ronin")])
+prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier")])
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" parent="." instance=ExtResource("11_hud")]
+
+[node name="RadarLayer" type="CanvasLayer" parent="."]
+
+[node name="Radar" type="Control" parent="RadarLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 16.0
+offset_right = -28.0
+offset_bottom = 148.0
+grow_horizontal = 0
+script = ExtResource("10_radar")

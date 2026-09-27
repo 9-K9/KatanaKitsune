@@ -37,10 +37,17 @@ var _slopes: Dictionary = {}
 
 func _ready() -> void:
 	if mode == Mode.FADE:
-		_shader = material as ShaderMaterial
-		if _shader == null:
+		var shared := material as ShaderMaterial
+		if shared == null:
 			push_warning("WallFade: %s has no ShaderMaterial; it will not fade." % name)
 			set_process(false)
+			return
+		## Every instance of a room prefab shares the material stored in its
+		## scene, so sixteen rooms would all write `subjects` to one resource and
+		## only the last to run each frame would be seen. A copy per layer keeps
+		## them independent.
+		_shader = shared.duplicate() as ShaderMaterial
+		material = _shader
 
 
 func _process(_delta: float) -> void:
