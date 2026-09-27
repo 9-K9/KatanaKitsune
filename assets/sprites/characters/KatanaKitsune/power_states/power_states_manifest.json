@@ -1,0 +1,105 @@
+{
+  "base_character": "KatanaKitsune",
+  "frame_size": [
+    480,
+    480
+  ],
+  "frames_per_sheet": 8,
+  "directions": 8,
+  "animations": [
+    "Death",
+    "FastRun",
+    "Flair",
+    "ForwardRoll",
+    "HighKick",
+    "IdleStanding",
+    "KatanaBlock",
+    "KatanaBlockCrouched",
+    "KatanaChargeAttack",
+    "KatanaCounterSlash",
+    "KatanaDraw",
+    "KatanaIdle",
+    "KatanaJump",
+    "KatanaKick",
+    "KatanaRun",
+    "KatanaSeath",
+    "KatanaSlashCrouched",
+    "KatanaSlashMid",
+    "KatanaWalk",
+    "MidKick",
+    "NinjaRun",
+    "RoundKick",
+    "RuningJump",
+    "SeductiveDance",
+    "Sitting",
+    "SittingFloor",
+    "SlowRun",
+    "SneakWalk",
+    "StealthIdle",
+    "StealthToCrouch",
+    "SwitchDirectionIdle",
+    "Walking"
+  ],
+  "states": [
+    {
+      "id": "01_Wood_JadeDragon",
+      "name": "Wood JadeDragon",
+      "path": "01_Wood_JadeDragon"
+    },
+    {
+      "id": "02_Fire_VermilionPhoenix",
+      "name": "Fire VermilionPhoenix",
+      "path": "02_Fire_VermilionPhoenix"
+    },
+    {
+      "id": "03_Earth_GoldenQilin",
+      "name": "Earth GoldenQilin",
+      "path": "03_Earth_GoldenQilin"
+    },
+    {
+      "id": "04_Metal_WhiteTiger",
+      "name": "Metal WhiteTiger",
+      "path": "04_Metal_WhiteTiger"
+    },
+    {
+      "id": "05_Water_BlackTortoise",
+      "name": "Water BlackTortoise",
+      "path": "05_Water_BlackTortoise"
+    },
+    {
+      "id": "06_Lightning_ThunderDragon",
+      "name": "Lightning ThunderDragon",
+      "path": "06_Lightning_ThunderDragon"
+    },
+    {
+      "id": "07_Ice_MoonFrost",
+      "name": "Ice MoonFrost",
+      "path": "07_Ice_MoonFrost"
+    },
+    {
+      "id": "08_Darkness_Eclipse",
+      "name": "Darkness Eclipse",
+      "path": "08_Darkness_Eclipse"
+    },
+    {
+      "id": "09_Light_SolarYang",
+      "name": "Light SolarYang",
+      "path": "09_Light_SolarYang"
+    },
+    {
+      "id": "10_Wind_AzureGale",
+      "name": "Wind AzureGale",
+      "path": "10_Wind_AzureGale"
+    },
+    {
+      "id": "11_Poison_JadeSerpent",
+      "name": "Poison JadeSerpent",
+      "path": "11_Poison_JadeSerpent"
+    },
+    {
+      "id": "12_Spirit_CelestialQi",
+      "name": "Spirit CelestialQi",
+      "path": "12_Spirit_CelestialQi"
+    }
+  ]
+}
