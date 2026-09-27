@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cstk1trnawq4p"]
+
+[ext_resource type="Script" path="res://scripts/system/RoomStackTest.gd" id="1_stack"]
+[ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
+
+[node name="StackTest" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_stack")
+room_scene = ExtResource("2_room")
+grid = Vector2i(2, 2)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1200, 600)
+zoom = Vector2(0.2, 0.2)
