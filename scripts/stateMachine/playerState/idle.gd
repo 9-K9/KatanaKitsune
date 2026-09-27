@@ -1,7 +1,9 @@
 extends PlayerClass
 
-## Left alone this long she sits down, and sitting mends her — so resting is a
-## real option between fights rather than something only potions can do.
+## Left alone this long beside a chair she sits down, and sitting mends her — so
+## resting is a real option between fights rather than something only potions can
+## do. Only a chair: the sit-on-the-floor clip does not hold up, and requiring
+## furniture gives chairs a reason to exist beyond decoration.
 const REST_AFTER: float = 8.0
 
 var _still_for: float = 0.0
@@ -37,9 +39,8 @@ func on_process(delta):
 		return
 
 	_still_for += delta
-	if _still_for >= REST_AFTER:
-		## Takes the chair if she is standing over one, otherwise the floor.
-		change_state("sittingChair" if chair_underfoot() != null else "sittingFloor")
+	if _still_for >= REST_AFTER and chair_underfoot() != null:
+		change_state("sittingChair")
 
 func on_physics_process(delta):
 	pass

@@ -318,6 +318,33 @@ func _spawn_player(step: Vector2) -> void:
 const MIN_GAP: float = 150.0
 
 
+## Where a wall tile's stone actually stands, relative to the cell it occupies.
+##
+## These tiles span five cells by sixteen and carry a texture origin, so the
+## cell position lands near the top of the sprite rather than at its base —
+## columns placed there stood about 56px off the wall line. The collision
+## polygon is the honest footprint, and its centre differs per side because the
+## walls lean, so this is read from the tile rather than typed in as a constant.
+func _wall_footprint(layer: TileMapLayer, cell: Vector2i) -> Vector2:
+	var ts: TileSet = layer.tile_set
+	if ts == null:
+		return Vector2.ZERO
+	var src := ts.get_source(layer.get_cell_source_id(cell)) as TileSetAtlasSource
+	if src == null:
+		return Vector2.ZERO
+	var data: TileData = src.get_tile_data(layer.get_cell_atlas_coords(cell),
+			layer.get_cell_alternative_tile(cell))
+	if data == null or data.get_collision_polygons_count(0) == 0:
+		return Vector2.ZERO
+	var points: PackedVector2Array = data.get_collision_polygon_points(0, 0)
+	if points.is_empty():
+		return Vector2.ZERO
+	var sum := Vector2.ZERO
+	for p in points:
+		sum += p
+	return sum / float(points.size())
+
+
 func _place_pillars() -> void:
 	if pillar_scene == null:
 		return
@@ -345,7 +372,8 @@ func _place_pillars() -> void:
 			for i in range(stride, cells.size() - 1, stride):
 				wanted.append(i)
 			for i in wanted:
-				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i]))
+				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i])
+						+ _wall_footprint(layer, cells[i]))
 				var crowded := false
 				for other in placed:
 					if other.distance_to(world) < MIN_GAP:
