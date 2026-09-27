@@ -24382,6 +24382,7 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 position = Vector2(-8, -83)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="AnimationManager"]
+position = Vector2(0, -100)
 sprite_frames = SubResource("SpriteFrames_kicbp")
 animation = &"idle_southWest"
 autoplay = "idle_southWest"

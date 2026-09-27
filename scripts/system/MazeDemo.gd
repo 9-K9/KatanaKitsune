@@ -32,7 +32,7 @@ extends Node2D
 ## the centre of the stone; higher settles them further onto the wall line.
 ## Scaling rather than adding keeps the sideways part flipping per side, which a
 ## fixed nudge would not — the walls lean opposite ways on opposite sides.
-@export_range(0.5, 2.5, 0.05) var pillar_wall_bias: float = 1.25
+@export_range(0.5, 2.5, 0.05) var pillar_wall_bias: float = 1.35
 
 @export_group("Atmosphere")
 ## Near-black, so the player's lantern and the braziers do the lighting.
@@ -195,9 +195,9 @@ func _light() -> void:
 	lamp.color = lantern_colour
 	lamp.energy = 1.5
 	lamp.texture_scale = lantern_radius
-	## Sits at her torso, not her feet, or the pool reads as lighting the floor
-	## behind her rather than travelling with her.
-	lamp.position = Vector2(0, -40)
+	## Sits at her torso. Her origin is now her feet, so this is measured up
+	## from the ground rather than out from the middle of her.
+	lamp.position = Vector2(0, -95)
 	player.add_child(lamp)
 
 
