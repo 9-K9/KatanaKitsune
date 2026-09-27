@@ -107,7 +107,7 @@ func apply_to(sprite: AnimatedSprite2D, index: int = -1) -> void:
 func _recolour(base_path: String, index: int) -> Texture2D:
 	if not base_path.begins_with(BASE_SPRITES):
 		return null
-	## .../sprites/<Folder>/KatanaKitsume_<Folder>_dirN.png
+	## .../sprites/<Folder>/KatanaKitsune_<Folder>_dirN.png
 	var parts := base_path.substr(BASE_SPRITES.length() + 1).split("/")
 	if parts.size() < 2:
 		return null

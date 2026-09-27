@@ -10,6 +10,7 @@ const FILL_INSET: Vector2 = Vector2(9, 8)
 @onready var depth_label: Label = $Depth
 @onready var fill: ColorRect = $Bar/Fill
 @onready var bar: TextureRect = $Bar
+@onready var portrait: TextureRect = $Portrait
 @onready var stamina_fill: ColorRect = $Stamina/Fill
 @onready var stamina_bar: TextureRect = $Stamina
 
@@ -26,6 +27,11 @@ func _ready() -> void:
 	_stamina_width = stamina_bar.size.x - FILL_INSET.x * 2.0
 	stamina_fill.position = FILL_INSET
 	stamina_fill.size = Vector2(_stamina_width, stamina_bar.size.y - FILL_INSET.y * 2.0)
+	## Portrait wears the chosen aspect, like she does. Each power state ships
+	## its own recoloured HUDicon.
+	var icon := load(PowerState.icon_path())
+	if icon != null:
+		portrait.texture = icon
 
 
 func player() -> CharacterBody2D:
