@@ -7,3 +7,9 @@
 # .import sidecars are meant to be committed: they hold each asset's UID, and
 # without them a fresh clone re-imports with new UIDs and every ext_resource
 # reference into that asset breaks.
+
+# Scratch space for art experiments. Work in progress here got swept into
+# unrelated commits more than once by a `git add -A`; ignoring it means that
+# cannot happen by accident, whoever or whatever is doing the staging.
+# To commit something from here, move it out of _tests/ first.
+assets/sprites/characters/_tests/
