@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dqv3n8kylr2ma"]
+[gd_scene load_steps=7 format=3 uid="uid://dqv3n8kylr2ma"]
 
 [ext_resource type="Script" path="res://scripts/system/GeneratedLevel.gd" id="1_gen"]
 [ext_resource type="TileSet" path="res://assets/sprites/tiles/crocotileGround.tres" id="2_kit"]
@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://cxt5st4rsdn8w" path="res://scenes/props/exitStairs.tscn" id="10_exit"]
 [ext_resource type="PackedScene" uid="uid://drn8k4pwxvq7s" path="res://scenes/monsters/undeadRonin.tscn" id="11_ronin"]
 [ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="9_chair"]
+[ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="12_pausemenu"]
+[ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="13_hud"]
 
 [node name="GeneratedLevel" type="Node2D" node_paths=PackedStringArray()]
 y_sort_enabled = true
@@ -41,3 +43,7 @@ tile_set = ExtResource("2_walls")
 
 [node name="Contents" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[node name="PauseMenu" parent="." instance=ExtResource("12_pausemenu")]
+
+[node name="HUD" parent="." instance=ExtResource("13_hud")]

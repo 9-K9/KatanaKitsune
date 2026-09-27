@@ -20,22 +20,47 @@ func _ready():
 	_sync_immortality_label()
 
 func _process(_delta):
-	if not is_instance_valid(gameManager) or not gameManager.has_method("getState"):
-		return
+	## Owns the pause toggle either way, because this node keeps processing while
+	## the tree is frozen; GameManager stops dead the instant the pause takes
+	## effect, so it could never un-pause the game itself.
+	if _has_manager():
+		_process_with_manager()
+	else:
+		_process_standalone()
+
+
+## Maps built around GameManager route pause through its state machine, so
+## game_over stays excluded and the key cannot be used to un-die.
+func _process_with_manager() -> void:
 	var state: String = gameManager.getState()
-	## Owns the pause toggle because this node keeps processing while the tree
-	## is frozen; GameManager stops dead the instant the pause takes effect.
-	## Death is excluded so the key cannot be used to un-die.
 	if state != "game_over" and Input.is_action_just_pressed("Pause"):
 		gameManager.setState("game_play" if state == "game_paused" else "game_paused")
 		state = gameManager.getState()
+	_set_shown(state == "game_paused")
 
-	var should_show: bool = state == "game_paused"
+
+## The maze's root is its generator, not a GameManager, so there is no state
+## machine to ask — the menu pauses the tree itself. Without this the key did
+## nothing at all on the level the game actually starts on.
+func _process_standalone() -> void:
+	if Input.is_action_just_pressed("Pause"):
+		get_tree().paused = not get_tree().paused
+	_set_shown(get_tree().paused)
+
+
+func _has_manager() -> bool:
+	return is_instance_valid(gameManager) and gameManager.has_method("getState")
+
+
+func _set_shown(should_show: bool) -> void:
 	if should_show != visible:
 		visible = should_show
 
 func _on_resume_pressed():
-	gameManager.setState("game_play")
+	if _has_manager():
+		gameManager.setState("game_play")
+	else:
+		get_tree().paused = false
 	_show_main_menu()
 
 func _on_cheats_pressed() -> void:
@@ -62,4 +87,7 @@ func _on_quit_pressed():
 	## Leaving the map has to lift the pause too, or the title screen loads
 	## into a frozen tree.
 	get_tree().paused = false
-	gameManager.setState("game_title")
+	if _has_manager():
+		gameManager.setState("game_title")
+	else:
+		get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
