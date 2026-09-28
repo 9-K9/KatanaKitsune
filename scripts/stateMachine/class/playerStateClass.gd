@@ -80,19 +80,23 @@ func chair_underfoot() -> Node2D:
 		## check kept getting wrong — 140 units of ground reach is only about 70
 		## pixels up or down the screen, and a chair a little below her fell out
 		## of it while still looking underfoot.
-		var zone := (chair as Node2D).get_node_or_null("SitZone") as Area2D
-		if zone != null:
-			if zone.overlaps_body(pc):
-				return chair
-			continue
+		var seat_position := _chair_position(chair as Node2D)
 		## Ground distance, not screen distance. The map is drawn 2:1, so a chair
 		## the same distance away up the screen would otherwise read as twice as
 		## close as one to the side.
-		var seat_position := _chair_position(chair as Node2D)
 		var offset: Vector2 = seat_position - pc.global_position
 		offset.y /= 0.5
 		var distance: float = offset.length()
-		if distance <= CHAIR_REACH and distance < nearest_distance:
+
+		var zone := (chair as Node2D).get_node_or_null("SitZone") as Area2D
+		var in_reach: bool = zone.overlaps_body(pc) if zone != null else distance <= CHAIR_REACH
+		if not in_reach:
+			continue
+		## Nearest, not first. Returning the first chair whose zone she was inside
+		## meant that with two in range she could be snapped onto whichever the
+		## group happened to list first — which is how she ended up sitting beside
+		## the chair she was standing at rather than on it.
+		if distance < nearest_distance:
 			nearest_distance = distance
 			nearest = chair
 	return nearest
