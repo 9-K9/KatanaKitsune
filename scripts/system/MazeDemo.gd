@@ -38,6 +38,11 @@ extends Node2D
 ## Scaling rather than adding keeps the sideways part flipping per side, which a
 ## fixed nudge would not — the walls lean opposite ways on opposite sides.
 @export_range(0.5, 2.5, 0.05) var pillar_wall_bias: float = 1.35
+## How far a column sorts after the wall it stands against. Measured at only 4px
+## without it, which is a coin flip — some columns landed behind the stone they
+## were framing. The art does not move: the node drops by this much and the
+## sprite rises by the same, so only the sort position changes.
+@export var pillar_sort_bias: float = 26.0
 
 @export_group("Atmosphere")
 ## Near-black, so the player's lantern and the braziers do the lighting.
@@ -112,6 +117,7 @@ func _build() -> void:
 	_spawn_player(step)
 	_place_starting_chair()
 	_populate(step)
+	_clear_buried_chairs()
 	_place_exit()
 	_light()
 
@@ -314,6 +320,29 @@ func _add_chair(where: Vector2, named: String) -> void:
 	(chair as Node2D).global_position = where
 
 
+## Throws away any chair standing inside something solid.
+##
+## The prop pool drops chairs on any floor cell, including ones a column is
+## already standing on. A buried chair still counts as somewhere to rest, so she
+## would walk into a column and sit on a chair nobody can see — which is exactly
+## what a chair under a column looked like.
+func _clear_buried_chairs() -> void:
+	var space := get_world_2d().direct_space_state
+	var removed := 0
+	for chair in get_tree().get_nodes_in_group("chair"):
+		if not (chair is Node2D):
+			continue
+		var query := PhysicsPointQueryParameters2D.new()
+		## Its own base, not its origin, which sits SORT_LIFT above the floor.
+		query.position = (chair as Node2D).global_position + Vector2(0.0, SORT_LIFT)
+		query.collision_mask = 1
+		if not space.intersect_point(query, 1).is_empty():
+			chair.queue_free()
+			removed += 1
+	if removed > 0:
+		print("MazeDemo: removed %d chair(s) standing in solid geometry" % removed)
+
+
 ## The world position of the middle of a room's floor.
 func _room_centre(cell: Vector2i) -> Vector2:
 	var room := _rooms.get(cell) as Node2D
@@ -442,7 +471,12 @@ func _place_pillars() -> void:
 				var pillar := pillar_scene.instantiate()
 				pillar.name = "Pillar_%d_%d_%s_%d" % [cell.x, cell.y, side, i]
 				add_child(pillar)
-				(pillar as Node2D).global_position = world
+				(pillar as Node2D).global_position = world + Vector2(0.0, pillar_sort_bias)
+				## Sprite back up by the same amount, so the stone stays where it
+				## was and only the sort position has changed.
+				var art := pillar.get_node_or_null("Sprite2D") as Node2D
+				if art != null:
+					art.position.y -= pillar_sort_bias
 
 
 ## Where a grid cell sits on screen.

@@ -15,11 +15,13 @@ const COLOUR_PLAYER := Color(0.30, 1.00, 0.45, 0.85)
 const COLOUR_ZONE := Color(0.35, 0.80, 1.00, 0.75)
 const COLOUR_SOLID := Color(1.00, 0.60, 0.20, 0.70)
 const COLOUR_ENEMY := Color(1.00, 0.35, 0.35, 0.75)
+## Wall tiles, which collide as their drawn silhouette rather than a footprint.
+const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
 ## The chair she would sit on if she stood still long enough.
 const COLOUR_PICKED := Color(1.00, 0.95, 0.40, 0.95)
 const ORIGIN_ARM: float = 9.0
 
-var _on: bool = false
+var _on: bool = true
 var _player: CharacterBody2D = null
 
 
@@ -30,6 +32,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	## Still toggleable, but it starts on — this is for looking at a problem, and
+	## having to remember a key first defeats that.
 	if event is InputEventKey and event.pressed and not event.echo \
 			and (event as InputEventKey).physical_keycode == KEY_F3:
 		_on = not _on
@@ -83,6 +87,40 @@ func _draw() -> void:
 	for node in get_parent().get_children():
 		if node is StaticBody2D:
 			_draw_body(node as StaticBody2D, COLOUR_SOLID)
+	_draw_walls(get_parent())
+
+
+## Wall collision, read off the tiles themselves. This is the shape that stops
+## her, and it is not the shape of the stone — it follows the drawn silhouette,
+## sloped face and all, which is why she can end up held partway up a wall.
+## Only switched-on layers: an opening keeps its tiles, and drawing those would
+## put a wall across every doorway.
+func _draw_walls(root: Node) -> void:
+	for layer in _wall_layers(root):
+		var tile_set: TileSet = layer.tile_set
+		if tile_set == null:
+			continue
+		for cell in layer.get_used_cells():
+			var source := tile_set.get_source(layer.get_cell_source_id(cell)) as TileSetAtlasSource
+			if source == null:
+				continue
+			var data: TileData = source.get_tile_data(layer.get_cell_atlas_coords(cell),
+					layer.get_cell_alternative_tile(cell))
+			if data == null:
+				continue
+			var at := Transform2D(0.0, layer.to_global(layer.map_to_local(cell)))
+			for i in data.get_collision_polygons_count(0):
+				_outline(data.get_collision_polygon_points(0, i), at, COLOUR_WALL)
+
+
+func _wall_layers(node: Node) -> Array[TileMapLayer]:
+	var found: Array[TileMapLayer] = []
+	if node is TileMapLayer and String(node.name).begins_with("Walls_") \
+			and (node as TileMapLayer).enabled:
+		found.append(node as TileMapLayer)
+	for child in node.get_children():
+		found.append_array(_wall_layers(child))
+	return found
 
 
 ## Would chair_underfoot pick this one? Same rule, so the overlay cannot
@@ -117,10 +155,10 @@ func _draw_shape(shape: Shape2D, at: Transform2D, colour: Color) -> void:
 	if shape is CircleShape2D:
 		var radius: float = (shape as CircleShape2D).radius
 		var ring := PackedVector2Array()
-		for i in 33:
+		for i in 32:
 			var a: float = TAU * float(i) / 32.0
 			ring.append(to_local(at * (Vector2(cos(a), sin(a)) * radius)))
-		draw_polyline(ring, colour, 1.5)
+		_fill(ring, colour)
 	elif shape is ConvexPolygonShape2D:
 		_outline((shape as ConvexPolygonShape2D).points, at, colour)
 	elif shape is RectangleShape2D:
@@ -129,13 +167,23 @@ func _draw_shape(shape: Shape2D, at: Transform2D, colour: Color) -> void:
 
 
 func _outline(points: PackedVector2Array, at: Transform2D, colour: Color) -> void:
-	if points.size() < 2:
+	if points.size() < 3:
 		return
 	var loop := PackedVector2Array()
 	for p in points:
 		loop.append(to_local(at * p))
-	loop.append(loop[0])
-	draw_polyline(loop, colour, 1.5)
+	_fill(loop, colour)
+
+
+## Filled, with a solid edge on top. A wash alone is hard to read where shapes
+## overlap, and an outline alone disappears into the floor pattern.
+func _fill(points: PackedVector2Array, colour: Color) -> void:
+	var wash := colour
+	wash.a = colour.a * 0.32
+	draw_colored_polygon(points, wash)
+	var closed := points.duplicate()
+	closed.append(points[0])
+	draw_polyline(closed, colour, 1.5)
 
 
 ## A small cross with a label, so the three points that matter can be told apart.
