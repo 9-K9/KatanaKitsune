@@ -1,4 +1,4 @@
-[gd_scene load_steps=2744 format=3 uid="uid://crfws6oy432nx"]
+[gd_scene load_steps=2745 format=3 uid="uid://crfws6oy432nx"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_heltt"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_d8qwd"]
@@ -24225,6 +24225,9 @@ shader_parameter/displacementStrength = 64.0
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ac2c"]
 polygon = PackedVector2Array(-26, -1, 0, -18, 26, -1, 0, 14)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_player"]
+radius = 33.0
+
 [node name="KatanaKitsune" type="CharacterBody2D" groups=["player"]]
 safe_margin = 1.0
 script = ExtResource("1_heltt")
@@ -24487,7 +24490,7 @@ occluder = SubResource("OccluderPolygon2D_0ac2c")
 wait_time = 0.5
 one_shot = true
 
-[node name="PlayerCollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-33, 0, 0, -17, 33, 0, 0, 17)
+[node name="PlayerCollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_player")
 
 [connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]
