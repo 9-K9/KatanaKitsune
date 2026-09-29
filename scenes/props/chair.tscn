@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/props/chair.png" id="1_chair"]
 [ext_resource type="Script" path="res://scripts/system/Chair.gd" id="2_chair_script"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_seat"]
-points = PackedVector2Array(-110, 0, 0, -78, 110, 0, 0, 78)
+[sub_resource type="CircleShape2D" id="CircleShape2D_seat"]
+radius = 96.0
 
 [node name="Chair" type="Node2D" groups=["chair"]]
 script = ExtResource("2_chair_script")
@@ -18,7 +18,8 @@ collision_layer = 0
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SitZone"]
-shape = SubResource("ConvexPolygonShape2D_seat")
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_seat")
 
 [node name="SitAnchor" type="Marker2D" parent="."]
-position = Vector2(0, -6)
+position = Vector2(26, 24)

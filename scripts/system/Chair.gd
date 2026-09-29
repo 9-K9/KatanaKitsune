@@ -4,6 +4,9 @@ extends Node2D
 ## Exact position and facing used by the player's automatic rest state.
 @export_enum("south", "southWest", "west", "northWest", "north", "northEast", "east", "southEast")
 var sit_facing: String = "southWest"
+## Nudges where she lands without moving the marker, for tuning a single chair
+## in the Inspector. Added to the marker, in screen pixels.
+@export var sit_nudge: Vector2 = Vector2.ZERO
 
 ## The marker maps straight onto her position: drag it a pixel and she moves a
 ## pixel. It used to convert by the 110px from her origin down to her feet, on
@@ -14,7 +17,7 @@ var sit_facing: String = "southWest"
 ## Rather than guess where her hips are in each of eight drawn directions, the
 ## marker simply is the answer, and can be dragged until it looks right.
 func get_sit_position() -> Vector2:
-	return get_seat_position()
+	return get_seat_position() + sit_nudge
 
 
 ## The seat itself, as marked in the editor. Drag SitAnchor onto the cushion and
