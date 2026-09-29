@@ -39,11 +39,16 @@ func _ready() -> void:
 	player.queue_free()
 
 	_build_icons()
+	_link_focus()
 	_highlighted = PowerState.chosen
 	_show(_highlighted)
 	## Deferred: grabbing focus before the containers have laid out does not
 	## stick, which is why the screen opened with nothing selected.
-	_focus_icons.call_deferred()
+	## Two frames, not one: the first lays the containers out, and a grab before
+	## that silently does nothing — which is why the screen opened on a button.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_focus_icons()
 
 
 func _build_icons() -> void:
@@ -59,6 +64,36 @@ func _build_icons() -> void:
 		button.tooltip_text = "%s — %s" % [PowerState.info(i)["element"], PowerState.info(i)["name"]]
 		button.pressed.connect(_on_icon_pressed.bind(i))
 		icons.add_child(button)
+
+
+## Wires the grid by hand. Godot works focus neighbours out geometrically, and
+## it was not finding the icons from the buttons at all — navigation just cycled
+## BACK and BEGIN. Stating them removes the guesswork.
+func _link_focus() -> void:
+	var count: int = icons.get_child_count()
+	var columns: int = icons.columns
+	var begin := get_node_or_null("Right/Buttons/Confirm") as Control
+	var back := get_node_or_null("Right/Buttons/Back") as Control
+	for i in count:
+		var icon: Control = icons.get_child(i)
+		var column: int = i % columns
+		if column > 0:
+			icon.focus_neighbor_left = icon.get_path_to(icons.get_child(i - 1))
+		if column < columns - 1 and i + 1 < count:
+			icon.focus_neighbor_right = icon.get_path_to(icons.get_child(i + 1))
+		if i - columns >= 0:
+			icon.focus_neighbor_top = icon.get_path_to(icons.get_child(i - columns))
+		if i + columns < count:
+			icon.focus_neighbor_bottom = icon.get_path_to(icons.get_child(i + columns))
+		elif begin != null:
+			## Bottom row drops onto BEGIN, so the screen reads downward.
+			icon.focus_neighbor_bottom = icon.get_path_to(begin)
+	## And back up from the buttons into the last row.
+	if count > 0:
+		var last_row_start: int = count - (count % columns if count % columns > 0 else columns)
+		for button in [begin, back]:
+			if button != null:
+				button.focus_neighbor_top = button.get_path_to(icons.get_child(last_row_start))
 
 
 ## Confirming an icon moves on to BEGIN, so the pad walks the screen in the
