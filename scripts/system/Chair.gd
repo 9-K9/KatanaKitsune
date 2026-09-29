@@ -13,9 +13,11 @@ extends Node2D
 ## art-alignment problem and nudged by eye through eight values, drifting as far
 ## as (50, 78), when it had an exact answer the convention already stated.
 
-## Straight down by the sort lift. Overridable per chair, for a prop whose seat
-## genuinely does not sit over its base.
-@export var seat_offset: Vector2 = Vector2(0.0, 100.0)
+## Straight down onto this chair's base, with no sideways component. 96 rather
+## than the convention's 100 because that is where this art actually meets the
+## floor — the number follows the sprite, not the other way round, so a chair
+## drawn to a different height just changes this value.
+@export var seat_offset: Vector2 = Vector2(0.0, 96.0)
 ## A further nudge for one awkward chair, kept separate so the default above
 ## stays readable as "undo the lift".
 @export var sit_nudge: Vector2 = Vector2.ZERO
