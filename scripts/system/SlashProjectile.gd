@@ -21,8 +21,15 @@ func launch(from: Vector2, direction: Vector2, power: float) -> void:
 	global_position = from
 	damage = power
 	_heading = direction.normalized() if direction != Vector2.ZERO else Vector2.RIGHT
-	## Points the way it travels, so the crescent faces its own direction.
-	rotation = _heading.angle()
+	## Aimed by the squashed vector, not the ground one: the sprite rotates on
+	## screen, so using the unsquashed heading points it above or below the line
+	## it actually travels.
+	##
+	## Turned half around because the art is a C opening right — its convex back
+	## is on the left, and rotating straight to the heading led with the hollow
+	## of the crescent, which reads as an arc flying backwards.
+	var on_screen := Vector2(_heading.x, _heading.y * 0.5)
+	rotation = on_screen.angle() + PI
 
 
 func _ready() -> void:

@@ -9963,7 +9963,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bhpuk")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlockCrouched_northEast",
 "speed": 8.0
 }, {
@@ -10021,7 +10021,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_s1u0k")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlockCrouched_south",
 "speed": 8.0
 }, {
@@ -10050,7 +10050,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wlw77")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlockCrouched_southEast",
 "speed": 8.0
 }, {
@@ -10079,7 +10079,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_72pfb")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlockCrouched_southWest",
 "speed": 8.0
 }, {
@@ -10108,7 +10108,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l6u64")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlockCrouched_west",
 "speed": 8.0
 }, {
@@ -10166,7 +10166,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bsbtw")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_north",
 "speed": 5.0
 }, {
@@ -10195,7 +10195,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g5io7")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_northEast",
 "speed": 5.0
 }, {
@@ -10224,7 +10224,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_cvluo")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_northWest",
 "speed": 5.0
 }, {
@@ -10253,7 +10253,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_r1cf6")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_south",
 "speed": 5.0
 }, {
@@ -10282,7 +10282,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_nvx8n")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_southEast",
 "speed": 5.0
 }, {
@@ -10311,7 +10311,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_i8618")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_southWest",
 "speed": 5.0
 }, {
@@ -10340,7 +10340,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mgw8n")
 }],
-"loop": true,
+"loop": false,
 "name": &"katanaBlock_west",
 "speed": 5.0
 }, {
