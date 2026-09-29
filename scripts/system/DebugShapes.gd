@@ -1,12 +1,14 @@
 extends Node2D
 
 ## F3 draws what the game is actually sensing with, rather than what it looks
-## like it is sensing with.
+## like it is sensing with. Off unless asked for.
 ##
-## Written because sitting on a chair went through several rounds of "it looks
-## wrong" against measurements that said it was right — the chair turned out to
-## be rendering inside the player's own silhouette. Shapes and origins are
-## invisible in a build, so there was nothing to look at. Now there is.
+## Worth keeping. Sitting on a chair went several rounds of "it looks wrong"
+## against measurements saying it was right — the chair was rendering inside the
+## player's own silhouette, and the sit target was a lifted origin floating
+## above the furniture. None of that is visible in a build. Once the shapes were
+## drawn, the answer stopped being a matter of nudging and turned out to be
+## exactly the sort lift.
 
 ## Everything is drawn over the world, never mind y-sorting.
 const OVERLAY_Z: int = 4096
@@ -27,7 +29,7 @@ const FEET_BELOW_ORIGIN: float = 110.0
 ## centre — so its base sits this far below the sprite node.
 const CHAIR_BASE_BELOW_SPRITE: float = 44.0
 
-var _on: bool = true
+var _on: bool = false
 var _player: CharacterBody2D = null
 
 
@@ -38,8 +40,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	## Still toggleable, but it starts on — this is for looking at a problem, and
-	## having to remember a key first defeats that.
+	## Off by default now the sitting is settled, but kept: drawing the shapes is
+	## what turned a week of nudging offsets by eye into an exact answer, and the
+	## next positioning problem will want it too.
 	if event is InputEventKey and event.pressed and not event.echo \
 			and (event as InputEventKey).physical_keycode == KEY_F3:
 		_on = not _on
