@@ -43,9 +43,23 @@ func _process_with_manager() -> void:
 ## machine to ask — the menu pauses the tree itself. Without this the key did
 ## nothing at all on the level the game actually starts on.
 func _process_standalone() -> void:
+	## Death has its own screen, and it pauses the tree to show it. Without this
+	## the pause menu reads that pause as its own, opens behind the Game Over
+	## panel and takes the focus off CONTINUE — two menus up at once, neither
+	## driveable.
+	if _player_dead():
+		_set_shown(false)
+		return
 	if Input.is_action_just_pressed("Pause"):
 		get_tree().paused = not get_tree().paused
 	_set_shown(get_tree().paused)
+
+
+func _player_dead() -> bool:
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is CharacterBody2D and "is_dead" in node and node.is_dead:
+			return true
+	return false
 
 
 func _has_manager() -> bool:

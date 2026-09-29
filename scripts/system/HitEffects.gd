@@ -8,7 +8,22 @@ extends Object
 ## four files to keep in step with four scripts for no gain.
 
 const BLOOD := Color(0.62, 0.05, 0.07)
-const TRAIL := preload("res://assets/sprites/fx/slash_trail.png")
+## The arc, drawn as six frames: a faint anticipation streak, the bright sweep
+## at its peak, then breaking up into sparks. A single still could not read as a
+## blade passing through — it just appeared and vanished.
+##
+## The seventh frame PixelLab produced is fully transparent, so it is left out
+## rather than held as a blank beat.
+const SLASH_FRAMES := [
+	preload("res://assets/sprites/fx/slash/slash_0.png"),
+	preload("res://assets/sprites/fx/slash/slash_1.png"),
+	preload("res://assets/sprites/fx/slash/slash_2.png"),
+	preload("res://assets/sprites/fx/slash/slash_3.png"),
+	preload("res://assets/sprites/fx/slash/slash_4.png"),
+	preload("res://assets/sprites/fx/slash/slash_5.png"),
+]
+## Fast enough to be a blow rather than a flourish.
+const SLASH_FPS: float = 22.0
 
 
 ## A short spray of blood, thrown away from whoever landed the blow.
@@ -62,27 +77,44 @@ static func blood(parent: Node, at: Vector2, from: Vector2, amount: float) -> vo
 static func slash(parent: Node, at: Vector2, direction: Vector2, size: float = 1.0) -> void:
 	if not is_instance_valid(parent):
 		return
-	var arc := Sprite2D.new()
+	var arc := AnimatedSprite2D.new()
+	arc.sprite_frames = _slash_frames()
 	parent.add_child(arc)
-	arc.texture = TRAIL
 	arc.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	arc.global_position = at
 	arc.z_index = 60
-	var heading: Vector2 = direction
-	heading.y *= 0.5
-	arc.rotation = heading.angle() if heading != Vector2.ZERO else 0.0
-	## Squashed across the short axis so it lies along the floor like everything
-	## else, and scaled by the weight of the blow.
-	arc.scale = Vector2(size, size * 0.62)
-	arc.modulate = Color(1.6, 1.9, 2.0, 0.95)
 
-	## Grows and fades as it passes, which reads as a blade moving through
-	## rather than a decal appearing.
-	var fade := arc.create_tween()
-	fade.set_parallel(true)
-	fade.tween_property(arc, "modulate:a", 0.0, 0.22)
-	fade.tween_property(arc, "scale", arc.scale * 1.35, 0.22)
-	_free_after(arc, 0.3)
+	## Squashed before taking the angle, so the arc lies along the floor rather
+	## than pointing above or below the line the blow actually travelled.
+	var heading := Vector2(direction.x, direction.y * 0.5)
+	arc.rotation = heading.angle() if heading != Vector2.ZERO else 0.0
+	arc.scale = Vector2(size, size * 0.62)
+	arc.modulate = Color(1.5, 1.8, 2.0, 1.0)
+
+	arc.play("slash")
+	## Frees itself when the sweep has finished rather than on a guessed timer.
+	arc.animation_finished.connect(func():
+		if is_instance_valid(arc):
+			arc.queue_free())
+
+
+## Built once and shared. Every hit making its own SpriteFrames would rebuild
+## the same six-frame resource on every swing.
+static var _frames_cache: SpriteFrames = null
+
+
+static func _slash_frames() -> SpriteFrames:
+	if _frames_cache != null:
+		return _frames_cache
+	var frames := SpriteFrames.new()
+	frames.add_animation("slash")
+	frames.set_animation_loop("slash", false)
+	frames.set_animation_speed("slash", SLASH_FPS)
+	for texture in SLASH_FRAMES:
+		frames.add_frame("slash", texture)
+	frames.remove_animation("default")
+	_frames_cache = frames
+	return _frames_cache
 
 
 static func _free_after(node: Node, seconds: float) -> void:

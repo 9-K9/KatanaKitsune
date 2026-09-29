@@ -17,6 +17,7 @@ const GUARD_SPEED: float = 0.42
 
 var _lowering: bool = false
 var _facing: String = ""
+var _walking: bool = false
 
 
 func on_enter():
@@ -24,6 +25,7 @@ func on_enter():
 	pc.block_opened_at = Time.get_ticks_msec()
 	pc.speed = pc.walkSpeed * GUARD_SPEED
 	_lowering = false
+	_walking = false
 	_facing = pc.facing_dir
 	## Played once here rather than every frame. Calling play() on a finished
 	## non-looping clip restarts it, which is half of why the guard cycled; the
@@ -41,7 +43,19 @@ func on_process(_delta):
 	if not Input.is_action_pressed("Defend"):
 		_lower()
 		return
-	if pc.facing_dir != _facing:
+	## There is no art for walking with the guard up, so moving borrows the
+	## stealth walk — a low, careful step, which is what carrying a raised blade
+	## should look like anyway. Standing still returns to the guard.
+	var moving: bool = pc.InputHandler() != Vector2.ZERO
+	if moving != _walking or (moving and pc.facing_dir != _facing):
+		_walking = moving
+		_facing = pc.facing_dir
+		if moving:
+			animated_sprite.speed_scale = 1.0
+			animated_sprite.play("stealthWalk_%s" % pc.facing_dir)
+		else:
+			_hold_guard()
+	elif pc.facing_dir != _facing:
 		_turn()
 	if Input.is_action_just_pressed("Stealth"):
 		change_state("katanaBlockCrouched")
@@ -58,6 +72,12 @@ func on_process(_delta):
 ## the guard stays up through the turn rather than dropping and re-raising.
 func _turn() -> void:
 	_facing = pc.facing_dir
+	_hold_guard()
+
+
+## Shows the guard for the way she now faces, already at its final frame, so she
+## pivots or stops walking with the blade up rather than re-raising it.
+func _hold_guard() -> void:
 	var clip := _clip()
 	animated_sprite.play(clip)
 	var frames: SpriteFrames = animated_sprite.sprite_frames

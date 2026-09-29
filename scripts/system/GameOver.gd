@@ -54,6 +54,10 @@ func _process(delta: float) -> void:
 		_to_game_over()
 
 
+func _take_focus() -> void:
+	TitleScreen.focus_first_button(panel)
+
+
 func _is_dead() -> bool:
 	if not is_instance_valid(_player):
 		for node in get_tree().get_nodes_in_group("player"):
@@ -78,8 +82,9 @@ func _begin() -> void:
 	tween.tween_property(fade, "modulate:a", 1.0, FADE_IN)
 	tween.tween_property(panel, "modulate:a", 1.0, FADE_IN)
 	## CONTINUE focused, so the countdown can be answered without reaching for a
-	## mouse — which is the one moment you are least likely to want to.
-	TitleScreen.focus_first_button(panel)
+	## mouse — the one moment you are least likely to want to. Deferred, so it
+	## lands after any other menu has finished deciding whether to show itself.
+	_take_focus.call_deferred()
 
 
 ## Taking the continue. Back to the aspect select rather than straight into a
