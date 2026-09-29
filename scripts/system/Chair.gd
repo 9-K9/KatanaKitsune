@@ -5,16 +5,16 @@ extends Node2D
 @export_enum("south", "southWest", "west", "northWest", "north", "northEast", "east", "southEast")
 var sit_facing: String = "southWest"
 
-## Her seated art hangs this far below her origin. The marker is placed on the
-## seat — where you can see she should land — and this converts that into the
-## origin the state actually moves her to. Marking the origin directly meant
-## placing a marker a hundred pixels above the chair and hoping.
-const FEET_BELOW_ORIGIN: float = 110.0
-
-
-## Where the player's origin has to be put for her to come down on the seat.
+## The marker maps straight onto her position: drag it a pixel and she moves a
+## pixel. It used to convert by the 110px from her origin down to her feet, on
+## the reasoning that her feet should land on the cushion — but seated, her feet
+## stick out in front of her and it is her hips that touch the seat. Converting
+## by her feet lifted her whole body clear of the chair.
+##
+## Rather than guess where her hips are in each of eight drawn directions, the
+## marker simply is the answer, and can be dragged until it looks right.
 func get_sit_position() -> Vector2:
-	return get_seat_position() - Vector2(0.0, FEET_BELOW_ORIGIN)
+	return get_seat_position()
 
 
 ## The seat itself, as marked in the editor. Drag SitAnchor onto the cushion and

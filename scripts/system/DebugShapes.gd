@@ -76,10 +76,7 @@ func _draw() -> void:
 		## her feet — so on screen it floats well above the chair and looks wrong
 		## even when she lands right. The second cross is where her feet actually
 		## come down, which is the one worth looking at.
-		_cross(target, COLOUR_PICKED, "seat — she lands here")
-		_cross(target - Vector2(0.0, FEET_BELOW_ORIGIN), COLOUR_ZONE, "her origin goes here")
-		draw_line(to_local(target),
-				to_local(target - Vector2(0.0, FEET_BELOW_ORIGIN)), COLOUR_ZONE, 1.0)
+		_cross(target, COLOUR_PICKED, "she sits here")
 		## And where the chair's own stone meets the floor, to compare against.
 		var art := node.get_node_or_null("Sprite2D") as Node2D
 		if art != null:
