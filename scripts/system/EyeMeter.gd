@@ -20,12 +20,20 @@ extends Control
 ## How quickly the glance settles on a new threat.
 @export var glance_speed: float = 9.0
 
+## The socket the eye sits in, framed like the radar beside it — same dark disc,
+## same thin amber edge — so the two read as one instrument rather than as a
+## sprite that happened to land next to a dial.
+@export var socket_radius: float = 40.0
+## The sneak meter, drawn just inside the frame so it never crosses the artwork.
 @export var ring_width: float = 3.0
-@export var ring_radius: float = 26.0
+@export var ring_radius: float = 35.0
 
 const COLOUR_RING := Color(0.72, 0.55, 0.92, 0.95)
 const COLOUR_RING_BACK := Color(0.10, 0.09, 0.14, 0.65)
 const COLOUR_ALERT_HALO := Color(0.88, 0.22, 0.20, 0.55)
+## Lifted straight from Radar, deliberately.
+const COLOUR_SOCKET := Color(0.05, 0.05, 0.06, 0.55)
+const COLOUR_FRAME := Color(0.85, 0.72, 0.42, 0.30)
 
 const EYE_CALM := preload("res://assets/sprites/ui/eye/eye_calm.png")
 const EYE_ALERT := preload("res://assets/sprites/ui/eye/eye_alert.png")
@@ -130,6 +138,11 @@ func _draw() -> void:
 	var centre: Vector2 = size * 0.5
 	var hidden: bool = _player.get("stealthed") or _player.get("crouched")
 
+	## Socket and frame first: the Control draws before its children, so the eye
+	## sprite lands on top of these rather than being hidden behind them.
+	draw_circle(centre, socket_radius, COLOUR_SOCKET)
+	draw_arc(centre, socket_radius, 0.0, TAU, 48, COLOUR_FRAME, 1.5, true)
+
 	if hidden:
 		var maximum: float = maxf(_player.get("max_sneak"), 1.0)
 		var left: float = clampf(_player.get("sneak") / maximum, 0.0, 1.0)
@@ -146,7 +159,7 @@ func _draw() -> void:
 	elif _threat != null:
 		## A soft halo instead of a ring: nothing is being counted down, this is
 		## just alarm.
-		draw_circle(centre, ring_radius + 2.0, COLOUR_ALERT_HALO * Color(1, 1, 1, 0.22))
+		draw_circle(centre, socket_radius, COLOUR_ALERT_HALO * Color(1, 1, 1, 0.30))
 
 
 ## Where the eye sits before any glance is applied.

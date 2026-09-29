@@ -51,16 +51,16 @@ script = ExtResource("10_radar")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -128.0
-offset_top = 156.0
-offset_right = -60.0
-offset_bottom = 224.0
+offset_left = -254.0
+offset_top = 42.0
+offset_right = -174.0
+offset_bottom = 122.0
 grow_horizontal = 0
 script = ExtResource("15_eye")
 
 [node name="Eye" type="TextureRect" parent="RadarLayer/EyeMeter"]
-offset_right = 44.0
-offset_bottom = 44.0
+offset_right = 64.0
+offset_bottom = 64.0
 expand_mode = 1
 stretch_mode = 5
 
