@@ -63,6 +63,10 @@ func _build_icons() -> void:
 		button.focus_mode = Control.FOCUS_ALL
 		button.tooltip_text = "%s — %s" % [PowerState.info(i)["element"], PowerState.info(i)["name"]]
 		button.pressed.connect(_on_icon_pressed.bind(i))
+		## Moving onto an icon previews it. Focus and selection were separate,
+		## so a pad could walk the grid with nothing changing but a thin
+		## outline — no name, no preview, no telling where you were.
+		button.focus_entered.connect(_show.bind(i))
 		icons.add_child(button)
 
 
@@ -136,7 +140,15 @@ func _show(index: int) -> void:
 	## Dim every icon but the highlighted one, so the selection is unmistakable.
 	for i in icons.get_child_count():
 		var button: TextureButton = icons.get_child(i)
-		button.modulate = Color.WHITE if i == index else Color(0.45, 0.42, 0.45)
+		## Three states, not two: the one being previewed is full brightness, the
+		## rest are dimmed, and the focused one is brighter still so it stands
+		## out against the preview when a pad is driving.
+		if i == index:
+			button.modulate = Color.WHITE
+		else:
+			button.modulate = Color(0.45, 0.42, 0.45)
+		if button.has_focus():
+			button.modulate = Color(1.35, 1.3, 1.1)
 
 
 func _play_current() -> void:
