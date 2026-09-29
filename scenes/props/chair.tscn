@@ -22,4 +22,4 @@ position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_seat")
 
 [node name="SitAnchor" type="Marker2D" parent="."]
-position = Vector2(50, 78)
+position = Vector2(34, 90)
