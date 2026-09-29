@@ -1,3 +1,4 @@
+class_name TitleScreen
 extends Node2D
 
 ## Title screen. GameManager sends the player here on "game_title".

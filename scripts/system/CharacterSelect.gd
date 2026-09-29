@@ -41,10 +41,9 @@ func _ready() -> void:
 	_build_icons()
 	_highlighted = PowerState.chosen
 	_show(_highlighted)
-	## Start on the aspect already chosen, so a pad opens the screen with the
-	## current choice under the cursor rather than nothing selected at all.
-	if _highlighted < icons.get_child_count():
-		(icons.get_child(_highlighted) as Control).grab_focus()
+	## Deferred: grabbing focus before the containers have laid out does not
+	## stick, which is why the screen opened with nothing selected.
+	_focus_icons.call_deferred()
 
 
 func _build_icons() -> void:
@@ -58,8 +57,31 @@ func _build_icons() -> void:
 		## so nothing in the editor would have set this.
 		button.focus_mode = Control.FOCUS_ALL
 		button.tooltip_text = "%s — %s" % [PowerState.info(i)["element"], PowerState.info(i)["name"]]
-		button.pressed.connect(_show.bind(i))
+		button.pressed.connect(_on_icon_pressed.bind(i))
 		icons.add_child(button)
+
+
+## Confirming an icon moves on to BEGIN, so the pad walks the screen in the
+## order the screen is read: pick an aspect, then commit to it.
+func _on_icon_pressed(index: int) -> void:
+	_show(index)
+	var begin := get_node_or_null("Right/Buttons/Confirm") as Control
+	if begin != null:
+		begin.grab_focus()
+
+
+## Back to the icons. Cancel is the pad's right-hand face button — B on an Xbox
+## pad, Circle on a DualShock, A on a Switch controller.
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	_focus_icons()
+	get_viewport().set_input_as_handled()
+
+
+func _focus_icons() -> void:
+	if _highlighted < icons.get_child_count():
+		(icons.get_child(_highlighted) as Control).grab_focus()
 
 
 ## Repaints the preview and the backdrop in one scheme.
