@@ -11,7 +11,7 @@ var speed : float = 0.0
 ## movement code multiplied by delta before move_and_slide() applied it again;
 ## these values reproduce the old 60fps feel exactly (5000/60, 10000/60).
 @export var walkSpeed : float = 83.333
-@export var runSpeed : float = 166.667
+@export var runSpeed : float = 183.333
 ## Damage one katana swing deals. Each swing now lands exactly once (see
 ## PlayerClass.playerAttack), where it used to fire on every rendered frame the
 ## clip sat on the hit frame — hence the old 0.25 "frame rate multiplies by 4".
@@ -56,7 +56,6 @@ var block_opened_at: int = 0
 var sneak: float = 100.0
 ## Per second while hidden. Crouching is stiller and costs less than sneaking.
 @export var sneak_drain: float = 14.0
-@export var crouch_drain: float = 8.0
 ## Per second once she is upright again.
 @export var sneak_regen: float = 11.0
 

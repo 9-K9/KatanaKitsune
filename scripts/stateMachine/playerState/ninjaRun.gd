@@ -5,7 +5,9 @@ extends PlayerClass
 ## hurry. Costs the most stamina of anything she can do.
 
 func on_enter():
-	pc.speed = pc.runSpeed * 1.35
+	## The single fastest movement in the game. Staying hidden costs a meter and
+	## gives up the katana, so it has to buy something you can feel.
+	pc.speed = pc.runSpeed * 1.55
 	pc.stealthed = true
 
 func on_process(delta):

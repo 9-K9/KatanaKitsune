@@ -7,9 +7,10 @@ func on_enter():
 	pc.stealthed = true
 
 func on_process(_delta):
-	## Hiding costs. Being unseen is the strongest position in the game, so it
-	## runs on a meter and she is forced upright when it empties rather than
-	## being able to cross a whole floor unnoticed.
+	## Moving unseen is what costs. Crouching in a corner is free — the meter
+	## exists to stop her crossing a whole floor unnoticed, not to punish
+	## waiting, and a gauge that drains while you stand still just means you
+	## never stand still.
 	pc.drain_sneak(pc.sneak_drain, _delta)
 	if pc.sneak_spent():
 		change_state("walk")

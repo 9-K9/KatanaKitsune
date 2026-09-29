@@ -23,10 +23,13 @@ extends Control
 ## The socket the eye sits in, framed like the radar beside it — same dark disc,
 ## same thin amber edge — so the two read as one instrument rather than as a
 ## sprite that happened to land next to a dial.
-@export var socket_radius: float = 40.0
-## The sneak meter, drawn just inside the frame so it never crosses the artwork.
-@export var ring_width: float = 3.0
-@export var ring_radius: float = 35.0
+@export var socket_radius: float = 43.0
+## Hugs the artwork, which is masked to a circle a pixel inside its own bounds.
+## Without it the eye reads as a square sprite dropped into a round hole.
+@export var iris_frame_radius: float = 32.0
+## The sneak meter, between the two frames so it never crosses the artwork.
+@export var ring_width: float = 5.0
+@export var ring_radius: float = 37.5
 
 const COLOUR_RING := Color(0.72, 0.55, 0.92, 0.95)
 const COLOUR_RING_BACK := Color(0.10, 0.09, 0.14, 0.65)
@@ -143,23 +146,32 @@ func _draw() -> void:
 	draw_circle(centre, socket_radius, COLOUR_SOCKET)
 	draw_arc(centre, socket_radius, 0.0, TAU, 48, COLOUR_FRAME, 1.5, true)
 
-	if hidden:
-		var maximum: float = maxf(_player.get("max_sneak"), 1.0)
-		var left: float = clampf(_player.get("sneak") / maximum, 0.0, 1.0)
-		draw_arc(centre, ring_radius, 0.0, TAU, 48, COLOUR_RING_BACK, ring_width, true)
-		## Runs down from twelve o'clock, so an emptying ring unwinds the way a
-		## clock does rather than filling up as her cover disappears.
-		var start: float = -PI * 0.5
-		var ring: Color = COLOUR_RING
-		## Reddens as it runs out, so the last moments of cover are visible
-		## without having to read the arc's length.
-		if left < 0.3:
-			ring = ring.lerp(COLOUR_ALERT_HALO, 1.0 - left / 0.3)
-		draw_arc(centre, ring_radius, start, start + TAU * left, 48, ring, ring_width, true)
-	elif _threat != null:
-		## A soft halo instead of a ring: nothing is being counted down, this is
-		## just alarm.
+	## Always drawn, in every state. It used to appear only while she was hidden,
+	## which meant the one moment you needed to plan around it — deciding whether
+	## there was enough left to cross the room — was the one moment it was gone.
+	var maximum: float = maxf(_player.get("max_sneak"), 1.0)
+	var left: float = clampf(_player.get("sneak") / maximum, 0.0, 1.0)
+	draw_arc(centre, ring_radius, 0.0, TAU, 48, COLOUR_RING_BACK, ring_width, true)
+	var ring: Color = COLOUR_RING
+	## Reddens as it runs out, so the last of her cover is visible without
+	## having to read the arc's length.
+	if left < 0.3:
+		ring = ring.lerp(COLOUR_ALERT_HALO, 1.0 - left / 0.3)
+	## Dimmed while she is upright, because then it is a reserve rather than a
+	## countdown — it should be legible without competing with the eye.
+	if not hidden:
+		ring.a *= 0.45
+	## Unwinds from twelve o'clock, the way a clock does.
+	var start: float = -PI * 0.5
+	draw_arc(centre, ring_radius, start, start + TAU * left, 48, ring, ring_width, true)
+
+	if not hidden and _threat != null:
+		## A wash across the whole socket rather than a ring: nothing is being
+		## counted down here, this is just alarm.
 		draw_circle(centre, socket_radius, COLOUR_ALERT_HALO * Color(1, 1, 1, 0.30))
+
+	## Last, and over the gauge: the collar that hides where the artwork ends.
+	draw_arc(centre, iris_frame_radius, 0.0, TAU, 48, COLOUR_FRAME, 2.0, true)
 
 
 ## Where the eye sits before any glance is applied.
