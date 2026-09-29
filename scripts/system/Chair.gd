@@ -35,7 +35,13 @@ var sit_facing: String = "southWest"
 ## character, whose own (0,0) is down at her feet. The art does not move: the
 ## node drops by this much and everything hanging off it rises by the same, so
 ## only the ordering changes.
-@export var sort_bias: float = 96.0
+## Half the 96, deliberately. Sorting from the base is right for walking past a
+## chair, but she also has to sit *in* one, and a base-sorted chair falls wholly
+## behind her the moment she does. Sorting from the chair's middle splits the
+## difference: she still passes behind it from up-screen, and when seated the
+## lower half of the chair draws over her, which is what sitting in it looks
+## like.
+@export var sort_bias: float = 48.0
 
 ## A note for whoever looks at SitZone and thinks it is in the wrong place: it
 ## is not. The zone tests against her collision shape, which rides 100px above

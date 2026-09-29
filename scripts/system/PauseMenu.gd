@@ -66,6 +66,7 @@ func _on_resume_pressed():
 func _on_cheats_pressed() -> void:
 	main_menu.visible = false
 	cheats_menu.visible = true
+	TitleScreen.focus_first_button(cheats_menu)
 	immortality_toggle.button_pressed = CheatManager.immortality_enabled
 	_sync_immortality_label()
 
@@ -79,6 +80,8 @@ func _on_cheats_back_pressed() -> void:
 func _show_main_menu() -> void:
 	main_menu.visible = true
 	cheats_menu.visible = false
+	## Focus follows whichever list is showing, so a pad can drive both.
+	TitleScreen.focus_first_button(main_menu)
 
 func _sync_immortality_label() -> void:
 	immortality_toggle.text = "IMMORTALITY IS ON" if CheatManager.immortality_enabled else "IMMORTALITY IS OFF"

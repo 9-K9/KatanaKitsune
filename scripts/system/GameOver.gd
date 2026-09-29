@@ -77,6 +77,9 @@ func _begin() -> void:
 	tween.set_parallel(true)
 	tween.tween_property(fade, "modulate:a", 1.0, FADE_IN)
 	tween.tween_property(panel, "modulate:a", 1.0, FADE_IN)
+	## CONTINUE focused, so the countdown can be answered without reaching for a
+	## mouse — which is the one moment you are least likely to want to.
+	TitleScreen.focus_first_button(panel)
 
 
 ## Taking the continue. Back to the aspect select rather than straight into a

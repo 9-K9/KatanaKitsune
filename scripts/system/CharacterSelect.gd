@@ -41,6 +41,10 @@ func _ready() -> void:
 	_build_icons()
 	_highlighted = PowerState.chosen
 	_show(_highlighted)
+	## Start on the aspect already chosen, so a pad opens the screen with the
+	## current choice under the cursor rather than nothing selected at all.
+	if _highlighted < icons.get_child_count():
+		(icons.get_child(_highlighted) as Control).grab_focus()
 
 
 func _build_icons() -> void:
@@ -50,6 +54,9 @@ func _build_icons() -> void:
 		button.ignore_texture_size = true
 		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		button.custom_minimum_size = Vector2(124, 124)
+		## Reachable with a pad. Icons are built here rather than in the scene,
+		## so nothing in the editor would have set this.
+		button.focus_mode = Control.FOCUS_ALL
 		button.tooltip_text = "%s — %s" % [PowerState.info(i)["element"], PowerState.info(i)["name"]]
 		button.pressed.connect(_show.bind(i))
 		icons.add_child(button)
