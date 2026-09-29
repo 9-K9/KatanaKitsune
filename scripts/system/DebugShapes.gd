@@ -20,6 +20,12 @@ const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
 ## The chair she would sit on if she stood still long enough.
 const COLOUR_PICKED := Color(1.00, 0.95, 0.40, 0.95)
 const ORIGIN_ARM: float = 9.0
+## Her seated art hangs this far below her origin, so this is the gap between
+## where she is sent and where she is seen to come down.
+const FEET_BELOW_ORIGIN: float = 110.0
+## Chair art is 96 tall with its stone ending at y 92, drawn from the sprite
+## centre — so its base sits this far below the sprite node.
+const CHAIR_BASE_BELOW_SPRITE: float = 44.0
 
 var _on: bool = true
 var _player: CharacterBody2D = null
@@ -64,13 +70,22 @@ func _draw() -> void:
 			_draw_area(zone, tint)
 		_cross(node.global_position, tint, "chair")
 		var anchor := node.get_node_or_null("SitAnchor") as Node2D
-		if anchor != null and anchor.global_position != node.global_position:
-			_cross(anchor.global_position, COLOUR_PICKED, "seat")
-			draw_line(to_local(node.global_position), to_local(anchor.global_position),
-					COLOUR_PICKED, 1.0)
+		var target: Vector2 = anchor.global_position if anchor != null else node.global_position
+		## Two points, because confusing them is exactly what went wrong. The
+		## anchor is where her ORIGIN is sent, and her origin rides 100px above
+		## her feet — so on screen it floats well above the chair and looks wrong
+		## even when she lands right. The second cross is where her feet actually
+		## come down, which is the one worth looking at.
+		_cross(target, COLOUR_ZONE, "origin goes here")
+		_cross(target + Vector2(0.0, FEET_BELOW_ORIGIN), COLOUR_PICKED, "she lands here")
+		draw_line(to_local(target),
+				to_local(target + Vector2(0.0, FEET_BELOW_ORIGIN)), COLOUR_PICKED, 1.0)
+		## And where the chair's own stone meets the floor, to compare against.
+		var art := node.get_node_or_null("Sprite2D") as Node2D
+		if art != null:
+			_cross(Vector2(node.global_position.x, node.global_position.y
+					+ art.position.y + CHAIR_BASE_BELOW_SPRITE), COLOUR_SOLID, "chair base")
 		if picked and player != null:
-			## The line she is about to walk.
-			var target: Vector2 = anchor.global_position if anchor != null else node.global_position
 			draw_line(to_local(player.global_position), to_local(target), COLOUR_PICKED, 1.5)
 
 	## Bodies. Her own shape first, then everything solid she can walk into.
