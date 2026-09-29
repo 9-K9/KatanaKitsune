@@ -129,7 +129,7 @@ func playerAttack(hit_frame: int = 3):
 	if not pc.has_method("blade_targets"):
 		return
 	for body in pc.blade_targets():
-		body.take_damage(pc.damage)
+		body.take_damage(pc.damage, pc.global_position)
 
 ##Math Functions
 func round_to_dec(num, digit):

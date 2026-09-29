@@ -329,9 +329,18 @@ func taunt_done() -> bool:
 	return taunt.has_spoken and not taunt.is_speaking
 
 
-func take_damage(amount: float) -> void:
+func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
 	if is_dead:
 		return
+	## Where the blade came through, so the spray throws the right way and the
+	## arc points along the blow rather than at a fixed angle.
+	var origin: Vector2 = from
+	if origin == Vector2.INF:
+		var target := player()
+		origin = target.global_position if target != null else global_position
+	HitEffects.blood(get_parent(), global_position + Vector2(0, -40), origin, amount)
+	HitEffects.slash(get_parent(), global_position + Vector2(0, -40),
+			global_position - origin, 1.0 + amount / 120.0)
 	health = maxf(health - amount, 0.0)
 	_refresh_health_bar()
 	## The killing blow gets the longer hold, so a one-shot does not look like
