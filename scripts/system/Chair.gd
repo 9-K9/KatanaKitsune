@@ -8,6 +8,17 @@ var sit_facing: String = "southWest"
 ## in the Inspector. Added to the marker, in screen pixels.
 @export var sit_nudge: Vector2 = Vector2.ZERO
 
+## Where the seat sits relative to this node, worked out rather than eyeballed.
+##
+## Two things pull her up and to the left of the chair. The node's origin is
+## lifted 100px above the chair's base so it sorts against characters, and the
+## sprite is drawn back down at +52 — so the chair you see is centred a good way
+## below the origin everything is measured from. Separately, her seated art is
+## drawn about 15px left of her own origin, so placing her origin on the chair's
+## centre still leaves her body left of it.
+const SPRITE_CENTRE_BELOW_ORIGIN: float = 52.0
+const HER_ART_LEANS_LEFT: float = 15.0
+
 ## The marker maps straight onto her position: drag it a pixel and she moves a
 ## pixel. It used to convert by the 110px from her origin down to her feet, on
 ## the reasoning that her feet should land on the cushion — but seated, her feet
