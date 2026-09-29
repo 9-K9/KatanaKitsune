@@ -22,12 +22,13 @@ stretch_mode = 6
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.03, 0.02, 0.03, 0.72)
+color = Color(0.03, 0.02, 0.03, 0.0)
 
 [node name="Center" type="CenterContainer" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
+anchor_right = 0.42
 anchor_bottom = 1.0
+offset_left = 42.0
 theme = ExtResource("2_theme")
 
 [node name="Panel" type="PanelContainer" parent="Center"]

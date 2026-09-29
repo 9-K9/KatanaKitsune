@@ -53,8 +53,14 @@ func _has_manager() -> bool:
 
 
 func _set_shown(should_show: bool) -> void:
-	if should_show != visible:
-		visible = should_show
+	if should_show == visible:
+		return
+	visible = should_show
+	## Focus has to be taken when the menu appears, not when it is built. The
+	## grab in _ready ran while this was still hidden, and a grab on a hidden
+	## tree does not stick — so a pad opened onto nothing.
+	if should_show:
+		_show_main_menu()
 
 func _on_resume_pressed():
 	if _has_manager():
