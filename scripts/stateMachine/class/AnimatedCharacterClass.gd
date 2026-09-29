@@ -33,8 +33,14 @@ var blocking: bool = false
 var katana_drawn: bool = false
 var parry_ready: bool = false
 var block_opened_at: int = 0
-## Damage let through while guarding.
+## Damage let through while guarding, when the blow's origin is unknown.
 @export var block_soak: float = 0.25
+## Blows arriving within this cone of her facing are stopped outright.
+@export var guard_arc_degrees: float = 120.0
+## Blows outside the guard but within this are caught on the flank.
+@export var flank_arc_degrees: float = 240.0
+## What a flanking blow still costs her.
+@export var flank_soak: float = 0.5
 ## A hit landing within this many ms of raising the guard is a parry.
 @export var parry_window_ms: int = 350
 @export var invincibility_duration: float = 0.8
@@ -223,7 +229,10 @@ func _buff_multiplier(kind: int) -> float:
 	return buffs[kind]["multiplier"] if buffs.has(kind) else 1.0
 
 
-func take_damage(amount: float) -> void:
+## `from` is where the blow came from, which decides what the guard is worth.
+## Optional so anything that simply loses health — breakables, scripted damage —
+## can still call this with one argument.
+func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
 	if CheatManager.immortality_enabled:
 		return
 	## A ward soaks the hit entirely rather than reducing it, so the player can
@@ -235,12 +244,9 @@ func take_damage(amount: float) -> void:
 	if is_invincible or is_dead:
 		return
 	if blocking:
-		## A hit taken just after the guard went up is a parry: no damage, and
-		## it arms the counter. Later hits are merely soaked.
-		if Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
-			parry_ready = true
+		amount = _guarded(amount, from)
+		if amount <= 0.0:
 			return
-		amount *= block_soak
 	health -= amount
 	health = max(health, 0)
 	if health <= 0:
@@ -248,6 +254,48 @@ func take_damage(amount: float) -> void:
 		_on_death()
 	else:
 		_start_invincibility()
+
+## What a raised guard does to a blow, by where it landed.
+##
+## A shield is a direction, not a discount. Meeting a blow head-on stops it
+## outright; catching one on the flank only blunts it; nothing stops a blade in
+## the back. Without this, holding Defend cut every hit from every angle by the
+## same amount and facing did not matter.
+func _guarded(amount: float, from: Vector2) -> float:
+	## No source given, so fall back to the old flat soak rather than guessing.
+	if from == Vector2.INF:
+		if Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
+			parry_ready = true
+			return 0.0
+		return amount * block_soak
+
+	var off: float = rad_to_deg(absf(_angle_off_facing(from)))
+	if off <= guard_arc_degrees * 0.5:
+		## Met square on. A blow arriving inside the parry window also opens the
+		## riposte; later ones are simply stopped.
+		if Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
+			parry_ready = true
+		return 0.0
+	if off <= flank_arc_degrees * 0.5:
+		return amount * flank_soak
+	## From behind. The guard is not in the way at all.
+	return amount
+
+
+## Degrees between the way she is facing and the direction a blow came from.
+func _angle_off_facing(from: Vector2) -> float:
+	var facing: Vector2 = stateDirection(facing_dir)
+	if facing == Vector2.ZERO:
+		return 0.0
+	var toward: Vector2 = from - global_position
+	if toward.length_squared() < 1.0:
+		return 0.0
+	## Both unsquashed, or the arc would be far wider up and down the screen
+	## than across it — the same correction the monsters' vision uses.
+	toward.y /= 0.5
+	facing.y /= 0.5
+	return toward.normalized().angle_to(facing.normalized())
+
 
 func _start_invincibility() -> void:
 	is_invincible = true

@@ -283,7 +283,8 @@ func strike(reach: float = 1.35) -> void:
 	if ground_distance_to(target.global_position) > attack_range * reach:
 		return
 	if target.has_method("take_damage"):
-		target.take_damage(attack_damage)
+		## Tells her guard where the blow came from.
+		target.take_damage(attack_damage, global_position)
 	_strike_breakables(reach)
 
 
