@@ -71,6 +71,7 @@ func _physics_process(_delta):
 	## Unconditional: the running states call drain_stamina, which resets the rest
 	## timer, so spending and recovering cannot both apply in the same frame.
 	recover_stamina(_delta)
+	recover_sneak(_delta)
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()

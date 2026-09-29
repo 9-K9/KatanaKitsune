@@ -21,6 +21,16 @@ extends Node2D
 @export var chair_scene: PackedScene = null
 ## Chairs dropped on open floor beyond the one beside the spawn.
 @export var extra_chairs: int = 3
+## Clear floor a chair needs around it. She walks the last steps to a seat, so
+## one wedged against a column is worse than no chair at all — she sets off and
+## grinds into the stone.
+##
+## Set to roughly her own body radius, because that is the actual question being
+## asked: is there room to stand at this chair. Measured on a floor, only one
+## chair in eight was literally buried, but four were tucked against geometry;
+## the rejection count is flat between 50 and 70 and climbs again past 90, where
+## it starts throwing away chairs that merely sit near a wall.
+@export var chair_clearance: float = 70.0
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -327,20 +337,33 @@ func _add_chair(where: Vector2, named: String) -> void:
 ## would walk into a column and sit on a chair nobody can see — which is exactly
 ## what a chair under a column looked like.
 func _clear_buried_chairs() -> void:
+	## One physics frame late, and that is the whole reason this works. Walls,
+	## columns and props are all added during _ready, and the physics server does
+	## not know about a body's shapes until the next step — so querying here
+	## immediately returned "nothing is there" for every chair, whatever it was
+	## standing on.
+	await get_tree().physics_frame
 	var space := get_world_2d().direct_space_state
 	var removed := 0
 	for chair in get_tree().get_nodes_in_group("chair"):
 		if not (chair is Node2D):
 			continue
-		var query := PhysicsPointQueryParameters2D.new()
+		## A shape rather than a point. Testing the exact centre only caught a
+		## chair standing *inside* something; one tucked against a column passed,
+		## and she would walk into the stone trying to reach it.
+		var probe := PhysicsShapeQueryParameters2D.new()
+		var clearance := CircleShape2D.new()
+		clearance.radius = chair_clearance
+		probe.shape = clearance
 		## Its own base, not its origin, which sits SORT_LIFT above the floor.
-		query.position = (chair as Node2D).global_position + Vector2(0.0, SORT_LIFT)
-		query.collision_mask = 1
-		if not space.intersect_point(query, 1).is_empty():
+		probe.transform = Transform2D(0.0,
+				(chair as Node2D).global_position + Vector2(0.0, SORT_LIFT))
+		probe.collision_mask = 1
+		if not space.intersect_shape(probe, 1).is_empty():
 			chair.queue_free()
 			removed += 1
 	if removed > 0:
-		print("MazeDemo: removed %d chair(s) standing in solid geometry" % removed)
+		print("MazeDemo: removed %d chair(s) without clear floor around them" % removed)
 
 
 ## The world position of the middle of a room's floor.

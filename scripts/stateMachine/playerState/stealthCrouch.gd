@@ -9,6 +9,13 @@ func on_enter():
 	pc.crouched = true
 
 func on_process(_delta):
+	## Hiding costs. Being unseen is the strongest position in the game, so it
+	## runs on a meter and she is forced upright when it empties rather than
+	## being able to cross a whole floor unnoticed.
+	pc.drain_sneak(pc.crouch_drain, _delta)
+	if pc.sneak_spent():
+		change_state("idle")
+		return
 	stateAnimation("stealthCrouch", 2)
 	## Striking from a crouch is the stealth attack.
 	if Input.is_action_just_pressed("Attack"):

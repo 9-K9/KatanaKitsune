@@ -21,8 +21,9 @@ func on_process(_delta):
 
 func on_physics_process(_delta):
 	if action_timer.is_stopped():
-		## Straight back into cover, still hidden.
-		change_state("stealthIdle")
+		## Straight back into cover if there is cover left to go back to —
+		## the strike itself is free, but it does not refill the meter.
+		change_state("stealthIdle" if pc.can_sneak() else "idle")
 
 func on_exit():
 	pc.damage = _base_damage

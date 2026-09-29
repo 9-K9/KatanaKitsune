@@ -3,21 +3,19 @@ extends PlayerClass
 ## Guard up. Held, not toggled: releasing Defend lowers the blade and drops back
 ## to idle.
 ##
-## She can still move, slowly, and still turn. A guard you cannot walk behind is
-## a trap rather than a defence — and since what the guard is worth depends on
-## which way she faces, being unable to turn made the direction meaningless.
+## She can turn, but not walk: stepping off a guard sheathes the blade and drops
+## her into a sneak instead, which defends on the same arc for less. Turning
+## matters because what the guard is worth depends on which way she faces.
 ##
 ## The raise plays once and stops on its last frame; releasing plays the same
 ## frames backwards. Turning mid-guard swaps to the new direction's clip already
 ## at its end, so she pivots with the blade up instead of re-raising it.
 const RAISE_RATE: float = 2.2
-## A fraction of a walk. Enough to give ground or hold a doorway, not enough to
-## carry a guard around as free protection.
-const GUARD_SPEED: float = 0.42
+## Planted. Movement is the sneak's job now.
+const GUARD_SPEED: float = 0.0
 
 var _lowering: bool = false
 var _facing: String = ""
-var _walking: bool = false
 
 
 func on_enter():
@@ -25,7 +23,6 @@ func on_enter():
 	pc.block_opened_at = Time.get_ticks_msec()
 	pc.speed = pc.walkSpeed * GUARD_SPEED
 	_lowering = false
-	_walking = false
 	_facing = pc.facing_dir
 	## Played once here rather than every frame. Calling play() on a finished
 	## non-looping clip restarts it, which is half of why the guard cycled; the
@@ -43,19 +40,23 @@ func on_process(_delta):
 	if not Input.is_action_pressed("Defend"):
 		_lower()
 		return
-	## There is no art for walking with the guard up, so moving borrows the
-	## stealth walk — a low, careful step, which is what carrying a raised blade
-	## should look like anyway. Standing still returns to the guard.
-	var moving: bool = pc.InputHandler() != Vector2.ZERO
-	if moving != _walking or (moving and pc.facing_dir != _facing):
-		_walking = moving
-		_facing = pc.facing_dir
-		if moving:
-			animated_sprite.speed_scale = 1.0
-			animated_sprite.play("stealthWalk_%s" % pc.facing_dir)
-		else:
-			_hold_guard()
-	elif pc.facing_dir != _facing:
+	## Moving out of a guard puts the blade away first. She used to snap from a
+	## raised katana straight into a borrowed stealth-walk clip, which read as the
+	## sword vanishing mid-step; now she sheathes and comes up in a sneak, which
+	## is the same defence by other means — see AnimatedCharacterClass.take_damage,
+	## where a low stance guards on the same arc without a blade.
+	##
+	## Only once the blade is actually up. Tapping Defend with a direction still
+	## held would otherwise sheathe on the first frame, so the guard never
+	## appeared at all — she just swapped one walk for another.
+	if _raised() and pc.InputHandler() != Vector2.ZERO:
+		## With nothing left in the sneak meter there is no low stance to go to,
+		## so she simply walks. Sending her to stealthWalk regardless would have
+		## it eject her again on its first frame.
+		pc.sheathe_into = "stealthWalk" if pc.can_sneak() else "walk"
+		change_state("katanaSeath")
+		return
+	if pc.facing_dir != _facing:
 		_turn()
 	if Input.is_action_just_pressed("Stealth"):
 		change_state("katanaBlockCrouched")
@@ -66,6 +67,12 @@ func on_process(_delta):
 		return
 	if Input.is_action_just_pressed("Jump"):
 		change_state("forwardRoll")
+
+
+## True once the raise has played out — the clip stops of its own accord, and
+## _hold_guard pauses on the last frame, so "not playing" means "guard up".
+func _raised() -> bool:
+	return not animated_sprite.is_playing()
 
 
 ## Swaps to the clip for the way she now faces, landing on its final frame so

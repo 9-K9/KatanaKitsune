@@ -16,7 +16,9 @@ func on_process(delta):
 	if Input.is_action_just_pressed("Attack"):
 		change_state("highKick")
 	if Input.is_action_just_pressed("Stealth"):
-		change_state("stealthWalk")
+		if pc.can_sneak():
+			change_state("stealthWalk")
+			return
 	if Input.is_action_just_pressed("Dodge"):
 		change_state("forwardRoll")
 	if Input.is_action_just_pressed("Jump"):

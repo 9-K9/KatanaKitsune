@@ -9,6 +9,12 @@ func on_enter():
 	pc.stealthed = true
 
 func on_process(delta):
+	## Sprinting while hidden spends the sneak meter fastest of all — it is the
+	## best movement option in the game and should not also be the cheapest.
+	pc.drain_sneak(pc.sneak_drain * 1.6, delta)
+	if pc.sneak_spent():
+		change_state("run")
+		return
 	stateAnimation("ninjaRun", 12)
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("stealthIdle")

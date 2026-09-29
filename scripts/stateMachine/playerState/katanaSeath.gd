@@ -1,23 +1,33 @@
 extends PlayerClass
 
-# Called when the state machine enters this state.
+## Putting the blade away. Faster than it was drawn at — three quarters of a
+## second of animation with no control is a long time to stand still in a fight.
+##
+## Where she ends up is set by whoever asked for the sheathe: guarding and then
+## walking sheathes *into* a sneak, so the blade goes away before she slips low
+## rather than her teleporting between the two stances.
+const RATE: float = 1.45
+
+var _left: float = 0.0
+var _next: String = ""
+
+
 func on_enter():
 	pc.katana_drawn = false
 	pc.speed = 0.0
-	pc.timerTimeOut = false
-	action_timer.wait_time = 0.75
-	action_timer.start()
+	## Claimed on the way in rather than on the way out, so a sheathe cut short
+	## by a hit or a death cannot leave a stale destination behind for the next
+	## one to pick up.
+	_next = pc.sheathe_into
+	pc.sheathe_into = ""
+	_left = play_oneshot("katanaSeath", RATE)
 
-# Called every frame when this state is active.
-func on_process(delta):
-	stateAnimation("katanaSeath",4)
-		
+
 func on_physics_process(delta):
-	if action_timer.is_stopped():
-		pc.timerTimeOut = true
-		change_state("idle")
-		
-# Called when the state machine exits this state.
+	_left -= delta
+	if _left <= 0.0:
+		change_state(_next if _next != "" else "idle")
+
+
 func on_exit():
-	pc.timerTimeOut = true
-	action_timer.stop()
+	animated_sprite.speed_scale = 1.0

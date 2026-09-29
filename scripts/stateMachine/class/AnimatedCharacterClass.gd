@@ -41,9 +41,58 @@ var block_opened_at: int = 0
 @export var flank_arc_degrees: float = 240.0
 ## What a flanking blow still costs her.
 @export var flank_soak: float = 0.5
+## How much of a blow a low stance turns aside without a blade in the way.
+## Below 1.0 on purpose: steel stops a hit, a stance only blunts it.
+@export var stance_soak: float = 0.6
 ## A hit landing within this many ms of raising the guard is a parry.
 @export var parry_window_ms: int = 350
 @export var invincibility_duration: float = 0.8
+
+##Sneak Variables
+## Staying hidden is the strongest position in the game — monsters see a third
+## as far, and she guards while doing it — so it has to run out. Empty, she is
+## forced upright and has to earn it back by being seen.
+@export var max_sneak: float = 100.0
+var sneak: float = 100.0
+## Per second while hidden. Crouching is stiller and costs less than sneaking.
+@export var sneak_drain: float = 14.0
+@export var crouch_drain: float = 8.0
+## Per second once she is upright again.
+@export var sneak_regen: float = 11.0
+
+var _sneak_used_this_frame: bool = false
+
+## Where katanaSeath hands off to. Set by whoever asked for the blade to go
+## away, so guarding into a sneak sheathes first instead of cutting straight
+## from a raised guard to a crouch.
+var sheathe_into: String = ""
+
+## Enough left to be worth hiding. A reserve rather than simply "above zero", so
+## she cannot tap in and out at an empty meter and flicker between stances.
+@export var sneak_entry_cost: float = 18.0
+
+
+func can_sneak() -> bool:
+	return sneak >= sneak_entry_cost
+
+
+## Spends sneak. Called by the stealth states; anything not calling it lets the
+## meter refill, so there is nothing to keep in sync.
+func drain_sneak(per_second: float, delta: float) -> void:
+	sneak = maxf(sneak - per_second * delta, 0.0)
+	_sneak_used_this_frame = true
+
+
+func recover_sneak(delta: float) -> void:
+	if not _sneak_used_this_frame:
+		sneak = minf(sneak + sneak_regen * delta, max_sneak)
+	_sneak_used_this_frame = false
+
+
+## Nothing left to hide with.
+func sneak_spent() -> bool:
+	return sneak <= 0.0
+
 
 ##Stamina Variables
 ## Running spends it, standing still returns it. Empty, she can only manage a
@@ -243,7 +292,10 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
 		return
 	if is_invincible or is_dead:
 		return
-	if blocking:
+	## Sneaking is a guard of its own: low, turned side-on, watching. She reads
+	## a blow coming the same way a raised blade does, so the same arc applies
+	## without needing the katana out. It is simply worth less.
+	if blocking or stealthed or crouched:
 		amount = _guarded(amount, from)
 		if amount <= 0.0:
 			return
@@ -271,15 +323,19 @@ func _guarded(amount: float, from: Vector2) -> float:
 			return 0.0
 		return amount * block_soak
 
+	## A raised blade stops a blow; a low stance only rides it. Without this,
+	## crouching would be as good as guarding and the katana would be pointless
+	## on defence.
+	var unarmed: float = 1.0 if blocking else stance_soak
 	var off: float = rad_to_deg(absf(_angle_off_facing(from)))
 	if off <= guard_arc_degrees * 0.5:
 		## Met square on. A blow arriving inside the parry window also opens the
 		## riposte; later ones are simply stopped.
-		if Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
+		if blocking and Time.get_ticks_msec() - block_opened_at <= parry_window_ms:
 			parry_ready = true
-		return 0.0
+		return amount * (1.0 - unarmed)
 	if off <= flank_arc_degrees * 0.5:
-		return amount * flank_soak
+		return amount * (flank_soak if blocking else 1.0 - stance_soak * 0.5)
 	## From behind. The guard is not in the way at all.
 	return amount
 

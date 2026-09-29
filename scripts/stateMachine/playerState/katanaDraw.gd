@@ -1,23 +1,23 @@
 extends PlayerClass
 
-# Called when the state machine enters this state.
+## Clearing the scabbard. Sped up to match the sheathe — both used to run for a
+## fixed 0.75s during which she could neither move nor act.
+const RATE: float = 1.45
+
+var _left: float = 0.0
+
+
 func on_enter():
 	pc.katana_drawn = true
 	pc.speed = 0.0
-	pc.timerTimeOut = false
-	action_timer.wait_time = 0.75
-	action_timer.start()
+	_left = play_oneshot("katanaDraw", RATE)
 
-# Called every frame when this state is active.
-func on_process(delta):
-	stateAnimation("katanaDraw",4)
-		
+
 func on_physics_process(delta):
-	if action_timer.is_stopped():
-		pc.timerTimeOut = true
+	_left -= delta
+	if _left <= 0.0:
 		change_state("katanaIdle")
-		
-# Called when the state machine exits this state.
+
+
 func on_exit():
-	pc.timerTimeOut = true
-	action_timer.stop()
+	animated_sprite.speed_scale = 1.0
