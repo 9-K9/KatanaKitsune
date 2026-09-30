@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table.png" id="2_intact"]
@@ -6,6 +6,11 @@
 
 [ext_resource type="PackedScene" uid="uid://cfood1pkup001" path="res://scenes/props/pickupFood.tscn" id="10_loot0"]
 [ext_resource type="PackedScene" uid="uid://cdrnk1pkup002" path="res://scenes/props/pickupDrink.tscn" id="11_loot1"]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_southEast.png" id="30_southEast"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_southWest.png" id="30_southWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_northWest.png" id="30_northWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_northEast.png" id="30_northEast"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
 points = PackedVector2Array(-60, 0, 0, -26, 60, 0, 0, 26)
@@ -21,6 +26,7 @@ display_loot = true
 loot_display_offset = Vector2(0, -110)
 empty_weight = 0.0
 always_drops = true
+facing_textures = Array[Texture2D]([ExtResource("30_southEast"), ExtResource("30_southWest"), ExtResource("30_northWest"), ExtResource("30_northEast")])
 break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true

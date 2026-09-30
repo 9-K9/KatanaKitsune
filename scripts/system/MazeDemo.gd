@@ -402,6 +402,11 @@ func _place_dining_set(room: Node2D) -> void:
 
 	var table := table_scene.instantiate()
 	table.name = "DiningTable"
+	## Turned like every other prop. The dining set builds its table by hand
+	## rather than going through _place, so it missed the facing pass and every
+	## table on every floor faced the same way.
+	if table.has_method("face_randomly"):
+		table.face_randomly(_rng)
 	add_child(table)
 	(table as Node2D).global_position = centre
 

@@ -1,8 +1,13 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack.png" id="2_intact"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_broken.png" id="3_broken"]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_southEast.png" id="30_southEast"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_southWest.png" id="30_southWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_northWest.png" id="30_northWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_northEast.png" id="30_northEast"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
 points = PackedVector2Array(-31, 0, 0, -9, 31, 0, 0, 9)
@@ -12,6 +17,7 @@ y_sort_enabled = true
 collision_layer = 3
 script = ExtResource("1_script")
 max_health = 28.0
+facing_textures = Array[Texture2D]([ExtResource("30_southEast"), ExtResource("30_southWest"), ExtResource("30_northWest"), ExtResource("30_northEast")])
 break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true
