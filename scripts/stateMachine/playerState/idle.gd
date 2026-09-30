@@ -16,27 +16,27 @@ func on_enter():
 func on_process(delta):
 	stateAnimation("idle",1)
 	var input: Vector2 = pc.InputHandler()
-	if 	input != Vector2.ZERO and Input.is_action_pressed("Run"):
+	if 	input != Vector2.ZERO and pc.input.pressed("Run"):
 		change_state("slowRun" if winded() else "run")
 		return
 	elif input != Vector2.ZERO:
 		change_state("walk")
 		return
 
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("midKick")
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		if pc.can_sneak():
 			change_state("stealthIdle")
 			return
-	if Input.is_action_just_pressed("Dodge"):
+	if pc.input.just_pressed("Dodge"):
 		change_state("forwardRoll")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("runningJump")
 	## Unarmed, Defend is the taunt — it pulls a patrol off its route.
-	if Input.is_action_just_pressed("Defend"):
+	if pc.input.just_pressed("Defend"):
 		change_state("seductiveDance")
 		return
 

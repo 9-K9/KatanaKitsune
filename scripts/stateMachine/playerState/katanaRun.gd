@@ -10,7 +10,7 @@ func on_enter():
 # Called every frame when this state is active.
 func on_process(delta):
 	stateAnimation("katanaRun",16)
-	if pc.InputHandler() != Vector2.ZERO and Input.is_action_just_released("Run"):
+	if pc.InputHandler() != Vector2.ZERO and pc.input.just_released("Run"):
 		change_state("katanaWalk")
 		return
 	elif pc.InputHandler() == Vector2.ZERO:
@@ -23,11 +23,11 @@ func on_process(delta):
 		change_state("katanaWalk")
 		return
 
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaSeath")
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("katanaKick")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("katanaJump")
 
 # Called every physics frame when this state is active.

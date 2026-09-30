@@ -21,7 +21,7 @@ func on_process(delta):
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("stealthIdle")
 		return
-	if not Input.is_action_pressed("Run"):
+	if not pc.input.pressed("Run"):
 		change_state("stealthWalk")
 		return
 
@@ -30,11 +30,11 @@ func on_process(delta):
 		change_state("stealthWalk")
 		return
 
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("run")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")
 
 func on_exit():

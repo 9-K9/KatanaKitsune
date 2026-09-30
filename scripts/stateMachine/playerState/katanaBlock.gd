@@ -37,7 +37,7 @@ func on_process(_delta):
 			change_state("katanaIdle")
 		return
 
-	if not Input.is_action_pressed("Defend"):
+	if not pc.input.pressed("Defend"):
 		_lower()
 		return
 	## Moving out of a guard puts the blade away first. She used to snap from a
@@ -58,14 +58,14 @@ func on_process(_delta):
 		return
 	if pc.facing_dir != _facing:
 		_turn()
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("katanaBlockCrouched")
 		return
 	## A hit taken inside the parry window opens the riposte.
 	if pc.parry_ready:
 		change_state("katanaCounterSlash")
 		return
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
 
 

@@ -11,7 +11,7 @@ func on_enter():
 	_provoke()
 
 func on_process(_delta):
-	if pc.InputHandler() != Vector2.ZERO or Input.is_action_just_pressed("Attack"):
+	if pc.InputHandler() != Vector2.ZERO or pc.input.just_pressed("Attack"):
 		change_state("idle")
 
 func on_physics_process(_delta):

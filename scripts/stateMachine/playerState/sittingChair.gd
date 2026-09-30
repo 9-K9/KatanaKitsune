@@ -43,11 +43,11 @@ func on_process(_delta):
 		stateAnimation("walk", 8)
 
 	if pc.InputHandler() != Vector2.ZERO \
-			or Input.is_action_just_pressed("Attack") \
-			or Input.is_action_just_pressed("Katana") \
-			or Input.is_action_just_pressed("Stealth") \
-			or Input.is_action_just_pressed("Jump") \
-			or Input.is_action_just_pressed("Dodge"):
+			or pc.input.just_pressed("Attack") \
+			or pc.input.just_pressed("Katana") \
+			or pc.input.just_pressed("Stealth") \
+			or pc.input.just_pressed("Jump") \
+			or pc.input.just_pressed("Dodge"):
 		change_state("idle")
 
 

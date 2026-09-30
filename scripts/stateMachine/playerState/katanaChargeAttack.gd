@@ -32,7 +32,7 @@ func on_process(delta):
 		## Brightens as it winds up, so the charge is readable without a meter.
 		var glow: float = 1.0 + _charge / MAX_CHARGE
 		animated_sprite.modulate = Color(glow, 1.0, 1.0)
-		if not Input.is_action_pressed("Attack"):
+		if not pc.input.pressed("Attack"):
 			_release()
 		return
 	playerAttack(HIT_FRAME)

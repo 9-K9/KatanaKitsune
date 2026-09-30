@@ -25,6 +25,7 @@ config/icon="res://icon.svg"
 Dialogic="*uid://ds2q0uclmolvu"
 CheatManager="*res://scripts/system/CheatManager.gd"
 PowerState="*res://scripts/system/PowerState.gd"
+Roster="*res://scripts/system/Roster.gd"
 
 [dialogic]
 

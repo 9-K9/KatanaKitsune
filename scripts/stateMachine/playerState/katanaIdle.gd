@@ -16,7 +16,7 @@ func on_process(delta):
 	## Checked before movement. This used to sit below, so any stick input sent
 	## her to katanaWalk first and the wind-up was unreachable — in a fight she
 	## is always moving, which made the charged attack impossible to land.
-	if Input.is_action_pressed("Attack"):
+	if pc.input.pressed("Attack"):
 		_attack_held += delta
 		## Plants while deciding, so the wind-up reads as a commitment.
 		if _attack_held >= CHARGE_HOLD:
@@ -27,20 +27,20 @@ func on_process(delta):
 		change_state("katanaSlashStand")
 		return
 
-	if 	pc.InputHandler() != Vector2.ZERO and Input.is_action_pressed("Run"):
+	if 	pc.InputHandler() != Vector2.ZERO and pc.input.pressed("Run"):
 		change_state("katanaRun")
 		return
 	elif pc.InputHandler() != Vector2.ZERO:
 		change_state("katanaWalk")
 		return
 
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaSeath")
-	if Input.is_action_pressed("Defend"):
+	if pc.input.pressed("Defend"):
 		change_state("katanaBlock")
-	if Input.is_action_just_pressed("Dodge"):
+	if pc.input.just_pressed("Dodge"):
 		change_state("forwardRoll")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("katanaJump")
 
 func on_physics_process(delta):

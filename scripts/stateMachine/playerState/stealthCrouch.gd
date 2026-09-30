@@ -11,14 +11,14 @@ func on_enter():
 func on_process(_delta):
 	stateAnimation("stealthCrouch", 2)
 	## Striking from a crouch is the stealth attack.
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("flair")
 		return
-	if Input.is_action_just_pressed("Defend") or pc.InputHandler() != Vector2.ZERO:
+	if pc.input.just_pressed("Defend") or pc.InputHandler() != Vector2.ZERO:
 		change_state("stealthIdle")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("idle")
 
 func on_exit():

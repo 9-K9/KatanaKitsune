@@ -57,15 +57,26 @@ func _ready() -> void:
 ## The player's body. Resolved lazily because the monster is spawned from code
 ## and may enter the tree before the player does.
 func player() -> CharacterBody2D:
-	if is_instance_valid(_player):
-		return _player
-	## The player's hitbox Area2D is in the "player" group too, so take the
-	## first body rather than the first node.
+	## The nearest living player, re-resolved each time rather than cached.
+	##
+	## It used to latch onto the first body in the group and keep it forever,
+	## which with four players meant every monster on the floor hunted player one
+	## and walked straight past the other three.
+	var best: CharacterBody2D = null
+	var best_distance: float = INF
 	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D:
-			_player = node
-			return _player
-	return null
+		## Her hitbox Area2D is in the group too; only the body can be chased.
+		if not (node is CharacterBody2D):
+			continue
+		if node.get("is_dead") == true:
+			continue
+		var distance: float = global_position.distance_squared_to(
+				(node as Node2D).global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = node
+	_player = best
+	return best
 
 
 ## Distance along the ground rather than across the screen. The map is drawn

@@ -17,7 +17,7 @@ func on_enter():
 func on_process(delta):
 	stateAnimation("fastRun",3)
 	var input: Vector2 = pc.InputHandler()
-	if input != Vector2.ZERO and Input.is_action_just_released("Run"):
+	if input != Vector2.ZERO and pc.input.just_released("Run"):
 		change_state("walk")
 		return
 	elif input == Vector2.ZERO:
@@ -36,13 +36,13 @@ func on_process(delta):
 		change_state("switchDirections")
 		return
 
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("roundKick")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("runningJump")
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("ninjaRun")
 
 # Called every physics frame when this state is active.

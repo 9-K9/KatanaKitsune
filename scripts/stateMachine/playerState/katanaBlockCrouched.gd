@@ -11,16 +11,16 @@ func on_enter():
 
 func on_process(_delta):
 	stateAnimation("katanaBlockCrouched", 4)
-	if not Input.is_action_pressed("Defend"):
+	if not pc.input.pressed("Defend"):
 		change_state("katanaIdle")
 		return
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("katanaBlock")
 		return
 	if pc.parry_ready:
 		change_state("katanaCounterSlash")
 
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
 
 func on_exit():

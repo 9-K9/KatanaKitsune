@@ -28,6 +28,17 @@ extends Node2D
 ## was: the table renders 202px across, so seats at 96 stood on the tabletop.
 @export var table_seat_gap: float = 150.0
 
+## Extra monsters per room for each player past the first. Per *room*, so it
+## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
+## at 92 monsters, which is a slog rather than a scaling.
+@export var party_enemy_bonus: float = 0.7
+
+## Breathing room kept around the party when the camera pulls back to hold them.
+@export var party_margin: float = 320.0
+## How far the view is allowed to pull back. Below this the dungeon stops being
+## readable, and players are better stopped from spreading than shown as ants.
+@export_range(0.3, 1.0, 0.05) var camera_zoom_min: float = 0.55
+
 ## Chairs dropped on open floor beyond the one beside the spawn.
 @export var extra_chairs: int = 3
 ## Clear floor a chair needs around it. She walks the last steps to a seat, so
@@ -81,6 +92,8 @@ const NEIGHBOUR := {
 }
 
 var _rng := RandomNumberGenerator.new()
+## Every player, in slot order. _player stays as player one for the HUD.
+var _players: Array[Node2D] = []
 var _rooms: Dictionary = {}
 ## How deep the run has gone. HUD reads this; each floor adds monsters.
 var depth: int = 1
@@ -180,7 +193,11 @@ func _populate(step: Vector2) -> void:
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
 		if not enemy_scenes.is_empty() and cell != start:
-			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) + depth - 1
+			## Scaled by the party. A floor built for one is a walkover for four,
+			## and the extra bodies also have to be worth the extra katanas.
+			var party: int = maxi(Roster.count(), 1)
+			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) \
+					+ depth - 1 + int(round(float(party - 1) * party_enemy_bonus))
 			for i in n:
 				_place(here, enemy_scenes[_rng.randi_range(0, enemy_scenes.size() - 1)])
 		if not prop_scenes.is_empty():
@@ -220,19 +237,19 @@ func _light() -> void:
 		tint.color = gloom
 		add_child(tint)
 
-	var player := _player_body()
-	if player == null or player.has_node("Lantern"):
-		return
-	var lamp := PointLight2D.new()
-	lamp.name = "Lantern"
-	lamp.texture = _glow()
-	lamp.color = lantern_colour
-	lamp.energy = 1.5
-	lamp.texture_scale = lantern_radius
-	## Sits at her torso. Her origin is now her feet, so this is measured up
-	## from the ground rather than out from the middle of her.
-	lamp.position = Vector2(0, -40)
-	player.add_child(lamp)
+	for carrier in _players:
+		if not is_instance_valid(carrier) or carrier.has_node("Lantern"):
+			continue
+		var lamp := PointLight2D.new()
+		lamp.name = "Lantern"
+		lamp.texture = _glow()
+		lamp.color = lantern_colour
+		lamp.energy = 1.5
+		lamp.texture_scale = lantern_radius
+		## Sits at her torso. Her origin is now her feet, so this is measured up
+		## from the ground rather than out from the middle of her.
+		lamp.position = Vector2(0, -40)
+		carrier.add_child(lamp)
 
 
 ## A soft round falloff, built rather than shipped as an asset.
@@ -481,27 +498,140 @@ func _room_centre(cell: Vector2i) -> Vector2:
 func _spawn_player(step: Vector2) -> void:
 	if player_scene == null:
 		return
-	## Spawned once and carried down; later floors only move her.
-	var player := _player
-	if player == null:
-		player = player_scene.instantiate()
-		add_child(player)
-		_player = player
-	## The middle room, standing on the centre of its floor. This used to work
-	## the position out from the old half-step formula, and was never updated
-	## when the lattice was corrected — so she was dropped at a point that
-	## belonged to no room, which is why she started against a wall.
-	player.global_position = _room_centre(Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2))
+	var wanted: int = maxi(Roster.count(), 1)
+	var centre: Vector2 = _room_centre(Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2))
 
-	if player.has_node("FollowCamera"):
+	## Spawned once and carried down; later floors only move them.
+	while _players.size() < wanted:
+		var body = player_scene.instantiate()
+		## Set before add_child so _ready picks the right device and colour —
+		## afterwards would be too late, the character would already have bound
+		## itself to the keyboard and repainted in somebody else's aspect.
+		body.slot = _players.size()
+		add_child(body)
+		_players.append(body)
+		## Only when there is a party to tell apart. One player needs no label
+		## saying which one they are.
+		if wanted > 1:
+			var mark := Node2D.new()
+			mark.name = "SlotMarker"
+			mark.set_script(load("res://scripts/system/SlotMarker.gd"))
+			body.add_child(mark)
+			mark.setup(body.slot, Roster.colour_of(body.slot))
+	## Kept for everything that still wants "the player" — the HUD, the radar
+	## and the eye all speak for player one.
+	_player = _players[0] if not _players.is_empty() else null
+
+	for i in _players.size():
+		if not is_instance_valid(_players[i]):
+			continue
+		## Fanned out around the middle of the room rather than stacked on one
+		## point, or four bodies would spawn inside each other and shove apart.
+		var angle: float = TAU * float(i) / float(maxi(_players.size(), 1))
+		var ring := Vector2(cos(angle), sin(angle) * 0.5) * (0.0 if _players.size() == 1 else 90.0)
+		(_players[i] as Node2D).global_position = centre + ring
+
+	_fit_camera()
+	if not Roster.device_lost.is_connected(_on_device_lost):
+		Roster.device_lost.connect(_on_device_lost)
+		Roster.device_regained.connect(_on_device_regained)
+
+
+func _physics_process(delta: float) -> void:
+	_track_party(delta)
+
+
+## Halts the floor while anyone's pad is unplugged, and says whose.
+##
+## The slot is held rather than freed: a cable pulled out by a foot should not
+## cost that player their run. Any spare pad plugged in adopts the waiting slot,
+## so a replacement controller rescues them without a trip to a menu.
+func _on_device_lost(slot: int) -> void:
+	get_tree().paused = true
+	_show_reconnect("PLAYER %d — RECONNECT CONTROLLER" % (slot + 1))
+
+
+func _on_device_regained(_slot: int) -> void:
+	if Roster.any_lost():
 		return
-	var cam := Camera2D.new()
-	cam.name = "FollowCamera"
-	player.add_child(cam)
-	cam.position_smoothing_enabled = true
-	cam.position_smoothing_speed = 6.0
-	cam.zoom = Vector2(1.0, 1.0)
-	cam.make_current()
+	get_tree().paused = false
+	_show_reconnect("")
+
+
+func _show_reconnect(text: String) -> void:
+	var layer := get_node_or_null("ReconnectLayer") as CanvasLayer
+	if layer == null:
+		layer = CanvasLayer.new()
+		layer.name = "ReconnectLayer"
+		## Runs while the tree is paused, or the notice could never appear —
+		## the thing it announces is the reason everything else stopped.
+		layer.process_mode = Node.PROCESS_MODE_ALWAYS
+		layer.layer = 90
+		add_child(layer)
+		var note := Label.new()
+		note.name = "Note"
+		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		note.set_anchors_preset(Control.PRESET_FULL_RECT)
+		note.add_theme_font_size_override("font_size", 28)
+		note.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
+		layer.add_child(note)
+	var note := layer.get_node_or_null("Note") as Label
+	if note != null:
+		note.text = text
+		note.visible = text != ""
+
+
+## One camera for the table, framing every living player.
+##
+## Shared rather than split: the HUD, radar, gloom and every lantern are single
+## CanvasLayer things, and four viewports would mean four of each. The cost is
+## that players cannot wander into separate rooms — the camera pulls back as
+## they spread and stops them drifting off the edge of the world.
+func _fit_camera() -> void:
+	var cam := get_node_or_null("PartyCamera") as Camera2D
+	if cam == null:
+		cam = Camera2D.new()
+		cam.name = "PartyCamera"
+		add_child(cam)
+		cam.position_smoothing_enabled = true
+		cam.position_smoothing_speed = 6.0
+		cam.make_current()
+	## Any camera the player scene ships with would fight this one for the view.
+	for body in _players:
+		if is_instance_valid(body):
+			var own := (body as Node).get_node_or_null("FollowCamera") as Camera2D
+			if own != null:
+				own.enabled = false
+
+
+## Keeps the shared camera on the middle of the party and pulled back far enough
+## to hold everyone. Runs in physics because that is when bodies move; sampling
+## in _process reads a stale position on frames with no physics tick and the
+## view jitters.
+func _track_party(_delta: float) -> void:
+	var cam := get_node_or_null("PartyCamera") as Camera2D
+	if cam == null:
+		return
+	var alive: Array[Node2D] = []
+	for body in _players:
+		if is_instance_valid(body) and not (body.get("is_dead") == true):
+			alive.append(body)
+	if alive.is_empty():
+		return
+
+	var box := Rect2(alive[0].global_position, Vector2.ZERO)
+	for body in alive:
+		box = box.expand(body.global_position)
+	cam.global_position = box.get_center()
+
+	## Zoom out only once the party is wider than the view, and never past the
+	## limit — a dungeon read at half size stops being readable.
+	var view: Vector2 = get_viewport_rect().size
+	var needed: Vector2 = (box.size + Vector2(party_margin, party_margin)) / view
+	var out: float = maxf(maxf(needed.x, needed.y), 1.0)
+	var target: float = clampf(1.0 / out, camera_zoom_min, 1.0)
+	cam.zoom = cam.zoom.lerp(Vector2(target, target), clampf(_delta * 4.0, 0.0, 1.0))
 
 
 ## One whole room along each isometric axis, in pixels.

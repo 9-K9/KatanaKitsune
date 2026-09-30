@@ -17,7 +17,7 @@ func on_process(delta):
 	stateAnimation("katanaWalk",8)
 
 	## Before the movement transitions, so holding Attack always wins.
-	if Input.is_action_pressed("Attack"):
+	if pc.input.pressed("Attack"):
 		_attack_held += delta
 		if _attack_held >= CHARGE_HOLD:
 			change_state("katanaChargeAttack")
@@ -27,16 +27,16 @@ func on_process(delta):
 		return
 
 	## Not promoted to a run while winded, or the two trade places every frame.
-	if pc.InputHandler() != Vector2.ZERO and Input.is_action_pressed("Run") and not winded():
+	if pc.InputHandler() != Vector2.ZERO and pc.input.pressed("Run") and not winded():
 		change_state("katanaRun")
 		return
 	elif pc.InputHandler() == Vector2.ZERO:
 		change_state("katanaIdle")
 		return
 
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaSeath")
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("katanaJump")
 
 # Called every physics frame when this state is active.

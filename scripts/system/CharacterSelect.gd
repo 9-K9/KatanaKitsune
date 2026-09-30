@@ -29,6 +29,32 @@ var _clip: int = 0
 var _elapsed: float = 0.0
 var _base_frames: SpriteFrames = null
 
+## How many are playing, who is choosing right now, and on what.
+##
+## The screen runs as three phases rather than one. Godot's focus system is
+## device-blind — it answers to every pad at once — so once players are picking
+## in turn the highlight is driven by hand from the active player's own device
+## and focus is left out of it entirely.
+enum Phase { COUNT, CLAIM, COLOUR }
+
+var _phase: int = Phase.COUNT
+var _wanted: int = 1
+var _active: int = 0
+## One probe per unclaimed device, watched during CLAIM so whichever pad presses
+## first takes the slot. Rebuilt whenever the roster changes.
+var _probes: Array[PlayerInput] = []
+## The device driving the highlight during COLOUR.
+var _driver: PlayerInput = null
+## Repeat throttle for stick navigation — an analogue stick held over is a level,
+## not an edge, and without this one nudge runs the whole row.
+var _repeat: float = 0.0
+const REPEAT_DELAY: float = 0.18
+## Kept alive between frames, and that matters: a PlayerInput works out a press
+## by comparing against what it saw last frame, so rebuilding these every frame
+## would make every held button look freshly pressed and one nudge would run the
+## whole list. Rebuilt only when a pad is plugged in or out.
+var _menu_probes: Array[PlayerInput] = []
+
 
 func _ready() -> void:
 	## Borrow the player's own SpriteFrames so the preview cannot drift from
@@ -48,7 +74,20 @@ func _ready() -> void:
 	## that silently does nothing — which is why the screen opened on a button.
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_focus_icons()
+	## A fresh roster every time the screen opens, or backing out to the title
+	## and coming back would stack yesterday's players on top of today's.
+	Roster.clear()
+	Input.joy_connection_changed.connect(_on_menu_joy_changed)
+	_rebuild_menu_probes()
+	_enter_count()
+
+
+## A pad plugged in at the menu joins the probes immediately, so a player can
+## pick up a controller and claim a slot without backing out and returning.
+func _on_menu_joy_changed(_device: int, _connected: bool) -> void:
+	_rebuild_menu_probes()
+	if _phase == Phase.CLAIM:
+		_enter_claim()
 
 
 func _build_icons() -> void:
@@ -112,9 +151,11 @@ func _on_icon_pressed(index: int) -> void:
 ## Back to the icons. Cancel is the pad's right-hand face button — B on an Xbox
 ## pad, Circle on a DualShock, A on a Switch controller.
 func _unhandled_input(event: InputEvent) -> void:
+	## Cancel belongs to the party flow now, which routes it to the right player
+	## rather than to whichever device happened to press. Left in place only so
+	## nothing else claims the event.
 	if not event.is_action_pressed("ui_cancel"):
 		return
-	_focus_icons()
 	get_viewport().set_input_as_handled()
 
 
@@ -162,6 +203,7 @@ func _play_current() -> void:
 
 
 func _process(delta: float) -> void:
+	_drive(delta)
 	_elapsed += delta
 	if _elapsed >= SECONDS_PER_CLIP:
 		_elapsed = 0.0
@@ -170,9 +212,205 @@ func _process(delta: float) -> void:
 
 
 func _on_confirm_pressed() -> void:
-	PowerState.select(_highlighted)
-	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
+	## The on-screen button belongs to whoever is choosing now.
+	_take_colour()
 
 
 func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+	_go_back()
+
+
+## Runs the current phase off real devices. Everything here reads a specific
+## device rather than the global Input, which is the whole point: during COLOUR
+## only the player whose turn it is may move the highlight.
+func _drive(delta: float) -> void:
+	_repeat = maxf(_repeat - delta, 0.0)
+	match _phase:
+		Phase.COUNT:
+			_drive_count()
+		Phase.CLAIM:
+			_drive_claim()
+		Phase.COLOUR:
+			_drive_colour()
+
+
+## Before anyone has claimed anything, so any device may set the number.
+func _drive_count() -> void:
+	var step: int = 0
+	for probe in _all_devices():
+		if probe.just_pressed("Right") or probe.just_pressed("Down"):
+			step = 1
+		elif probe.just_pressed("Left") or probe.just_pressed("Up"):
+			step = -1
+		if probe.confirm_pressed():
+			_active = 0
+			_enter_claim()
+			return
+		if probe.cancel_pressed():
+			_go_back()
+			return
+	if step != 0:
+		_wanted = clampi(_wanted + step, 1, Roster.MAX_PLAYERS)
+		_banner("HOW MANY PLAYERS?   %s" % _count_bar())
+
+
+## Whichever free device presses first takes this slot.
+func _drive_claim() -> void:
+	for probe in _probes:
+		if probe.cancel_pressed():
+			_go_back()
+			return
+	for probe in _probes:
+		if not probe.confirm_pressed():
+			continue
+		if Roster.join(probe.device) < 0:
+			continue
+		_enter_colour()
+		return
+
+
+## Only the active player's device moves the highlight.
+func _drive_colour() -> void:
+	if _driver == null:
+		return
+	if _driver.cancel_pressed():
+		_go_back()
+		return
+	if _driver.confirm_pressed():
+		_take_colour()
+		return
+	if _repeat > 0.0:
+		return
+	var across: int = icons.columns if icons.columns > 0 else 6
+	var step: int = 0
+	if _driver.pressed("Right"):
+		step = 1
+	elif _driver.pressed("Left"):
+		step = -1
+	elif _driver.pressed("Down"):
+		step = across
+	elif _driver.pressed("Up"):
+		step = -across
+	if step == 0:
+		return
+	_repeat = REPEAT_DELAY
+	var total: int = PowerState.count()
+	## Steps over schemes an earlier player already wears, so held navigation
+	## never parks on a choice that cannot be confirmed.
+	var next: int = _highlighted
+	for _i in total:
+		next = wrapi(next + step, 0, total)
+		if not Roster.scheme_taken(next, _active):
+			break
+	_highlighted = next
+	_show(_highlighted)
+
+
+## Keyboard plus every connected pad, for the phases open to all comers.
+func _all_devices() -> Array[PlayerInput]:
+	if _menu_probes.is_empty():
+		_rebuild_menu_probes()
+	return _menu_probes
+
+
+func _rebuild_menu_probes() -> void:
+	_menu_probes = [PlayerInput.new(PlayerInput.KEYBOARD)]
+	for id in Input.get_connected_joypads():
+		_menu_probes.append(PlayerInput.new(id))
+
+
+## ---------------------------------------------------------------- party flow
+
+func _enter_count() -> void:
+	_phase = Phase.COUNT
+	_wanted = maxi(_wanted, 1)
+	_banner("HOW MANY PLAYERS?   %s" % _count_bar())
+
+
+func _enter_claim() -> void:
+	_phase = Phase.CLAIM
+	_probes.clear()
+	for id in Roster.free_devices():
+		_probes.append(PlayerInput.new(id))
+	if _probes.is_empty():
+		## Nothing left to claim with — more players were asked for than there
+		## are devices, so settle for the ones already in.
+		_start_game()
+		return
+	_banner("PLAYER %d — PRESS A BUTTON" % (_active + 1))
+
+
+func _enter_colour() -> void:
+	_phase = Phase.COLOUR
+	_driver = Roster.input_for(_active)
+	## Opens on a scheme nobody has taken, so the first thing shown is a legal
+	## choice rather than one that silently refuses to confirm.
+	_highlighted = _first_free_scheme()
+	_show(_highlighted)
+	_banner("PLAYER %d — %s" % [_active + 1, _driver.device_name()])
+
+
+## Every scheme not already worn by an earlier player.
+func _first_free_scheme() -> int:
+	for i in PowerState.count():
+		if not Roster.scheme_taken(i, _active):
+			return i
+	return 0
+
+
+func _take_colour() -> void:
+	if _phase != Phase.COLOUR or Roster.scheme_taken(_highlighted, _active):
+		return
+	Roster.set_scheme(_active, _highlighted)
+	_active += 1
+	if _active >= _wanted:
+		_start_game()
+		return
+	_enter_claim()
+
+
+## Back always hands control to the player before, so a wrong colour is one
+## press away from being redone rather than a reason to restart the screen.
+func _go_back() -> void:
+	match _phase:
+		Phase.COUNT:
+			get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+		Phase.CLAIM:
+			## Nobody has claimed this slot yet, so step back over the player
+			## before and let them choose again.
+			if _active == 0:
+				Roster.clear()
+				_enter_count()
+			else:
+				_active -= 1
+				Roster.drop_last()
+				_enter_claim()
+		Phase.COLOUR:
+			## Give up this device and re-claim, so a player who grabbed the
+			## wrong pad can hand it back.
+			Roster.drop_last()
+			_enter_claim()
+
+
+func _start_game() -> void:
+	## Player one's scheme stays the global one, so the title art and anything
+	## else still reading PowerState.chosen keeps working.
+	if Roster.count() > 0:
+		PowerState.select(Roster.scheme_of(0))
+	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
+
+
+func _count_bar() -> String:
+	var bar := ""
+	for i in Roster.MAX_PLAYERS:
+		bar += ("[%d]" % (i + 1)) if (i + 1) == _wanted else (" %d " % (i + 1))
+	return bar
+
+
+func _banner(text: String) -> void:
+	var label := get_node_or_null("Right/SchemeName") as Label
+	if label != null and _phase != Phase.COLOUR:
+		label.text = text
+	var hint := get_node_or_null("Right/Element") as Label
+	if hint != null:
+		hint.text = text if _phase != Phase.COLOUR else hint.text

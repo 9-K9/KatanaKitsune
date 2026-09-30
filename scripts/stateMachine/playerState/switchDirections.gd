@@ -18,7 +18,7 @@ func on_physics_process(_delta):
 		if pc.InputHandler() == Vector2.ZERO:
 			change_state("idle")
 		else:
-			change_state("run" if Input.is_action_pressed("Run") else "walk")
+			change_state("run" if pc.input.pressed("Run") else "walk")
 
 func on_exit():
 	animated_sprite.speed_scale = 1.0

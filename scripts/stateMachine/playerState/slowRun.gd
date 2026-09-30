@@ -12,7 +12,7 @@ func on_process(_delta):
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("idle")
 		return
-	if not Input.is_action_pressed("Run"):
+	if not pc.input.pressed("Run"):
 		change_state("walk")
 		return
 
@@ -21,9 +21,9 @@ func on_process(_delta):
 		change_state("run")
 		return
 
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("runningJump")
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("roundKick")
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")

@@ -1,5 +1,14 @@
 extends AnimatedCharacterClass
 
+## This player's controls, bound to their own device. Every state asks this
+## rather than the global Input, because Input.is_action_pressed answers for any
+## device — with four pads connected, one player's Attack would swing all four
+## katanas.
+var input: PlayerInput = null
+## Which player this is. Slot 0 is player one; the maze sets this when it spawns
+## her, and it decides the device, the colour scheme and the marker underfoot.
+var slot: int = 0
+
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
 @export var contact_damage: float = 10.0
@@ -31,11 +40,16 @@ const HITTABLE_GROUPS: PackedStringArray = ["enemy", "breakable"]
 
 func _ready() -> void:
 	health = max_health
-	## Repaint into the chosen aspect. Only the sheets behind each frame change,
-	## so every animation, region and timing is untouched.
+	## Falls back to the keyboard when nothing has claimed a slot, so running the
+	## maze scene directly still gives a playable character.
+	if input == null:
+		input = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
+	## Repaint into this player's chosen aspect. Only the sheets behind each
+	## frame change, so every animation, region and timing is untouched. The
+	## index is per-player now: four players wear four different colours.
 	var sprite := get_node_or_null("AnimationManager/AnimatedSprite2D")
 	if sprite != null:
-		PowerState.apply_to(sprite)
+		PowerState.apply_to(sprite, Roster.scheme_of(slot) if Roster.count() > slot else -1)
 	var hitbox = $CollisionChecker/PlayerHitBox
 	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
 
@@ -78,9 +92,8 @@ func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
 		
 func InputHandler():
-	##movement based on players direciton from input
-	direction = Input.get_vector("Left", "Right", "Up", "Down")
-	direction = direction.normalized()
+	##movement based on this player's own device, not on any device at all
+	direction = input.vector()
 	return round(direction)
 
 func _physics_process(_delta):

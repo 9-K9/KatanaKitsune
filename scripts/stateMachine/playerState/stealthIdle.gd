@@ -10,20 +10,20 @@ func on_enter():
 func on_process(_delta):
 	stateAnimation("stealthIdle", 1)
 	## Striking from cover is the stealth attack, wherever she is hidden.
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("flair")
 		return
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("idle")
 		return
 	if pc.InputHandler() != Vector2.ZERO:
 		change_state("stealthWalk")
-	if Input.is_action_just_pressed("Defend"):
+	if pc.input.just_pressed("Defend"):
 		change_state("stealthCrouch")
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")
 
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
 
 func on_exit():

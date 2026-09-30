@@ -17,10 +17,10 @@ func on_process(_delta):
 		return
 	stateAnimation("stealthWalk", 2)
 	## Striking from cover is the stealth attack, wherever she is hidden.
-	if Input.is_action_just_pressed("Attack"):
+	if pc.input.just_pressed("Attack"):
 		change_state("flair")
 		return
-	if Input.is_action_just_pressed("Stealth"):
+	if pc.input.just_pressed("Stealth"):
 		change_state("walk")
 		return
 	if pc.InputHandler() == Vector2.ZERO:
@@ -28,13 +28,13 @@ func on_process(_delta):
 		return
 
 	## Running while hidden is the ninja run, provided she has the wind for it.
-	if Input.is_action_pressed("Run") and not winded():
+	if pc.input.pressed("Run") and not winded():
 		change_state("ninjaRun")
 		return
 
-	if Input.is_action_just_pressed("Jump"):
+	if pc.input.just_pressed("Jump"):
 		change_state("forwardRoll")
-	if Input.is_action_just_pressed("Katana"):
+	if pc.input.just_pressed("Katana"):
 		change_state("katanaDraw")
 
 func on_exit():
