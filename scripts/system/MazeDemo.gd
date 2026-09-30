@@ -24,8 +24,9 @@ extends Node2D
 @export var table_scene: PackedScene = null
 ## How often a room gets one.
 @export_range(0.0, 1.0, 0.05) var table_chance: float = 0.45
-## How far the chairs sit from the table, along the floor axes.
-@export var table_seat_gap: float = 96.0
+## How far the chairs sit from the table, along the floor axes. Wider than it
+## was: the table renders 202px across, so seats at 96 stood on the tabletop.
+@export var table_seat_gap: float = 150.0
 
 ## Chairs dropped on open floor beyond the one beside the spawn.
 @export var extra_chairs: int = 3

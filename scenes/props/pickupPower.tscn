@@ -17,7 +17,7 @@ duration = 12.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -20)
-scale = Vector2(2, 2)
+scale = Vector2(1, 1)
 texture = ExtResource("2_t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
