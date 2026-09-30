@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table.png" id="2_intact"]
@@ -11,6 +11,11 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_southWest.png" id="30_southWest"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_northWest.png" id="30_northWest"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_northEast.png" id="30_northEast"]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_broken_southEast.png" id="31_bsouthEast"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_broken_southWest.png" id="31_bsouthWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_broken_northWest.png" id="31_bnorthWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_broken_northEast.png" id="31_bnorthEast"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
 points = PackedVector2Array(-60, 0, 0, -26, 60, 0, 0, 26)
@@ -27,6 +32,7 @@ loot_display_offset = Vector2(0, -110)
 empty_weight = 0.0
 always_drops = true
 facing_textures = Array[Texture2D]([ExtResource("30_southEast"), ExtResource("30_southWest"), ExtResource("30_northWest"), ExtResource("30_northEast")])
+facing_break_textures = Array[Texture2D]([ExtResource("31_bsouthEast"), ExtResource("31_bsouthWest"), ExtResource("31_bnorthWest"), ExtResource("31_bnorthEast")])
 break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true

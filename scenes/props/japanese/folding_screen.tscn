@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen.png" id="2_intact"]
@@ -9,6 +9,11 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_northWest.png" id="30_northWest"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_northEast.png" id="30_northEast"]
 
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_broken_southEast.png" id="31_bsouthEast"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_broken_southWest.png" id="31_bsouthWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_broken_northWest.png" id="31_bnorthWest"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/folding_screen_broken_northEast.png" id="31_bnorthEast"]
+
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
 points = PackedVector2Array(-32, 0, 0, -10, 32, 0, 0, 10)
 
@@ -18,6 +23,7 @@ collision_layer = 3
 script = ExtResource("1_script")
 max_health = 22.0
 facing_textures = Array[Texture2D]([ExtResource("30_southEast"), ExtResource("30_southWest"), ExtResource("30_northWest"), ExtResource("30_northEast")])
+facing_break_textures = Array[Texture2D]([ExtResource("31_bsouthEast"), ExtResource("31_bsouthWest"), ExtResource("31_bnorthWest"), ExtResource("31_bnorthEast")])
 break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true
