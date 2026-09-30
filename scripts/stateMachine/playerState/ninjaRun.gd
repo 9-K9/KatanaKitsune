@@ -11,9 +11,9 @@ func on_enter():
 	pc.stealthed = true
 
 func on_process(delta):
-	## Sprinting while hidden spends the sneak meter fastest of all — it is the
-	## best movement option in the game and should not also be the cheapest.
-	pc.drain_sneak(pc.sneak_drain * 1.6, delta)
+	## Sprinting while hidden is the best movement in the game, so it carries the
+	## running rate rather than a multiple of the creeping one.
+	pc.drain_sneak(pc.sneak_run_drain, delta)
 	if pc.sneak_spent():
 		change_state("run")
 		return

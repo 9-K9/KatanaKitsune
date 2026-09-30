@@ -15,6 +15,12 @@ extends StaticBody2D
 ## smuggled into spawn_scene, which means "something unpleasant was nesting in
 ## here" and would read as a bug to the next person.
 @export var loot_scenes: Array[PackedScene] = []
+## Lay the drop out on top of the prop instead of hiding it inside. A meal on a
+## table should be visible before you smash the table — you break it *because*
+## you can see the food, rather than smashing furniture on spec.
+@export var display_loot: bool = false
+## Where on the prop the drop sits, relative to this node.
+@export var loot_display_offset: Vector2 = Vector2(0, -46)
 @export var loot_weight: float = 6.0
 @export var spawn_scene: PackedScene = null
 @export var spawn_weight: float = 2.0
@@ -48,9 +54,16 @@ var _flash_material: ShaderMaterial
 var _drop_spawned: bool = false
 
 
+## The drop, chosen and instanced up front when it is displayed, so the item you
+## can see on the table is the exact one that falls off it.
+var _displayed: Node2D = null
+
+
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
+	if display_loot:
+		_lay_out_loot()
 	## Nudge each prop off the exact tile centre so a room full of urns does not
 	## read as a grid.
 	sprite.rotation = 0.0
@@ -125,11 +138,43 @@ func _break() -> void:
 	queue_free()
 
 
+## Puts the chosen drop on top of the prop, dormant.
+func _lay_out_loot() -> void:
+	var picked: PackedScene = _roll()
+	if picked == null:
+		return
+	var thing = picked.instantiate()
+	if not ("armed" in thing):
+		return
+	thing.armed = false
+	add_child(thing)
+	(thing as Node2D).position = loot_display_offset
+	_displayed = thing
+	## Already decided, so _break must not roll a second time.
+	_drop_spawned = true
+
+
 func _drop_once() -> void:
 	if _drop_spawned:
+		## A displayed drop is already in the world; it just needs releasing.
+		_release_displayed()
 		return
 	_drop_spawned = true
 	_drop()
+
+
+## Tips the displayed item onto the floor and makes it takeable.
+func _release_displayed() -> void:
+	if not is_instance_valid(_displayed):
+		return
+	var item := _displayed
+	_displayed = null
+	var landing: Vector2 = global_position
+	## Reparented to the map, or it would be freed with the prop moments later.
+	var keep := get_parent()
+	item.reparent(keep)
+	if item.has_method("arm"):
+		item.arm(landing)
 
 
 func _drop() -> void:

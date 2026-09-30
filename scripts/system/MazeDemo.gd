@@ -355,8 +355,32 @@ func _place_dining_set(room: Node2D) -> void:
 	var cells := ground.get_used_cells()
 	if cells.is_empty():
 		return
-	var centre: Vector2 = ground.to_global(
-			ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+	## Set out in open floor rather than on any tile at all. A table dropped
+	## against a wall puts half its seats inside the stone, and the clearance
+	## cull then removes them — six tables were keeping eight chairs between
+	## them. Checked against the tilemap, not the physics world, because this
+	## runs during _ready where the physics server is still empty.
+	var floor_cells := {}
+	for cell in cells:
+		floor_cells[cell] = true
+	var open_cells: Array[Vector2i] = []
+	for cell in cells:
+		var clear := true
+		## Two cells, not one: the seats stand 96px out, which is two tiles across
+		## the lattice, so a single ring of floor still let half of them land in
+		## the wall and be culled.
+		for dx in [-2, -1, 0, 1, 2]:
+			for dy in [-2, -1, 0, 1, 2]:
+				if not floor_cells.has(cell + Vector2i(dx, dy)):
+					clear = false
+					break
+			if not clear:
+				break
+		if clear:
+			open_cells.append(cell)
+	var pick: Vector2i = (open_cells if not open_cells.is_empty() else cells)[
+			_rng.randi_range(0, (open_cells.size() if not open_cells.is_empty() else cells.size()) - 1)]
+	var centre: Vector2 = ground.to_global(ground.map_to_local(pick))
 
 	var table := table_scene.instantiate()
 	table.name = "DiningTable"
@@ -379,6 +403,11 @@ func _place_dining_set(room: Node2D) -> void:
 		chair.name = "DiningChair%d" % i
 		if "facing" in chair:
 			chair.facing = seat["faces"]
+		## Its own table is the one thing it is *supposed* to be pressed up
+		## against. The clearance cull would otherwise throw away every chair it
+		## just seated: the chairs stand 96px out and the probe reaches 70, which
+		## bites into a table half as wide again as that gap.
+		chair.set_meta("dining_table", table)
 		add_child(chair)
 		(chair as Node2D).global_position = centre + seat["offset"] * table_seat_gap
 
@@ -424,6 +453,11 @@ func _clear_buried_chairs() -> void:
 		probe.transform = Transform2D(0.0,
 				(chair as Node2D).global_position + Vector2(0.0, SORT_LIFT))
 		probe.collision_mask = 1
+		## Everything except the table it was deliberately drawn up to. It is
+		## still tested against walls, columns and every other prop.
+		var table = chair.get_meta("dining_table", null)
+		if is_instance_valid(table) and table is CollisionObject2D:
+			probe.exclude = [table.get_rid()]
 		if not space.intersect_shape(probe, 1).is_empty():
 			chair.queue_free()
 			removed += 1

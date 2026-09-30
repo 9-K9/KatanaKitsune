@@ -18,6 +18,11 @@ enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA }
 ## Power-up lifetime in seconds. Ignored by HEALTH.
 @export var duration: float = 12.0
 
+## Laid out on a table rather than lying loose. It is visible but cannot be
+## taken — the meal is on the furniture, and she has to break the furniture to
+## get at it. Armed by Breakable when the prop shatters.
+@export var armed: bool = true
+
 @onready var sprite: Sprite2D = $Sprite2D
 
 var _taken: bool = false
@@ -29,9 +34,33 @@ func _ready() -> void:
 	_rest_y = sprite.position.y
 	_bob = randf() * TAU
 	body_entered.connect(_on_body_entered)
+	if not armed:
+		monitoring = false
 
 
 func _process(delta: float) -> void:
+	## Sits still while it is still somebody's table setting; only loose loot
+	## bobs, which is what marks it as pickable.
+	if not armed:
+		return
+	_hover(delta)
+
+
+## Made takeable, and tipped onto the floor. Called when the prop holding it
+## breaks: until then it is scenery you can see but not use.
+##
+## Moves the whole node rather than the sprite — the sprite's local y is the
+## hover offset, so animating that would leave the item hanging in mid-air at
+## the height of a table that no longer exists.
+func arm(falls_to: Vector2) -> void:
+	armed = true
+	set_deferred("monitoring", true)
+	var fall := create_tween()
+	fall.tween_property(self, "global_position", falls_to, 0.3) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+
+func _hover(delta: float) -> void:
 	## Slow hover so dropped loot reads as pickable rather than as scenery.
 	_bob += delta * 2.4
 	sprite.position.y = _rest_y + sin(_bob) * 3.0

@@ -54,8 +54,17 @@ var block_opened_at: int = 0
 ## forced upright and has to earn it back by being seen.
 @export var max_sneak: float = 100.0
 var sneak: float = 100.0
-## Per second while hidden. Crouching is stiller and costs less than sneaking.
-@export var sneak_drain: float = 14.0
+## Per second while hidden, by what she is doing. Creeping is nearly free — the
+## meter is there to stop her crossing a whole floor at speed, not to stop her
+## creeping up on one guard, and at 14/sec a few steps emptied it before she
+## could even pick a target.
+@export var sneak_drain: float = 3.5
+## Sprinting unseen is the fastest movement in the game, so it is where the
+## meter should actually be spent.
+@export var sneak_run_drain: float = 12.0
+## A lump sum, taken when the stealth strike lands. It kills in one hit, so it
+## has to cost most of a bar rather than a fraction of a second's creeping.
+@export var flair_sneak_cost: float = 35.0
 ## Per second once she is upright again.
 @export var sneak_regen: float = 11.0
 
