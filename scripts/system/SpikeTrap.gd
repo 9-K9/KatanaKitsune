@@ -69,4 +69,6 @@ func _strike() -> void:
 		## Hits monsters as readily as the player — a trap the player can bait
 		## a mummy onto is more interesting than one only they can trip.
 		if body.has_method("take_damage"):
-			body.take_damage(damage)
+			## Straight up through the floor: there is no facing that meets it,
+			## so it ignores guards and stances alike.
+			body.take_damage(damage, global_position, false)

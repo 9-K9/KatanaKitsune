@@ -304,7 +304,7 @@ func _strike_breakables(reach: float) -> void:
 	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
 		var body = hit.get("collider")
 		if is_instance_valid(body) and body.is_in_group("breakable") and body.has_method("take_damage"):
-			body.take_damage(attack_damage)
+			body.take_damage(attack_damage, global_position)
 
 
 ## Called when the player interacts with this monster — an Action press or the
@@ -329,7 +329,8 @@ func taunt_done() -> bool:
 	return taunt.has_spoken and not taunt.is_speaking
 
 
-func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
+func take_damage(amount: float, from: Vector2 = Vector2.INF,
+		_guardable: bool = true) -> void:
 	if is_dead:
 		return
 	## Where the blade came through, so the spray throws the right way and the

@@ -55,7 +55,14 @@ func _ready() -> void:
 	sprite.material = _flash_material
 
 
-func take_damage(amount: float) -> void:
+## `from` is where the blow came from. Unused here — a crate has no facing to
+## guard with and does not bleed — but it has to be accepted: everything a swing
+## can hit is called through one path, and callers pass the source so characters
+## can work out guard angles and throw blood the right way. Without it, every
+## hit on a breakable threw "Expected 1 argument" and the crate never took the
+## damage.
+func take_damage(amount: float, _from: Vector2 = Vector2.INF,
+		_guardable: bool = true) -> void:
 	if _broken:
 		return
 	health -= amount

@@ -280,7 +280,12 @@ func _buff_multiplier(kind: int) -> float:
 ## `from` is where the blow came from, which decides what the guard is worth.
 ## Optional so anything that simply loses health — breakables, scripted damage —
 ## can still call this with one argument.
-func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
+## `guardable` is false for damage there is no stance against — spikes coming up
+## through the floor, say. Without it, the sneak-as-defence rule quietly made
+## crouching a discount on trap damage, because a blow with no source falls
+## through to the flat soak.
+func take_damage(amount: float, from: Vector2 = Vector2.INF,
+		guardable: bool = true) -> void:
 	if CheatManager.immortality_enabled:
 		return
 	## A ward soaks the hit entirely rather than reducing it, so the player can
@@ -294,7 +299,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF) -> void:
 	## Sneaking is a guard of its own: low, turned side-on, watching. She reads
 	## a blow coming the same way a raised blade does, so the same arc applies
 	## without needing the katana out. It is simply worth less.
-	if blocking or stealthed or crouched:
+	if guardable and (blocking or stealthed or crouched):
 		amount = _guarded(amount, from)
 		if amount <= 0.0:
 			return
