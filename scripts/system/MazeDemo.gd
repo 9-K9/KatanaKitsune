@@ -192,6 +192,9 @@ func _place(room: Node2D, scene: PackedScene) -> void:
 	if cells.is_empty():
 		return
 	var thing = scene.instantiate()
+	## Chairs also arrive through the prop pool, and want turning just the same.
+	if thing.has_method("face_randomly"):
+		thing.face_randomly(_rng)
 	add_child(thing)
 	thing.global_position = ground.to_global(
 		ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
@@ -326,6 +329,11 @@ func _place_starting_chair() -> void:
 func _add_chair(where: Vector2, named: String) -> void:
 	var chair := chair_scene.instantiate()
 	chair.name = named
+	## Turned before it is added, so the setter has run by the time _ready picks
+	## the art. Without this every chair on the floor faces the same way, which
+	## reads as a waiting room rather than a ruin.
+	if chair.has_method("face_randomly"):
+		chair.face_randomly(_rng)
 	add_child(chair)
 	(chair as Node2D).global_position = where
 

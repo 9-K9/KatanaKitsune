@@ -21,8 +21,20 @@ extends Node2D
 ## A further nudge for one awkward chair, kept separate so the default above
 ## stays readable as "undo the lift".
 @export var sit_nudge: Vector2 = Vector2.ZERO
-@export_enum("south", "southWest", "west", "northWest", "north", "northEast", "east", "southEast")
-var sit_facing: String = "southWest"
+## Which way this chair is turned, and so which way she faces sitting in it.
+##
+## Four, not eight, and specifically these four: they are the directions that
+## run along the tile grid rather than across it. Input (1,1) moves by the
+## lattice's +ix step of (+24,+12) on screen, so "southEast" is a floor axis —
+## a chair turned to one of these sits square to the room instead of skewed
+## against the diamond. The screen-cardinal four would look rotated.
+const FACINGS: PackedStringArray = ["southEast", "southWest", "northWest", "northEast"]
+
+@export_enum("southEast", "southWest", "northWest", "northEast")
+var facing: String = "southWest":
+	set(value):
+		facing = value
+		_apply_facing()
 ## How much later this chair sorts than its raw position would put it.
 ##
 ## The same 96 as seat_offset, and for the same reason. This node's (0,0) is at
@@ -50,7 +62,34 @@ var sit_facing: String = "southWest"
 ## under her body where it can never touch her, and sitting would stop working.
 
 
+## The art for each facing, one sheet per direction rather than a rotation of
+## one sprite — an isometric chair's legs, seat and back all occlude each other
+## differently from each side, which no amount of flipping produces.
+const ART := {
+	"southEast": preload("res://assets/sprites/props/chair/chair_southEast.png"),
+	"southWest": preload("res://assets/sprites/props/chair/chair_southWest.png"),
+	"northWest": preload("res://assets/sprites/props/chair/chair_northWest.png"),
+	"northEast": preload("res://assets/sprites/props/chair/chair_northEast.png"),
+}
+
+
+func _apply_facing() -> void:
+	var sprite := get_node_or_null("Sprite2D") as Sprite2D
+	if sprite != null and ART.has(facing):
+		sprite.texture = ART[facing]
+
+
+## Turns the chair to one of the four floor axes at random. Called by the
+## generator when it drops a chair, so a room does not end up with every chair
+## facing the same way like a waiting room.
+func face_randomly(rng: RandomNumberGenerator) -> void:
+	facing = FACINGS[rng.randi() % FACINGS.size()]
+
+
 func _ready() -> void:
+	## Runs again here because the setter fires during scene construction, before
+	## the Sprite2D child exists to receive it.
+	_apply_facing()
 	if is_zero_approx(sort_bias):
 		return
 	position.y += sort_bias
@@ -76,5 +115,7 @@ func get_seat_position() -> Vector2:
 	return global_position + seat_offset - Vector2(0.0, sort_bias)
 
 
+## She sits facing the way the chair does — a chair turned southWest seats her
+## looking southWest.
 func get_sit_facing() -> String:
-	return sit_facing
+	return facing
