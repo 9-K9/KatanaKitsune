@@ -31,6 +31,14 @@ extends StaticBody2D
 ## Chests are meant to feel worth hitting, so they always drop.
 @export var always_drops: bool = false
 @export var break_texture: Texture2D
+## The four isometric facings, in this order: southEast, southWest, northWest,
+## northEast. Those are the directions that run along the tile grid rather than
+## across it, so a prop turned to one of them sits square to the room. Leave
+## empty for a prop with only one view, which still works exactly as before.
+@export var facing_textures: Array[Texture2D] = []
+## The same four, shattered. Falls back to break_texture when it is short, so a
+## prop can have directional art before its debris does.
+@export var facing_break_textures: Array[Texture2D] = []
 @export_range(1, 8, 1) var break_frames: int = 4
 @export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
 ## Keep the final broken sprite instead of fading and freeing the prop.
@@ -54,6 +62,44 @@ var _flash_material: ShaderMaterial
 var _drop_spawned: bool = false
 
 
+## Which way this one faces, as an index into facing_textures.
+var facing_index: int = 0
+
+const FACING_NAMES: PackedStringArray = ["southEast", "southWest", "northWest", "northEast"]
+
+
+## Turns the prop to one of the floor axes. Called by the generator as it places
+## each one, so a room is not full of identically-oriented furniture. Named to
+## match Chair.face_randomly, which is what MazeDemo already looks for.
+func face_randomly(rng: RandomNumberGenerator) -> void:
+	if facing_textures.is_empty():
+		return
+	facing_index = rng.randi() % facing_textures.size()
+	_apply_facing()
+
+
+func _apply_facing() -> void:
+	if facing_textures.is_empty():
+		return
+	var art: Texture2D = facing_textures[facing_index % facing_textures.size()]
+	if art == null:
+		return
+	## The sprite may not be resolved yet when the generator turns the prop
+	## before adding it to the tree, so this does not rely on @onready.
+	var node := get_node_or_null("Sprite2D") as Sprite2D
+	if node != null:
+		node.texture = art
+
+
+## The shattered art for the way this one faces.
+func _broken_texture() -> Texture2D:
+	if facing_index < facing_break_textures.size():
+		var art: Texture2D = facing_break_textures[facing_index]
+		if art != null:
+			return art
+	return break_texture
+
+
 ## The drop, chosen and instanced up front when it is displayed, so the item you
 ## can see on the table is the exact one that falls off it.
 var _displayed: Node2D = null
@@ -62,6 +108,7 @@ var _displayed: Node2D = null
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
+	_apply_facing()
 	if display_loot:
 		_lay_out_loot()
 	## Nudge each prop off the exact tile centre so a room full of urns does not
@@ -114,8 +161,9 @@ func _break() -> void:
 		_flash_tween.kill()
 	_set_flash_amount(0.0)
 
-	if break_texture != null:
-		sprite.texture = break_texture
+	var shattered: Texture2D = _broken_texture()
+	if shattered != null:
+		sprite.texture = shattered
 		sprite.hframes = break_frames
 		sprite.frame = 0
 		for frame_index in break_frames:
