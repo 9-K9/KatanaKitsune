@@ -9,6 +9,12 @@ extends StaticBody2D
 
 ## What comes out when it breaks. Weights are relative, not percentages.
 @export var loot_scene: PackedScene = null
+## Alternatives for the loot slot, chosen between at random when the prop
+## breaks. A table holds a meal, and a meal is food or drink — without this a
+## breakable could only ever drop one thing, and the second would have to be
+## smuggled into spawn_scene, which means "something unpleasant was nesting in
+## here" and would read as a bug to the next person.
+@export var loot_scenes: Array[PackedScene] = []
 @export var loot_weight: float = 6.0
 @export var spawn_scene: PackedScene = null
 @export var spawn_weight: float = 2.0
@@ -140,8 +146,11 @@ func _drop() -> void:
 func _roll() -> PackedScene:
 	var choices: Array[PackedScene] = []
 	var weights: Array[float] = []
-	if loot_scene != null:
-		choices.append(loot_scene)
+	var loot: PackedScene = loot_scene
+	if not loot_scenes.is_empty():
+		loot = loot_scenes[randi() % loot_scenes.size()]
+	if loot != null:
+		choices.append(loot)
 		weights.append(loot_weight)
 	if spawn_scene != null:
 		choices.append(spawn_scene)

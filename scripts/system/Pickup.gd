@@ -7,7 +7,10 @@ extends Area2D
 ## the player, and keeping it in one place means breakables can drop either
 ## without caring which.
 
-enum Kind { HEALTH, DAMAGE, SPEED, WARD }
+## STAMINA is food and drink rather than a charm: it restores the meter she
+## spends on running and fighting, which nothing else refilled on demand. Kept
+## in the same enum so a breakable can drop one without knowing the difference.
+enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA }
 
 @export var kind: Kind = Kind.HEALTH
 ## Health restored, or the multiplier applied for a power-up.
@@ -50,6 +53,11 @@ func _apply(player: CharacterBody2D) -> void:
 	match kind:
 		Kind.HEALTH:
 			player.health = minf(player.health + amount, player.max_health)
+		Kind.STAMINA:
+			player.stamina = minf(player.stamina + amount, player.max_stamina)
+			## winded() is simply "stamina <= stamina_floor", so topping the meter
+			## up is all that is needed to let her run again — there is no
+			## separate winded flag to clear.
 		Kind.DAMAGE, Kind.SPEED, Kind.WARD:
 			if player.has_method("grant_buff"):
 				player.grant_buff(kind, amount, duration)

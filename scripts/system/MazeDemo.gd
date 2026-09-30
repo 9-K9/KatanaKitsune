@@ -19,6 +19,14 @@ extends Node2D
 ## One is always placed beside the spawn. Resting only happens at a chair, so
 ## leaving it to the random prop pool meant a floor could offer nowhere to rest.
 @export var chair_scene: PackedScene = null
+## A low table with chairs drawn up to it. Scattering furniture at random makes
+## a storeroom; a table with seats around it makes a room somebody used.
+@export var table_scene: PackedScene = null
+## How often a room gets one.
+@export_range(0.0, 1.0, 0.05) var table_chance: float = 0.45
+## How far the chairs sit from the table, along the floor axes.
+@export var table_seat_gap: float = 96.0
+
 ## Chairs dropped on open floor beyond the one beside the spawn.
 @export var extra_chairs: int = 3
 ## Clear floor a chair needs around it. She walks the last steps to a seat, so
@@ -178,6 +186,8 @@ func _populate(step: Vector2) -> void:
 			var m: int = _rng.randi_range(props_per_room.x, props_per_room.y)
 			for i in m:
 				_place(here, prop_scenes[_rng.randi_range(0, prop_scenes.size() - 1)])
+		if table_scene != null and _rng.randf() < table_chance:
+			_place_dining_set(here)
 
 
 ## Puts one thing on a random floor tile of `room`, so nothing lands in a wall
@@ -324,6 +334,53 @@ func _place_starting_chair() -> void:
 	elsewhere.shuffle()
 	for i in mini(extra_chairs, elsewhere.size()):
 		_add_chair(_room_centre(elsewhere[i]), "Chair_%d_%d" % [elsewhere[i].x, elsewhere[i].y])
+
+
+## The four floor axes as screen vectors, and the facing that looks back along
+## each. Built from the lattice step: +ix lands at (+24,+12) on screen, which is
+## southEast, so a chair standing there faces northWest to see the table.
+const SEATS := [
+	{"offset": Vector2( 1.0,  0.5), "faces": "northWest"},
+	{"offset": Vector2(-1.0,  0.5), "faces": "northEast"},
+	{"offset": Vector2(-1.0, -0.5), "faces": "southEast"},
+	{"offset": Vector2( 1.0, -0.5), "faces": "southWest"},
+]
+
+
+## A table with two or three chairs turned in towards it.
+func _place_dining_set(room: Node2D) -> void:
+	var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
+	if ground == null:
+		return
+	var cells := ground.get_used_cells()
+	if cells.is_empty():
+		return
+	var centre: Vector2 = ground.to_global(
+			ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+
+	var table := table_scene.instantiate()
+	table.name = "DiningTable"
+	add_child(table)
+	(table as Node2D).global_position = centre
+
+	if chair_scene == null:
+		return
+	## A random subset of the four sides, so no two sets look alike and the
+	## table is never boxed in on every side.
+	var sides: Array = SEATS.duplicate()
+	for i in range(sides.size() - 1, 0, -1):
+		var j: int = _rng.randi_range(0, i)
+		var swap = sides[i]
+		sides[i] = sides[j]
+		sides[j] = swap
+	for i in _rng.randi_range(2, 3):
+		var seat: Dictionary = sides[i]
+		var chair := chair_scene.instantiate()
+		chair.name = "DiningChair%d" % i
+		if "facing" in chair:
+			chair.facing = seat["faces"]
+		add_child(chair)
+		(chair as Node2D).global_position = centre + seat["offset"] * table_seat_gap
 
 
 func _add_chair(where: Vector2, named: String) -> void:

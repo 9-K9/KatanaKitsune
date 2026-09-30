@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tea_set.png" id="2_intact"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tea_set_broken.png" id="3_broken"]
+
+[ext_resource type="PackedScene" uid="uid://cfood1pkup001" path="res://scenes/props/pickupFood.tscn" id="10_loot0"]
+[ext_resource type="PackedScene" uid="uid://cdrnk1pkup002" path="res://scenes/props/pickupDrink.tscn" id="11_loot1"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
 points = PackedVector2Array(-24, 0, 0, -11, 24, 0, 0, 11)
@@ -12,6 +15,9 @@ y_sort_enabled = true
 collision_layer = 3
 script = ExtResource("1_script")
 max_health = 10.0
+loot_scenes = Array[PackedScene]([ExtResource("10_loot0"), ExtResource("11_loot1")])
+loot_weight = 7.0
+empty_weight = 3.0
 break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true
