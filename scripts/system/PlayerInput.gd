@@ -93,6 +93,17 @@ func _sync() -> void:
 		_now[menu] = _read_menu(menu)
 
 
+## Treats everything currently held as already-held, so a button still down from
+## whatever created this object does not read as a fresh press.
+##
+## Without it, claiming a pad with Confirm immediately confirms the next screen
+## too: the new object's record of "last frame" is empty, so the held button
+## looks like an edge and the player never gets to choose anything.
+func prime() -> void:
+	_sync()
+	_was = _now.duplicate()
+
+
 ## Is this player holding `action` right now.
 func pressed(action: String) -> bool:
 	_sync()
@@ -166,6 +177,30 @@ const CONFIRM_BUTTON: int = JOY_BUTTON_A
 const CANCEL_BUTTON: int = JOY_BUTTON_B
 
 
+## Nintendo pads swap these two relative to everyone else.
+##
+## The agreed rule is positional — the BOTTOM face button confirms on every pad,
+## which is A on an Xbox pad, Cross on a PlayStation one and B on a Switch one.
+## Xbox and PlayStation pads report that bottom button as JOY_BUTTON_A, but
+## Nintendo pads report by Nintendo's own labels, where A is the right-hand
+## button. Taking JOY_BUTTON_A at face value therefore lands on the wrong
+## physical button for exactly one brand.
+func _nintendo() -> bool:
+	if device == KEYBOARD:
+		return false
+	var name := Input.get_joy_name(device).to_lower()
+	return name.contains("nintendo") or name.contains("switch") \
+			or name.contains("joy-con") or name.contains("pro controller")
+
+
+func _confirm_button() -> int:
+	return CANCEL_BUTTON if _nintendo() else CONFIRM_BUTTON
+
+
+func _cancel_button() -> int:
+	return CONFIRM_BUTTON if _nintendo() else CANCEL_BUTTON
+
+
 func confirm_pressed() -> bool:
 	_sync()
 	return _edge("__confirm")
@@ -185,7 +220,7 @@ func _read_menu(which: String) -> bool:
 					or Input.is_key_pressed(KEY_KP_ENTER)
 		return Input.is_key_pressed(KEY_ESCAPE) or Input.is_key_pressed(KEY_BACKSPACE)
 	return Input.is_joy_button_pressed(device,
-			CONFIRM_BUTTON if which == "__confirm" else CANCEL_BUTTON)
+			_confirm_button() if which == "__confirm" else _cancel_button())
 
 
 func _edge(which: String) -> bool:

@@ -331,7 +331,11 @@ func _enter_claim() -> void:
 	_phase = Phase.CLAIM
 	_probes.clear()
 	for id in Roster.free_devices():
-		_probes.append(PlayerInput.new(id))
+		var probe := PlayerInput.new(id)
+		## Same reason: a button still held from the previous phase must not
+		## instantly claim the next slot.
+		probe.prime()
+		_probes.append(probe)
 	if _probes.is_empty():
 		## Nothing left to claim with — more players were asked for than there
 		## are devices, so settle for the ones already in.
@@ -343,6 +347,10 @@ func _enter_claim() -> void:
 func _enter_colour() -> void:
 	_phase = Phase.COLOUR
 	_driver = Roster.input_for(_active)
+	## The button that claimed this pad is very likely still held. Priming makes
+	## it count as already-down, so the colour screen waits for a fresh press
+	## instead of confirming the first scheme and skipping the choice entirely.
+	_driver.prime()
 	## Opens on a scheme nobody has taken, so the first thing shown is a legal
 	## choice rather than one that silently refuses to confirm.
 	_highlighted = _first_free_scheme()
