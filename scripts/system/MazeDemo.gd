@@ -31,25 +31,89 @@ extends Node2D
 ## guarantees — so most of them landed on no floor at all and were skipped.
 @export var table_seat_gap: float = 110.0
 
-## How many floors share a look before it changes. The dungeon stone is the
-## default; themed floors are painted over it.
+## How many floors share a look before it changes.
 @export var floors_per_theme: int = 1
 ## Start deeper than floor one. For testing a themed floor without walking down
 ## to it — the generator is identical, only the starting depth differs.
 @export var start_depth: int = 1
 
-## Themes available, in the order they come up. Each names a TileMapLayer that
-## already exists on the room prefab and carries its own tileset — "" means the
-## room's own Ground layer, i.e. the dungeon.
-@export var floor_themes: PackedStringArray = ["", "Floor_JP_Indoor"]
-## The wall set each theme wears, by texture prefix. Parallel to floor_themes.
+## Every look a floor can wear, one per wall set the project ships.
 ##
-## Every wall set in assets/crocotile/isometrictiles/walls/ is eight directional
-## PNGs rendered from the same camera rig onto the same 240x384 canvas with the
-## same content bounds, so swapping one prefix for another is a pure texture
-## change — the tile data, the collision polygons and the wall-side toggling all
-## stay exactly as they were. There are sixty-two sets already in the project.
-@export var wall_themes: PackedStringArray = ["rusticBrickWall", "japaneseWall"]
+## Each is a wall texture prefix, the floor layer to show, and the ground
+## texture prefix. All sixty-four wall sets live in the same folder as eight
+## directional PNGs on an identical 240x384 canvas with identical content
+## bounds — they were rendered from one camera rig — so a theme is a string
+## swap, not new geometry, collision or prefabs.
+##
+## The pairing is by name: anything reading as a Japanese or Chinese building
+## gets the tatami layer, the open-air sets get grass, and the rest keep the
+## checkered stone.
+const THEMES: Array[Dictionary] = [
+	{"wall": "aluminiumMetalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "apartmentWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "arcadeGameWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "bathroomWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "blackAsylumnWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "casinoWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "casinoWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "cementBurntWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "cementWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "cementWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "chainMetalWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "chainPrisonWall", "floor": "", "ground": "grassTile"},
+	{"wall": "chinaTownWall", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "chineseWall", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "chineseWall2", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "computerScreenWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "devilsWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "glassWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "greenMetalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "greenWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "greenWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "japaneseWall", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "japaneseWall2", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "japaneseWall3", "floor": "Floor_JP_Indoor", "ground": "checkeredFloorIsometric"},
+	{"wall": "metalicFenceWall", "floor": "", "ground": "grassTile"},
+	{"wall": "metalicFenceWall2", "floor": "", "ground": "grassTile"},
+	{"wall": "metalicGateWall", "floor": "", "ground": "grassTile"},
+	{"wall": "metalicGateWall2", "floor": "", "ground": "grassTile"},
+	{"wall": "metalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "porcelinWhiteWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rubixGameWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rustedMetalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rusticBrickWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rusticBrickWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rusticBrickWall3", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rusticBrickWall4", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "rusticWoodenWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "schoolBrickWall", "floor": "", "ground": "grassTile"},
+	{"wall": "scifiBlackBlueDirtWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackBlueWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackBlueWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall3", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall4", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall6", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlackWall7", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlueWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlueWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiBlueWall3", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "scifiMetalWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "slumWall", "floor": "", "ground": "grassTile"},
+	{"wall": "snakeEdgeWall", "floor": "", "ground": "grassTile"},
+	{"wall": "stainedMetalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "supermarketWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "toiletWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "whiteAsylumnWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "whiteMarbleWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "whiteMetalicWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "whiteWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "wood&BlueWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "wood&BrickWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "woodenWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "woodenWall2", "floor": "", "ground": "checkeredFloorIsometric"},
+]
 
 ## Extra monsters per room for each player past the first. Per *room*, so it
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
@@ -168,42 +232,41 @@ func descend() -> void:
 	_announce_floor()
 
 
-## Repaints every room's floor in this depth's theme.
+## Dresses every room in this depth's theme: walls, ground and floor layer.
 ##
-## The cells are copied from the room's own Ground layer rather than authored
-## into the prefab, so a themed floor is exactly the shape of the dungeon one
-## and no room has to be drawn twice. The Japanese tiles are 48x24 diamonds on
-## 48x48 canvases, which is the game's native grid — they drop straight on.
+## The cells for a themed floor layer are copied from the room's own Ground
+## layer rather than authored into a second prefab, so a themed floor is exactly
+## the shape of the dungeon one and no room has to be drawn twice.
 func _theme_floor() -> void:
-	if floor_themes.is_empty():
+	if THEMES.is_empty():
 		return
-	var index: int = ((depth - 1) / maxi(floors_per_theme, 1)) % floor_themes.size()
-	var theme: String = floor_themes[index]
-	if index < wall_themes.size():
-		_theme_walls(wall_themes[index])
+	var theme: Dictionary = THEMES[((depth - 1) / maxi(floors_per_theme, 1)) % THEMES.size()]
+	_theme_walls(theme["wall"])
+
+	var layer_name: String = theme["floor"]
 	for cell in _rooms:
 		var room: Node = _rooms[cell]
 		var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
 		if ground == null:
 			continue
+		if ground.tile_set != null:
+			_repoint(ground.tile_set, theme["ground"])
 		## Every themed layer off first, so moving between themes does not leave
 		## the last one showing underneath.
-		for name in floor_themes:
-			if name == "":
-				continue
-			var other := room.get_node_or_null("TileMap/" + name) as TileMapLayer
+		for other_name in ["Floor_JP_Indoor", "Floor_JP_Exterior"]:
+			var other := room.get_node_or_null("TileMap/" + other_name) as TileMapLayer
 			if other != null:
 				other.visible = false
 				other.clear()
-		ground.visible = theme == ""
-		if theme == "":
+		ground.visible = layer_name == ""
+		if layer_name == "":
 			continue
-		var layer := room.get_node_or_null("TileMap/" + theme) as TileMapLayer
+		var layer := room.get_node_or_null("TileMap/" + layer_name) as TileMapLayer
 		if layer == null or layer.tile_set == null:
 			ground.visible = true
 			continue
 		## A handful of materials for the whole floor rather than a different
-		## tile per cell — sixteen materials scattered at random reads as
+		## tile per cell — sixteen variants scattered at random reads as
 		## confetti, not as a room somebody laid.
 		var palette: Array[int] = []
 		var sources: int = layer.tile_set.get_source_count()
@@ -251,6 +314,11 @@ func _repoint(tiles: TileSet, prefix: String) -> void:
 		var dir: String = was.get_file().get_basename().split("_dir")[-1]
 		if not dir.is_valid_int():
 			continue
+		## Built in the texture's own folder, which is what keeps this safe on the
+		## ground tileset: that one holds blocks, slopes and stairs alongside the
+		## flat floor, and they live in sibling folders. Asking for
+		## blocks/grassTile_dir1.png finds nothing, so only the floor swaps and
+		## the geometry pieces are left as they are.
 		var wanted: String = "%s/%s_dir%s.png" % [was.get_base_dir(), prefix, dir]
 		## Left alone when the set has no art for a direction, so a half-finished
 		## wall set degrades to the old look rather than to blank tiles.
