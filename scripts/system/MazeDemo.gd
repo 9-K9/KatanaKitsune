@@ -33,7 +33,11 @@ extends Node2D
 
 ## How many floors share a look before it changes. The dungeon stone is the
 ## default; themed floors are painted over it.
-@export var floors_per_theme: int = 2
+@export var floors_per_theme: int = 1
+## Start deeper than floor one. For testing a themed floor without walking down
+## to it — the generator is identical, only the starting depth differs.
+@export var start_depth: int = 1
+
 ## Themes available, in the order they come up. Each names a TileMapLayer that
 ## already exists on the room prefab and carries its own tileset — "" means the
 ## room's own Ground layer, i.e. the dungeon.
@@ -134,9 +138,16 @@ func descend() -> void:
 	for body in _players:
 		if is_instance_valid(body):
 			keep.append(body)
+	## The camera outlives a floor too. It is a plain Node2D child, so it used to
+	## be freed with the level — and because queue_free is deferred, the rebuild
+	## then found the doomed camera still in the tree, reused it, and lost it at
+	## the end of the frame. The next floor had no camera at all and the view
+	## stayed where the stairs had been.
+	var lens := get_node_or_null("PartyCamera")
 	for child in get_children():
-		## The players, the gloom and the HUD layers outlive a floor.
-		if child in keep or child is CanvasLayer or child is CanvasModulate:
+		## The players, the camera, the gloom and the HUD layers outlive a floor.
+		if child in keep or child == lens or child is CanvasLayer \
+				or child is CanvasModulate:
 			continue
 		child.queue_free()
 	## Dropped any that died and were freed, so the next floor spawns a fresh
@@ -228,6 +239,7 @@ func _announce_floor() -> void:
 
 
 func _build() -> void:
+	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
 	var step := _lattice_step()
 	for iy in grid.y:
