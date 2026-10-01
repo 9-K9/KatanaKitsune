@@ -42,6 +42,14 @@ extends Node2D
 ## already exists on the room prefab and carries its own tileset — "" means the
 ## room's own Ground layer, i.e. the dungeon.
 @export var floor_themes: PackedStringArray = ["", "Floor_JP_Indoor"]
+## The wall set each theme wears, by texture prefix. Parallel to floor_themes.
+##
+## Every wall set in assets/crocotile/isometrictiles/walls/ is eight directional
+## PNGs rendered from the same camera rig onto the same 240x384 canvas with the
+## same content bounds, so swapping one prefix for another is a pure texture
+## change — the tile data, the collision polygons and the wall-side toggling all
+## stay exactly as they were. There are sixty-two sets already in the project.
+@export var wall_themes: PackedStringArray = ["rusticBrickWall", "japaneseWall"]
 
 ## Extra monsters per room for each player past the first. Per *room*, so it
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
@@ -169,7 +177,10 @@ func descend() -> void:
 func _theme_floor() -> void:
 	if floor_themes.is_empty():
 		return
-	var theme: String = floor_themes[((depth - 1) / maxi(floors_per_theme, 1)) % floor_themes.size()]
+	var index: int = ((depth - 1) / maxi(floors_per_theme, 1)) % floor_themes.size()
+	var theme: String = floor_themes[index]
+	if index < wall_themes.size():
+		_theme_walls(wall_themes[index])
 	for cell in _rooms:
 		var room: Node = _rooms[cell]
 		var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
@@ -204,6 +215,47 @@ func _theme_floor() -> void:
 		for at in ground.get_used_cells():
 			layer.set_cell(at, palette[_rng.randi() % palette.size()], Vector2i.ZERO)
 		layer.visible = true
+
+
+## Repoints the wall tiles at a different set of textures.
+##
+## Each atlas source is asked what it is currently showing and given the same
+## direction from the new set, so this does not depend on the sources being in
+## any particular order — it reads dirN out of the existing path and keeps it.
+func _theme_walls(prefix: String) -> void:
+	if prefix == "":
+		return
+	var done: Dictionary = {}
+	for cell in _rooms:
+		var room: Node = _rooms[cell]
+		for side in ["NE", "NW", "SE", "SW"]:
+			var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+			if layer == null or layer.tile_set == null:
+				continue
+			## All four sides share one TileSet, and scene sub-resources are
+			## shared between room instances, so without this the same swap runs
+			## sixty-four times a floor.
+			var id: int = layer.tile_set.get_instance_id()
+			if done.has(id):
+				continue
+			done[id] = true
+			_repoint(layer.tile_set, prefix)
+
+
+func _repoint(tiles: TileSet, prefix: String) -> void:
+	for i in tiles.get_source_count():
+		var source := tiles.get_source(tiles.get_source_id(i)) as TileSetAtlasSource
+		if source == null or source.texture == null:
+			continue
+		var was: String = source.texture.resource_path
+		var dir: String = was.get_file().get_basename().split("_dir")[-1]
+		if not dir.is_valid_int():
+			continue
+		var wanted: String = "%s/%s_dir%s.png" % [was.get_base_dir(), prefix, dir]
+		## Left alone when the set has no art for a direction, so a half-finished
+		## wall set degrades to the old look rather than to blank tiles.
+		if wanted != was and ResourceLoader.exists(wanted):
+			source.texture = load(wanted)
 
 
 ## Says which floor she has arrived on, briefly, in the middle of the screen.
