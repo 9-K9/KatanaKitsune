@@ -35,7 +35,6 @@ script = ExtResource("1_maze")
 room_scene = ExtResource("2_room")
 player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
-maze_seed = 12345
 enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"), ExtResource("5_ronin")])
 exit_scene = ExtResource("12_exit")
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair"), ExtResource("20_ceramic_jar"), ExtResource("20_tea_set"), ExtResource("20_sake_barrel"), ExtResource("20_storage_chest"), ExtResource("20_offering_box"), ExtResource("20_zabuton_stack"), ExtResource("20_katana_rack"), ExtResource("20_folding_screen"), ExtResource("20_stone_lantern")])

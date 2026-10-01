@@ -185,6 +185,15 @@ const NEIGHBOUR := {
 }
 
 var _rng := RandomNumberGenerator.new()
+## Which look this floor drew. Rolled rather than derived from depth: keyed to
+## the depth, floor one was always aluminium and floor two always apartment, the
+## same order every run. The roll comes off _rng, which is seeded from
+## maze_seed, so a floor is still reproducible from its seed — it just is not
+## the same floor for everybody.
+var _theme_index: int = -1
+## Themes already used this run, so a short descent does not show the same
+## walls twice before it has shown sixty-four other options.
+var _themes_used: Array[int] = []
 ## Every player, in slot order. _player stays as player one for the HUD.
 var _players: Array[Node2D] = []
 var _rooms: Dictionary = {}
@@ -197,6 +206,10 @@ func _ready() -> void:
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
 		return
+	## Zero means roll one. The scene used to carry maze_seed = 12345, so every
+	## run of the game built the identical dungeon — same maze, same rooms, same
+	## props, every launch. Set it to a fixed number again only to reproduce a
+	## specific floor while debugging.
 	if maze_seed == 0:
 		maze_seed = randi()
 	_build()
@@ -239,6 +252,23 @@ func descend() -> void:
 	_announce_floor()
 
 
+## Picks this floor's look at random, avoiding anything already seen this run.
+##
+## Falls back to a plain roll once every theme has been used, rather than
+## refusing to pick — sixty-four floors is deeper than anyone will go, but a
+## generator that can run out is a generator that will.
+func _roll_theme() -> void:
+	if THEMES.is_empty():
+		return
+	for _try in 24:
+		var pick: int = _rng.randi() % THEMES.size()
+		if not _themes_used.has(pick):
+			_theme_index = pick
+			_themes_used.append(pick)
+			return
+	_theme_index = _rng.randi() % THEMES.size()
+
+
 ## Dresses every room in this depth's theme: walls, ground and floor layer.
 ##
 ## The cells for a themed floor layer are copied from the room's own Ground
@@ -247,8 +277,11 @@ func descend() -> void:
 func _theme_floor() -> void:
 	if THEMES.is_empty():
 		return
-	var theme: Dictionary = THEMES[((depth - 1) / maxi(floors_per_theme, 1)) % THEMES.size()]
+	if _theme_index < 0:
+		_roll_theme()
+	var theme: Dictionary = THEMES[_theme_index]
 	_theme_walls(theme["wall"])
+	_theme_pillars(theme["wall"])
 
 	var layer_name: String = theme["floor"]
 	for cell in _rooms:
@@ -285,6 +318,28 @@ func _theme_floor() -> void:
 		for at in ground.get_used_cells():
 			layer.set_cell(at, palette[_rng.randi() % palette.size()], Vector2i.ZERO)
 		layer.visible = true
+
+
+## Dresses the columns in the same material as the walls.
+##
+## Looks for pillar_<material>.png beside the default and leaves the stone one
+## in place when there is none, so this does nothing until that art exists and
+## then starts working with no further change. The material name is the wall
+## prefix with its trailing "Wall" removed, which is how the wall sets are named.
+func _theme_pillars(wall_prefix: String) -> void:
+	var material: String = wall_prefix.trim_suffix("Wall")
+	var art: String = "res://assets/sprites/props/pillars/pillar_%s.png" % material
+	if not ResourceLoader.exists(art):
+		return
+	var texture := load(art) as Texture2D
+	if texture == null:
+		return
+	for node in get_children():
+		if not node.name.begins_with("Pillar"):
+			continue
+		var sprite := node.get_node_or_null("Sprite2D") as Sprite2D
+		if sprite != null:
+			sprite.texture = texture
 
 
 ## Repoints the wall tiles at a different set of textures.
@@ -368,6 +423,7 @@ func _announce_floor() -> void:
 func _build() -> void:
 	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
+	_roll_theme()
 	var step := _lattice_step()
 	for iy in grid.y:
 		for ix in grid.x:
