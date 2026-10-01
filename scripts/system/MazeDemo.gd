@@ -115,11 +115,25 @@ func _ready() -> void:
 func descend() -> void:
 	depth += 1
 	maze_seed = _rng.randi()
+	## Everyone who is playing survives the descent, not just player one. This
+	## used to spare `_player` alone, which with a party meant players two to
+	## four were freed with the floor — and because queue_free is deferred,
+	## _players still reported them as present, so _spawn_player did not replace
+	## them either and the party simply vanished on the stairs.
+	var keep: Array[Node] = []
+	for body in _players:
+		if is_instance_valid(body):
+			keep.append(body)
 	for child in get_children():
-		## The player, the gloom and the HUD layers outlive a floor.
-		if child == _player or child is CanvasLayer or child is CanvasModulate:
+		## The players, the gloom and the HUD layers outlive a floor.
+		if child in keep or child is CanvasLayer or child is CanvasModulate:
 			continue
 		child.queue_free()
+	## Dropped any that died and were freed, so the next floor spawns a fresh
+	## body for their slot rather than counting a dangling reference.
+	_players = []
+	for body in keep:
+		_players.append(body)
 	_rooms.clear()
 	_build()
 
