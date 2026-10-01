@@ -109,8 +109,8 @@ const THEMES: Array[Dictionary] = [
 	{"wall": "whiteMarbleWall", "floor": "", "ground": "whiteMarbleFloor"},
 	{"wall": "whiteMetalicWall", "floor": "", "ground": "whiteMetalicFloor"},
 	{"wall": "whiteWall", "floor": "", "ground": "whiteFloor"},
-	{"wall": "wood&BlueWall", "floor": "", "ground": "checkeredFloorIsometric"},
-	{"wall": "wood&BrickWall", "floor": "", "ground": "checkeredFloorIsometric"},
+	{"wall": "wood&BlueWall", "floor": "", "ground": "wood&BlueFloor"},
+	{"wall": "wood&BrickWall", "floor": "", "ground": "wood&BrickFloor"},
 	{"wall": "woodenWall", "floor": "", "ground": "woodenFloor"},
 	{"wall": "woodenWall2", "floor": "", "ground": "woodenFloor"},
 ]

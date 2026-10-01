@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "assets/sprites/props/pillar.png"
 WALLS = ROOT / "assets/crocotile/isometrictiles/walls"
 OUT = ROOT / "assets/sprites/props/pillars"
-MATERIALS = """rusticBrick cement cementBurnt whiteMarble japanese chinaTown chinese casino arcadeGame computerScreen blackAsylumn whiteAsylumn chainPrison slum schoolBrick bathroom toilet supermarket apartment glass woodenWall rusticWooden metalic rustedMetalic stainedMetalic aluminiumMetalic greenMetalic whiteMetalic chainMetal metalicFence metalicGate scifiBlack scifiBlue scifiBlackBlue scifiMetal devils snakeEdge porcelinWhite rubixGame green white""".split()
+MATERIALS = """rusticBrick cement cementBurnt whiteMarble japanese chinaTown chinese casino arcadeGame computerScreen blackAsylumn whiteAsylumn chainPrison slum schoolBrick bathroom toilet supermarket apartment glass woodenWall rusticWooden metalic rustedMetalic stainedMetalic aluminiumMetalic greenMetalic whiteMetalic chainMetal metalicFence metalicGate scifiBlack scifiBlue scifiBlackBlue scifiMetal devils snakeEdge porcelinWhite rubixGame green white wood&Blue wood&Brick""".split()
 
 
 def luminance(c):

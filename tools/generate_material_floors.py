@@ -12,7 +12,7 @@ import random
 ROOT = Path(__file__).resolve().parents[1]
 GROUNDS = ROOT / "assets/crocotile/isometrictiles/grounds"
 WALLS = ROOT / "assets/crocotile/isometrictiles/walls"
-MATERIALS = """rusticBrick cement cementBurnt whiteMarble japanese chinaTown chinese casino arcadeGame computerScreen blackAsylumn whiteAsylumn chainPrison slum schoolBrick bathroom toilet supermarket apartment glass wooden rusticWooden metalic rustedMetalic stainedMetalic aluminiumMetalic greenMetalic whiteMetalic chainMetal metalicFence metalicGate scifiBlack scifiBlue scifiBlackBlue scifiMetal devils snakeEdge porcelinWhite rubixGame green white""".split()
+MATERIALS = """rusticBrick cement cementBurnt whiteMarble japanese chinaTown chinese casino arcadeGame computerScreen blackAsylumn whiteAsylumn chainPrison slum schoolBrick bathroom toilet supermarket apartment glass wooden rusticWooden metalic rustedMetalic stainedMetalic aluminiumMetalic greenMetalic whiteMetalic chainMetal metalicFence metalicGate scifiBlack scifiBlue scifiBlackBlue scifiMetal devils snakeEdge porcelinWhite rubixGame green white wood&Blue wood&Brick""".split()
 
 
 def lum(c):
