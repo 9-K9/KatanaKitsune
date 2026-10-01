@@ -50,6 +50,13 @@ func _process_standalone() -> void:
 	if _player_dead():
 		_set_shown(false)
 		return
+	## A pad pulled out also pauses the tree, to say whose. Same trap as death:
+	## without this the menu reads that pause as its own and opens behind the
+	## reconnect notice, so two things are up at once and the player whose
+	## controller is missing is the one being asked to drive the menu.
+	if Roster.any_lost():
+		_set_shown(false)
+		return
 	if Input.is_action_just_pressed("Pause"):
 		get_tree().paused = not get_tree().paused
 	_set_shown(get_tree().paused)
