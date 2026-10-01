@@ -320,6 +320,33 @@ func _theme_floor() -> void:
 		layer.visible = true
 
 
+## Candidate material names for a wall set, most specific first.
+func _pillar_names(wall_prefix: String) -> Array[String]:
+	var out: Array[String] = []
+	var bare: String = wall_prefix
+	while bare.length() > 0 and bare[bare.length() - 1].is_valid_int():
+		bare = bare.substr(0, bare.length() - 1)
+	for candidate in [wall_prefix, bare, wall_prefix.trim_suffix("Wall"),
+			bare.trim_suffix("Wall")]:
+		if candidate != "" and not out.has(candidate):
+			out.append(candidate)
+	## Then by dropping trailing words: scifiBlackBlueDirt has no column of its
+	## own but scifiBlackBlue does, and it is the same material with grime on it.
+	var trimmed: String = bare.trim_suffix("Wall")
+	while trimmed.length() > 1:
+		var cut: int = -1
+		for i in range(trimmed.length() - 1, 0, -1):
+			if trimmed[i] == trimmed[i].to_upper() and trimmed[i] != trimmed[i].to_lower():
+				cut = i
+				break
+		if cut <= 0:
+			break
+		trimmed = trimmed.substr(0, cut)
+		if not out.has(trimmed):
+			out.append(trimmed)
+	return out
+
+
 ## Dresses the columns in the same material as the walls.
 ##
 ## Looks for pillar_<material>.png beside the default and leaves the stone one
@@ -327,11 +354,16 @@ func _theme_floor() -> void:
 ## then starts working with no further change. The material name is the wall
 ## prefix with its trailing "Wall" removed, which is how the wall sets are named.
 func _theme_pillars(wall_prefix: String) -> void:
-	var material: String = wall_prefix.trim_suffix("Wall")
-	var art: String = "res://assets/sprites/props/pillars/pillar_%s.png" % material
-	if not ResourceLoader.exists(art):
-		return
-	var texture := load(art) as Texture2D
+	## Tried from most specific to least: the set's own name, then with any
+	## trailing number dropped, then with "Wall" trimmed. Twenty-four of the
+	## sixty-four sets are numbered variants — casinoWall2, rusticBrickWall3 —
+	## and they share their base material's column rather than going bare.
+	var texture: Texture2D = null
+	for material in _pillar_names(wall_prefix):
+		var art: String = "res://assets/sprites/props/pillars/pillar_%s.png" % material
+		if ResourceLoader.exists(art):
+			texture = load(art) as Texture2D
+			break
 	if texture == null:
 		return
 	for node in get_children():
@@ -1101,6 +1133,12 @@ func _place_pillars() -> void:
 				placed.append(world)
 				var pillar := pillar_scene.instantiate()
 				pillar.name = "Pillar_%d_%d_%s_%d" % [cell.x, cell.y, side, i]
+				## Its own occlusion check, so a player walking up the screen
+				## behind a column does not simply vanish.
+				var fade := Node.new()
+				fade.name = "Fade"
+				fade.set_script(load("res://scripts/system/PillarFade.gd"))
+				pillar.add_child(fade)
 				add_child(pillar)
 				(pillar as Node2D).global_position = world + Vector2(0.0, pillar_sort_bias)
 				## Sprite back up by the same amount, so the stone stays where it
