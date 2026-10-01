@@ -115,6 +115,13 @@ const THEMES: Array[Dictionary] = [
 	{"wall": "woodenWall2", "floor": "", "ground": "checkeredFloorIsometric"},
 ]
 
+## Floor spikes. Laid in short runs rather than scattered, because the trap
+## carries a phase_offset for exactly that — a line of them stepping through the
+## cycle rolls like a wave and can be timed, where one alone is just a tax.
+@export var trap_scene: PackedScene = null
+@export_range(0.0, 1.0, 0.05) var trap_chance: float = 0.35
+@export var traps_per_run: Vector2i = Vector2i(3, 5)
+
 ## Extra monsters per room for each player past the first. Per *room*, so it
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
 ## at 92 monsters, which is a slog rather than a scaling.
@@ -451,6 +458,8 @@ func _populate(step: Vector2) -> void:
 				_place(here, prop_scenes[_rng.randi_range(0, prop_scenes.size() - 1)])
 		if table_scene != null and _rng.randf() < table_chance:
 			_place_dining_set(here)
+		if trap_scene != null and cell != start and _rng.randf() < trap_chance:
+			_place_trap_run(here)
 
 
 ## Puts one thing on a random floor tile of `room`, so nothing lands in a wall
@@ -608,6 +617,54 @@ const SEATS := [
 	{"offset": Vector2(-1.0, -0.5), "faces": "southEast"},
 	{"offset": Vector2( 1.0, -0.5), "faces": "southWest"},
 ]
+
+
+## A line of floor spikes stepping through the cycle.
+##
+## Never in the starting room: the first thing a new player meets should not be
+## something that damages them before they have moved.
+func _place_trap_run(room: Node2D) -> void:
+	var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
+	if ground == null:
+		return
+	var cells := ground.get_used_cells()
+	if cells.is_empty():
+		return
+	var floor_cells := {}
+	for cell in cells:
+		floor_cells[cell] = true
+
+	## Along one of the two tile axes, so the run reads as a deliberate line in
+	## the architecture rather than a diagonal scatter.
+	var axis: Vector2i = [Vector2i(1, 0), Vector2i(0, 1)][_rng.randi() % 2]
+	var wanted: int = _rng.randi_range(traps_per_run.x, traps_per_run.y)
+
+	## A start cell with enough floor ahead of it to hold the whole run.
+	var from: Vector2i = Vector2i.ZERO
+	var found := false
+	for _try in 20:
+		var candidate: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+		var fits := true
+		for i in wanted:
+			if not floor_cells.has(candidate + axis * i):
+				fits = false
+				break
+		if fits:
+			from = candidate
+			found = true
+			break
+	if not found:
+		return
+
+	for i in wanted:
+		var trap = trap_scene.instantiate()
+		add_child(trap)
+		(trap as Node2D).global_position = ground.to_global(
+				ground.map_to_local(from + axis * i))
+		## Spread evenly around the cycle so the run ripples instead of firing
+		## as one slab, which would be a wall rather than a rhythm.
+		if "phase_offset" in trap:
+			trap.phase_offset = trap.period * float(i) / float(wanted)
 
 
 ## A table with two or three chairs turned in towards it.

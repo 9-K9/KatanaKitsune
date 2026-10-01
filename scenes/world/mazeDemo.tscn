@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
 [ext_resource type="PackedScene" uid="1000" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
 [ext_resource type="Script" path="res://scripts/system/DebugShapes.gd" id="12_dbg"]
+[ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="22_trap"]
 
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar.tscn" id="20_ceramic_jar"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set.tscn" id="20_tea_set"]
@@ -39,6 +40,7 @@ enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"
 exit_scene = ExtResource("12_exit")
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair"), ExtResource("20_ceramic_jar"), ExtResource("20_tea_set"), ExtResource("20_sake_barrel"), ExtResource("20_storage_chest"), ExtResource("20_offering_box"), ExtResource("20_zabuton_stack"), ExtResource("20_katana_rack"), ExtResource("20_folding_screen"), ExtResource("20_stone_lantern")])
 pillar_scene = ExtResource("11_pillar")
+trap_scene = ExtResource("22_trap")
 chair_scene = ExtResource("10_chair")
 table_scene = ExtResource("21_table")
 
