@@ -138,6 +138,39 @@ func descend() -> void:
 		_players.append(body)
 	_rooms.clear()
 	_build()
+	_announce_floor()
+
+
+## Says which floor she has arrived on, briefly, in the middle of the screen.
+##
+## The stairs used to drop you to a new floor with no acknowledgement at all —
+## the only sign was the small FLOOR counter in the corner, so walking onto them
+## read as being teleported by a glitch rather than as descending.
+func _announce_floor() -> void:
+	var layer := get_node_or_null("FloorLayer") as CanvasLayer
+	if layer == null:
+		layer = CanvasLayer.new()
+		layer.name = "FloorLayer"
+		layer.layer = 80
+		add_child(layer)
+		var note := Label.new()
+		note.name = "Note"
+		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		note.set_anchors_preset(Control.PRESET_FULL_RECT)
+		note.add_theme_font_size_override("font_size", 44)
+		note.add_theme_color_override("font_color", Color(0.85, 0.72, 0.42))
+		layer.add_child(note)
+	var note := layer.get_node_or_null("Note") as Label
+	if note == null:
+		return
+	note.text = "FLOOR %d" % depth
+	note.modulate.a = 1.0
+	## Holds, then fades. Long enough to read on arrival, short enough that it is
+	## not in the way of the first room.
+	var fade := create_tween()
+	fade.tween_interval(1.4)
+	fade.tween_property(note, "modulate:a", 0.0, 0.9)
 
 
 func _build() -> void:
@@ -195,6 +228,16 @@ func _place_exit() -> void:
 				queue.append(next)
 
 	var stairs = exit_scene.instantiate()
+	## Lit, because an unlit prop on a dark floor is scenery. This is the one
+	## thing in a room the player is actually looking for.
+	var beacon := PointLight2D.new()
+	beacon.name = "Beacon"
+	beacon.texture = _glow()
+	beacon.color = Color(0.65, 0.85, 1.0)
+	beacon.energy = 1.5
+	beacon.texture_scale = 0.9
+	beacon.position = Vector2(0, -20)
+	stairs.add_child(beacon)
 	add_child(stairs)
 	stairs.global_position = _room_centre(far)
 	## Deferred: descend() frees the whole floor and the signal fires from
