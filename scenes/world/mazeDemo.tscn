@@ -17,7 +17,6 @@
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
 [ext_resource type="PackedScene" uid="1000" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
 [ext_resource type="Script" path="res://scripts/system/DebugShapes.gd" id="12_dbg"]
-[ext_resource type="Script" path="res://scripts/system/EyeMeter.gd" id="15_eye"]
 
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar.tscn" id="20_ceramic_jar"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set.tscn" id="20_tea_set"]
@@ -57,23 +56,6 @@ offset_right = -28.0
 offset_bottom = 148.0
 grow_horizontal = 0
 script = ExtResource("10_radar")
-
-[node name="EyeMeter" type="Control" parent="RadarLayer"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -262.0
-offset_top = 38.0
-offset_right = -174.0
-offset_bottom = 126.0
-grow_horizontal = 0
-script = ExtResource("15_eye")
-
-[node name="Eye" type="TextureRect" parent="RadarLayer/EyeMeter"]
-offset_right = 64.0
-offset_bottom = 64.0
-expand_mode = 1
-stretch_mode = 5
 
 [node name="PauseMenu" parent="." instance=ExtResource("13_pausemenu")]
 
