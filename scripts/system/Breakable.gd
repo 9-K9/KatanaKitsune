@@ -19,8 +19,9 @@ extends StaticBody2D
 ## table should be visible before you smash the table — you break it *because*
 ## you can see the food, rather than smashing furniture on spec.
 @export var display_loot: bool = false
-## Where on the prop the drop sits, relative to this node.
-@export var loot_display_offset: Vector2 = Vector2(0, -46)
+## How far above this prop's base its surface is. The drop is drawn there, but
+## parked at the base, so it sorts with the furniture instead of behind it.
+@export var loot_display_lift: float = 46.0
 @export var loot_weight: float = 6.0
 @export var spawn_scene: PackedScene = null
 @export var spawn_weight: float = 2.0
@@ -195,8 +196,13 @@ func _lay_out_loot() -> void:
 	if not ("armed" in thing):
 		return
 	thing.armed = false
+	## Centred on the prop and left at its base — the lift moves the picture, not
+	## the node, so Y-sort still treats the meal as standing where the table
+	## stands rather than up in the air behind it.
+	if "display_lift" in thing:
+		thing.display_lift = loot_display_lift
 	add_child(thing)
-	(thing as Node2D).position = loot_display_offset
+	(thing as Node2D).position = Vector2.ZERO
 	_displayed = thing
 	## Already decided, so _break must not roll a second time.
 	_drop_spawned = true

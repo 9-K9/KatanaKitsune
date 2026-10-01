@@ -22,6 +22,14 @@ enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA }
 ## taken — the meal is on the furniture, and she has to break the furniture to
 ## get at it. Armed by Breakable when the prop shatters.
 @export var armed: bool = true
+## How far above this node's own origin the art is drawn while it is laid out
+## on something. The node itself stays down at the furniture's base so Y-sort
+## places it with the furniture; only the picture climbs onto the tabletop.
+##
+## Same reasoning as Chair.sort_bias, inverted: sorting compares raw node
+## positions, so an item parked at tabletop height sorts as though it stood
+## 110px further up the screen and drew behind the table it is sitting on.
+var display_lift: float = 0.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 
@@ -31,6 +39,11 @@ var _rest_y: float = 0.0
 
 
 func _ready() -> void:
+	if display_lift != 0.0:
+		sprite.position.y -= display_lift
+		## Over the furniture, never behind it. Relative so the whole prop still
+		## sorts against the room as one thing.
+		sprite.z_index = 1
 	_rest_y = sprite.position.y
 	_bob = randf() * TAU
 	body_entered.connect(_on_body_entered)
@@ -55,6 +68,13 @@ func _process(delta: float) -> void:
 func arm(falls_to: Vector2) -> void:
 	armed = true
 	set_deferred("monitoring", true)
+	## Back down to the floor as the furniture goes: the lift was the tabletop,
+	## and there is no tabletop any more.
+	if display_lift != 0.0:
+		sprite.position.y += display_lift
+		sprite.z_index = 0
+		_rest_y = sprite.position.y
+		display_lift = 0.0
 	var fall := create_tween()
 	fall.tween_property(self, "global_position", falls_to, 0.3) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)

@@ -9,6 +9,24 @@ var input: PlayerInput = null
 ## her, and it decides the device, the colour scheme and the marker underfoot.
 var slot: int = 0
 
+## Reviving a fallen team-mate: stand over them and drop into a sneak.
+##
+## It costs the whole sneak meter and drains fast — a few seconds crouched over
+## the body, not a chore, but it spends the thing that keeps you hidden, so
+## picking someone up in front of a monster is a real decision.
+@export var revive_drain: float = 42.0
+## Ground reach to a fallen body, measured unsquashed like every other distance
+## in an isometric room.
+##
+## Generous on purpose. "Standing over" someone never means sharing their exact
+## position — she is about 66 across, so two characters pressed together already
+## sit over a hundred units apart once the isometric squash is undone. At 110 a
+## player who looked like they were on the body was measured at 132 and the
+## revive silently never started.
+@export var revive_reach: float = 190.0
+## Share of their health a revived player comes back with.
+@export var revive_health: float = 0.5
+
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
 @export var contact_damage: float = 10.0
@@ -102,6 +120,7 @@ func _physics_process(_delta):
 	## timer, so spending and recovering cannot both apply in the same frame.
 	recover_stamina(_delta)
 	recover_sneak(_delta)
+	_try_revive(_delta)
 	_hood_lantern(_delta)
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
@@ -151,6 +170,41 @@ func _gather_lights() -> void:
 		_lights.append(light)
 		## Captured the first time it is seen, before anything has dimmed it.
 		_light_base.append(Vector3(light.energy, light.scale.x, light.scale.y))
+
+
+## Spends the sneak meter to bring a fallen team-mate back.
+##
+## Draining rather than a button press, so the cost is visible on the eye's ring
+## as it happens and can be abandoned by standing up.
+func _try_revive(delta: float) -> void:
+	if is_dead or not (stealthed or crouched):
+		return
+	var fallen := _fallen_underfoot()
+	if fallen == null:
+		return
+	drain_sneak(revive_drain, delta)
+	if sneak <= 0.0:
+		fallen.revive(revive_health)
+
+
+## The nearest downed player within reach, or null.
+func _fallen_underfoot() -> Node:
+	var best: Node = null
+	var best_distance: float = INF
+	for node in get_tree().get_nodes_in_group("player"):
+		if node == self or not (node is CharacterBody2D):
+			continue
+		if not (node.get("is_dead") == true):
+			continue
+		## Unsquashed: the map is drawn 2:1, so a body the same distance away up
+		## the screen would otherwise read as twice as close as one to the side.
+		var offset: Vector2 = (node as Node2D).global_position - global_position
+		offset.y /= 0.5
+		var distance: float = offset.length()
+		if distance <= revive_reach and distance < best_distance:
+			best_distance = distance
+			best = node
+	return best
 
 
 func _on_action_timer_timeout():

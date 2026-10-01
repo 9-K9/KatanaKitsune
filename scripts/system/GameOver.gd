@@ -58,13 +58,20 @@ func _take_focus() -> void:
 	TitleScreen.focus_first_button(panel)
 
 
+## The run is over only when the whole party is down.
+##
+## This used to ask the first player body in the group, so in a party one death
+## ended everyone's run — and it made reviving pointless, because the screen
+## appeared before anyone could reach the body.
 func _is_dead() -> bool:
-	if not is_instance_valid(_player):
-		for node in get_tree().get_nodes_in_group("player"):
-			if node is CharacterBody2D:
-				_player = node
-				break
-	return is_instance_valid(_player) and "is_dead" in _player and _player.is_dead
+	var any := false
+	for node in get_tree().get_nodes_in_group("player"):
+		if not (node is CharacterBody2D) or not ("is_dead" in node):
+			continue
+		any = true
+		if not node.is_dead:
+			return false
+	return any
 
 
 func _begin() -> void:

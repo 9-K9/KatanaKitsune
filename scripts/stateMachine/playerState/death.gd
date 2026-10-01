@@ -17,6 +17,9 @@ func on_enter() -> void:
 	_handed_off = false
 	pc.speed = 0.0
 	pc.actionBlockInput = true
+	## Out of the way: a corpse that still blocks movement turns a doorway into
+	## a wall, and in a party it can seal a team-mate in.
+	pc.collapse()
 	## Lowercase, and played once here rather than every frame from on_process:
 	## the clips are "death_south" etc, so "Death_south" resolved to nothing,
 	## and re-calling play() each frame restarted the collapse forever.
@@ -30,6 +33,11 @@ func on_process(delta: float) -> void:
 	_elapsed += delta
 	if animated_sprite.is_playing() or _elapsed < GAME_OVER_DELAY:
 		return
+	## Only once nobody is left standing. A fallen player in a party waits to be
+	## picked up instead of ending the run — see AnimatedCharacterClass.revive.
+	for other in pc.get_tree().get_nodes_in_group("player"):
+		if other is CharacterBody2D and "is_dead" in other and not other.is_dead:
+			return
 	_handed_off = true
 	var manager := pc.get_tree().current_scene
 	if is_instance_valid(manager) and manager.has_method("setState"):

@@ -23,6 +23,9 @@ var is_invincible: bool = false
 ## Latched on the killing blow. Without it every later hit on the corpse ran
 ## _on_death() again and restarted the death animation from the top.
 var is_dead: bool = false
+## What this body collided as before it fell, so reviving puts it back exactly
+## rather than guessing at a layer.
+var _layer_alive: int = -1
 
 ## Set by the states that own them, read by anything that cares.
 ## Stealth halves how far a monster notices her from; blocking cuts damage; the
@@ -321,6 +324,31 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		_on_death()
 	else:
 		_start_invincibility()
+
+## Falls out of the world's collision so the living can walk over the body.
+##
+## Deferred because this is reached from inside a physics callback, and changing
+## a body's layer mid-step is the classic way to crash Godot's space.
+func collapse() -> void:
+	if _layer_alive < 0:
+		_layer_alive = collision_layer
+	set_deferred("collision_layer", 0)
+
+
+## Back on her feet with a share of her health. The caller decides what that
+## costs; this only puts the body back together.
+func revive(fraction: float = 0.5) -> void:
+	if not is_dead:
+		return
+	is_dead = false
+	health = maxf(max_health * fraction, 1.0)
+	if _layer_alive >= 0:
+		set_deferred("collision_layer", _layer_alive)
+	is_invincible = false
+	var machine := get_node_or_null("FiniteStateMachine")
+	if machine != null and machine.has_method("change_state"):
+		machine.change_state("idle")
+
 
 ## What a raised guard does to a blow, by where it landed.
 ##
