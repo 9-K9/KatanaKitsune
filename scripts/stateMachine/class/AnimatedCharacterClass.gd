@@ -345,6 +345,10 @@ func revive(fraction: float = 0.5) -> void:
 	if _layer_alive >= 0:
 		set_deferred("collision_layer", _layer_alive)
 	is_invincible = false
+	## Belt and braces: this is the function that promises to put the body back
+	## together, so it should not depend on which state happened to be blocking.
+	if "actionBlockInput" in self:
+		set("actionBlockInput", false)
 	var machine := get_node_or_null("FiniteStateMachine")
 	if machine != null and machine.has_method("change_state"):
 		machine.change_state("idle")

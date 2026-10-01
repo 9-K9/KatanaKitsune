@@ -56,4 +56,8 @@ func on_input(event: InputEvent) -> void:
 
 # Called when the state machine exits this state.
 func on_exit() -> void:
-	pass
+	## Hands the controls back. Every other state that blocks input clears it on
+	## the way out; death never did, because until revive existed nothing ever
+	## left this state. A revived player stood up and could not move.
+	pc.actionBlockInput = false
+	animated_sprite.speed_scale = 1.0
