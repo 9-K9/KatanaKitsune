@@ -26,7 +26,10 @@ extends Node2D
 @export_range(0.0, 1.0, 0.05) var table_chance: float = 0.45
 ## How far the chairs sit from the table, along the floor axes. Wider than it
 ## was: the table renders 202px across, so seats at 96 stood on the tabletop.
-@export var table_seat_gap: float = 150.0
+## Just outside the tabletop, not a stride away. At 150 the seats sat about
+## three tiles out — past the two tiles of clear floor the table's own placement
+## guarantees — so most of them landed on no floor at all and were skipped.
+@export var table_seat_gap: float = 110.0
 
 ## Extra monsters per room for each player past the first. Per *room*, so it
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
@@ -45,12 +48,11 @@ extends Node2D
 ## one wedged against a column is worse than no chair at all — she sets off and
 ## grinds into the stone.
 ##
-## Set to roughly her own body radius, because that is the actual question being
-## asked: is there room to stand at this chair. Measured on a floor, only one
-## chair in eight was literally buried, but four were tucked against geometry;
-## the rejection count is flat between 50 and 70 and climbs again past 90, where
-## it starts throwing away chairs that merely sit near a wall.
-@export var chair_clearance: float = 70.0
+## The question being asked is whether she can reach the seat, and she is about
+## 66 across. This only tests props and columns now — walls are excluded, so the
+## generous figure that used to compensate for the oversized wall silhouette is
+## no longer needed and was costing real chairs.
+@export var chair_clearance: float = 50.0
 @export var grid: Vector2i = Vector2i(4, 4)
 ## Roofs make the layout unreadable while testing; off by default here.
 @export var show_roofs: bool = false
@@ -387,31 +389,34 @@ func _place_dining_set(room: Node2D) -> void:
 	var cells := ground.get_used_cells()
 	if cells.is_empty():
 		return
-	## Set out in open floor rather than on any tile at all. A table dropped
-	## against a wall puts half its seats inside the stone, and the clearance
-	## cull then removes them — six tables were keeping eight chairs between
-	## them. Checked against the tilemap, not the physics world, because this
-	## runs during _ready where the physics server is still empty.
+	## Placed where its own seats will actually fit, rather than merely on open
+	## floor. The table is wide enough that its chairs sit three or four tiles
+	## out, so a generic "two clear rings" test said yes in places where half the
+	## seats still landed in stone — tables were coming out with one chair.
+	## Scoring candidates by how many of their four seats are over floor asks the
+	## question that matters directly. Checked against the tilemap, not physics,
+	## because this runs during _ready where the physics server is still empty.
 	var floor_cells := {}
 	for cell in cells:
 		floor_cells[cell] = true
-	var open_cells: Array[Vector2i] = []
-	for cell in cells:
-		var clear := true
-		## Two cells, not one: the seats stand 96px out, which is two tiles across
-		## the lattice, so a single ring of floor still let half of them land in
-		## the wall and be culled.
-		for dx in [-2, -1, 0, 1, 2]:
-			for dy in [-2, -1, 0, 1, 2]:
-				if not floor_cells.has(cell + Vector2i(dx, dy)):
-					clear = false
-					break
-			if not clear:
-				break
-		if clear:
-			open_cells.append(cell)
-	var pick: Vector2i = (open_cells if not open_cells.is_empty() else cells)[
-			_rng.randi_range(0, (open_cells.size() if not open_cells.is_empty() else cells.size()) - 1)]
+
+	var pick: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+	var best: int = -1
+	## A sample rather than every tile: rooms have hundreds of cells and four
+	## seat tests each would be thousands of lookups per table.
+	for _try in 24:
+		var candidate: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+		var origin: Vector2 = ground.map_to_local(candidate)
+		var fits: int = 0
+		for seat in SEATS:
+			var at: Vector2 = origin + seat["offset"] * table_seat_gap
+			if floor_cells.has(ground.local_to_map(at)):
+				fits += 1
+		if fits > best:
+			best = fits
+			pick = candidate
+		if fits == SEATS.size():
+			break
 	var centre: Vector2 = ground.to_global(ground.map_to_local(pick))
 
 	var table := table_scene.instantiate()
@@ -436,6 +441,11 @@ func _place_dining_set(room: Node2D) -> void:
 		sides[j] = swap
 	for i in _rng.randi_range(2, 3):
 		var seat: Dictionary = sides[i]
+		var where: Vector2 = centre + seat["offset"] * table_seat_gap
+		## Belt and braces: the table was chosen for seats that fit, but if the
+		## room could not offer a perfect spot one or two may still be in stone.
+		if not floor_cells.has(ground.local_to_map(ground.to_local(where))):
+			continue
 		var chair := chair_scene.instantiate()
 		chair.name = "DiningChair%d" % i
 		if "facing" in chair:
@@ -446,7 +456,7 @@ func _place_dining_set(room: Node2D) -> void:
 		## bites into a table half as wide again as that gap.
 		chair.set_meta("dining_table", table)
 		add_child(chair)
-		(chair as Node2D).global_position = centre + seat["offset"] * table_seat_gap
+		(chair as Node2D).global_position = where
 
 
 func _add_chair(where: Vector2, named: String) -> void:
@@ -489,7 +499,13 @@ func _clear_buried_chairs() -> void:
 		## Its own base, not its origin, which sits SORT_LIFT above the floor.
 		probe.transform = Transform2D(0.0,
 				(chair as Node2D).global_position + Vector2(0.0, SORT_LIFT))
-		probe.collision_mask = 1
+		## Layer 2 only: props and columns, not walls. Props sit on layer 3, which
+		## is bits 1 and 2; the walls are bit 1 alone. Probing bit 1 therefore hit
+		## the walls too, and the wall collision is a deliberately oversized
+		## silhouette, so chairs were being rejected from well across the room
+		## from any stone — seventeen a floor. She can stand beside a wall
+		## perfectly well; what she cannot do is stand inside a column.
+		probe.collision_mask = 2
 		## Everything except the table it was deliberately drawn up to. It is
 		## still tested against walls, columns and every other prop.
 		var table = chair.get_meta("dining_table", null)
