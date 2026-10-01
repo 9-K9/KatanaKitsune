@@ -31,6 +31,14 @@ extends Node2D
 ## guarantees — so most of them landed on no floor at all and were skipped.
 @export var table_seat_gap: float = 110.0
 
+## How many floors share a look before it changes. The dungeon stone is the
+## default; themed floors are painted over it.
+@export var floors_per_theme: int = 2
+## Themes available, in the order they come up. Each names a TileMapLayer that
+## already exists on the room prefab and carries its own tileset — "" means the
+## room's own Ground layer, i.e. the dungeon.
+@export var floor_themes: PackedStringArray = ["", "Floor_JP_Indoor"]
+
 ## Extra monsters per room for each player past the first. Per *room*, so it
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
 ## at 92 monsters, which is a slog rather than a scaling.
@@ -139,6 +147,52 @@ func descend() -> void:
 	_rooms.clear()
 	_build()
 	_announce_floor()
+
+
+## Repaints every room's floor in this depth's theme.
+##
+## The cells are copied from the room's own Ground layer rather than authored
+## into the prefab, so a themed floor is exactly the shape of the dungeon one
+## and no room has to be drawn twice. The Japanese tiles are 48x24 diamonds on
+## 48x48 canvases, which is the game's native grid — they drop straight on.
+func _theme_floor() -> void:
+	if floor_themes.is_empty():
+		return
+	var theme: String = floor_themes[((depth - 1) / maxi(floors_per_theme, 1)) % floor_themes.size()]
+	for cell in _rooms:
+		var room: Node = _rooms[cell]
+		var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
+		if ground == null:
+			continue
+		## Every themed layer off first, so moving between themes does not leave
+		## the last one showing underneath.
+		for name in floor_themes:
+			if name == "":
+				continue
+			var other := room.get_node_or_null("TileMap/" + name) as TileMapLayer
+			if other != null:
+				other.visible = false
+				other.clear()
+		ground.visible = theme == ""
+		if theme == "":
+			continue
+		var layer := room.get_node_or_null("TileMap/" + theme) as TileMapLayer
+		if layer == null or layer.tile_set == null:
+			ground.visible = true
+			continue
+		## A handful of materials for the whole floor rather than a different
+		## tile per cell — sixteen materials scattered at random reads as
+		## confetti, not as a room somebody laid.
+		var palette: Array[int] = []
+		var sources: int = layer.tile_set.get_source_count()
+		if sources == 0:
+			ground.visible = true
+			continue
+		for _i in mini(3, sources):
+			palette.append(layer.tile_set.get_source_id(_rng.randi() % sources))
+		for at in ground.get_used_cells():
+			layer.set_cell(at, palette[_rng.randi() % palette.size()], Vector2i.ZERO)
+		layer.visible = true
 
 
 ## Says which floor she has arrived on, briefly, in the middle of the screen.
@@ -609,6 +663,7 @@ func _spawn_player(step: Vector2) -> void:
 		var ring := Vector2(cos(angle), sin(angle) * 0.5) * (0.0 if _players.size() == 1 else 90.0)
 		(_players[i] as Node2D).global_position = centre + ring
 
+	_theme_floor()
 	_fit_camera()
 	if not Roster.device_lost.is_connected(_on_device_lost):
 		Roster.device_lost.connect(_on_device_lost)
