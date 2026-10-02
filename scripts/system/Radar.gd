@@ -38,10 +38,13 @@ func _draw() -> void:
 	var centre := Vector2(radius, radius)
 	draw_circle(centre, radius, Color(0.05, 0.05, 0.06, 0.55))
 
-	var target := _find_player()
-	if target == null:
+	## Centred on the party rather than on player one, so it agrees with the
+	## shared camera instead of drifting away from what is on screen.
+	var crew := Roster.bodies(get_tree())
+	if crew.is_empty():
 		_ring(centre)
 		return
+	var focus: Vector2 = Roster.centre_of_party(get_tree())
 
 	## Walls first, so cones and blips sit on top of them.
 	if _walls_age >= wall_refresh_seconds:
@@ -49,7 +52,7 @@ func _draw() -> void:
 	for run in _walls:
 		var points := PackedVector2Array()
 		for world in run:
-			var local := _to_radar(world, target.global_position, centre)
+			var local := _to_radar(world, focus, centre)
 			if local != Vector2.INF:
 				points.append(local)
 		if points.size() >= 2:
@@ -61,7 +64,7 @@ func _draw() -> void:
 	for node in get_tree().get_nodes_in_group("enemy"):
 		if not (node is Node2D) or ("is_dead" in node and node.is_dead):
 			continue
-		var blip := _to_radar(node.global_position, target.global_position, centre)
+		var blip := _to_radar(node.global_position, focus, centre)
 		if blip == Vector2.INF:
 			continue
 		var colour := _colour_for(node)
@@ -159,13 +162,3 @@ func _find_wall_layers(node: Node) -> Array[TileMapLayer]:
 	return found
 
 
-func _find_player() -> CharacterBody2D:
-	if is_instance_valid(_player):
-		return _player
-	## The player's hitbox Area2D is in the "player" group too, so take the
-	## first body rather than the first node.
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D:
-			_player = node
-			return _player
-	return null

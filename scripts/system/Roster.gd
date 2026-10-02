@@ -129,6 +129,48 @@ func any_lost() -> bool:
 	return false
 
 
+## Every living player body in the scene.
+##
+## One place, because this lookup was copy-pasted into four files and three of
+## them got it wrong the same way: they latched onto the first CharacterBody2D
+## in the group and cached it forever, so the radar, the wall fade and the debug
+## overlay all only ever followed player one. The monsters had the identical bug
+## and were fixed; these were missed.
+##
+## Her PlayerHitBox is in the "player" group too, so the body test is not
+## optional — the first node in the group is as likely to be that Area2D.
+func bodies(tree: SceneTree) -> Array[CharacterBody2D]:
+	var out: Array[CharacterBody2D] = []
+	for node in tree.get_nodes_in_group("player"):
+		if node is CharacterBody2D and not (node.get("is_dead") == true):
+			out.append(node)
+	return out
+
+
+## The middle of the party, for anything that has to pick one point to speak
+## for everybody — the radar's centre, for instance.
+func centre_of_party(tree: SceneTree) -> Vector2:
+	var all := bodies(tree)
+	if all.is_empty():
+		return Vector2.ZERO
+	var sum := Vector2.ZERO
+	for body in all:
+		sum += body.global_position
+	return sum / float(all.size())
+
+
+## The living player closest to a point, or null.
+func nearest_to(tree: SceneTree, point: Vector2) -> CharacterBody2D:
+	var best: CharacterBody2D = null
+	var best_distance: float = INF
+	for body in bodies(tree):
+		var distance: float = point.distance_squared_to(body.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = body
+	return best
+
+
 ## A pad appeared or vanished. Mid-game a lost pad holds its slot rather than
 ## freeing it — a dropped cable should not cost a player their run — and the
 ## maze pauses until the same slot has a device again.

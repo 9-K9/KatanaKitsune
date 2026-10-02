@@ -51,14 +51,21 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var target := _find_player()
+	## The nearest player to this wall, not the first one in the group. With a
+	## party, keying on player one meant a wall never lifted for anybody else —
+	## players two to four simply walked behind solid stone.
+	var target := Roster.nearest_to(get_tree(), global_position)
 	if target == null:
 		return
 
 	if mode == Mode.HIDE:
-		## Keyed to the player alone. Lifting a roof because a monster wandered
+		## Keyed to players alone. Lifting a roof because a monster wandered
 		## under it would just flicker the room.
-		var hidden: bool = _is_covering(target.global_position)
+		var hidden: bool = false
+		for body in Roster.bodies(get_tree()):
+			if _is_covering(body.global_position):
+				hidden = true
+				break
 		if hidden == visible:
 			visible = not hidden
 		return
@@ -157,13 +164,3 @@ func _sort_y(cell: Vector2i) -> float:
 	return base if data == null else base + data.y_sort_origin
 
 
-func _find_player() -> CharacterBody2D:
-	if is_instance_valid(_player):
-		return _player
-	## The player's hitbox Area2D is in the "player" group too, so take the
-	## first body rather than the first node.
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D:
-			_player = node
-			return _player
-	return null

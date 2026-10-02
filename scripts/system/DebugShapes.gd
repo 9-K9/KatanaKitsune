@@ -57,7 +57,7 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if not _on:
 		return
-	var player := _find_player()
+	var player := Roster.nearest_to(get_tree(), Vector2.ZERO)
 
 	## Chairs: the zone she has to be inside, the origin, and the seat she is
 	## actually sent to — which are three different points and were being
@@ -211,11 +211,3 @@ func _cross(where: Vector2, colour: Color, label: String) -> void:
 		draw_string(font, p + Vector2(11, -4), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, colour)
 
 
-func _find_player() -> CharacterBody2D:
-	if is_instance_valid(_player):
-		return _player
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D:
-			_player = node
-			return _player
-	return null
