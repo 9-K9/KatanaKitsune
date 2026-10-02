@@ -123,7 +123,7 @@ def main() -> None:
         animation_source = SOURCE / "sprites" / animation
         animation_output = OUTPUT / "sprites" / animation
         for source in sorted(animation_source.glob("*.png")):
-            destination_name = source.name.replace("KatanaKitsume", "AzureKitsune")
+            destination_name = source.name.replace("KatanaKitsune", "AzureKitsune")
             recolor(source, animation_output / destination_name)
 
     recolor(SOURCE / "HUDicon.png", OUTPUT / "HUDicon.png")

@@ -122,7 +122,7 @@ def generate_asset(source: Path, relative_destination: Path) -> None:
 def make_preview() -> None:
     cells: list[Image.Image] = []
     for state in PALETTES:
-        sheet = OUTPUT / state / "sprites/IdleStanding" / "KatanaKitsume_IdleStanding_dir1.png"
+        sheet = OUTPUT / state / "sprites/IdleStanding" / "KatanaKitsune_IdleStanding_dir1.png"
         frame = Image.open(sheet).convert("RGBA").crop((0, 0, 480, 480))
         bbox = frame.getbbox()
         if bbox is None:
