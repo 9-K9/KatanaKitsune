@@ -75,6 +75,27 @@ func _is_dead() -> bool:
 
 
 func _begin() -> void:
+	## A score worth recording gets its initials taken before the menu appears.
+	## The run ends either way; this is only whether the board remembers it.
+	var best: Dictionary = Score.best_of_run()
+	if Score.would_place(best["points"]) >= 0 and best["points"] > 0:
+		var wave: int = 1
+		var level = get_tree().current_scene
+		if level != null and "depth" in level:
+			wave = level.depth
+		var entry := load("res://scripts/system/NameEntry.gd").new()
+		entry.name = "NameEntry"
+		get_parent().add_child(entry)
+		entry.finished.connect(func():
+			entry.queue_free()
+			_begin_menu())
+		get_tree().paused = true
+		entry.open(best["slot"], best["points"], wave)
+		return
+	_begin_menu()
+
+
+func _begin_menu() -> void:
 	_counting = true
 	_left = float(countdown_from)
 	visible = true

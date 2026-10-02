@@ -39,6 +39,14 @@ const EYE_CALM := preload("res://assets/sprites/ui/eye/eye_calm.png")
 const EYE_ALERT := preload("res://assets/sprites/ui/eye/eye_alert.png")
 const EYE_CLOSED := preload("res://assets/sprites/ui/eye/eye_closed.png")
 
+## Hotter as the chain climbs, so a glance reads the grade without the letter.
+const GRADE_COLOURS := {
+	"D": Color(0.70, 0.70, 0.72), "C": Color(0.60, 0.82, 0.95),
+	"B": Color(0.55, 0.92, 0.60), "A": Color(0.98, 0.85, 0.35),
+	"S": Color(1.00, 0.60, 0.25), "SS": Color(1.00, 0.35, 0.30),
+	"SSS": Color(1.00, 0.30, 0.65),
+}
+
 const FRAME_PORTRAIT := preload("res://assets/sprites/ui/frame_portrait.png")
 const FRAME_BAR := preload("res://assets/sprites/ui/bar_frame.png")
 
@@ -126,7 +134,15 @@ func _build_cell(slot: int) -> Dictionary:
 	eye.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(eye)
 
-	return {"slot": slot, "portrait": portrait, "frame": frame,
+	## The running score, beside the player number.
+	var score := Label.new()
+	score.position = Vector2(x + BAR_LEFT + 34.0, CELL_TOP - 2.0)
+	score.text = "0"
+	score.add_theme_font_size_override("font_size", 14)
+	score.add_theme_color_override("font_color", Color(0.85, 0.78, 0.55))
+	add_child(score)
+
+	return {"slot": slot, "portrait": portrait, "frame": frame, "score": score,
 			"health": health, "stamina": stamina, "eye": eye,
 			"eye_centre": eye.position + Vector2(EYE_SIZE, EYE_SIZE) * 0.5,
 			## Staggered per player, or four eyes blink in unison and the row
@@ -202,6 +218,11 @@ func _update_cell(index: int, delta: float) -> void:
 	## is missing and go back for them.
 	var portrait: TextureRect = cell["portrait"]
 	portrait.modulate = Color(0.35, 0.3, 0.32) if dead else Color.WHITE
+
+	var score: Label = cell["score"]
+	var want: String = "%d" % Score.points[cell["slot"]]
+	if score.text != want:
+		score.text = want
 
 	var eye: TextureRect = cell["eye"]
 	var hidden: bool = body.get("stealthed") == true or body.get("crouched") == true
