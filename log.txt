@@ -329,3 +329,81 @@ summarised below, but nothing was acted on.
     again at the end.
 
 ===============================================================================
+
+===============================================================================
+SESSION LOG — 2026-10-02 (continued, Desktop)
+===============================================================================
+
+Machine: kubuntu-850150qe
+Pulled the laptop's three commits (ae242979). Clean fast-forward.
+
+ONLY ITEM (A) WAS DONE. (B) through (G) are untouched — no files archived, no
+dead code removed, no duplication collapsed.
+
+
+-------------------------------------------------------------------------------
+(A) DONE — commit bde9e646
+-------------------------------------------------------------------------------
+
+The three copies of _find_player() are gone. Radar.gd, WallFade.gd and
+DebugShapes.gd now call Roster.bodies() / nearest_to() / centre_of_party().
+
+WallFade was not cosmetic. A wall lifted only for player one, so players two to
+four walked behind solid stone with no way to see themselves. It now asks
+whether ANY living player is behind it.
+
+The radar centred on player one while the shared camera frames the whole party,
+so the two drifted apart on screen. It now centres on the party.
+
+The shared lookup lives on Roster because Roster already owns who is playing. It
+skips the dead and tests for a CharacterBody2D — her PlayerHitBox is in the same
+group, so the first node is as likely to be that Area2D as the character.
+
+Verified with three players: finds all three, follows one moved far from the
+others, drops one on death.
+
+
+-------------------------------------------------------------------------------
+CORRECTIONS TO THE SURVEY ABOVE
+-------------------------------------------------------------------------------
+
+(F) is SUPERSEDED, not a feature mid-flight. All 64 themes carry "floor": ""
+    because the themed-floor-layer approach was replaced on the Desktop the
+    night before this log was written: 344 ground tiles were generated, one
+    material per wall set, so a room is now made of one material rather than a
+    floor layer painted over a different ground. Nothing is waiting to be
+    switched back on.
+    SAFE TO ARCHIVE, and not currently on the archive list:
+      assets/pixellab/japanese_environment/tilesets/floors_indoor.tres
+      assets/pixellab/japanese_environment/tilesets/floors_exterior.tres
+      the Floor_JP_Indoor / Floor_JP_Exterior layers in room_A.tscn
+      and with them the whole PixelLab japanese_environment tile set, whose
+      props are still used but whose floors and building kit are not.
+
+(E) two entries are LIVE as of 40d0a7ce and must not be removed:
+      floors_per_theme  — read by _theme_floor() when picking the theme index.
+      FACING_NAMES / facing_textures — drive the four-direction props and their
+      debris. The survey was written against the pre-pull tree.
+
+    Worth re-running the whole of (B) and (E) against current main before
+    deleting anything. The tree moved a long way the night before the survey.
+
+
+-------------------------------------------------------------------------------
+STILL OUTSTANDING
+-------------------------------------------------------------------------------
+
+  (B) ~25 dead files, not archived
+  (C) dead scaffolding inside KatanaKitsune.tscn (sittingFloor, characterState,
+      _stateDummy) — needs scene edits
+  (D) duplicated directionState/stateDirection, five near-identical kick states,
+      stateAnimation's discarded fps argument
+  (E) dead functions and vars, minus the two corrections above
+  (G) the taunt dialogue-dismiss -> chase handoff, still needs a human
+
+  Also still unrun, blocked by a permission check on this machine:
+      python3 ~/GODOT/Projects/KatanaKitsuneWorkshop/archive.py
+      393 files / 34.3 MB out of the game repo. The list is now stale in our
+      favour — the PixelLab floors above would add to it.
+
+===============================================================================
