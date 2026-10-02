@@ -83,7 +83,8 @@ func _begin() -> void:
 		var level = get_tree().current_scene
 		if level != null and "depth" in level:
 			wave = level.depth
-		var entry := load("res://scripts/system/NameEntry.gd").new()
+		## Untyped: load() returns a Variant, so := cannot infer a class here.
+		var entry = load("res://scripts/system/NameEntry.gd").new()
 		entry.name = "NameEntry"
 		get_parent().add_child(entry)
 		entry.finished.connect(func():
