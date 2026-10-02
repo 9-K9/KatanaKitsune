@@ -1,4 +1,4 @@
-[gd_scene load_steps=323 format=3 ]
+[gd_scene load_steps=323 format=3]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="enemy_script"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="fsm"]
