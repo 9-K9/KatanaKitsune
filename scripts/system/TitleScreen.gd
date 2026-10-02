@@ -3,9 +3,6 @@ extends Node2D
 
 ## Title screen. GameManager sends the player here on "game_title".
 
-## The playable level. mapTemplate is the hand-built single room kept for
-## testing; the maze is the actual first level.
-const FIRST_MAP := "res://scenes/world/mazeDemo.tscn"
 const SELECT := "res://scenes/menuscreens/characterSelect.tscn"
 
 

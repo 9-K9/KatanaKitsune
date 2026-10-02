@@ -131,7 +131,3 @@ func playerAttack(hit_frame: int = 3):
 	for body in pc.blade_targets():
 		body.take_damage(pc.damage, pc.global_position)
 
-##Math Functions
-func round_to_dec(num, digit):
-	return round(num * pow(10.0, digit)) / pow(10.0, digit)
-	

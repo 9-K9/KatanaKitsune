@@ -19,9 +19,6 @@ class_name EnemyBase
 ## collision polygon, which is a tile-sized 128x64, or the monster can never get
 ## near enough to trigger a swing.
 @export var attack_range: float = 110.0
-## Gives up the chase past this. Kept above detection_range so a player sitting
-## right on the edge does not flip the monster between idle and walk every frame.
-@export var lose_interest_range: float = 560.0
 
 @export_group("Timing")
 ## Seconds between swings.
@@ -32,7 +29,6 @@ class_name EnemyBase
 ## The map is drawn 2:1, so a step down the screen covers half the ground a step
 ## sideways does. Same convention as the player's movement code.
 const ISO_Y_SCALE: float = 0.5
-const HIT_FLASH: Color = Color(1.0, 0.35, 0.35, 1.0)
 
 var health: float = 0.0
 var is_dead: bool = false
@@ -332,12 +328,6 @@ func provoke() -> bool:
 	return true
 
 
-## Whether this monster is past its dialogue and free to fight. True for
-## monsters that never had a line in the first place.
-func taunt_done() -> bool:
-	if not is_instance_valid(taunt):
-		return true
-	return taunt.has_spoken and not taunt.is_speaking
 
 
 func take_damage(amount: float, from: Vector2 = Vector2.INF,

@@ -29,7 +29,6 @@ var slot: int = 0
 
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
-@export var contact_damage: float = 10.0
 
 ## What the blade is currently over. Resolved once — the attack code used to
 ## re-look this up by string path on every swing.
@@ -92,19 +91,6 @@ func blade_targets() -> Array[Node2D]:
 	return found
 
 
-## The monster a non-attack interaction applies to: the nearest one in the
-## blade. Breakables are skipped — only monsters have anything to say.
-func current_target() -> Node2D:
-	var best: Node2D = null
-	var best_distance: float = INF
-	for body in blade_targets():
-		if not body.is_in_group("enemy"):
-			continue
-		var distance: float = global_position.distance_squared_to(body.global_position)
-		if distance < best_distance:
-			best_distance = distance
-			best = body
-	return best
 
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")

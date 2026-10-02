@@ -50,13 +50,6 @@ func apply_all() -> void:
 	_apply("SW", wall_sw)
 
 
-## Which sides are currently walled, e.g. ["NE", "NW"] for a corner.
-func closed_sides() -> Array[String]:
-	var out: Array[String] = []
-	for side in SIDES:
-		if get("wall_" + side.to_lower()):
-			out.append(side)
-	return out
 
 
 ## The reverse: sides a corridor or doorway can attach to.

@@ -66,7 +66,6 @@ var _drop_spawned: bool = false
 ## Which way this one faces, as an index into facing_textures.
 var facing_index: int = 0
 
-const FACING_NAMES: PackedStringArray = ["southEast", "southWest", "northWest", "northEast"]
 
 
 ## Turns the prop to one of the floor axes. Called by the generator as it places

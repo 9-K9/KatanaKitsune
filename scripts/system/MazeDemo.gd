@@ -31,8 +31,6 @@ extends Node2D
 ## guarantees — so most of them landed on no floor at all and were skipped.
 @export var table_seat_gap: float = 110.0
 
-## How many floors share a look before it changes.
-@export var floors_per_theme: int = 1
 ## Start deeper than floor one. For testing a themed floor without walking down
 ## to it — the generator is identical, only the starting depth differs.
 @export var start_depth: int = 1
@@ -609,11 +607,6 @@ func _glow() -> GradientTexture2D:
 	return tex
 
 
-func _player_body() -> Node2D:
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D:
-			return node
-	return null
 
 
 ## Carves the maze. A randomised depth-first spanning tree first, so every room

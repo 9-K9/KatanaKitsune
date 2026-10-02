@@ -131,13 +131,6 @@ func drain_stamina(per_second: float, delta: float) -> void:
 	_stamina_rested_for = 0.0
 
 
-## Takes a lump sum, and reports whether she could afford it at all.
-func spend_stamina(amount: float) -> bool:
-	if stamina < amount:
-		return false
-	stamina -= amount
-	_stamina_rested_for = 0.0
-	return true
 
 
 ## Called every physics frame. Draining resets the rest timer, so a state that

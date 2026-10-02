@@ -22,9 +22,6 @@ const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
 ## The chair she would sit on if she stood still long enough.
 const COLOUR_PICKED := Color(1.00, 0.95, 0.40, 0.95)
 const ORIGIN_ARM: float = 9.0
-## Her seated art hangs this far below her origin, so this is the gap between
-## where she is sent and where she is seen to come down.
-const FEET_BELOW_ORIGIN: float = 110.0
 ## Chair art is 96 tall with its stone ending at y 92, drawn from the sprite
 ## centre — so its base sits this far below the sprite node.
 const CHAIR_BASE_BELOW_SPRITE: float = 44.0

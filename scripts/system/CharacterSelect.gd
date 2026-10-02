@@ -159,9 +159,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-func _focus_icons() -> void:
-	if _highlighted < icons.get_child_count():
-		(icons.get_child(_highlighted) as Control).grab_focus()
 
 
 ## Repaints the preview and the backdrop in one scheme.

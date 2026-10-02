@@ -157,13 +157,6 @@ func vector() -> Vector2:
 	return move.normalized() if move != Vector2.ZERO else Vector2.ZERO
 
 
-## True if this device has anything held at all — used by the join screen to
-## notice a player pressing a button to claim a slot.
-func any_pressed() -> bool:
-	for action in _every_action():
-		if pressed(action):
-			return true
-	return false
 
 
 ## Menu confirm and cancel, per device.

@@ -9,22 +9,7 @@ class_name AI_Class
 @onready var self_state: String = "idle"
 @onready var animation_state = "%s_%s"%[self_state,facing_dir]
 
-func navigationControler(targetVector2,spd,dt,fps):
-	nav.target_position = targetVector2
-	direction = nav.get_next_path_position() - global_position
-	direction = direction.normalized()
-	var round_dir = round(direction)
-	facing_dir = directionState(round_dir)		
-	if nav.is_navigation_finished():
-		self_state = "idle"
-		velocity = Vector2.ZERO
-	else:
-		self_state = "walk"
-		## No delta: move_and_slide() already integrates over the physics step.
-		velocity = direction * spd
-	animationState(fps)
-	move_and_slide()
-	
+
 ## The inverse of directionState: the unit vector a named facing points along.
 ## Lives here beside its counterpart because the monsters need it to work out
 ## what is in front of them, and AI_Class does not inherit the player's copy.
