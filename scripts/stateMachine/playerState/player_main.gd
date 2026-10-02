@@ -61,6 +61,14 @@ func _ready() -> void:
 	## maze scene directly still gives a playable character.
 	if input == null:
 		input = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
+	## Rebuilt whenever this slot's device changes. A PlayerInput binds to one
+	## device index at construction, and a slot can be adopted by a different pad
+	## when the original is unplugged — so without this a reconnected player
+	## holds an input pointed at a controller that is no longer there and simply
+	## cannot move. That is not a cable fault; it happens every time the
+	## replacement pad has a different index.
+	if not Roster.device_regained.is_connected(_rebind):
+		Roster.device_regained.connect(_rebind)
 	## Repaint into this player's chosen aspect. Only the sheets behind each
 	## frame change, so every animation, region and timing is untouched. The
 	## index is per-player now: four players wear four different colours.
@@ -191,6 +199,16 @@ func _fallen_underfoot() -> Node:
 			best_distance = distance
 			best = node
 	return best
+
+
+## Points this player's controls at whatever device now owns their slot.
+func _rebind(for_slot: int) -> void:
+	if for_slot != slot:
+		return
+	input = Roster.input_for(slot)
+	## Primed, or the button that reconnected the pad reads as a fresh press on
+	## the first frame back.
+	input.prime()
 
 
 func _on_action_timer_timeout():

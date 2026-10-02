@@ -903,6 +903,7 @@ func _spawn_player(step: Vector2) -> void:
 		(_players[i] as Node2D).global_position = centre + ring
 
 	_theme_floor()
+	_pass_through_each_other()
 	_fit_camera()
 	if not Roster.device_lost.is_connected(_on_device_lost):
 		Roster.device_lost.connect(_on_device_lost)
@@ -974,6 +975,26 @@ func _show_reconnect(text: String) -> void:
 	if note != null:
 		note.text = text
 		note.visible = text != ""
+
+
+## Lets the party walk through one another.
+##
+## Collision exceptions rather than layers: players sit on layer 1 alongside the
+## walls, and everything that has to notice a player — pickups, spike traps,
+## chair zones — masks that layer. Moving them off it to separate them from each
+## other would quietly break all of those. An exception is per-pair and touches
+## nothing else.
+##
+## Two players shoved apart by their own collision is how a revived or
+## reconnected character ends up launched through the geometry and out into
+## black space: they spawn on the same spot and the solver has to resolve it.
+func _pass_through_each_other() -> void:
+	for a in _players:
+		if not is_instance_valid(a):
+			continue
+		for b in _players:
+			if b != a and is_instance_valid(b):
+				(a as CharacterBody2D).add_collision_exception_with(b)
 
 
 ## One camera for the table, framing every living player.
