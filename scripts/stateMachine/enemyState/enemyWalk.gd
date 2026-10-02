@@ -27,5 +27,7 @@ func on_physics_process(_delta: float) -> void:
 		return
 
 	var step: Vector2 = enemy.chase_direction()
-	enemy.move_towards(step if step != Vector2.ZERO else to_player, enemy.move_speed)
+	## Scaled by the rung: a runner closes, a revenant creeps and never stops.
+	var pace: float = enemy.move_speed * enemy.traits.get("chase", 1.0)
+	enemy.move_towards(step if step != Vector2.ZERO else to_player, pace)
 	enemy.play_loop("walk")

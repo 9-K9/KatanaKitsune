@@ -195,6 +195,10 @@ var _wave_live: bool = false
 var _clearing: bool = false
 ## When this wave began, for the speed bonus.
 var _wave_started: float = 0.0
+var _boss_placed: bool = false
+## What the party was worth on wave one, so scaling is applied to the original
+## numbers each wave rather than compounding on last wave's result.
+var _party_base: Dictionary = {}
 ## Themes already used this run, so a short descent does not show the same
 ## walls twice before it has shown sixty-four other options.
 var _themes_used: Array[int] = []
@@ -496,6 +500,8 @@ func _build() -> void:
 ## is left clear so she is not swung at before taking a step.
 func _populate(step: Vector2) -> void:
 	_wave_started = Time.get_ticks_msec() * 0.001
+	_boss_placed = false
+	_scale_party()
 	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
@@ -506,7 +512,16 @@ func _populate(step: Vector2) -> void:
 			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) \
 					+ depth - 1 + int(round(float(party - 1) * party_enemy_bonus))
 			for i in n:
-				_place(here, enemy_scenes[_rng.randi_range(0, enemy_scenes.size() - 1)])
+				var monster = _place(here, enemy_scenes[_rng.randi_range(0, enemy_scenes.size() - 1)])
+				if monster != null and monster.has_method("apply_tier"):
+					## Boss waves put one lord in the middle room's neighbour and
+					## fill the rest from the pool, so a boss wave reads as a
+					## boss wave rather than as six of them at once.
+					var rung: int = EnemyTier.roll(depth, _rng)
+					if EnemyTier.is_boss_wave(depth) and not _boss_placed:
+						rung = 6
+						_boss_placed = true
+					monster.apply_tier(rung, depth)
 		if not prop_scenes.is_empty():
 			var m: int = _rng.randi_range(props_per_room.x, props_per_room.y)
 			for i in m:
@@ -519,15 +534,15 @@ func _populate(step: Vector2) -> void:
 
 ## Puts one thing on a random floor tile of `room`, so nothing lands in a wall
 ## or out in the void.
-func _place(room: Node2D, scene: PackedScene) -> void:
+func _place(room: Node2D, scene: PackedScene) -> Node:
 	if scene == null:
-		return
+		return null
 	var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
 	if ground == null:
-		return
+		return null
 	var cells := ground.get_used_cells()
 	if cells.is_empty():
-		return
+		return null
 	var thing = scene.instantiate()
 	## Chairs also arrive through the prop pool, and want turning just the same.
 	if thing.has_method("face_randomly"):
@@ -535,6 +550,7 @@ func _place(room: Node2D, scene: PackedScene) -> void:
 	add_child(thing)
 	thing.global_position = ground.to_global(
 		ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+	return thing
 
 
 ## Drops the whole floor into gloom and gives the player a lantern, so the maze
@@ -913,6 +929,26 @@ func _spawn_player(step: Vector2) -> void:
 func _physics_process(delta: float) -> void:
 	_track_party(delta)
 	_check_wave_cleared()
+
+
+## Brings the party up with the monsters, on the same curve and the same cap.
+## Without this the scaling is only ever a difficulty increase, and a long run
+## turns into chipping at sponges.
+func _scale_party() -> void:
+	var deep: float = minf(1.0 + float(depth - 1) * 0.05, 2.0)
+	for body in _players:
+		if not is_instance_valid(body):
+			continue
+		var id: int = body.get_instance_id()
+		if not _party_base.has(id):
+			_party_base[id] = {"health": body.max_health, "damage": body.damage}
+		var base: Dictionary = _party_base[id]
+		var was: float = body.max_health
+		body.max_health = base["health"] * deep
+		## Healed by the increase rather than to full: surviving a wave should
+		## still cost something going into the next.
+		body.health = minf(body.health + (body.max_health - was), body.max_health)
+		body.damage = base["damage"] * deep
 
 
 ## The way on is an empty room. No stairs: hunting the last monster is a better

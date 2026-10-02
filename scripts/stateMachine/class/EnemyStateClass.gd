@@ -9,6 +9,9 @@ class_name EnemyBase
 ## Which rung of the bestiary this monster is, 1 to 6. Drives what it is worth
 ## and, later, which behaviours it is allowed.
 @export var tier: int = 1
+## What this tier can do, read once on ready. Looked up rather than duplicated
+## onto every monster scene, so retuning a rung is one table edit.
+var traits: Dictionary = {}
 
 @export_group("Stats")
 @export var max_health: float = 100.0
@@ -47,6 +50,25 @@ var _flash_tween: Tween = null
 var _attack_ready_at_ms: int = 0
 var _nav_checked: bool = false
 var _nav_usable: bool = false
+
+
+func apply_tier(to: int, wave: int = 1) -> void:
+	tier = to
+	traits = EnemyTier.of(to)
+	## Scaled by the rung and then by how deep the run has gone, capped so a
+	## long run does not become arithmetic rather than a fight.
+	var deep: float = minf(1.0 + float(wave - 1) * 0.06, WAVE_CAP)
+	max_health *= traits["health"] * deep
+	health = max_health
+	attack_damage *= traits["damage"] * deep
+	if traits["phases"]:
+		## Walls are not cover from this one, and it walks through them.
+		set_deferred("collision_mask", 0)
+
+
+## How far the wave scaling can push a monster. Past this the numbers stop
+## meaning anything and a fight becomes a stalemate.
+const WAVE_CAP: float = 2.5
 
 
 func _ready() -> void:
@@ -153,6 +175,10 @@ func _look_for_player() -> bool:
 	## monsters are left in deliberately: one standing in a doorway blocks the
 	## view through it, which is the same rule the walls follow.
 	query.exclude = [get_rid(), target.get_rid()]
+	## A phasing monster has no line of sight to break — stone is not cover from
+	## something that walks through it.
+	if traits.get("phases", false):
+		return true
 	return space.intersect_ray(query).is_empty()
 
 
@@ -357,6 +383,24 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	HitEffects.blood(get_parent(), global_position + Vector2(0, -40), origin, amount)
 	HitEffects.slash(get_parent(), global_position + Vector2(0, -40),
 			global_position - origin, 1.0 + amount / 120.0)
+	## A warden meets blows it is facing. A flat frontal soak rather than the
+	## player's arc — a monster parrying that precisely would be unreadable in a
+	## crowd.
+	if traits.get("guards", false) and from != Vector2.INF:
+		var facing: Vector2 = stateDirection(facing_dir)
+		if facing != Vector2.ZERO:
+			var toward: Vector2 = from - global_position
+			toward.y /= 0.5
+			facing.y /= 0.5
+			if absf(toward.normalized().angle_to(facing.normalized())) < deg_to_rad(70.0):
+				amount *= 0.45
+	## The boss never learned to watch its own back. This is the only way in.
+	var weak: float = traits.get("stealth_weak", 1.0)
+	if weak > 1.0 and _last_hit_by >= 0:
+		var striker := _player_in_slot(_last_hit_by)
+		if striker != null and (striker.get("stealthed") == true
+				or striker.get("crouched") == true):
+			amount *= weak
 	health = maxf(health - amount, 0.0)
 	_refresh_health_bar()
 	## The killing blow gets the longer hold, so a one-shot does not look like
