@@ -12,7 +12,6 @@ extends Node2D
 @export var player_scene: PackedScene = null
 @export var enemy_scenes: Array[PackedScene] = []
 @export var prop_scenes: Array[PackedScene] = []
-@export var exit_scene: PackedScene = null
 ## Stood at the ends of every opening and spaced across it, so a knocked-out
 ## wall reads as a deliberate colonnade instead of a severed run of stone.
 @export var pillar_scene: PackedScene = null
@@ -189,6 +188,13 @@ var _rng := RandomNumberGenerator.new()
 ## maze_seed, so a floor is still reproducible from its seed — it just is not
 ## the same floor for everybody.
 var _theme_index: int = -1
+## Set once this wave's monsters are standing. Without it the very first frame
+## after a rebuild — before _populate has run — looks like a cleared room, and
+## the next wave would start instantly and forever.
+var _wave_live: bool = false
+var _clearing: bool = false
+## When this wave began, for the speed bonus.
+var _wave_started: float = 0.0
 ## Themes already used this run, so a short descent does not show the same
 ## walls twice before it has shown sixty-four other options.
 var _themes_used: Array[int] = []
@@ -246,6 +252,8 @@ func descend() -> void:
 	for body in keep:
 		_players.append(body)
 	_rooms.clear()
+	_wave_live = false
+	_clearing = false
 	_build()
 	_announce_floor()
 
@@ -423,7 +431,7 @@ func _repoint(tiles: TileSet, prefix: String) -> void:
 ## The stairs used to drop you to a new floor with no acknowledgement at all —
 ## the only sign was the small FLOOR counter in the corner, so walking onto them
 ## read as being teleported by a glitch rather than as descending.
-func _announce_floor() -> void:
+func _announce_floor(text: String = "") -> void:
 	var layer := get_node_or_null("FloorLayer") as CanvasLayer
 	if layer == null:
 		layer = CanvasLayer.new()
@@ -441,7 +449,7 @@ func _announce_floor() -> void:
 	var note := layer.get_node_or_null("Note") as Label
 	if note == null:
 		return
-	note.text = "FLOOR %d" % depth
+	note.text = text if text != "" else "WAVE %d" % depth
 	note.modulate.a = 1.0
 	## Holds, then fades. Long enough to read on arrival, short enough that it is
 	## not in the way of the first room.
@@ -478,55 +486,16 @@ func _build() -> void:
 	_place_starting_chair()
 	_populate(step)
 	_clear_buried_chairs()
-	_place_exit()
+	## Armed only now: _populate has run, so an empty room from here really does
+	## mean the wave was cleared rather than that it has not started.
+	_wave_live = true
 	_light()
-
-
-## The stairs go in whichever room is furthest from the start, measured through
-## the maze rather than across it, so the exit is a walk and not a room away.
-func _place_exit() -> void:
-	if exit_scene == null:
-		return
-	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
-	var far: Vector2i = start
-	var best: int = -1
-	var seen: Dictionary = {start: 0}
-	var queue: Array[Vector2i] = [start]
-	while queue.size() > 0:
-		var cell: Vector2i = queue.pop_front()
-		if seen[cell] > best:
-			best = seen[cell]
-			far = cell
-		var room = _rooms.get(cell)
-		if room == null or not room.has_method("open_sides"):
-			continue
-		for side in room.open_sides():
-			var next: Vector2i = cell + NEIGHBOUR[side]
-			if _rooms.has(next) and not seen.has(next):
-				seen[next] = seen[cell] + 1
-				queue.append(next)
-
-	var stairs = exit_scene.instantiate()
-	## Lit, because an unlit prop on a dark floor is scenery. This is the one
-	## thing in a room the player is actually looking for.
-	var beacon := PointLight2D.new()
-	beacon.name = "Beacon"
-	beacon.texture = _glow()
-	beacon.color = Color(0.65, 0.85, 1.0)
-	beacon.energy = 1.5
-	beacon.texture_scale = 0.9
-	beacon.position = Vector2(0, -20)
-	stairs.add_child(beacon)
-	add_child(stairs)
-	stairs.global_position = _room_centre(far)
-	## Deferred: descend() frees the whole floor and the signal fires from
-	## inside body_entered, mid-physics.
-	stairs.descended.connect(descend, CONNECT_DEFERRED)
 
 
 ## Drops monsters and breakables into the rooms. The room the player starts in
 ## is left clear so she is not swung at before taking a step.
 func _populate(step: Vector2) -> void:
+	_wave_started = Time.get_ticks_msec() * 0.001
 	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
@@ -942,6 +911,28 @@ func _spawn_player(step: Vector2) -> void:
 
 func _physics_process(delta: float) -> void:
 	_track_party(delta)
+	_check_wave_cleared()
+
+
+## The way on is an empty room. No stairs: hunting the last monster is a better
+## end to a wave than hunting a staircase, and it means a level cannot be walked
+## past without engaging the thing it was built around.
+func _check_wave_cleared() -> void:
+	if _clearing or not _wave_live:
+		return
+	for node in get_tree().get_nodes_in_group("enemy"):
+		if is_instance_valid(node) and not (node.get("is_dead") == true):
+			return
+	_clearing = true
+	_finish_wave()
+
+
+func _finish_wave() -> void:
+	Score.wave_cleared(depth, Time.get_ticks_msec() * 0.001 - _wave_started)
+	_announce_floor("AREA CLEAR")
+	await get_tree().create_timer(2.1, false).timeout
+	if is_inside_tree():
+		descend()
 
 
 ## Halts the floor while anyone's pad is unplugged, and says whose.

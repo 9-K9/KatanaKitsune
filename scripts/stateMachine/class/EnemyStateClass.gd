@@ -6,6 +6,10 @@ class_name EnemyBase
 ## states under scripts/stateMachine/enemyState/, driven by the monster's
 ## FiniteStateMachine child the same way the player's states are.
 
+## Which rung of the bestiary this monster is, 1 to 6. Drives what it is worth
+## and, later, which behaviours it is allowed.
+@export var tier: int = 1
+
 @export_group("Stats")
 @export var max_health: float = 100.0
 @export var move_speed: float = 55.0
@@ -330,8 +334,18 @@ func provoke() -> bool:
 
 
 
+## Who struck the killing blow, so the score goes to the right player.
+var _last_hit_by: int = -1
+
+
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		_guardable: bool = true) -> void:
+	## Credited by proximity to the source of the blow, which is the player's
+	## own position for a swing and the arc's for a thrown one.
+	if from != Vector2.INF:
+		var striker := Roster.nearest_to(get_tree(), from)
+		if striker != null and "slot" in striker:
+			_last_hit_by = striker.slot
 	if is_dead:
 		return
 	## Where the blade came through, so the spray throws the right way and the
@@ -358,11 +372,27 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 ## and the player's ActionArea releases it as a target.
 func begin_death() -> void:
 	is_dead = true
+	## Scored here rather than in the death state, so it lands the instant the
+	## monster is out of the fight — the streak window has to open now, not when
+	## the collapse animation finishes.
+	if _last_hit_by >= 0:
+		var killer := _player_in_slot(_last_hit_by)
+		var unseen: bool = killer != null and (killer.get("stealthed") == true
+				or killer.get("crouched") == true)
+		Score.killed(_last_hit_by, tier, unseen)
 	velocity = Vector2.ZERO
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
 	if is_instance_valid(health_bar):
 		health_bar.visible = false
+
+
+## The body in a given slot, or null.
+func _player_in_slot(slot: int) -> Node:
+	for body in Roster.bodies(get_tree()):
+		if body.get("slot") == slot:
+			return body
+	return null
 
 
 ## Called by the death state once the animation has played out.

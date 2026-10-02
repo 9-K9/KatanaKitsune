@@ -294,6 +294,14 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		return
 	if is_invincible or is_dead:
 		return
+	## Inside a kill streak's window. Separate from is_invincible rather than
+	## reusing it, so the two cannot stack into permanent protection — and so a
+	## blow still breaks the chain even though it did no damage. The window is
+	## for the moment between kills, not a shield to stand behind.
+	if "slot" in self and Score.protected(get("slot")):
+		Score.broke(get("slot"))
+		_start_invincibility()
+		return
 	## Sneaking is a guard of its own: low, turned side-on, watching. She reads
 	## a blow coming the same way a raised blade does, so the same arc applies
 	## without needing the katana out. It is simply worth less.
