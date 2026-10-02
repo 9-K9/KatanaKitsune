@@ -200,26 +200,19 @@ func directionState(rnd_dir):
 			string_dir = "southEast"
 	return string_dir	
 	
-func stateDirection(str_dir):
-	var vector_dir : Vector2
-	match str_dir:
-		"south":
-			vector_dir = Vector2(0,1)
-		"southWest":
-			vector_dir = Vector2(-1,1)
-		"west":
-			vector_dir = Vector2(-1,0)
-		"northWest":
-			vector_dir = Vector2(-1,-1)
-		"north":
-			vector_dir = Vector2(0,-1)
-		"northEast":
-			vector_dir = Vector2(1,-1)
-		"east":
-			vector_dir = Vector2(1,0)
-		"southEast":
-			vector_dir = Vector2(1,1)
-	return vector_dir
+## The screen vector for a facing name, or ZERO if the name is not one of the
+## eight. A dict rather than a match with no default branch: that version agreed
+## with this one only because a typed local happens to initialise to ZERO.
+const FACING_VECTORS := {
+	"south": Vector2(0, 1), "southWest": Vector2(-1, 1),
+	"west": Vector2(-1, 0), "northWest": Vector2(-1, -1),
+	"north": Vector2(0, -1), "northEast": Vector2(1, -1),
+	"east": Vector2(1, 0), "southEast": Vector2(1, 1),
+}
+
+
+func stateDirection(str_dir) -> Vector2:
+	return FACING_VECTORS.get(str_dir, Vector2.ZERO)
 	
 func updateRayCast2D(str_dir):
 	setRayCast2D(stateDirection(str_dir)) 
@@ -389,7 +382,11 @@ func _guarded(amount: float, from: Vector2) -> float:
 func _angle_off_facing(from: Vector2) -> float:
 	var facing: Vector2 = stateDirection(facing_dir)
 	if facing == Vector2.ZERO:
-		return 0.0
+		## Unknown facing fails safe, not open. Returning 0.0 here meant "dead
+		## ahead", so a facing_dir that was not one of the eight names made every
+		## blow from every direction read as a perfect frontal block and she took
+		## no damage at all. PI is behind her, which is the unguarded case.
+		return PI
 	var toward: Vector2 = from - global_position
 	if toward.length_squared() < 1.0:
 		return 0.0
