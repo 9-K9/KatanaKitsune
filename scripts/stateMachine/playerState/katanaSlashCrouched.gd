@@ -1,26 +1,9 @@
-extends PlayerClass
+extends OneShotAttackState
 
-# Called when the state machine enters this state.
-func on_enter():
-	pc.speed = 0.0
-	pc.actionBlockInput = true
-	pc.timerTimeOut = false
-	action_timer.wait_time = 1
-	action_timer.start()
-	beginAttack()
+## A low cut from a crouch.
 
-# Called every frame when this state is active.
-func on_process(delta):
-	stateAnimation("katanaSlashCrouched",8)
-	playerAttack()
-		
-func on_physics_process(delta):
-	if action_timer.is_stopped():
-		pc.timerTimeOut = true
-		change_state("katanaIdle")
-		
-# Called when the state machine exits this state.
-func on_exit():
-	pc.timerTimeOut = true
-	pc.actionBlockInput = false
-	action_timer.stop()
+func _init() -> void:
+	clip = "katanaSlashCrouched"
+	fps = 8
+	duration = 1.0
+	exit_state = "katanaIdle"

@@ -1,26 +1,9 @@
-extends PlayerClass
+extends OneShotAttackState
 
-# Called when the state machine enters this state.
-func on_enter():
-	pc.speed = 0.0
-	pc.actionBlockInput = true
-	pc.timerTimeOut = false
-	action_timer.wait_time = 0.75
-	action_timer.start()
-	beginAttack()
+## A kick to the head. Faster than the mid kick, and 0.08s of the lock runs past the end of the art.
 
-# Called every frame when this state is active.
-func on_process(delta):
-	stateAnimation("highKick",12)
-	playerAttack()
-		
-func on_physics_process(delta):
-	if action_timer.is_stopped():
-		pc.timerTimeOut = true
-		change_state("idle")
-		
-# Called when the state machine exits this state.
-func on_exit():
-	pc.timerTimeOut = true
-	pc.actionBlockInput = false
-	action_timer.stop()
+func _init() -> void:
+	clip = "highKick"
+	fps = 12
+	duration = 0.75
+	exit_state = "idle"
