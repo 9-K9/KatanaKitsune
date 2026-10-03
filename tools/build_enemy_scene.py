@@ -27,6 +27,28 @@ FRAME = 224
 DIRECTIONS = ("southWest", "west", "northWest", "north",
               "northEast", "east", "southEast", "south")
 
+## How tall each one stands against a human, which the art cannot carry on its
+## own: a generator normalises every model it makes, so a giant skeleton and a
+## weasel come back the same size and the bestiary reads flat.
+##
+## Visual only. The collision polygon is left alone deliberately — a gashadokuro
+## with a body three times the size would wedge itself in the corridors it is
+## supposed to come down.
+HEIGHT = {
+    "gashadokuro": 2.6,   # towers over everything; the point of it
+    "oni":         1.40,
+    "nurarihyon":  1.15,  # bosses read as bigger than the duellists
+    "hannya":      1.15,
+    "kamaitachi":  0.70,  # small and fast, and should look breakable
+}
+
+## Where the feet sit inside a frame, and how far that is below the sprite's
+## centre. Scaling the sprite scales this gap too, so the offset has to move
+## with it or a scaled monster floats.
+FEET_BELOW_CENTRE = 80.0
+## The template's own sprite offset, which the formula has to reproduce at 1.0.
+BASE_SPRITE_Y = -72.0
+
 ## The twelve, with their rung and the numbers that suit them. Tier drives
 ## behaviour; these are only what the monster is before the wave scaling.
 ROSTER = {
@@ -141,6 +163,28 @@ def _expand_template(out, folder, title, clips, add_duellist_states):
     return out
 
 
+def _apply_height(out, folder):
+    """Scale the sprite, keeping the feet on the floor.
+
+    The sprite draws centred, so its feet sit FEET_BELOW_CENTRE under its own
+    position. Scaling by k scales that gap as well, and a monster scaled about
+    its middle ends up hovering by the difference. Moving the offset to
+    8 - 80k cancels it: at k=1 that is the template's own -72, and at any other
+    k the feet land in the same place.
+    """
+    k = HEIGHT.get(folder)
+    if k is None:
+        return out
+    y = (BASE_SPRITE_Y + FEET_BELOW_CENTRE) - FEET_BELOW_CENTRE * k
+    anchor = '[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]\nposition = Vector2(0, -72)'
+    assert anchor in out, "sprite node not where %s expected it" % folder
+    return out.replace(
+        anchor,
+        '[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]\n'
+        'position = Vector2(0, %.1f)\nscale = Vector2(%.2f, %.2f)' % (y, k, k),
+        1)
+
+
 def build(folder, tier=None):
     clips, missing, wrong = sheets_for(folder)
     if missing or wrong:
@@ -172,6 +216,8 @@ def build(folder, tier=None):
     ## keeps a gashadokuro rebuild byte-identical to earlier builds.
     if clips != LEGACY_COUNTS:
         out = _expand_template(out, folder, title, clips, tier >= 5)
+
+    out = _apply_height(out, folder)
 
     path = os.path.join(SCENES, "%s.tscn" % folder)
     open(path, "w").write(out)
