@@ -1,5 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cmaze7kq2wvn3"]
 
+[ext_resource type="PackedScene" path="res://scenes/monsters/yukiOnna.tscn" id="90_yukiOnna"]
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
 [ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
@@ -36,7 +37,7 @@ script = ExtResource("1_maze")
 room_scene = ExtResource("2_room")
 player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
-enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"), ExtResource("5_ronin"), ExtResource("23_gasha")])
+enemy_scenes = Array[PackedScene]([ExtResource("4_mummy"), ExtResource("4_mummy"), ExtResource("5_ronin"), ExtResource("23_gasha"), ExtResource("90_yukiOnna")])
 exit_scene = ExtResource("12_exit")
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair"), ExtResource("20_ceramic_jar"), ExtResource("20_tea_set"), ExtResource("20_sake_barrel"), ExtResource("20_storage_chest"), ExtResource("20_offering_box"), ExtResource("20_zabuton_stack"), ExtResource("20_katana_rack"), ExtResource("20_folding_screen"), ExtResource("20_stone_lantern")])
 pillar_scene = ExtResource("11_pillar")
