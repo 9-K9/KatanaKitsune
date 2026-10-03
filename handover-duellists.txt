@@ -1,0 +1,94 @@
+===============================================================================
+HANDOVER — 2026-10-03  TIER 5/6 DUELLIST ART, IN PROGRESS
+Read alongside log.txt.
+===============================================================================
+
+PICK UP HERE. The characters exist; the clips mostly do not.
+
+
+FOUR DUELLIST CHARACTERS GENERATED
+  (requested 160px, 8 directions, low top-down)
+
+  YukiOnna    79849bea-fdf7-48e8-b400-990fc45bb331   tier 5
+  KitsuneBi   e797ff85-d630-40be-8cbf-49ef675353c9   tier 5
+  Nurarihyon  240c7672-863a-45fe-9bc5-1d00439c9b59   tier 6
+  Hannya      0dc4e3c5-2b81-4345-b29d-80858d0a6151   tier 6
+
+  None has been exported to assets/ yet. They exist only in PixelLab.
+
+
+IN FLIGHT
+
+  A one-direction Block re-test on YukiOnna with keep_first_frame=false
+  (group a39ebce1-c842-4f04-92c0-bbd0e35f25a2, 6 generations), checking whether
+  dropping the reference frame removes a scale pop.
+
+  The original 8-direction Block (group e5ce9a49-6e22-45e3-a36e-3c6683698ca0,
+  48 generations, 9 frames) IS STILL THERE. Delete it if the retest is better.
+
+  THE POP: in the first Block, frames 0-1 are visibly larger and carry a flame
+  aura; frames 2-8 are smaller with the kimono spread. It lurches on playback.
+  The guard pose itself reads correctly from frame 2 onward — the prompt is
+  fine, the reference frame is the problem.
+
+
+THREE FINDINGS THE API DOES NOT TELL YOU
+
+  1. A custom v3 clip costs 48 generations and takes ~8 MINUTES for eight
+     directions. The hint says 30-60s per direction; it is wrong. Templates
+     cost 8 generations, run far quicker, and have no pop at all, because they
+     pose a skeleton rather than redrawing the character each frame.
+
+  2. Frames come back 216x216, NOT the 160 requested — the silhouette grows the
+     canvas. Convenient against the 224 target cells, but any export code
+     written for 160 is wrong before it runs.
+
+  3. Only 10 concurrent job slots exist and an 8-direction animation needs 8.
+     So: one animation at a time, and whoever else is working MUST NOT queue
+     PixelLab jobs or the two of you starve each other.
+
+
+REMAINING WORK, PER CHARACTER
+
+  Templates (8 generations each — do these first, cheap and reliable):
+    Idle   fight-stance-idle-8-frames
+    Walk   walking-8-frames
+    Hurt   taking-punch
+    Death  falling-back-death
+
+  Custom v3 (48 generations each, keep_first_frame=false on all of them):
+    Attack  "slashing downward with a katana"
+    Block   "standing guard with katana raised across the body"
+    Draw    "drawing a katana from its scabbard"
+    Charge  "winding up a heavy two-handed overhead katana strike"
+
+  EXPORT to
+    assets/sprites/monsters/<name>/sprites/<Clip>/<Name>_<Clip>_dir<N>.png
+    224x224 horizontal strips.
+    dir1=SE dir2=E dir3=NE dir4=N dir5=NW dir6=W dir7=SW dir8=S.
+    PixelLab names map: south-east->dir1, east->dir2, north-east->dir3,
+    north->dir4, north-west->dir5, west->dir6, south-west->dir7, south->dir8.
+    Feet on the same row undeadRonin uses — its content bbox in a 224 frame is
+    (65,37,155,192), so feet at y=192.
+
+  Budget was ~3600 generations, with roughly 900 needed for all four.
+
+
+OWNERSHIP — do not cross these
+
+  Codex owns tools/build_enemy_scene.py, enemyDraw.gd and enemyCharge.gd, and
+  is extending the builder for variable clip sets and generating the extra
+  SpriteFrames blocks. Do not touch those three files, and do not queue
+  PixelLab jobs if you are the one doing the Godot-side work.
+
+
+ALREADY DONE AND COMMITTED
+
+  6d2f287b  enemyBlock.gd, the guarding flag, in_attack_range(), duellists
+            raising their guard about a third of the time on approach. It calls
+            play_once("block"), so it shows nothing until that clip exists.
+  48a14dec  the six-tier system: wave-weighted rolls, bosses every fifth wave,
+            monster and party scaling, phasing, guarding, boss stealth weakness.
+  23d963d0  gashadokuro — the only one of the twelve yokai that ever arrived.
+
+===============================================================================

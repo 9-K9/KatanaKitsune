@@ -460,3 +460,7 @@ STILL OUTSTANDING
       favour — the PixelLab floors above would add to it.
 
 ===============================================================================
+
+
+See handover-duellists.txt for the tier 5/6 duellist art pipeline,
+which is mid-flight as of 2026-10-03.
