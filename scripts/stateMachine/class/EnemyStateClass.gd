@@ -60,7 +60,11 @@ var _nav_usable: bool = false
 
 func apply_tier(to: int, wave: int = 1) -> void:
 	tier = to
-	traits = EnemyTier.of(to)
+	## Duplicated, not referenced. EnemyTier.of returns the shared row out of
+	## its table, so trimming it in place would strip the skill from every
+	## monster of that rung for the rest of the run.
+	traits = EnemyTier.of(to).duplicate()
+	_drop_skills_without_states()
 	## Scaled by the rung and then by how deep the run has gone, capped so a
 	## long run does not become arithmetic rather than a fight.
 	var deep: float = minf(1.0 + float(wave - 1) * 0.06, WAVE_CAP)
@@ -70,6 +74,27 @@ func apply_tier(to: int, wave: int = 1) -> void:
 	if traits["phases"]:
 		## Walls are not cover from this one, and it walks through them.
 		set_deferred("collision_mask", 0)
+
+
+## Takes away any skill this monster has no state node to perform.
+##
+## The generator picks the art uniformly and rolls the rung separately, so any
+## scene can be handed any tier — a shambler can come up tier 6. Only the four
+## duellist scenes carry block, draw and charge, and asking for a state that is
+## not there logs an error and leaves current_state untouched, so the monster
+## retries the same transition every frame: an error flood and a body that
+## stands still instead of fighting.
+##
+## Trimming the traits is better than guarding each call site, because the
+## traits are what every behaviour reads. One monster quietly fights a rung
+## below its skill ceiling; nothing errors and nothing freezes.
+func _drop_skills_without_states() -> void:
+	if not is_instance_valid(state_machine):
+		return
+	if traits.get("duellist", false) and not state_machine.has_node("draw"):
+		traits["duellist"] = false
+	if traits.get("guards", false) and not state_machine.has_node("block"):
+		traits["guards"] = false
 
 
 ## How far the wave scaling can push a monster. Past this the numbers stop
