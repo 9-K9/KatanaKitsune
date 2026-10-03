@@ -10,40 +10,20 @@ class_name AI_Class
 @onready var animation_state = "%s_%s"%[self_state,facing_dir]
 
 
-## The inverse of directionState: the unit vector a named facing points along.
-## Lives here beside its counterpart because the monsters need it to work out
-## what is in front of them, and AI_Class does not inherit the player's copy.
-const FACING_VECTORS := {
-	"south": Vector2(0, 1), "southWest": Vector2(-1, 1), "west": Vector2(-1, 0),
-	"northWest": Vector2(-1, -1), "north": Vector2(0, -1),
-	"northEast": Vector2(1, -1), "east": Vector2(1, 0), "southEast": Vector2(1, 1),
-}
+## Facing lookups live in IsoFacing so the monsters and the player share one
+## table. Kept as methods rather than replaced at the call sites because Radar
+## finds anything that can report a facing with has_method("stateDirection").
 
-
+## The unit vector a named facing points along, or ZERO if it is not one of the
+## eight. The monsters need it to work out what is in front of them.
 func stateDirection(str_dir: String) -> Vector2:
-	return FACING_VECTORS.get(str_dir, Vector2.ZERO)
+	return IsoFacing.vector_of(str_dir)
 
 
+## The facing name for a rounded direction vector, or "" if it is not one of
+## the eight.
 func directionState(rnd_dir):
-	var string_dir : String
-	match rnd_dir:
-		Vector2(0,1):
-			string_dir = "south"
-		Vector2(-1,1):
-			string_dir = "southWest"
-		Vector2(-1,0):
-			string_dir = "west"
-		Vector2(-1,-1):
-			string_dir = "northWest"
-		Vector2(0,-1):
-			string_dir = "north"
-		Vector2(1,-1):
-			string_dir = "northEast"
-		Vector2(1,0):
-			string_dir = "east"
-		Vector2(1,1):
-			string_dir = "southEast"
-	return string_dir
+	return IsoFacing.name_of(rnd_dir)
 		
 func animationState(fps):
 	animation_state = "%s_%s"%[self_state,facing_dir]

@@ -172,40 +172,20 @@ var _base_run: float = 0.0
 @onready var myAnimatedSprite2D : AnimatedSprite2D = get_node(_animatedSprite2D)
 @onready var myTimer : Timer = get_node(_actionTimer)
 			
+## Facing lookups live in IsoFacing so the player and the monsters share one
+## table. Kept as methods rather than replaced at the call sites because Radar
+## finds anything that can report a facing with has_method("stateDirection").
+
+## The facing name for a rounded direction vector, or "" if it is not one of
+## the eight. Callers guard on "" to leave the current facing alone.
 func directionState(rnd_dir):
-	var string_dir : String
-	match rnd_dir:
-		Vector2(0,1):
-			string_dir = "south"
-		Vector2(-1,1):
-			string_dir = "southWest"
-		Vector2(-1,0):
-			string_dir = "west"
-		Vector2(-1,-1):
-			string_dir = "northWest"
-		Vector2(0,-1):
-			string_dir = "north"
-		Vector2(1,-1):
-			string_dir = "northEast"
-		Vector2(1,0):
-			string_dir = "east"
-		Vector2(1,1):
-			string_dir = "southEast"
-	return string_dir	
-	
+	return IsoFacing.name_of(rnd_dir)
+
+
 ## The screen vector for a facing name, or ZERO if the name is not one of the
-## eight. A dict rather than a match with no default branch: that version agreed
-## with this one only because a typed local happens to initialise to ZERO.
-const FACING_VECTORS := {
-	"south": Vector2(0, 1), "southWest": Vector2(-1, 1),
-	"west": Vector2(-1, 0), "northWest": Vector2(-1, -1),
-	"north": Vector2(0, -1), "northEast": Vector2(1, -1),
-	"east": Vector2(1, 0), "southEast": Vector2(1, 1),
-}
-
-
+## eight.
 func stateDirection(str_dir) -> Vector2:
-	return FACING_VECTORS.get(str_dir, Vector2.ZERO)
+	return IsoFacing.vector_of(str_dir)
 	
 func updateRayCast2D(str_dir):
 	setRayCast2D(stateDirection(str_dir)) 
