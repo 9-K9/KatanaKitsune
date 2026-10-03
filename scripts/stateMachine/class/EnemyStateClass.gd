@@ -12,6 +12,10 @@ class_name EnemyBase
 ## What this tier can do, read once on ready. Looked up rather than duplicated
 ## onto every monster scene, so retuning a rung is one table edit.
 var traits: Dictionary = {}
+## True only while a duellist is actually holding its guard up. The tier's
+## passive soak applies whenever it is facing a blow; this is the deeper
+## reduction for a block it deliberately raised.
+var guarding: bool = false
 
 @export_group("Stats")
 @export var max_health: float = 100.0
@@ -263,6 +267,12 @@ func _navigation_available() -> bool:
 
 ## Points the sprite along `dir`. Facing is taken from the unforeshortened
 ## vector so the monster looks where the player actually is on screen.
+## Close enough to swing. Used by the duellist states to decide whether to
+## answer a guard with a strike or close the distance first.
+func in_attack_range() -> bool:
+	return distance_to_player() <= attack_range
+
+
 func face(dir: Vector2) -> void:
 	if dir == Vector2.ZERO:
 		return
@@ -393,7 +403,9 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 			toward.y /= 0.5
 			facing.y /= 0.5
 			if absf(toward.normalized().angle_to(facing.normalized())) < deg_to_rad(70.0):
-				amount *= 0.45
+				## A guard it chose to raise stops far more than merely facing
+				## the right way does.
+				amount *= 0.15 if guarding else 0.45
 	## The boss never learned to watch its own back. This is the only way in.
 	var weak: float = traits.get("stealth_weak", 1.0)
 	if weak > 1.0 and _last_hit_by >= 0:

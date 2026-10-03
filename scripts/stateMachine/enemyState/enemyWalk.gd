@@ -10,6 +10,13 @@ func on_physics_process(_delta: float) -> void:
 		change_state("alert")
 		return
 
+	## Guards rather than trades, but only sometimes — a duellist that blocked
+	## every approach would be impassable, and one that never blocked would be
+	## no different from a runner.
+	if enemy.traits.get("duellist", false) and enemy.in_attack_range() \
+			and enemy.attack_off_cooldown() and randf() < 0.35:
+		change_state("block")
+		return
 	var distance: float = enemy.distance_to_player()
 	## Face where she actually is, but walk where the path says: staring at a
 	## corner while rounding it reads as the monster losing interest.
