@@ -1,8 +1,7 @@
-[gd_scene load_steps=2745 format=3 uid="uid://crfws6oy432nx"]
+[gd_scene load_steps=2742 format=3 uid="uid://crfws6oy432nx"]
 
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/player_main.gd" id="1_heltt"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="2_d8qwd"]
-[ext_resource type="Script" path="res://scripts/stateMachine/class/playerStateClass.gd" id="3_ek1kb"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/idle.gd" id="4_wm7im"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/walk.gd" id="5_85g7n"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/run.gd" id="6_i5lrg"]
@@ -60,7 +59,6 @@
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/seductiveDance.gd" id="25_1f1nf"]
 [ext_resource type="Texture2D" uid="uid://0lrt1hq6lj6e" path="res://assets/sprites/characters/KatanaKitsune/sprites/IdleStanding/KatanaKitsune_IdleStanding_dir2.png" id="25_ufm8y"]
 [ext_resource type="Texture2D" uid="uid://qtjvm1bvfbui" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsune_FastRun_dir6.png" id="26_tece5"]
-[ext_resource type="Script" path="res://scripts/stateMachine/playerState/sittingFloor.gd" id="26_y2njc"]
 [ext_resource type="Texture2D" uid="uid://cge61cac8f7vl" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsune_FastRun_dir4.png" id="27_drmxb"]
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/sittingChair.gd" id="27_k6cvj"]
 [ext_resource type="Texture2D" uid="uid://6vlt1iby6gkd" path="res://assets/sprites/characters/KatanaKitsune/sprites/FastRun/KatanaKitsune_FastRun_dir5.png" id="28_g3oq3"]
@@ -79,7 +77,6 @@
 [ext_resource type="Script" path="res://scripts/stateMachine/playerState/death.gd" id="34_cb7ou"]
 [ext_resource type="Texture2D" uid="uid://b71740rs7af2e" path="res://assets/sprites/characters/KatanaKitsune/sprites/Walking/KatanaKitsune_Walking_dir6.png" id="34_f8cvb"]
 [ext_resource type="Texture2D" uid="uid://ppwnsjiuh4k5" path="res://assets/sprites/characters/KatanaKitsune/sprites/ForwardRoll/KatanaKitsune_ForwardRoll_dir4.png" id="34_jhky3"]
-[ext_resource type="Script" path="res://scenes/characters/stateDummy.gd" id="35_f2twu"]
 [ext_resource type="Texture2D" uid="uid://di62bigllijk" path="res://assets/sprites/characters/KatanaKitsune/sprites/Walking/KatanaKitsune_Walking_dir4.png" id="35_q2mwq"]
 [ext_resource type="Texture2D" uid="uid://cqoi5n5hxw1br" path="res://assets/sprites/characters/KatanaKitsune/sprites/ForwardRoll/KatanaKitsune_ForwardRoll_dir5.png" id="35_yij6e"]
 [ext_resource type="Texture2D" uid="uid://cut81onhf2e2" path="res://assets/sprites/characters/KatanaKitsune/sprites/ForwardRoll/KatanaKitsune_ForwardRoll_dir2.png" id="36_2dnro"]
@@ -24245,10 +24242,6 @@ script = ExtResource("2_d8qwd")
 current_state = NodePath("idle")
 animation_player = NodePath("../AnimationManager/AnimationPlayer")
 
-[node name="characterState" type="Node" parent="FiniteStateMachine"]
-script = ExtResource("3_ek1kb")
-_animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
-
 [node name="idle" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("4_wm7im")
 _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
@@ -24341,10 +24334,6 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 script = ExtResource("25_1f1nf")
 _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
-[node name="sittingFloor" type="Node" parent="FiniteStateMachine"]
-script = ExtResource("26_y2njc")
-_animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
-
 [node name="sittingChair" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("27_k6cvj")
 _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
@@ -24375,10 +24364,6 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="death" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("34_cb7ou")
-_animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
-
-[node name="_stateDummy" type="Node" parent="FiniteStateMachine"]
-script = ExtResource("35_f2twu")
 _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 
 [node name="AnimationManager" type="Node2D" parent="."]
