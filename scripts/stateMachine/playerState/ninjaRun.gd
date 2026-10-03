@@ -17,7 +17,7 @@ func on_process(delta):
 	if pc.sneak_spent():
 		change_state("run")
 		return
-	stateAnimation("ninjaRun", 12)
+	stateAnimation("ninjaRun")
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("stealthIdle")
 		return

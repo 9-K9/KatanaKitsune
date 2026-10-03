@@ -4,5 +4,4 @@ extends OneShotAttackState
 
 func _init() -> void:
 	clip = "katanaKick"
-	fps = 8
 	exit_state = "katanaIdle"

@@ -4,5 +4,4 @@ extends OneShotAttackState
 
 func _init() -> void:
 	clip = "roundKick"
-	fps = 12
 	exit_state = "idle"

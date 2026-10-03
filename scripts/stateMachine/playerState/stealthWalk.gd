@@ -15,7 +15,7 @@ func on_process(_delta):
 	if pc.sneak_spent():
 		change_state("walk")
 		return
-	stateAnimation("stealthWalk", 2)
+	stateAnimation("stealthWalk")
 	## Striking from cover is the stealth attack, wherever she is hidden.
 	if pc.input.just_pressed("Attack"):
 		change_state("flair")

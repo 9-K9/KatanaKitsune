@@ -10,7 +10,7 @@ func on_enter():
 	pc.block_opened_at = Time.get_ticks_msec()
 
 func on_process(_delta):
-	stateAnimation("katanaBlockCrouched", 4)
+	stateAnimation("katanaBlockCrouched")
 	if not pc.input.pressed("Defend"):
 		change_state("katanaIdle")
 		return

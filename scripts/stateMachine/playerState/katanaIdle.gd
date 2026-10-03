@@ -12,7 +12,7 @@ func on_enter():
 
 # Called every frame when this state is active.
 func on_process(delta):
-	stateAnimation("katanaIdle",1)
+	stateAnimation("katanaIdle")
 	## Checked before movement. This used to sit below, so any stick input sent
 	## her to katanaWalk first and the wind-up was unreachable — in a fight she
 	## is always moving, which made the charged attack impossible to land.

@@ -9,7 +9,7 @@ func on_enter():
 	pc.crouched = true
 
 func on_process(_delta):
-	stateAnimation("stealthCrouch", 2)
+	stateAnimation("stealthCrouch")
 	## Striking from a crouch is the stealth attack.
 	if pc.input.just_pressed("Attack"):
 		change_state("flair")

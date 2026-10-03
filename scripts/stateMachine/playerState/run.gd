@@ -15,7 +15,7 @@ func on_enter():
 
 # Called every frame when this state is active.
 func on_process(delta):
-	stateAnimation("fastRun",3)
+	stateAnimation("fastRun")
 	var input: Vector2 = pc.InputHandler()
 	if input != Vector2.ZERO and pc.input.just_released("Run"):
 		change_state("walk")

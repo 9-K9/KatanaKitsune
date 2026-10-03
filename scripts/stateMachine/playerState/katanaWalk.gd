@@ -14,7 +14,7 @@ func on_enter():
 
 # Called every frame when this state is active.
 func on_process(delta):
-	stateAnimation("katanaWalk",8)
+	stateAnimation("katanaWalk")
 
 	## Before the movement transitions, so holding Attack always wins.
 	if pc.input.pressed("Attack"):

@@ -7,7 +7,7 @@ func on_enter():
 	pc.speed = 0.0
 
 func on_process(_delta):
-	stateAnimation("sittingFloor", 2)
+	stateAnimation("sittingFloor")
 	if pc.InputHandler() != Vector2.ZERO \
 			or pc.input.just_pressed("Attack") \
 			or pc.input.just_pressed("Katana") \

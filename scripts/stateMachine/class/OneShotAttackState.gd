@@ -14,11 +14,6 @@ extends PlayerClass
 
 ## Clip name without the facing suffix — stateAnimation appends that.
 var clip: String = ""
-## Passed through to stateAnimation. It is discarded there today (the function
-## nulls it on its first line), but the five states disagreed about it — 8 or
-## 12 — so the values are kept rather than quietly collapsed, in case that
-## function is ever made to honour them.
-var fps: int = 8
 ## Seconds of input lock. Left at 0 — the usual case — it is measured from the
 ## art, so a redrawn clip changes the lock with it and the two cannot drift.
 ## Set it above zero only to hold her deliberately longer than the animation.
@@ -52,7 +47,7 @@ func lock_seconds() -> float:
 
 
 func on_process(_delta: float) -> void:
-	stateAnimation(clip, fps)
+	stateAnimation(clip)
 	playerAttack()
 
 

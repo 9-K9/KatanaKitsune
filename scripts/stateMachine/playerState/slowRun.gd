@@ -8,7 +8,7 @@ func on_enter():
 	pc.speed = pc.walkSpeed * 1.3
 
 func on_process(_delta):
-	stateAnimation("slowRun", 8)
+	stateAnimation("slowRun")
 	if pc.InputHandler() == Vector2.ZERO:
 		change_state("idle")
 		return

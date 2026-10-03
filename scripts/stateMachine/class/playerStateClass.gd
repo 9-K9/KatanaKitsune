@@ -17,9 +17,14 @@ extends StateMachineState
 ## True once the current swing has already dealt its damage.
 var _swing_connected: bool = false
 
-##Handles Input and returns a state string
-func stateAnimation(state_to_animate,fps):
-	fps = null #fps can be set in code or in the editor
+## Plays a looping clip in the direction she is facing.
+##
+## Took an `fps` argument until it was measured: thirteen of the nineteen call
+## sites disagreed with the rate the SpriteFrames is actually authored at, and
+## not slightly — idle passed 1 against 5, fastRun passed 3 against 16. Honouring
+## them would have played most of the game in slow motion. The art carries its
+## own rate, so the argument was dropped rather than made to work.
+func stateAnimation(state_to_animate):
 	var string_animation : String
 	string_animation = "%s_%s"%[state_to_animate,pc.facing_dir]
 	## Undoes any rate a one-shot state left behind. Looping states call this

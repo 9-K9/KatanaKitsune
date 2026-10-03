@@ -38,9 +38,9 @@ func on_enter():
 func on_process(_delta):
 	## The walk plays while she is closing the gap, the sit once she is there.
 	if _seated:
-		stateAnimation("sittingChair", 2)
+		stateAnimation("sittingChair")
 	else:
-		stateAnimation("walk", 8)
+		stateAnimation("walk")
 
 	if pc.InputHandler() != Vector2.ZERO \
 			or pc.input.just_pressed("Attack") \

@@ -5,7 +5,7 @@ func on_enter():
 
 # Called every frame when this state is active.
 func on_process(delta):	
-	stateAnimation("walk",2)
+	stateAnimation("walk")
 	if pc.InputHandler() != Vector2.ZERO and pc.input.pressed("Run"):
 		change_state("slowRun" if winded() else "run")
 	elif pc.InputHandler() == Vector2.ZERO:

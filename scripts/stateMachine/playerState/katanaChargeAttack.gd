@@ -28,7 +28,7 @@ func on_process(delta):
 	if not _released:
 		_charge = minf(_charge + delta, MAX_CHARGE)
 		## The wind-up loops, so it can be held without running out of frames.
-		stateAnimation("katanaChargeAttack", 6)
+		stateAnimation("katanaChargeAttack")
 		## Brightens as it winds up, so the charge is readable without a meter.
 		var glow: float = 1.0 + _charge / MAX_CHARGE
 		animated_sprite.modulate = Color(glow, 1.0, 1.0)

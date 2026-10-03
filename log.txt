@@ -179,12 +179,20 @@ REMOVED from AI_Class: gameManager, direction, self_state, animation_state and
     A missing clip measures 0, which would end an attack on the frame it began,
     so OneShotAttackState falls back to 0.75s in that case.
 
-(B) stateAnimation(state, fps) DISCARDS fps
-    playerStateClass.gd sets `fps = null` on its first line while ~20 call
-    sites still pass a number. Either make it honour the value or drop the
-    parameter. The five attack states disagreed about it (8 vs 12), and that
-    disagreement was preserved rather than collapsed, in case it is ever made
-    to matter.
+(B) DONE 2026-10-03 — stateAnimation's dead fps argument is gone
+    It set `fps = null` on its first line while nineteen call sites passed a
+    number. Measured before deciding: thirteen of the nineteen disagreed with
+    the rate the SpriteFrames is authored at, and not slightly — idle passed 1
+    against 5, walk 2 against 8, fastRun 3 against 16. Honouring the argument
+    would have played most of the game in slow motion, so it was removed rather
+    than made to work. The art carries its own rate.
+    The `fps` field on OneShotAttackState went with it.
+
+    NOTED IN PASSING, NOT INVESTIGATED: setting AnimatedSprite2D.animation from
+    a state does not stick in a headless frame — the AnimationTree appears to
+    overwrite it. Verified this is pre-existing (identical before and after the
+    change), so it is not fallout, but stateAnimation may be doing less than it
+    looks. Worth a look sometime.
 
 (C) MazeDemo's themed-floor branch never executes — DEAD BY DATA, NOT CODE
     All 64 THEMES entries have "floor": "", so the layer_name guard always

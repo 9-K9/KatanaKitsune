@@ -14,7 +14,7 @@ func on_enter():
 
 # Called every frame when this state is active.
 func on_process(delta):
-	stateAnimation("idle",1)
+	stateAnimation("idle")
 	var input: Vector2 = pc.InputHandler()
 	if 	input != Vector2.ZERO and pc.input.pressed("Run"):
 		change_state("slowRun" if winded() else "run")

@@ -8,7 +8,7 @@ func on_enter():
 	pc.stealthed = true
 
 func on_process(_delta):
-	stateAnimation("stealthIdle", 1)
+	stateAnimation("stealthIdle")
 	## Striking from cover is the stealth attack, wherever she is hidden.
 	if pc.input.just_pressed("Attack"):
 		change_state("flair")
