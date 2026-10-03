@@ -1,13 +1,9 @@
 extends CharacterBody2D
 class_name AI_Class
 
-@onready var gameManager = get_node_or_null("/root/Main")
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
-@onready var direction : Vector2 = Vector2.ZERO
 @onready var facing_dir: String = "southWest"
-@onready var self_state: String = "idle"
-@onready var animation_state = "%s_%s"%[self_state,facing_dir]
 
 
 ## Facing lookups live in IsoFacing so the monsters and the player share one
@@ -24,9 +20,5 @@ func stateDirection(str_dir: String) -> Vector2:
 ## the eight.
 func directionState(rnd_dir):
 	return IsoFacing.name_of(rnd_dir)
-		
-func animationState(fps):
-	animation_state = "%s_%s"%[self_state,facing_dir]
-	animated_sprite.play(animation_state,fps)
 
 

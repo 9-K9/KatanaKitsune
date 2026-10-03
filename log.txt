@@ -1,466 +1,264 @@
 ===============================================================================
-SESSION LOG — 2026-10-02
+SESSION LOG
 Katana Kitsune (Isometric) + Katana Kitsune Workshop
+
+  2026-10-02  setup, Dialogic, taunts, tooling, spelling
+  2026-10-03  refactor pass
 ===============================================================================
 
-Machine: kubuntu-hplaptop15seq2xxx
-Engine:  Godot 4.7.2.stable  (~/Godot/Godot_v4.7.2-stable_linux.x86_64,
-         now symlinked to /usr/local/bin/godot)
+Engine: Godot 4.7.2.stable. `godot` is on PATH via a symlink to
+        ~/Godot/Godot_v4.7.2-stable_linux.x86_64.
 
-Everything below is committed and pushed. Both repos are clean and in sync.
+Repos, both clean and pushed:
+  KatanaKitsune-Isometric-   github.com/rpg2k3/KatanaKitsune-Isometric-
+  KatanaKitsuneWorkshop      github.com/rpg2k3/KatanaKitsuneWorkshop
 
-  KatanaKitsune-Isometric-   main @ 547198f1
-  KatanaKitsuneWorkshop      main @ 15024a9
-
-
--------------------------------------------------------------------------------
-1. WHAT WAS DONE
--------------------------------------------------------------------------------
-
-SETUP
-  - No GitHub access existed on this PC: no gh, no SSH keys, no .gitconfig.
-    Installed gh, authenticated as rpg2k3, set git identity
-    (Emanzi Kamugisha <ekamugisha0@gmail.com>) to match existing commits.
-  - Cloned KatanaKitsune-Isometric- and KatanaKitsumeWorkshop into ~/projects/.
-
-STALE MAIN  (the reason the first run looked wrong)
-  - PR #3 merged an early snapshot of fix/godot-4.7-migration into main back in
-    August, then work continued on that branch without merging again. main was
-    16 commits behind and had no enemies, no breakables, no traps, old GUI.
-  - Merged the branch into main. That is why the first launch looked like an
-    old build — it was one.
-
-DIALOGIC  2.0-Alpha-14 -> 2.0-Alpha-20
-  - Alpha-14 targeted Godot 4.2 and did not compile on 4.7:
-    node_name_label.gd declared _set() without returning on all paths, which
-    since 4.4 is a hard parse error (Object._set is a typed virtual). It
-    cascaded into the SpeakerPortraitTextbox layer.
-  - Alpha-20 targets 4.5+ and fixes it upstream.
-  - Three local patches to the vendored addon were checked one by one against
-    alpha-20 and all three were already fixed upstream, two with better
-    implementations. Nothing was lost in the swap.
-  - NOTE: the first editor open after this throws ~40 "class not declared"
-    errors. That is the global class cache populating. Restart the editor and
-    it clears. Not a real failure.
-
-ENEMY TAUNTS  (commit 7fe8078)
-  - New `alert` state: stands guard, glances to random directions, locks on
-    when the player is inside detection range.
-  - New `taunt` state: rooted, facing the player, until the dialogue is
-    dismissed, then straight into the hunt.
-  - TauntComponent (scripts/components/TauntComponent.gd): standalone node
-    holding the timeline path and the spoken/speaking latches. Talks only to
-    Dialogic and its own exports, so it drops onto an NPC or boss unchanged.
-    A static latch stops two monsters taunting over each other, since Dialogic
-    has one global timeline.
-  - Lines live in dialogue/enemies/.
-  - Damage taken mid-taunt still lands but does not route to `hurt` — that
-    would leave the timeline running with nothing waiting on it.
-  - The requested 100px leash was NOT used: it sits below attack_range (110),
-    so the monster would have disengaged from inside its own swing and never
-    landed a hit. Used the existing lose_interest_range of 560 instead.
-
-TARGETING REFACTOR  (commit 11fd472)
-  - Targeting was answered two ways: playerAttack queried the live ActionArea
-    overlap, while the provoke hook read a cached enemyBody kept in sync by
-    Area2D signals. They could disagree, and the cache held only one body.
-  - Both now go through the character: blade_targets() and current_target().
-  - enemyBody, its two signal handlers and the scene's body_entered connection
-    are gone.
-  - Also: PlayerClass no longer re-walks the string path
-    "CollisionChecker/RayCast2D/ActionArea" on every swing, and the provoke
-    check now gates on input before running the overlap query rather than
-    after.
-
-TITLE SCREEN
-  - Removed LeftShade, a full-height ColorRect at 38% opacity across the left
-    40% of the screen. It was darkening the cover art rather than the controls.
-  - Codex then redesigned the screen (per-button StyleBoxFlat plates, kanji
-    kicker, tagline) and kept the [connection] paths in sync. Verified, committed.
-
-TOOLING  (commits 67333af, 4f63da4)
-  - tools/check_scene_connections.gd + tools/check-connections.sh
-  - Catches signal connections that have gone stale. A .tscn wires signals by
-    full node path; reparent or rename a button and the path stops resolving,
-    and GODOT SAYS NOTHING. No error, no warning. The scene renders, the button
-    highlights on hover, and clicking does nothing. Reads as a game-logic bug.
-  - Run it after ANY change to a scene's node tree:
-        tools/check-connections.sh
-        tools/check-connections.sh scenes/title_screen.tscn
-  - Exits non-zero, so it works as a pre-commit gate.
-  - The wrapper finds the engine itself ($GODOT, then PATH, then searches $HOME).
-  - Validated by breaking things on purpose: a stale from= path is caught both
-    statically and by the instanced button pass, and a typo'd method= is caught
-    against the script. A checker that has only ever passed proves nothing.
-  - Its first draft had a false positive (flagged the cheats menu Immortality
-    CheckButton, which reports through `toggled`, not `pressed`). Fixed to
-    accept pressed/toggled/button_up/button_down.
-
-PULLED 117 COMMITS from the Desktop  (multiplayer, stealth, 64 themes, chairs,
-  revive, lanterns, pillars). Fast-forward, no conflicts.
-
-take_damage SIGNATURE — CHECKED, NO BUG
-  All three implementations agree:
-      take_damage(amount: float, from: Vector2 = Vector2.INF,
-                  guardable: bool = true) -> void
-  EnemyStateClass.gd:343 / AnimatedCharacterClass.gd:299 / Breakable.gd:131
-  Params 2 and 3 have defaults, so every call site (1, 2 or 3 args) is valid.
-  Worth having checked: these are duck-typed calls that no static check catches.
-
-SPELLING — "Kitsume" -> "Kitsune", everywhere
-  - Game repo: the live assets were ALREADY correct (13,344 references, none
-    wrong). Only two stragglers, both silently broken — see section 2.
-  - Workshop: 22 files renamed with git mv so history follows, plus the
-    misspelling inside five .import sidecars.
-  - GitHub repos renamed: KatanaKitsumeWorkshop -> KatanaKitsuneWorkshop,
-    KatanaKitsume-Platformer- -> KatanaKitsune-Platformer-.
-  - Local dir renamed to ~/projects/KatanaKitsuneWorkshop.
-  - Zero occurrences of "Kitsume" remain on disk in either repo.
-    (.godot/imported/ still has some; that is gitignored cache, regenerated.)
+This file is rewritten as work lands. The 2026-10-02 version listed a large
+dead-code survey as outstanding; most of it is now done, by the Desktop and
+here, so that list has been replaced with what is actually left.
 
 
 -------------------------------------------------------------------------------
-2. BUGS FOUND AND FIXED
+HOW TO CHECK THE PROJECT
 -------------------------------------------------------------------------------
 
-tools/generate_kitsune_power_palettes.py:125
-  Opened KatanaKitsume_IdleStanding_dir1.png, which no asset has been called
-  since the sprites were renamed. make_preview() raised FileNotFoundError.
-  FIXED (c43d7b1f).
+From the repo root:
 
-tools/recolor_kitsune_test.py:126
-  The rename to AzureKitsune_* was a str.replace on "KatanaKitsume", which
-  never matched. Recoloured sprites were silently written out still carrying
-  the source name. FIXED (c43d7b1f).
+    tools/check-connections.sh          # stale signal wiring — see below
+    godot --headless --editor --quit    # import pass
+    godot --headless                    # run the game headless
 
-Neither would have surfaced until you ran those tools.
+Three things that will mislead you:
+
+  1. RUN THE IMPORT PASS TWICE after adding a script with a `class_name`. The
+     first populates the global class registry; the second is the real verdict.
+     A new class reports "not declared in the current scope" until then.
+
+  2. `godot --headless --check-only --script res://foo.gd` DOES NOT LOAD
+     AUTOLOADS OR THE CLASS REGISTRY. Any script touching Roster, CheatManager,
+     Dialogic or another `class_name` will report "Compilation failed" there
+     while being perfectly fine. Only the editor import pass is authoritative.
+     This wasted time twice.
+
+  3. tools/check-connections.sh catches what nothing else does. A .tscn wires
+     signals by full node path; reparent or rename a node and the path stops
+     resolving, and GODOT SAYS NOTHING — no error, no warning, a clean headless
+     run. The scene renders, the button highlights on hover, clicking does
+     nothing. Run it after ANY change to a scene's node tree. Exits non-zero,
+     so it works as a pre-commit gate.
 
 
 -------------------------------------------------------------------------------
-3. WHAT NEEDS CONTINUING
+1. WHAT EXISTS NOW
 -------------------------------------------------------------------------------
 
-*** THE REFACTOR WAS NOT STARTED. ***
-No files were archived, no dead code removed. A full survey was done and is
-summarised below, but nothing was acted on.
+ARCHIVE POLICY
+  archive/ holds code that is no longer reachable but is kept rather than
+  deleted. A .gdignore makes Godot skip the directory entirely — scripts are
+  not parsed, class_name is not registered. Verified: Godot never reads it.
+  Moving a file out is all it takes to restore.
+
+  archive/README.md         what was archived, why, and what replaced it
+  archive/removed-members.md functions and fields deleted out of still-live
+                            files, reproduced verbatim so they can be restored
+
+  NOTE: the Desktop's own sweep (c88eb7c0) DELETED rather than archived. That
+  is recoverable from git at c88eb7c0^ but is not in archive/.
+
+TOOLING
+  tools/check-connections.sh + tools/check_scene_connections.gd
+    Finds stale [connection] paths, missing handler methods, and buttons with
+    no live handler. The wrapper locates Godot itself ($GODOT, then PATH, then
+    searches $HOME), so `godot` need not be installed.
+    Validated by breaking things deliberately — a checker that has only ever
+    passed proves nothing.
+
+  scripts/system/IsoFacing.gd
+    The one eight-way facing table. The reverse map is derived from the
+    forward one so the two directions cannot drift apart.
+
+  scripts/stateMachine/class/OneShotAttackState.gd
+    Shared body for committed single-clip attacks.
+
+ENEMY TAUNTS
+  alert -> provoke -> taunt -> hunt, with TauntComponent holding the timeline
+  and the spoken/speaking latches. Lines in dialogue/enemies/.
+  THE TRIGGER MOVED: the original input hook was removed by the multiplayer
+  rewrite; provoke() now fires from seductiveDance.gd. The feature survived,
+  rewired.
 
 
-(A) REAL MULTIPLAYER BUG — not yet fixed, highest value item here
-    _find_player() is copy-pasted verbatim in three places:
-        scripts/system/Radar.gd:162
-        scripts/system/WallFade.gd:161
-        scripts/system/DebugShapes.gd:214
-    All three latch onto the FIRST CharacterBody2D in the "player" group and
-    cache it forever. This is exactly the bug EnemyStateClass.player() was
-    rewritten to fix (see its comment at lines 61-64). The monsters were fixed;
-    the radar, wall fade and debug overlay were not — they only ever track
-    player one.
-    scripts/system/PillarFade.gd:44-56 is a fourth implementation and is the
-    only one that got it right (loops all players, skips is_dead). Use it as
-    the model, or hoist it into a shared helper.
+-------------------------------------------------------------------------------
+2. WHAT WAS DONE — 2026-10-02
+-------------------------------------------------------------------------------
 
-(B) DEAD CODE — ~25 files, provably unreferenced, safe to archive
-    Verified against .tscn ExtResource/path, .tres, project.godot autoloads,
-    preload/load/ResourceLoader, extends, class_name usage, AND uid:// form.
+  - gh installed and authenticated as rpg2k3; git identity set.
+  - main was 16 commits stale (PR #3 merged an early snapshot of
+    fix/godot-4.7-migration, then work continued on the branch). Merged. That
+    is why the first launch looked like an old build — it was one.
+  - Dialogic 2.0-Alpha-14 -> Alpha-20. Alpha-14 targeted Godot 4.2 and did not
+    compile on 4.7: node_name_label.gd declared _set() without returning on all
+    paths, a hard parse error since 4.4. All three local patches to the addon
+    were already fixed upstream.
+    NOTE: the first editor open after a Dialogic swap throws ~40 "class not
+    declared" errors. That is the class cache populating. Restart, it clears.
+  - Enemy taunts (see above).
+  - Targeting unified: blade_targets() / current_target() on the character
+    replaced a cached enemyBody plus a separate live overlap query that could
+    disagree.
+  - Title screen: removed LeftShade; Codex then redesigned it.
+  - Spelling: "Kitsume" -> "Kitsune" everywhere. 22 files renamed in the
+    Workshop with git mv; both GitHub repos renamed. The live sprite assets
+    were already correct — 13,344 references, none wrong.
+  - Fixed two silently-broken tools: generate_kitsune_power_palettes.py raised
+    FileNotFoundError, and recolor_kitsune_test.py's rename never matched so
+    recoloured sprites kept the source name.
 
-    Unreferenced scripts:
-      scripts/system/RigidBody.gd
-      scripts/system/RayChecker.gd
-      scripts/system/SetSprite2D.gd        (also still has a debug print)
-      scripts/system/WallsModulate.gd
 
-    Two whole superseded subsystems:
-      scenes/world/generatedLevel.tscn
-        + scripts/system/GeneratedLevel.gd
-        + scripts/system/LevelGenerator.gd
-        + assets/sprites/tiles/crocotileGround.tres, crocotileWalls.tres
-        MazeDemo.gd (1191 lines) does everything GeneratedLevel.gd (166) does,
-        plus 64 themes, lanterns, chairs, pillar fade and the multiplayer party.
-        GeneratedLevel still has a single `var _player` and spawns exactly one.
+-------------------------------------------------------------------------------
+3. WHAT WAS DONE — 2026-10-03 (the refactor pass)
+-------------------------------------------------------------------------------
 
-      scenes/world/maps/mapTemplate.tscn
-        + scenes/world/ysortmap.tscn
-        + scenes/world/worldCamera.tscn + scripts/system/WorldCamera2D.gd
-        + scripts/system/GameManager.gd
-        + scripts/system/debugPrint.gd
-        + scripts/system/YsortPlayerSpawn.gd
-        main_scene is now title_screen.tscn; nothing reaches this chain.
-        CAUTION: WallFade.gd is LIVE (also on room_A.tscn). Do not take it
-        with ysortmap.
+Pulled 50 commits (six new enemies, enemyBlock/Charge/Draw, EnemyTier, Score,
+NameEntry) on top of the earlier 117 (multiplayer, stealth, 64 themes, chairs,
+revive, lanterns, pillars).
 
-    Others:
-      scenes/combat/battle_scene.tscn      (86-byte empty stub)
-      scenes/world/rooms/stackTest.tscn + scripts/system/RoomStackTest.gd
-      scenes/world/maps/mapA2DE.tmp        (161 KB editor temp, committed)
-      tools/__pycache__/                   (build artefact, check .gitignore)
+FIXED: room_A's wall and roof fade were dead wiring.
+  room_A.tscn carried four [connection] entries to methods that exist nowhere.
+  The scene was copied from ysortmap.tscn, which brought the connections but
+  not the script behind them; the Desktop's sweep then deleted that script.
+  Nothing needed porting — WallFade.gd already replaces the whole mechanism and
+  is wired there (FADE on Walls_*, HIDE on Roofs). Removed the connections and
+  the two Area2D triggers that fed them, which were running physics for nobody.
+  Symptom had been: in room_A, walls do not fade and roofs do not hide.
 
-    Orphaned assets:
-      assets/sprites/monsters/abomination/         (only ref is mapA2DE.tmp)
+FIXED: mazeDemo.tscn referenced gameOver.tscn with uid="1000", not a valid uid.
+  Godot fell back to the text path and warned. Would have broken outright if
+  that scene ever moved.
+
+ARCHIVED: sittingFloor.gd and stateDummy.gd, plus three dead nodes from
+  KatanaKitsune.tscn (sittingFloor, _stateDummy, characterState) and a
+  load_steps count left 3 too high.
+  The eight sittingFloor_* SpriteFrames clips were deliberately LEFT IN. That
+  is art, not code; it costs nothing unused, and leaving it means restoring the
+  state is just re-adding the node.
+
+REFACTORED: one facing table instead of two.
+  AnimatedCharacterClass and AI_Class both extend CharacterBody2D directly, so
+  each carried its own copy. Now both delegate to IsoFacing. The thin methods
+  are kept because Radar.gd finds anything that can report a facing with
+  has_method("stateDirection").
+  Verified against the exact old `match` over 26 inputs including five
+  negative-zero cases — `match` compares by value, a Dictionary by hash, and
+  round() really does emit -0.0. Zero mismatches.
+
+REFACTORED: five one-shot attack states share one body.
+  midKick, highKick, roundKick, katanaKick, katanaSlashCrouched were 26
+  identical lines apiece. Now nine lines each on OneShotAttackState.
+  120 lines removed, 35 added. TIMINGS DELIBERATELY UNCHANGED — see §4.
+
+REMOVED from AI_Class: gameManager, direction, self_state, animation_state and
+  animationState(). Zero uses anywhere in the enemy tree. Remains of the
+  pre-FSM monster. Bodies are in archive/removed-members.md.
+  NavAIClass.gd went from 53 lines to 24.
+  Note animationState() passed its `fps` argument to AnimatedSprite2D.play(),
+  whose second parameter is custom_scale, not a frame rate. It was never doing
+  what its name says.
+
+
+-------------------------------------------------------------------------------
+4. WHAT NEEDS CONTINUING
+-------------------------------------------------------------------------------
+
+(A) THREE ATTACKS LOCK INPUT 0.08s PAST THEIR ART — a feel decision, not a bug
+    Measured against the SpriteFrames:
+        midKick              1.00s hardcoded, 1.00s art — exact
+        katanaSlashCrouched  1.00s hardcoded, 1.00s art — exact
+        highKick             0.75s hardcoded, 0.67s art
+        roundKick            0.75s hardcoded, 0.67s art
+        katanaKick           0.75s hardcoded, 0.67s art
+    Switching those three to play_oneshot() would shave 80ms off each, the way
+    katanaSlashStand already works. Left alone because it changes feel and that
+    is your call, not a refactor's. This is NOT the forwardRoll case where two
+    thirds of the clip never showed.
+
+(B) stateAnimation(state, fps) DISCARDS fps
+    playerStateClass.gd sets `fps = null` on its first line while ~20 call
+    sites still pass a number. Either make it honour the value or drop the
+    parameter. The five attack states disagreed about it (8 vs 12), and that
+    disagreement was preserved rather than collapsed, in case it is ever made
+    to matter.
+
+(C) MazeDemo's themed-floor branch never executes — DEAD BY DATA, NOT CODE
+    All 64 THEMES entries have "floor": "", so the layer_name guard always
+    continues and the set_cell block never runs. One non-empty string switches
+    it back on. Reads as a feature mid-flight. Not archived on purpose.
+    Dragging with it: floors_indoor.tres, floors_exterior.tres, and the
+    Floor_JP_Indoor / Floor_JP_Exterior layers in room_A.tscn.
+
+(D) ORPHANED ASSETS — surveyed, never acted on
       assets/sprites/tiles/dungeonkit/ + dungeonKit.tres + dungeonKit_atlas.png
       assets/crocotile/isometrictiles/_redesign/
       assets/crocotile/isometrictiles/misc/hexgrid.png
-      ~59 of 99 files in assets/crocotile/isometrictiles/roofs/  (MEDIUM
-        confidence — statically unreferenced and no dynamic path reaches them,
-        but a scene you add later could pick them up from the editor)
+      ~59 of 99 files in assets/crocotile/isometrictiles/roofs/ (MEDIUM
+        confidence — no dynamic path reaches them, but a scene added later
+        could pick them up from the editor)
+      tools/__pycache__/ (build artefact — check .gitignore)
 
-    Spent one-off generators (output committed and in use):
-      tools/generate_title_power_variants.py   (hardcodes /mnt/K-DRIVE/... —
-        unrunnable on any other machine, definitionally one-off)
+    *** DO NOT RUN A NAIVE ORPHAN SCAN. *** These look unreferenced and are
+    loaded dynamically by name:
+      assets/crocotile/isometrictiles/walls/   504 files, built from the 64
+        THEMES prefixes in MazeDemo — deleting them kills the whole themed
+        dungeon feature
+      assets/sprites/props/pillars/            86 files, MazeDemo._theme_pillars
+      assets/sprites/characters/KatanaKitsune/power_states/ and
+      assets/sprites/ui/title_power_states/    PowerState.gd
+
+(E) SPENT ONE-OFF GENERATORS — archive candidates
+      tools/generate_title_power_variants.py  hardcodes /mnt/K-DRIVE/... so it
+        cannot run on another machine
       tools/recolor_kitsune_test.py
       tools/recolor_kitsune_skin_test.py
       tools/recolor_kitsune_hair_skin_test.py
-        All three write into assets/sprites/characters/_tests/, WHICH DOES NOT
-        EXIST. Two of them read from it, so they cannot even run. They were the
-        exploration that led to generate_kitsune_power_palettes.py.
+        All three write into assets/sprites/characters/_tests/, which does not
+        exist. Two of them read from it, so they cannot run at all.
+      tools/validate_japanese_environment.gd — the only file referencing the
+        three tilesets it validates; no scene uses them.
 
-    KEEP — loaded dynamically, a naive orphan scan would delete working features:
-      assets/crocotile/isometrictiles/walls/      (504 files, loaded by name
-        from the 64 THEMES prefixes at MazeDemo.gd:416-420 — deleting these
-        kills the entire themed-dungeon feature)
-      assets/sprites/props/pillars/               (MazeDemo.gd:363-365)
-      assets/sprites/characters/KatanaKitsune/power_states/ and
-      assets/sprites/ui/title_power_states/       (PowerState.gd:25-26)
+(F) UNVERIFIED BY ANYONE — needs hands on a keyboard
+    The taunt's dialogue-dismiss -> chase handoff. Everything up to the
+    dialogue opening is tested; that last hop needs a human to dismiss the box,
+    and it is Dialogic alpha-20's first real workout here.
 
-(C) DEAD SCAFFOLDING INSIDE LIVE SCENES — needs scene edits, more care
-      scripts/stateMachine/playerState/sittingFloor.gd — no inbound transition
-        from any of the 35 change_state targets. The resting feature went to
-        the chair instead (idle.gd:45 -> "sittingChair"). Archive the
-        sittingFloor_* animations and the AnimationNodeStateMachine transitions
-        at KatanaKitsune.tscn:24150 together, or the FSM graph will reference a
-        missing node.
-      `characterState` node (KatanaKitsune.tscn:24248) — attaches the abstract
-        base PlayerClass as if it were a state. The SCRIPT is very much alive;
-        only this node instance is scaffolding.
-      `_stateDummy` node (KatanaKitsune.tscn:24380) + scenes/characters/
-        stateDummy.gd — the editor template pasted in as a node, all eight
-        methods are `pass`.
-
-(D) DUPLICATED LOGIC
-      directionState()  — verbatim in NavAIClass.gd:42-61 and
-        AnimatedCharacterClass.gd:182-201.
-      stateDirection()  — same two files, and WORSE: the dict version returns
-        Vector2.ZERO on bad input, the match version falls through to an
-        uninitialised Vector2. Both callers test `== Vector2.ZERO` to mean
-        "unknown facing", so they rely on that accident agreeing.
-      Five near-identical one-shot attack states (midKick, highKick, roundKick,
-        katanaKick, katanaSlashCrouched) — 26 lines each, differing only in
-        clip name, wait_time, fps and exit state. katanaSlashStand.gd is the
-        modern form: it uses play_oneshot() + clip_length() to derive duration
-        from the art instead of hardcoding 0.75.
-      stateAnimation(state, fps) — playerStateClass.gd:21-22 sets `fps = null`
-        on its first line. ~20 call sites pass an fps number that is discarded.
-
-(E) DEAD FUNCTIONS AND VARS INSIDE LIVE FILES
-      navigationControler(), animationState()   NavAIClass.gd:12,63
-      taunt_done()                              EnemyStateClass.gd:337
-      current_target()                          player_main.gd:97  (orphaned
-        when the multiplayer rewrite replaced the provoke input hook)
-      spend_stamina()                           AnimatedCharacterClass.gd:135
-      round_to_dec()                            playerStateClass.gd:135
-      any_pressed(), _every_action()            PlayerInput.gd:162,143
-      _focus_icons()                            CharacterSelect.gd:162
-      _player_body()                            MazeDemo.gd:612
-      closed_sides()                            RoomWalls.gd:54  (open_sides()
-        IS live — only the closed_ half is dead)
-      getPlayerPosition(), get_box_inertia()    (both in orphaned files)
-
-      lose_interest_range  EnemyStateClass.gd:24 — never read. Giving up is now
-        seconds_since_seen() >= memory_seconds. The comment still describes the
-        old behaviour.
-      floors_per_theme     MazeDemo.gd:35
-      HIT_FLASH            EnemyStateClass.gd:35  (superseded by HIT_BLOWOUT)
-      FIRST_MAP            TitleScreen.gd:8
-      contact_damage       player_main.gd:32  (its consumer was emptied)
-      _player              EnemyStateClass.gd:45 — assigned, never read
-      FACING_NAMES         Breakable.gd:69
-      FEET_BELOW_ORIGIN    DebugShapes.gd:27
-
-(F) DEAD BY DATA, NOT BY CODE — DO NOT ARCHIVE WITHOUT DECIDING
-      MazeDemo.gd:285-320, the themed-floor-layer branch.
-      All 64 THEMES entries (lines 52-115) have "floor": "", so layer_name is
-      always "", line 302 always continues, and the set_cell block never runs.
-      Dragging with it: floors_indoor.tres, floors_exterior.tres, and the
-      Floor_JP_Indoor / Floor_JP_Exterior layers at room_A.tscn:855,861.
-      ONE non-empty "floor" string switches it all back on. This looks like a
-      feature mid-flight rather than abandoned code.
-
-(G) STILL UNVERIFIED BY ANYONE — needs hands on keyboard
-      The taunt's dialogue-dismiss -> chase handoff. Everything up to the
-      dialogue opening is tested; that last hop needs a human to dismiss the
-      box, and it is Dialogic alpha-20's first real workout in this project.
-      NOTE: the trigger changed. My input hook is gone (removed by the
-      multiplayer input rewrite); provoke() now fires from
-      seductiveDance.gd:26. The feature survived, rewired.
+(G) DUELLIST ART — see handover-duellists.txt, which is the live document for
+    it. Four characters generated in PixelLab, none exported to assets/ yet.
+    Codex owns tools/build_enemy_scene.py, enemyDraw.gd and enemyCharge.gd.
 
 
 -------------------------------------------------------------------------------
-4. CORRECTIONS TO EARLIER ASSUMPTIONS
+5. CORRECTIONS — things believed and found wrong
 -------------------------------------------------------------------------------
 
-  - enemyIdle.gd is NOT superseded by `alert`. I assumed it was; I was wrong.
-    `idle` is the unaware/roaming state, `alert` is the lost-sight search
-    state. Both are wired and reachable, and enemyAlert.gd:32 transitions INTO
-    idle. Do not archive it.
+  - enemyIdle.gd is NOT superseded by `alert`. `idle` is the unaware/roaming
+    state, `alert` the lost-sight search state; enemyAlert.gd transitions INTO
+    idle, and both monster scenes start on it. It was nearly archived on that
+    wrong assumption.
 
-  - The corner enemy placement in ysortmap.tscn and the Room.corners() /
-    _fill_corners() work in GeneratedLevel/LevelGenerator are both inside dead
-    subsystems. The old open question "are the corner enemies standing in a
-    wall" is moot — those scenes never load.
+  - The _find_player() multiplayer bug IS FIXED. Radar, DebugShapes, WallFade
+    and PillarFade all use Roster now. The 2026-10-02 log listed it as the
+    highest-value outstanding item; the Desktop closed it.
 
-  - glow.tres was not part of the chair/table y-sort work. That diff is a uid
-    stamp from a headless editor run. The y-sort fixes came in with the pull
-    and were already committed (cc97de7c, f25c6559, 66a01bc1, c33ffc88).
+  - The stateDirection() halves no longer disagree on bad input. They did when
+    first surveyed; the player's had since been converted to a dict. The
+    IsoFacing work removed the second copy, not the disagreement.
 
+  - glow.tres was never part of the chair/table y-sort work — that diff is a
+    uid stamp from a headless editor run. The y-sort fixes came in with the
+    pull (cc97de7c, f25c6559, 66a01bc1, c33ffc88).
 
--------------------------------------------------------------------------------
-5. ENVIRONMENT NOTES
--------------------------------------------------------------------------------
-
-  - `godot` is now on PATH via /usr/local/bin/godot -> the 4.7.2 binary.
-  - Useful checks, all run from the repo root:
-        tools/check-connections.sh                    # stale signal wiring
-        godot --headless --editor --quit               # import pass
-        godot --headless                               # run the game headless
-    Run the editor import pass TWICE after a big asset change — the first
-    populates the global class cache and can report errors that clear on the
-    second.
-  - This session could not push for most of its length (a permission check kept
-    refusing); commands were handed over to be run manually. It started working
-    again at the end.
+  - The corner enemy placement in ysortmap.tscn and the Room.corners() work in
+    GeneratedLevel/LevelGenerator were both inside subsystems that are now
+    deleted. The old question "are the corner enemies standing in a wall" is
+    moot; those scenes no longer exist.
 
 ===============================================================================
-
-===============================================================================
-SESSION LOG — 2026-10-02 (continued, Desktop)
-===============================================================================
-
-Machine: kubuntu-850150qe
-Pulled the laptop's three commits (ae242979). Clean fast-forward.
-
-DONE: (A), (B) scripts and scenes, (D) in part, (E).
-STILL OPEN: (B) orphan art, (C) scene scaffolding, (D) the five kick states and
-stateAnimation's discarded fps, (G) the taunt handoff.
-
-
--------------------------------------------------------------------------------
-(A) DONE — commit bde9e646
--------------------------------------------------------------------------------
-
-The three copies of _find_player() are gone. Radar.gd, WallFade.gd and
-DebugShapes.gd now call Roster.bodies() / nearest_to() / centre_of_party().
-
-WallFade was not cosmetic. A wall lifted only for player one, so players two to
-four walked behind solid stone with no way to see themselves. It now asks
-whether ANY living player is behind it.
-
-The radar centred on player one while the shared camera frames the whole party,
-so the two drifted apart on screen. It now centres on the party.
-
-The shared lookup lives on Roster because Roster already owns who is playing. It
-skips the dead and tests for a CharacterBody2D — her PlayerHitBox is in the same
-group, so the first node is as likely to be that Area2D as the character.
-
-Verified with three players: finds all three, follows one moved far from the
-others, drops one on death.
-
-
--------------------------------------------------------------------------------
-(D) PART DONE — commit 6372c4df
--------------------------------------------------------------------------------
-
-A real bug sat under the duplicated stateDirection, and it was not the one the
-survey flagged.
-
-_angle_off_facing returned 0.0 when stateDirection could not resolve
-facing_dir. 0.0 means "dead ahead", so any facing name outside the eight made
-every blow from every direction read as a perfect frontal block — total
-invulnerability. It failed open. Now returns PI, the unguarded case. Verified:
-"east" blocks the front and takes 40 behind; "E" and "gibberish" take 40 from
-both, where they took 0 from both before.
-
-The survey called the match version buggy for falling through to an
-uninitialised Vector2. It is not — a typed local initialises to ZERO, so it
-agreed with NavAIClass's dict by accident. Both are one dict now, agreeing by
-construction.
-
-STILL OPEN under (D): the five near-identical kick states, and
-stateAnimation(state, fps) discarding its fps argument at ~20 call sites.
-
-
--------------------------------------------------------------------------------
-(E) DONE — commit b0d6b7c8
--------------------------------------------------------------------------------
-
-Sixteen removed: navigationControler, taunt_done, current_target,
-spend_stamina, round_to_dec, any_pressed, _focus_icons, _player_body,
-closed_sides, lose_interest_range, HIT_FLASH, FIRST_MAP, contact_damage,
-FACING_NAMES, FEET_BELOW_ORIGIN, floors_per_theme.
-
-Kept against the survey: animationState and _every_action are both still called.
-
-
--------------------------------------------------------------------------------
-(B) SCRIPTS AND SCENES DONE — commit c88eb7c0
--------------------------------------------------------------------------------
-
-29 files. Both superseded subsystems and their scaffolding, each checked for
-inbound references from anything live first — the cluster referenced only
-itself. Also mapA2DE.tmp, the 161KB editor temp that was the only remaining
-thing naming GameManager and worldCamera.
-
-WallFade.gd deliberately kept. It is live on room_A.tscn and would have been
-taken along with ysortmap by anyone working folder-by-folder rather than
-reference-by-reference — exactly as the survey warned.
-
-STILL OPEN under (B): the orphan art. abomination/, dungeonkit/, _redesign/,
-hexgrid.png and the ~59 roof tiles are untouched, and belong with the archive
-script rather than with a git rm.
-
-
--------------------------------------------------------------------------------
-CORRECTIONS TO THE SURVEY ABOVE
--------------------------------------------------------------------------------
-
-(F) is SUPERSEDED, not a feature mid-flight. All 64 themes carry "floor": ""
-    because the themed-floor-layer approach was replaced on the Desktop the
-    night before this log was written: 344 ground tiles were generated, one
-    material per wall set, so a room is now made of one material rather than a
-    floor layer painted over a different ground. Nothing is waiting to be
-    switched back on.
-    SAFE TO ARCHIVE, and not currently on the archive list:
-      assets/pixellab/japanese_environment/tilesets/floors_indoor.tres
-      assets/pixellab/japanese_environment/tilesets/floors_exterior.tres
-      the Floor_JP_Indoor / Floor_JP_Exterior layers in room_A.tscn
-      and with them the whole PixelLab japanese_environment tile set, whose
-      props are still used but whose floors and building kit are not.
-
-(E) I WAS WRONG, THE SURVEY WAS RIGHT. An earlier revision of this file claimed
-    floors_per_theme and FACING_NAMES were live. Both were dead:
-      floors_per_theme stopped being read when _roll_theme replaced the
-      depth-keyed theme selection — my own change killed it.
-      FACING_NAMES was conflated with facing_textures, which is the live one.
-    Both removed in b0d6b7c8. Every symbol in that commit was re-checked against
-    current main rather than taken from either list.
-
-
--------------------------------------------------------------------------------
-STILL OUTSTANDING
--------------------------------------------------------------------------------
-
-  (B) orphan ART only — abomination/, dungeonkit/, _redesign/, hexgrid.png,
-      ~59 roof tiles. Scripts and scenes are done.
-  (C) dead scaffolding inside KatanaKitsune.tscn (sittingFloor, characterState,
-      _stateDummy) — needs scene edits, untouched
-  (D) the five near-identical kick states, and stateAnimation's discarded fps
-  (G) the taunt dialogue-dismiss -> chase handoff, still needs a human
-
-  Also still unrun, blocked by a permission check on this machine:
-      python3 ~/GODOT/Projects/KatanaKitsuneWorkshop/archive.py
-      393 files / 34.3 MB out of the game repo. The list is now stale in our
-      favour — the PixelLab floors above would add to it.
-
-===============================================================================
-
-
-See handover-duellists.txt for the tier 5/6 duellist art pipeline,
-which is mid-flight as of 2026-10-03.
