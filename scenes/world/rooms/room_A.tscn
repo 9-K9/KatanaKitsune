@@ -895,31 +895,6 @@ tile_map_data = PackedByteArray("AAAGAAkAAwAAAAAAAAADABAAAwAAAAAAAAAKAAIAAwAAAAA
 tile_set = SubResource("TileSet_tjlhk")
 script = ExtResource("68_kwptf")
 
-[node name="WallsCheckPlayer" type="Area2D" parent="TileMap" unique_id=1839357500]
-z_index = 1
-z_as_relative = false
-
-[node name="CP2D_SE" type="CollisionPolygon2D" parent="TileMap/WallsCheckPlayer" unique_id=1823289206]
-visible = false
-polygon = PackedVector2Array(-97, 149, -97, 411, -74, 427, 576, 96, 576, -158, -68, 164)
-metadata/_edit_lock_ = true
-
-[node name="CP2D_NW" type="CollisionPolygon2D" parent="TileMap/WallsCheckPlayer" unique_id=2083058297]
-visible = false
-position = Vector2(-639, -330)
-polygon = PackedVector2Array(-97, 149, -97, 411, -74, 427, 576, 96, 576, -158, -68, 164)
-metadata/_edit_lock_ = true
-
-[node name="CP2D_NE" type="CollisionPolygon2D" parent="TileMap/WallsCheckPlayer" unique_id=30154950]
-visible = false
-position = Vector2(47, -23)
-polygon = PackedVector2Array(-106, -481, -109, -219, 549, 104, 576, 96, 576, -158, 549, -151)
-metadata/_edit_lock_ = true
-
-[node name="CP2D_SW" type="CollisionPolygon2D" parent="TileMap/WallsCheckPlayer" unique_id=1648873083]
-position = Vector2(-658, 324)
-polygon = PackedVector2Array(-106, -481, -109, -219, 561, 106, 584, 99, 582, -158, 556, -149)
-
 [node name="Roofs" type="TileMapLayer" parent="TileMap" unique_id=274099275]
 visible = false
 z_index = 1
@@ -931,9 +906,3 @@ tile_set = SubResource("TileSet_lejh4")
 script = ExtResource("68_kwptf")
 mode = 1
 
-[node name="RoofCheckPlayer" type="Area2D" parent="TileMap/Roofs" unique_id=1256100275]
-z_index = 2
-z_as_relative = false
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="TileMap/Roofs/RoofCheckPlayer" unique_id=983715980]
-polygon = PackedVector2Array(-72, -486, -724, -162, -44, 176, 604, -148)

@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="10_chair"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="13_pausemenu"]
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
-[ext_resource type="PackedScene" uid="1000" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
+[ext_resource type="PackedScene" uid="uid://cq8gk2mvxr4n7" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
 [ext_resource type="Script" path="res://scripts/system/DebugShapes.gd" id="12_dbg"]
 [ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="22_trap"]
 [ext_resource type="PackedScene" path="res://scenes/monsters/gashadokuro.tscn" id="23_gasha"]
