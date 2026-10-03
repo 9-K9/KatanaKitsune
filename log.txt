@@ -201,34 +201,86 @@ REMOVED from AI_Class: gameManager, direction, self_state, animation_state and
     Dragging with it: floors_indoor.tres, floors_exterior.tres, and the
     Floor_JP_Indoor / Floor_JP_Exterior layers in room_A.tscn.
 
-(D) ORPHANED ASSETS — surveyed, never acted on
-      assets/sprites/tiles/dungeonkit/ + dungeonKit.tres + dungeonKit_atlas.png
-      assets/crocotile/isometrictiles/_redesign/
-      assets/crocotile/isometrictiles/misc/hexgrid.png
-      ~59 of 99 files in assets/crocotile/isometrictiles/roofs/ (MEDIUM
-        confidence — no dynamic path reaches them, but a scene added later
-        could pick them up from the editor)
-      tools/__pycache__/ (build artefact — check .gitignore)
+(D) ORPHANED ASSETS — surveyed and re-verified 2026-10-03, never acted on
+    All of these are present and referenced by nothing. Sizes are on disk.
 
-    *** DO NOT RUN A NAIVE ORPHAN SCAN. *** These look unreferenced and are
-    loaded dynamically by name:
+      assets/sprites/tiles/dungeonkit/           468K   58 tile_*.png, 0 refs
+      assets/sprites/tiles/dungeonKit.tres        12K   0 refs
+      assets/sprites/tiles/dungeonKit_atlas.png   64K   referenced ONLY by
+                                                        dungeonKit.tres, which
+                                                        is itself unreferenced
+        The whole dungeonKit family is a closed dead set — the .tres points at
+        the atlas, the atlas points nowhere, and nothing points at the .tres.
+        Note the .tres does NOT reference the 58 tile_*.png either.
+
+      assets/crocotile/isometrictiles/_redesign/  32K   two .aseprite sources.
+        Godot cannot import .aseprite, so these are art-source files rather
+        than game assets. Your call whether sources belong in this repo or in
+        the Workshop.
+
+      assets/crocotile/isometrictiles/misc/hexgrid.png  4K   0 refs
+
+      assets/crocotile/isometrictiles/roofs/      99 files, ~59 unreferenced.
+        MEDIUM CONFIDENCE ONLY. The 40 that are used are the rusticBrick and
+        plain modularRoofSlope sets. I checked whether MazeDemo's theming could
+        reach the rest dynamically and it cannot — _repoint() is only ever
+        called on Walls_* layers and TileMap/Ground, the Roofs layer tileset is
+        never repointed, and show_roofs defaults to false. But a scene you add
+        later could pick them up from the editor, so this is the one group I
+        would not sweep without looking.
+
+    *** DO NOT RUN A NAIVE ORPHAN SCAN. ***
+    These look unreferenced to any grep and are loaded dynamically by name:
       assets/crocotile/isometrictiles/walls/   504 files, built from the 64
-        THEMES prefixes in MazeDemo — deleting them kills the whole themed
-        dungeon feature
+        THEMES prefixes in MazeDemo (_theme_walls / _repoint). DELETING THESE
+        KILLS THE ENTIRE THEMED-DUNGEON FEATURE.
       assets/sprites/props/pillars/            86 files, MazeDemo._theme_pillars
-      assets/sprites/characters/KatanaKitsune/power_states/ and
-      assets/sprites/ui/title_power_states/    PowerState.gd
+      assets/sprites/characters/KatanaKitsune/power_states/
+      assets/sprites/ui/title_power_states/    both via PowerState.gd
 
-(E) SPENT ONE-OFF GENERATORS — archive candidates
-      tools/generate_title_power_variants.py  hardcodes /mnt/K-DRIVE/... so it
-        cannot run on another machine
-      tools/recolor_kitsune_test.py
-      tools/recolor_kitsune_skin_test.py
-      tools/recolor_kitsune_hair_skin_test.py
-        All three write into assets/sprites/characters/_tests/, which does not
-        exist. Two of them read from it, so they cannot run at all.
-      tools/validate_japanese_environment.gd — the only file referencing the
-        three tilesets it validates; no scene uses them.
+    CORRECTION to the earlier version of this log: tools/__pycache__ was listed
+    as a build artefact to check. It is already gitignored (.gitignore:19) and
+    untracked. Nothing to do.
+
+(E) SPENT ONE-OFF GENERATORS — archive candidates, re-verified 2026-10-03
+
+    Cannot run at all. All three write into assets/sprites/characters/_tests/,
+    AND THAT DIRECTORY DOES NOT EXIST. Two of them also read from it, so they
+    fail immediately. They were the exploration that led to
+    generate_kitsune_power_palettes.py, which superseded them.
+      tools/recolor_kitsune_test.py            writes _tests/AzureKitsune
+      tools/recolor_kitsune_skin_test.py       reads Azure, writes Golden
+      tools/recolor_kitsune_hair_skin_test.py  reads Azure, writes Violet
+
+    Cannot run on this machine. Hardcodes
+    SOURCE = /mnt/K-DRIVE/Pictures/PixAI/KatanaKitsune/CoverTitle.png, a path
+    outside the repo. Definitionally one-off; its output is committed.
+      tools/generate_title_power_variants.py
+
+    Validates assets nothing loads. It checks source counts on
+    japanese_ground_tileset.tres, japanese_raised_terrain_tileset.tres and
+    japanese_building_tileset.tres — and it is the ONLY file in the repo that
+    references any of those three. No scene uses them.
+      tools/validate_japanese_environment.gd
+
+    KEEP — these are live:
+      tools/check_scene_connections.gd + check-connections.sh   the linter
+      tools/validate_japanese_props.gd    asserts the 10 japanese props are
+        still breakables and that chair.tscn still exposes get_sit_position /
+        get_sit_facing. Tests live scenes; run manually.
+      tools/generate_kitsune_power_palettes.py   output loaded at runtime by
+        PowerState.gd
+      tools/generate_material_floors.py          output consumed by
+        MazeDemo._repoint
+      tools/generate_material_pillars.py         output consumed by
+        MazeDemo._theme_pillars
+      tools/build_enemy_scene.py                 CODEX OWNS THIS — see
+        handover-duellists.txt
+
+    Suggested approach when you pick this up: move the four spent ones to
+    archive/tools/ rather than deleting, same as archive/ already does for
+    code. They are small, and a generator you ran once is the only record of
+    how its output was made.
 
 (F) UNVERIFIED BY ANYONE — needs hands on a keyboard
     The taunt's dialogue-dismiss -> chase handoff. Everything up to the
