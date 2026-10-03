@@ -26,7 +26,7 @@ func on_enter() -> void:
 
 func on_physics_process(delta: float) -> void:
 	if enemy.sees_player():
-		change_state("walk")
+		change_state("draw" if enemy.traits.get("duellist", false) and not enemy.blade_drawn else "walk")
 		return
 
 	if _pause_left > 0.0:

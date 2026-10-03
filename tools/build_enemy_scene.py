@@ -18,9 +18,14 @@ ART = os.path.join(ROOT, "assets/sprites/monsters")
 SCENES = os.path.join(ROOT, "scenes/monsters")
 TEMPLATE = os.path.join(SCENES, "undeadRonin.tscn")
 
-## What a finished set looks like: five clips, eight directions each.
-CLIPS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
+## The template's clips remain first so legacy five-clip scenes retain their
+## byte-for-byte layout. Additional folders are appended in this order.
+BASE_CLIPS = ("Idle", "Walk", "Attack", "Hurt", "Death")
+EXTRA_CLIPS = ("Block", "Draw", "Charge")
+LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
 FRAME = 224
+DIRECTIONS = ("southWest", "west", "northWest", "north",
+              "northEast", "east", "southEast", "south")
 
 ## The twelve, with their rung and the numbers that suit them. Tier drives
 ## behaviour; these are only what the monster is before the wave scaling.
@@ -41,9 +46,22 @@ ROSTER = {
 
 
 def sheets_for(folder):
-    """Every sheet the set should have, and whether it is there and sane."""
+    """Return detected clip frame counts plus incomplete/corrupt sheet lists."""
     missing, wrong = [], []
-    for clip, frames in CLIPS.items():
+    sprite_root = os.path.join(ART, folder, "sprites")
+    if not os.path.isdir(sprite_root):
+        return {}, ["sprites folder"], wrong
+    found = set(name for name in os.listdir(sprite_root)
+                if os.path.isdir(os.path.join(sprite_root, name)))
+    clips = [clip for clip in BASE_CLIPS + EXTRA_CLIPS if clip in found]
+    clips += sorted(found.difference(clips))
+    for clip in BASE_CLIPS:
+        if clip not in found:
+            missing.append("%s folder" % clip)
+
+    counts = {}
+    for clip in clips:
+        direction_counts = []
         for d in range(1, 9):
             name = "%s_%s_dir%d.png" % (folder[0].upper() + folder[1:], clip, d)
             path = os.path.join(ART, folder, "sprites", clip, name)
@@ -56,16 +74,75 @@ def sheets_for(folder):
             try:
                 from PIL import Image
                 w, h = Image.open(path).size
-                if h != FRAME or w != FRAME * frames:
-                    wrong.append("%s is %dx%d, want %dx%d"
-                                 % (name, w, h, FRAME * frames, FRAME))
+                if h != FRAME or w % FRAME:
+                    wrong.append("%s is %dx%d, want Nx%d by %d"
+                                 % (name, w, h, FRAME, FRAME))
+                else:
+                    direction_counts.append(w // FRAME)
             except Exception as exc:
                 wrong.append("%s unreadable (%s)" % (name, exc))
-    return missing, wrong
+        if direction_counts:
+            if len(set(direction_counts)) != 1:
+                wrong.append("%s directions have differing frame counts: %s"
+                             % (clip, direction_counts))
+            elif len(direction_counts) == 8:
+                counts[clip] = direction_counts[0]
+    return counts, missing, wrong
+
+
+def _art_resources(folder, title, clips):
+    """Build texture, atlas and SpriteFrames resources for measured sheets."""
+    ext, atlas, animations = [], [], []
+    for clip, frames in clips.items():
+        key = clip.lower()
+        for direction in range(1, 9):
+            ext.append('[ext_resource type="Texture2D" path="res://assets/sprites/monsters/%s/sprites/%s/%s_%s_dir%d.png" id="t_%s_%d"]'
+                       % (folder, clip, title, clip, direction, key, direction))
+            for frame in range(frames):
+                atlas.append('[sub_resource type="AtlasTexture" id="Atlas_%s_%d_%d"]\natlas = ExtResource("t_%s_%d")\nregion = Rect2(%d, 0, 224, 224)'
+                             % (key, direction, frame, key, direction, frame * FRAME))
+            frame_rows = []
+            for frame in range(frames):
+                frame_rows.append('{\n"duration": 1.0,\n"texture": SubResource("Atlas_%s_%d_%d")\n}'
+                                  % (key, direction, frame))
+            animations.append('{\n"frames": [%s],\n"loop": %s,\n"name": &"%s_%s",\n"speed": %.1f\n}'
+                              % (", ".join(frame_rows),
+                                 "true" if clip in ("Idle", "Walk") else "false",
+                                 key, DIRECTIONS[direction - 1],
+                                 6.0 if clip == "Idle" else 10.0))
+    sprite_frames = '[sub_resource type="SpriteFrames" id="SpriteFrames_mummy"]\nanimations = [%s]' % ", ".join(animations)
+    return "\n".join(ext), "\n\n".join(atlas), sprite_frames
+
+
+def _expand_template(out, folder, title, clips, add_duellist_states):
+    """Replace the fixed art resource block and add duellist state nodes."""
+    ext, atlas, sprite_frames = _art_resources(folder, title, clips)
+    start = out.index('[ext_resource type="Texture2D"')
+    end = out.index('[sub_resource type="StyleBoxFlat"')
+    out = out[:start] + ext + "\n\n" + atlas + "\n\n" + sprite_frames + "\n\n" + out[end:]
+
+    if add_duellist_states:
+        state_resources = (
+            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyBlock.gd" id="st_block"]\n'
+            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyDraw.gd" id="st_draw"]\n'
+            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyCharge.gd" id="st_charge"]\n')
+        marker = '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyHurt.gd"'
+        out = out.replace(marker, state_resources + marker, 1)
+        state_nodes = ('[node name="block" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_block")\n\n'
+                       '[node name="draw" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_draw")\n\n'
+                       '[node name="charge" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_charge")\n\n')
+        out = out.replace('[node name="hurt" type="Node" parent="FiniteStateMachine"]',
+                          state_nodes + '[node name="hurt" type="Node" parent="FiniteStateMachine"]', 1)
+    old_atlas = sum(LEGACY_COUNTS.values()) * 8
+    delta = (len(clips) * 8 - len(BASE_CLIPS) * 8
+             + sum(clips.values()) * 8 - old_atlas
+             + (3 if add_duellist_states else 0))
+    out = re.sub(r'load_steps=(\d+)', lambda m: 'load_steps=%d' % (int(m.group(1)) + delta), out, count=1)
+    return out
 
 
 def build(folder, tier=None):
-    missing, wrong = sheets_for(folder)
+    clips, missing, wrong = sheets_for(folder)
     if missing or wrong:
         return False, "incomplete: %d missing, %d wrong" % (len(missing), len(wrong))
 
@@ -74,6 +151,10 @@ def build(folder, tier=None):
         return False, "not in the roster table"
     tier = tier if tier is not None else stats[0]
     _, health, speed, damage = stats
+    if tier >= 5:
+        absent = [clip for clip in EXTRA_CLIPS if clip not in clips]
+        if absent:
+            return False, "incomplete: missing duellist clips %s" % ", ".join(absent)
 
     title = folder[0].upper() + folder[1:]
     out = open(TEMPLATE).read()
@@ -86,6 +167,11 @@ def build(folder, tier=None):
     out = out.replace("max_health = 180.0\nmove_speed = 38.0",
                       "tier = %d\nmax_health = %.1f\nmove_speed = %.1f\nattack_damage = %.1f"
                       % (tier, health, speed, damage))
+
+    ## Preserve the historical path for template-shaped sets. This is what
+    ## keeps a gashadokuro rebuild byte-identical to earlier builds.
+    if clips != LEGACY_COUNTS:
+        out = _expand_template(out, folder, title, clips, tier >= 5)
 
     path = os.path.join(SCENES, "%s.tscn" % folder)
     open(path, "w").write(out)

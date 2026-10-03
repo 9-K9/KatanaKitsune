@@ -16,6 +16,8 @@ var traits: Dictionary = {}
 ## passive soak applies whenever it is facing a blow; this is the deeper
 ## reduction for a block it deliberately raised.
 var guarding: bool = false
+## Latched after the draw animation finishes; a fresh instance resets it.
+var blade_drawn: bool = false
 
 @export_group("Stats")
 @export var max_health: float = 100.0
@@ -321,7 +323,7 @@ func start_attack_cooldown() -> void:
 ## Lands a claw hit if the player is still inside the swing. `reach` is a
 ## multiplier on attack_range, so a player backing off mid-swing can still be
 ## clipped by the follow-through.
-func strike(reach: float = 1.35) -> void:
+func strike(reach: float = 1.35, damage_multiplier: float = 1.0) -> void:
 	if is_dead:
 		return
 	var target := player()
@@ -331,14 +333,14 @@ func strike(reach: float = 1.35) -> void:
 		return
 	if target.has_method("take_damage"):
 		## Tells her guard where the blow came from.
-		target.take_damage(attack_damage, global_position)
-	_strike_breakables(reach)
+		target.take_damage(attack_damage * damage_multiplier, global_position)
+	_strike_breakables(reach, damage_multiplier)
 
 
 ## Enemy swings may smash props caught in the same attack radius. This query
 ## runs only on the attack animation's hit frame; walking into a prop cannot
 ## damage it.
-func _strike_breakables(reach: float) -> void:
+func _strike_breakables(reach: float, damage_multiplier: float = 1.0) -> void:
 	var shape := CircleShape2D.new()
 	shape.radius = attack_range * reach
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -351,7 +353,7 @@ func _strike_breakables(reach: float) -> void:
 	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
 		var body = hit.get("collider")
 		if is_instance_valid(body) and body.is_in_group("breakable") and body.has_method("take_damage"):
-			body.take_damage(attack_damage, global_position)
+			body.take_damage(attack_damage * damage_multiplier, global_position)
 
 
 ## Called when the player interacts with this monster — an Action press or the
