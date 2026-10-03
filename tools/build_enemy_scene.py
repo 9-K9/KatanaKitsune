@@ -48,6 +48,14 @@ HEIGHT = {
 FEET_BELOW_CENTRE = 80.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
+## The head, measured the same way: content in a 224 frame runs y=37 to y=192,
+## so the top of the silhouette is 75px above the sprite's centre and that
+## distance scales as well.
+HEAD_ABOVE_CENTRE = 75.0
+## Clear air between the head and the bar, held constant at every size — it is
+## a readability margin, not part of the monster, so it should not grow.
+BAR_GAP = 47.0
+BAR_HEIGHT = 6.0
 
 ## The twelve, with their rung and the numbers that suit them. Tier drives
 ## behaviour; these are only what the monster is before the wave scaling.
@@ -178,11 +186,25 @@ def _apply_height(out, folder):
     y = (BASE_SPRITE_Y + FEET_BELOW_CENTRE) - FEET_BELOW_CENTRE * k
     anchor = '[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]\nposition = Vector2(0, -72)'
     assert anchor in out, "sprite node not where %s expected it" % folder
-    return out.replace(
+    out = out.replace(
         anchor,
         '[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]\n'
         'position = Vector2(0, %.1f)\nscale = Vector2(%.2f, %.2f)' % (y, k, k),
         1)
+
+    ## The bar is a sibling of the sprite, so it does not inherit the scale and
+    ## would otherwise stay at a man's head height — across a giant's waist, and
+    ## floating well above a weasel. It rides the head instead: the head sits
+    ## HEAD_ABOVE_CENTRE above the sprite's centre and that distance scales,
+    ## so the bar follows it and keeps a constant gap above.
+    top = y - HEAD_ABOVE_CENTRE * k - BAR_GAP
+    bar = '[node name="HealthBar" type="ProgressBar" parent="."]\noffset_left = -26.0\noffset_top = -194.0'
+    assert bar in out, "health bar not where %s expected it" % folder
+    return out.replace(
+        bar,
+        '[node name="HealthBar" type="ProgressBar" parent="."]\n'
+        'offset_left = -26.0\noffset_top = %.1f' % top,
+        1).replace("offset_bottom = -188.0", "offset_bottom = %.1f" % (top + BAR_HEIGHT), 1)
 
 
 def build(folder, tier=None):

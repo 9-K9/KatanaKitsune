@@ -2193,9 +2193,9 @@ autoplay = "idle_southWest"
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -26.0
-offset_top = -194.0
+offset_top = -442.0
 offset_right = 26.0
-offset_bottom = -188.0
+offset_bottom = -436.0
 theme_override_styles/background = SubResource("StyleBoxFlat_hpbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
