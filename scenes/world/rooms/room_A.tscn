@@ -937,8 +937,3 @@ z_as_relative = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="TileMap/Roofs/RoofCheckPlayer" unique_id=983715980]
 polygon = PackedVector2Array(-72, -486, -724, -162, -44, 176, 604, -148)
-
-[connection signal="area_entered" from="TileMap/WallsCheckPlayer" to="." method="_on_walls_check_player_area_entered"]
-[connection signal="area_exited" from="TileMap/WallsCheckPlayer" to="." method="_on_walls_check_player_area_exited"]
-[connection signal="area_entered" from="TileMap/Roofs/RoofCheckPlayer" to="." method="_on_area_2d_area_entered"]
-[connection signal="area_exited" from="TileMap/Roofs/RoofCheckPlayer" to="." method="_on_area_2d_area_exited"]
