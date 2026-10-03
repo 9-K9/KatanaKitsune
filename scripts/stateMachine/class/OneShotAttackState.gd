@@ -19,11 +19,15 @@ var clip: String = ""
 ## 12 — so the values are kept rather than quietly collapsed, in case that
 ## function is ever made to honour them.
 var fps: int = 8
-## Seconds of input lock. Deliberately a number rather than clip_length(): for
-## midKick and katanaSlashCrouched it already equals the art exactly, and for
-## the other three it runs 0.08s long, which is a balance decision rather than
-## something to silently change during a refactor.
-var duration: float = 1.0
+## Seconds of input lock. Left at 0 — the usual case — it is measured from the
+## art, so a redrawn clip changes the lock with it and the two cannot drift.
+## Set it above zero only to hold her deliberately longer than the animation.
+var duration: float = 0.0
+
+## Used only when a clip is missing, where clip_length() measures 0 and the
+## attack would otherwise end on the frame it began. The old hardcoded value,
+## so a missing clip behaves as it used to rather than failing silently.
+const FALLBACK_SECONDS: float = 0.75
 ## Where to go when the timer runs out — "idle" bare-handed, "katanaIdle" with
 ## the blade drawn.
 var exit_state: String = "idle"
@@ -33,9 +37,18 @@ func on_enter() -> void:
 	pc.speed = 0.0
 	pc.actionBlockInput = true
 	pc.timerTimeOut = false
-	action_timer.wait_time = duration
+	action_timer.wait_time = lock_seconds()
 	action_timer.start()
 	beginAttack()
+
+
+## How long to hold her. Measured per facing, because clip_length() asks the
+## SpriteFrames for the clip in the direction she is actually facing.
+func lock_seconds() -> float:
+	if duration > 0.0:
+		return duration
+	var measured: float = clip_length(clip)
+	return measured if measured > 0.0 else FALLBACK_SECONDS
 
 
 func on_process(_delta: float) -> void:

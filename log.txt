@@ -170,17 +170,14 @@ REMOVED from AI_Class: gameManager, direction, self_state, animation_state and
 4. WHAT NEEDS CONTINUING
 -------------------------------------------------------------------------------
 
-(A) THREE ATTACKS LOCK INPUT 0.08s PAST THEIR ART — a feel decision, not a bug
-    Measured against the SpriteFrames:
-        midKick              1.00s hardcoded, 1.00s art — exact
-        katanaSlashCrouched  1.00s hardcoded, 1.00s art — exact
-        highKick             0.75s hardcoded, 0.67s art
-        roundKick            0.75s hardcoded, 0.67s art
-        katanaKick           0.75s hardcoded, 0.67s art
-    Switching those three to play_oneshot() would shave 80ms off each, the way
-    katanaSlashStand already works. Left alone because it changes feel and that
-    is your call, not a refactor's. This is NOT the forwardRoll case where two
-    thirds of the clip never showed.
+(A) DONE 2026-10-03 — the kicks no longer overrun their art
+    highKick, roundKick and katanaKick locked input for 0.75s over 0.67s of
+    animation. All five one-shot attacks now measure the lock from the
+    SpriteFrames instead of carrying a number, so a redrawn clip changes the
+    lock with it. midKick and katanaSlashCrouched were already exact and are
+    unchanged; the three kicks each lost 0.08s.
+    A missing clip measures 0, which would end an attack on the frame it began,
+    so OneShotAttackState falls back to 0.75s in that case.
 
 (B) stateAnimation(state, fps) DISCARDS fps
     playerStateClass.gd sets `fps = null` on its first line while ~20 call
