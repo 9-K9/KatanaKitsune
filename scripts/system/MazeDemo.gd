@@ -860,7 +860,13 @@ func _clear_buried_chairs() -> void:
 		probe.collision_mask = 2
 		## Everything except the table it was deliberately drawn up to. It is
 		## still tested against walls, columns and every other prop.
-		var table = chair.get_meta("dining_table", null)
+		##
+		## has_meta rather than a default, because passing null as the default
+		## does not work: get_meta falls back only when the default differs from
+		## nil, so an explicit null is indistinguishable from supplying none and
+		## it takes the error path instead. Chairs from the prop pool have no
+		## table and hit this every time one is placed.
+		var table: Variant = chair.get_meta("dining_table") if chair.has_meta("dining_table") else null
 		if is_instance_valid(table) and table is CollisionObject2D:
 			probe.exclude = [table.get_rid()]
 		if not space.intersect_shape(probe, 1).is_empty():
