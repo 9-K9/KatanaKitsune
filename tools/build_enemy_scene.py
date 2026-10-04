@@ -144,29 +144,46 @@ def _art_resources(folder, title, clips):
     return "\n".join(ext), "\n\n".join(atlas), sprite_frames
 
 
-def _expand_template(out, folder, title, clips, add_duellist_states):
-    """Replace the fixed art resource block and add duellist state nodes."""
+## The state each extra clip unlocks. A monster gets the node when it has the
+## art to show it, which is what EnemyStateClass._drop_skills_without_states
+## looks for when it decides whether a rolled rung can be performed.
+EXTRA_STATES = {
+    "Block":  ("block", "enemyBlock.gd", "st_block"),
+    "Draw":   ("draw", "enemyDraw.gd", "st_draw"),
+    "Charge": ("charge", "enemyCharge.gd", "st_charge"),
+}
+
+
+def _expand_template(out, folder, title, clips):
+    """Replace the fixed art resource block and add whatever states the art supports.
+
+    Driven by which clips exist rather than by tier, because tier is not a
+    property of the art: the generator picks a scene uniformly and rolls a rung
+    for it afterwards, so any monster may be asked to guard. A warden with a
+    Block folder can raise its guard whatever rung it was handed, and one
+    without is demoted at spawn rather than erroring.
+    """
     ext, atlas, sprite_frames = _art_resources(folder, title, clips)
     start = out.index('[ext_resource type="Texture2D"')
     end = out.index('[sub_resource type="StyleBoxFlat"')
     out = out[:start] + ext + "\n\n" + atlas + "\n\n" + sprite_frames + "\n\n" + out[end:]
 
-    if add_duellist_states:
-        state_resources = (
-            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyBlock.gd" id="st_block"]\n'
-            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyDraw.gd" id="st_draw"]\n'
-            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyCharge.gd" id="st_charge"]\n')
+    added = [EXTRA_STATES[c] for c in EXTRA_CLIPS if c in clips]
+    if added:
+        resources = "".join(
+            '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/%s" id="%s"]\n'
+            % (script, rid) for _, script, rid in added)
         marker = '[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyHurt.gd"'
-        out = out.replace(marker, state_resources + marker, 1)
-        state_nodes = ('[node name="block" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_block")\n\n'
-                       '[node name="draw" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_draw")\n\n'
-                       '[node name="charge" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("st_charge")\n\n')
+        out = out.replace(marker, resources + marker, 1)
+        nodes = "".join(
+            '[node name="%s" type="Node" parent="FiniteStateMachine"]\nscript = ExtResource("%s")\n\n'
+            % (node, rid) for node, _, rid in added)
         out = out.replace('[node name="hurt" type="Node" parent="FiniteStateMachine"]',
-                          state_nodes + '[node name="hurt" type="Node" parent="FiniteStateMachine"]', 1)
+                          nodes + '[node name="hurt" type="Node" parent="FiniteStateMachine"]', 1)
     old_atlas = sum(LEGACY_COUNTS.values()) * 8
     delta = (len(clips) * 8 - len(BASE_CLIPS) * 8
              + sum(clips.values()) * 8 - old_atlas
-             + (3 if add_duellist_states else 0))
+             + len(added))
     out = re.sub(r'load_steps=(\d+)', lambda m: 'load_steps=%d' % (int(m.group(1)) + delta), out, count=1)
     return out
 
@@ -217,6 +234,9 @@ def build(folder, tier=None):
         return False, "not in the roster table"
     tier = tier if tier is not None else stats[0]
     _, health, speed, damage = stats
+    ## Tiers 5 and 6 are duellists by definition, so a scene built for one has
+    ## to carry the whole kit. Lower rungs take whatever extras they have — a
+    ## Block folder alone is enough to make a warden actually guard.
     if tier >= 5:
         absent = [clip for clip in EXTRA_CLIPS if clip not in clips]
         if absent:
@@ -237,7 +257,7 @@ def build(folder, tier=None):
     ## Preserve the historical path for template-shaped sets. This is what
     ## keeps a gashadokuro rebuild byte-identical to earlier builds.
     if clips != LEGACY_COUNTS:
-        out = _expand_template(out, folder, title, clips, tier >= 5)
+        out = _expand_template(out, folder, title, clips)
 
     out = _apply_height(out, folder)
 
