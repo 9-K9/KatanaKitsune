@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern.png" id="2_intact"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern_broken.png" id="3_broken"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="4_glow"]
 
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern_southEast.png" id="30_southEast"]
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern_southWest.png" id="30_southWest"]
@@ -34,4 +35,11 @@ texture = ExtResource("2_intact")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("ConvexPolygonShape2D_prop")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(0, -40)
+texture = ExtResource("4_glow")
+color = Color(1, 0.68, 0.34, 1)
+energy = 1.2
+texture_scale = 2.4
 

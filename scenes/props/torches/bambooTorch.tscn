@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/torches/bambooTorch_lit.png" id="2_lit"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/torches/bambooTorch_broken.png" id="3_broken"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="4_glow"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_t"]
+points = PackedVector2Array(-11, 0, 0, -6, 11, 0, 0, 6)
+
+[node name="BambooTorch" type="StaticBody2D" groups=["breakable"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_s")
+max_health = 20.0
+lit_frames = 6
+lit_fps = 9.0
+break_texture = ExtResource("3_broken")
+break_frames = 4
+break_frame_time = 0.08
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -34)
+texture = ExtResource("2_lit")
+hframes = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ConvexPolygonShape2D_t")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(0, -44)
+texture = ExtResource("4_glow")
+color = Color(0.62, 1.00, 0.66, 1)
+energy = 1.05
+texture_scale = 3.05

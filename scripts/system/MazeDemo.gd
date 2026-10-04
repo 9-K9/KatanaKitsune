@@ -170,6 +170,15 @@ const THEMES: Array[Dictionary] = [
 @export var lantern_radius: float = 2.6
 @export var lantern_colour: Color = Color(1.0, 0.82, 0.55)
 
+## The standing lights that make a room readable without the player's lantern.
+##
+## Placed on their own rather than through the prop pool, because the pool is a
+## uniform draw across eight scenes and a room could easily come up with none —
+## which is the whole reason the floor was too dark to read. Light is not
+## decoration, so it does not get left to chance.
+@export var torch_scenes: Array[PackedScene] = []
+@export var torches_per_room: Vector2i = Vector2i(2, 4)
+
 const SIDES: Array[String] = ["NE", "NW", "SE", "SW"]
 ## Which lattice step each side faces. This follows from the isometric transform
 ## rather than from looking at a render: +x moves right and down, which is SE,
@@ -526,6 +535,13 @@ func _populate(step: Vector2) -> void:
 			var m: int = _rng.randi_range(props_per_room.x, props_per_room.y)
 			for i in m:
 				_place(here, prop_scenes[_rng.randi_range(0, prop_scenes.size() - 1)])
+		## Guaranteed, not rolled. Every room lights itself rather than relying
+		## on the lantern the player carries — a dark room is unreadable, and a
+		## uniform draw from the prop pool would leave some rooms with none.
+		if not torch_scenes.is_empty():
+			var lights: int = _rng.randi_range(torches_per_room.x, torches_per_room.y)
+			for i in lights:
+				_place(here, torch_scenes[_rng.randi_range(0, torch_scenes.size() - 1)])
 		if table_scene != null and _rng.randf() < table_chance:
 			_place_dining_set(here)
 		if trap_scene != null and cell != start and _rng.randf() < trap_chance:

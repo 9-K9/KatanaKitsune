@@ -42,6 +42,13 @@ extends StaticBody2D
 @export var facing_break_textures: Array[Texture2D] = []
 @export_range(1, 8, 1) var break_frames: int = 4
 @export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
+## Frames in the intact sprite, cycled while the prop is whole. 0 leaves it
+## static, which is every crate and urn. A torch sets this to the length of its
+## flame loop, so the fire moves without needing an AnimatedSprite2D — which
+## would mean a second prop class purely because one sprite animates, and would
+## not survive _break swapping the texture out from under it.
+@export_range(0, 16, 1) var lit_frames: int = 0
+@export_range(2.0, 24.0, 1.0) var lit_fps: float = 9.0
 ## Keep the final broken sprite instead of fading and freeing the prop.
 @export var persist_broken: bool = false
 
@@ -119,6 +126,23 @@ func _ready() -> void:
 	_flash_material = ShaderMaterial.new()
 	_flash_material.shader = shader
 	sprite.material = _flash_material
+	if lit_frames > 1:
+		sprite.hframes = lit_frames
+		## Staggered, or every torch on the floor flickers in lockstep and the
+		## room pulses as one light instead of several.
+		_lit_at = randf() * float(lit_frames)
+	else:
+		set_process(false)
+
+
+var _lit_at: float = 0.0
+
+
+func _process(delta: float) -> void:
+	if _broken or lit_frames <= 1:
+		return
+	_lit_at = fmod(_lit_at + delta * lit_fps, float(lit_frames))
+	sprite.frame = int(_lit_at)
 
 
 ## `from` is where the blow came from. Unused here — a crate has no facing to
@@ -156,6 +180,7 @@ func _break() -> void:
 	## invisible crate around while the shards fade.
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
+	_douse()
 
 	if is_instance_valid(_flash_tween):
 		_flash_tween.kill()
@@ -184,6 +209,27 @@ func _break() -> void:
 	fade.tween_property(sprite, "position:y", sprite.position.y - 3.0, 0.32)
 	await fade.finished
 	queue_free()
+
+
+## Puts out any flame this prop was carrying.
+##
+## A lantern that keeps burning after it is shattered is the obvious tell, and
+## for a prop with persist_broken the light would otherwise hang over the rubble
+## for the rest of the run. Guttering it over a fifth of a second rather than
+## cutting it reads as the flame dying rather than as the light being switched
+## off, and it lands while the break frames are still playing.
+##
+## Written generically, in the base class, because any prop may carry a light
+## and none of them should keep it: a brazier, a lantern, a candle on a table.
+func _douse() -> void:
+	for child in get_children():
+		if child is PointLight2D:
+			var light := child as PointLight2D
+			var gutter := create_tween()
+			gutter.tween_property(light, "energy", 0.0, 0.22)
+			gutter.tween_callback(func() -> void:
+				if is_instance_valid(light):
+					light.enabled = false)
 
 
 ## Puts the chosen drop on top of the prop, dormant.
