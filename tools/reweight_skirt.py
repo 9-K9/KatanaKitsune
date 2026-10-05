@@ -18,6 +18,7 @@ few pixels does not.
 Only the upper-leg bones are touched. Knees, feet, arms and spine are left as
 the rigger set them.
 """
+import os
 import sys
 
 import bpy
@@ -86,6 +87,13 @@ def main():
     bpy.ops.export_scene.gltf(filepath=dst, export_format="GLB",
                               export_animations=True, export_nla_strips=True)
     print("REWEIGHT wrote %s" % dst)
+
+    ## Save the scene beside the output, so trying a different blend height does
+    ## not mean re-importing and re-weighting from scratch. Named blend_path,
+    ## not blend — that is already the fade-height argument.
+    blend_path = os.path.splitext(dst)[0] + ".blend"
+    bpy.ops.wm.save_as_mainfile(filepath=blend_path)
+    print("REWEIGHT saved %s" % blend_path)
 
 
 main()

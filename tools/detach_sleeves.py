@@ -19,6 +19,7 @@ Worth knowing why this was missed first time round: a tally of each vertex's
 Skinning blends, so a diagnosis that only reads the top influence will keep
 saying everything is fine.
 """
+import os
 import sys
 
 import bpy
@@ -76,6 +77,13 @@ def main():
     bpy.ops.export_scene.gltf(filepath=dst, export_format="GLB",
                               export_animations=True, export_nla_strips=True)
     print("DETACH wrote %s" % dst)
+
+    ## Save the scene beside the output. Re-importing a 25MB GLB and redoing the
+    ## weighting to try one different number is wasteful, and a power cut
+    ## already destroyed a session's working files once.
+    blend = os.path.splitext(dst)[0] + ".blend"
+    bpy.ops.wm.save_as_mainfile(filepath=blend)
+    print("DETACH saved %s" % blend)
 
 
 main()
