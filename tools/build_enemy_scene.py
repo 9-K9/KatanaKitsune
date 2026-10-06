@@ -23,7 +23,12 @@ TEMPLATE = os.path.join(SCENES, "undeadRonin.tscn")
 BASE_CLIPS = ("Idle", "Walk", "Attack", "Hurt", "Death")
 EXTRA_CLIPS = ("Block", "Draw", "Charge")
 LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
-FRAME = 224
+## The sprite cell. 480 to match Katana Kitsune, because these animations move:
+## backflips, flying kicks and spin jumps all leave a 224 box, and the enemies
+## that convention came from barely shifted their feet. Raising it costs texture
+## memory and nothing else — the character still draws at ~155px, it just has
+## room to leave the ground.
+FRAME = 480
 DIRECTIONS = ("southWest", "west", "northWest", "north",
               "northEast", "east", "southEast", "south")
 
@@ -42,15 +47,17 @@ HEIGHT = {
     "kamaitachi":  0.70,  # small and fast, and should look breakable
 }
 
-## Where the feet sit inside a frame, and how far that is below the sprite's
-## centre. Scaling the sprite scales this gap too, so the offset has to move
-## with it or a scaled monster floats.
-FEET_BELOW_CENTRE = 80.0
+## Where the feet sit inside a frame, measured from the sprite's centre.
+## At FRAME=480 the feet belong at y=340, matching Katana Kitsune, so they are
+## 100px below the 240 centre. Scaling the sprite scales this gap too, so the
+## offset has to move with it or a scaled monster floats.
+FEET_IN_FRAME = 340.0
+FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
-## The head, measured the same way: content in a 224 frame runs y=37 to y=192,
-## so the top of the silhouette is 75px above the sprite's centre and that
-## distance scales as well.
+## The head, measured the same way. These were taken in a 224 frame, where
+## content ran y=37 to y=192, putting the head 75px above the sprite's centre.
+## They are offsets from the centre, so they do not change with the cell size.
 HEAD_ABOVE_CENTRE = 75.0
 ## Clear air between the head and the bar, held constant at every size — it is
 ## a readability margin, not part of the monster, so it should not grow.
@@ -129,8 +136,8 @@ def _art_resources(folder, title, clips):
             ext.append('[ext_resource type="Texture2D" path="res://assets/sprites/monsters/%s/sprites/%s/%s_%s_dir%d.png" id="t_%s_%d"]'
                        % (folder, clip, title, clip, direction, key, direction))
             for frame in range(frames):
-                atlas.append('[sub_resource type="AtlasTexture" id="Atlas_%s_%d_%d"]\natlas = ExtResource("t_%s_%d")\nregion = Rect2(%d, 0, 224, 224)'
-                             % (key, direction, frame, key, direction, frame * FRAME))
+                atlas.append('[sub_resource type="AtlasTexture" id="Atlas_%s_%d_%d"]\natlas = ExtResource("t_%s_%d")\nregion = Rect2(%d, 0, %d, %d)'
+                             % (key, direction, frame, key, direction, frame * FRAME, FRAME, FRAME))
             frame_rows = []
             for frame in range(frames):
                 frame_rows.append('{\n"duration": 1.0,\n"texture": SubResource("Atlas_%s_%d_%d")\n}'
