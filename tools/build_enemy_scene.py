@@ -66,22 +66,42 @@ HEAD_ABOVE_CENTRE = 75.0
 BAR_GAP = 47.0
 BAR_HEIGHT = 6.0
 
-## The twelve, with their rung and the numbers that suit them. Tier drives
+## The nine, with their rung and the numbers that suit them. Tier drives
 ## behaviour; these are only what the monster is before the wave scaling.
+##
+## Keys are the asset folder name, lowercase-first, which is also what the
+## PixelOver export is named after.
 ROSTER = {
-    "gashadokuro": (1, 150.0, 34.0, 14.0),   # starved giant skeleton
-    "jikininki":   (1, 110.0, 42.0, 11.0),   # corpse-eater
-    "kamaitachi":  (2,  80.0, 64.0, 13.0),   # sickle weasel, quick and frail
-    "nureOnna":    (2, 100.0, 58.0, 14.0),   # serpent woman
-    "oni":         (3, 220.0, 44.0, 22.0),   # horned ogre with a club
-    "tengu":       (3, 160.0, 52.0, 18.0),   # crow-beaked swordsman
-    "onryo":       (4, 180.0, 30.0, 20.0),   # vengeful spirit
-    "yurei":       (4, 160.0, 28.0, 18.0),   # drifting ghost
-    "kitsuneBi":   (5, 200.0, 56.0, 24.0),   # fox-fire spirit
-    "yukiOnna":    (5, 210.0, 54.0, 25.0),   # snow woman
-    "nurarihyon":  (6, 420.0, 60.0, 30.0),   # yokai lord
-    "hannya":      (6, 400.0, 64.0, 32.0),   # horned demon
+    "kasha":         (1, 120.0, 40.0, 12.0),  # corpse-stealing cat demon, a scavenger
+    "kappa":         (2, 140.0, 50.0, 15.0),  # river imp; wrestles, drags you under
+    "karasuShinobi": (2,  90.0, 66.0, 14.0),  # crow ninja, fast and frail
+    "jorogumo":      (3, 160.0, 48.0, 20.0),  # spider woman, ambusher
+    "oni":           (3, 240.0, 44.0, 24.0),  # horned ogre, the wall of the set
+    "tengu":         (4, 170.0, 54.0, 19.0),  # mountain spirit, master of arms
+    "yuki_Onna":     (5, 210.0, 52.0, 25.0),  # snow woman, cold and inevitable
+    "ninja":         (5, 190.0, 60.0, 26.0),  # the human among them, and the quickest
+    "yokai_Lord":    (6, 420.0, 58.0, 32.0),  # the boss
 }
+
+## Where the feet sit inside a frame, measured from the sprite's centre.
+## 336 in a 480 cell — the origin PixelOver exports with, 96 below the 240
+## centre. That number is the art's, not ours: it was chosen so a jump or a
+## death still has headroom and nothing gets its head cut off, and it has been
+## tested. The code bends to it. Scaling the sprite scales this gap too, so the
+## offset has to move with it or a scaled monster floats.
+FEET_IN_FRAME = 336.0
+FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
+## The template's own sprite offset, which the formula has to reproduce at 1.0.
+BASE_SPRITE_Y = -72.0
+## The head, measured the same way. These were taken in a 224 frame, where
+## content ran y=37 to y=192, putting the head 75px above the sprite's centre.
+## They are offsets from the centre, so they do not change with the cell size.
+HEAD_ABOVE_CENTRE = 75.0
+## Clear air between the head and the bar, held constant at every size — it is
+## a readability margin, not part of the monster, so it should not grow.
+BAR_GAP = 47.0
+BAR_HEIGHT = 6.0
+
 
 
 def sheets_for(folder):
