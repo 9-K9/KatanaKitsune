@@ -29,8 +29,13 @@ LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
 ## memory and nothing else — the character still draws at ~155px, it just has
 ## room to leave the ground.
 FRAME = 480
-DIRECTIONS = ("southWest", "west", "northWest", "north",
-              "northEast", "east", "southEast", "south")
+## dirN in a PixelOver export, in its order: dir1 is south-EAST, not south and
+## not south-west. Getting this wrong costs nothing at build time and produces a
+## monster that moonwalks — facing one way while travelling another — with no
+## error anywhere. The previous order here was the PixelLab one and is why
+## Jorogumo walked backwards.
+DIRECTIONS = ("southEast", "east", "northEast", "north",
+              "northWest", "west", "southWest", "south")
 
 ## How tall each one stands against a human, which the art cannot carry on its
 ## own: a generator normalises every model it makes, so a giant skeleton and a

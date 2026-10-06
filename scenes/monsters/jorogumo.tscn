@@ -2680,7 +2680,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_1_7")
 }],
 "loop": true,
-"name": &"idle_southWest",
+"name": &"idle_southEast",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2709,7 +2709,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_2_7")
 }],
 "loop": true,
-"name": &"idle_west",
+"name": &"idle_east",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2738,7 +2738,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_3_7")
 }],
 "loop": true,
-"name": &"idle_northWest",
+"name": &"idle_northEast",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2796,7 +2796,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_5_7")
 }],
 "loop": true,
-"name": &"idle_northEast",
+"name": &"idle_northWest",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2825,7 +2825,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_6_7")
 }],
 "loop": true,
-"name": &"idle_east",
+"name": &"idle_west",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2854,7 +2854,7 @@ animations = [{
 "texture": SubResource("Atlas_idle_7_7")
 }],
 "loop": true,
-"name": &"idle_southEast",
+"name": &"idle_southWest",
 "speed": 6.0
 }, {
 "frames": [{
@@ -2912,7 +2912,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_1_7")
 }],
 "loop": true,
-"name": &"walk_southWest",
+"name": &"walk_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -2941,7 +2941,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_2_7")
 }],
 "loop": true,
-"name": &"walk_west",
+"name": &"walk_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -2970,7 +2970,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_3_7")
 }],
 "loop": true,
-"name": &"walk_northWest",
+"name": &"walk_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3028,7 +3028,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_5_7")
 }],
 "loop": true,
-"name": &"walk_northEast",
+"name": &"walk_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3057,7 +3057,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_6_7")
 }],
 "loop": true,
-"name": &"walk_east",
+"name": &"walk_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3086,7 +3086,7 @@ animations = [{
 "texture": SubResource("Atlas_walk_7_7")
 }],
 "loop": true,
-"name": &"walk_southEast",
+"name": &"walk_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3144,7 +3144,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_1_7")
 }],
 "loop": false,
-"name": &"attack_southWest",
+"name": &"attack_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3173,7 +3173,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_2_7")
 }],
 "loop": false,
-"name": &"attack_west",
+"name": &"attack_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3202,7 +3202,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_3_7")
 }],
 "loop": false,
-"name": &"attack_northWest",
+"name": &"attack_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3260,7 +3260,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_5_7")
 }],
 "loop": false,
-"name": &"attack_northEast",
+"name": &"attack_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3289,7 +3289,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_6_7")
 }],
 "loop": false,
-"name": &"attack_east",
+"name": &"attack_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3318,7 +3318,7 @@ animations = [{
 "texture": SubResource("Atlas_attack_7_7")
 }],
 "loop": false,
-"name": &"attack_southEast",
+"name": &"attack_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3376,7 +3376,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_1_7")
 }],
 "loop": false,
-"name": &"hurt_southWest",
+"name": &"hurt_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3405,7 +3405,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_2_7")
 }],
 "loop": false,
-"name": &"hurt_west",
+"name": &"hurt_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3434,7 +3434,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_3_7")
 }],
 "loop": false,
-"name": &"hurt_northWest",
+"name": &"hurt_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3492,7 +3492,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_5_7")
 }],
 "loop": false,
-"name": &"hurt_northEast",
+"name": &"hurt_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3521,7 +3521,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_6_7")
 }],
 "loop": false,
-"name": &"hurt_east",
+"name": &"hurt_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3550,7 +3550,7 @@ animations = [{
 "texture": SubResource("Atlas_hurt_7_7")
 }],
 "loop": false,
-"name": &"hurt_southEast",
+"name": &"hurt_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3608,7 +3608,7 @@ animations = [{
 "texture": SubResource("Atlas_death_1_7")
 }],
 "loop": false,
-"name": &"death_southWest",
+"name": &"death_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3637,7 +3637,7 @@ animations = [{
 "texture": SubResource("Atlas_death_2_7")
 }],
 "loop": false,
-"name": &"death_west",
+"name": &"death_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3666,7 +3666,7 @@ animations = [{
 "texture": SubResource("Atlas_death_3_7")
 }],
 "loop": false,
-"name": &"death_northWest",
+"name": &"death_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3724,7 +3724,7 @@ animations = [{
 "texture": SubResource("Atlas_death_5_7")
 }],
 "loop": false,
-"name": &"death_northEast",
+"name": &"death_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3753,7 +3753,7 @@ animations = [{
 "texture": SubResource("Atlas_death_6_7")
 }],
 "loop": false,
-"name": &"death_east",
+"name": &"death_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3782,7 +3782,7 @@ animations = [{
 "texture": SubResource("Atlas_death_7_7")
 }],
 "loop": false,
-"name": &"death_southEast",
+"name": &"death_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3840,7 +3840,7 @@ animations = [{
 "texture": SubResource("Atlas_block_1_7")
 }],
 "loop": false,
-"name": &"block_southWest",
+"name": &"block_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3869,7 +3869,7 @@ animations = [{
 "texture": SubResource("Atlas_block_2_7")
 }],
 "loop": false,
-"name": &"block_west",
+"name": &"block_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3898,7 +3898,7 @@ animations = [{
 "texture": SubResource("Atlas_block_3_7")
 }],
 "loop": false,
-"name": &"block_northWest",
+"name": &"block_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3956,7 +3956,7 @@ animations = [{
 "texture": SubResource("Atlas_block_5_7")
 }],
 "loop": false,
-"name": &"block_northEast",
+"name": &"block_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -3985,7 +3985,7 @@ animations = [{
 "texture": SubResource("Atlas_block_6_7")
 }],
 "loop": false,
-"name": &"block_east",
+"name": &"block_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4014,7 +4014,7 @@ animations = [{
 "texture": SubResource("Atlas_block_7_7")
 }],
 "loop": false,
-"name": &"block_southEast",
+"name": &"block_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4072,7 +4072,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_1_7")
 }],
 "loop": false,
-"name": &"alert_southWest",
+"name": &"alert_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4101,7 +4101,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_2_7")
 }],
 "loop": false,
-"name": &"alert_west",
+"name": &"alert_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4130,7 +4130,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_3_7")
 }],
 "loop": false,
-"name": &"alert_northWest",
+"name": &"alert_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4188,7 +4188,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_5_7")
 }],
 "loop": false,
-"name": &"alert_northEast",
+"name": &"alert_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4217,7 +4217,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_6_7")
 }],
 "loop": false,
-"name": &"alert_east",
+"name": &"alert_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4246,7 +4246,7 @@ animations = [{
 "texture": SubResource("Atlas_alert_7_7")
 }],
 "loop": false,
-"name": &"alert_southEast",
+"name": &"alert_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4304,7 +4304,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_1_7")
 }],
 "loop": false,
-"name": &"attack2_southWest",
+"name": &"attack2_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4333,7 +4333,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_2_7")
 }],
 "loop": false,
-"name": &"attack2_west",
+"name": &"attack2_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4362,7 +4362,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_3_7")
 }],
 "loop": false,
-"name": &"attack2_northWest",
+"name": &"attack2_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4420,7 +4420,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_5_7")
 }],
 "loop": false,
-"name": &"attack2_northEast",
+"name": &"attack2_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4449,7 +4449,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_6_7")
 }],
 "loop": false,
-"name": &"attack2_east",
+"name": &"attack2_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4478,7 +4478,7 @@ animations = [{
 "texture": SubResource("Atlas_attack2_7_7")
 }],
 "loop": false,
-"name": &"attack2_southEast",
+"name": &"attack2_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4536,7 +4536,7 @@ animations = [{
 "texture": SubResource("Atlas_run_1_7")
 }],
 "loop": false,
-"name": &"run_southWest",
+"name": &"run_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4565,7 +4565,7 @@ animations = [{
 "texture": SubResource("Atlas_run_2_7")
 }],
 "loop": false,
-"name": &"run_west",
+"name": &"run_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4594,7 +4594,7 @@ animations = [{
 "texture": SubResource("Atlas_run_3_7")
 }],
 "loop": false,
-"name": &"run_northWest",
+"name": &"run_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4652,7 +4652,7 @@ animations = [{
 "texture": SubResource("Atlas_run_5_7")
 }],
 "loop": false,
-"name": &"run_northEast",
+"name": &"run_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4681,7 +4681,7 @@ animations = [{
 "texture": SubResource("Atlas_run_6_7")
 }],
 "loop": false,
-"name": &"run_east",
+"name": &"run_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4710,7 +4710,7 @@ animations = [{
 "texture": SubResource("Atlas_run_7_7")
 }],
 "loop": false,
-"name": &"run_southEast",
+"name": &"run_southWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4768,7 +4768,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_1_7")
 }],
 "loop": false,
-"name": &"taunt_southWest",
+"name": &"taunt_southEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4797,7 +4797,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_2_7")
 }],
 "loop": false,
-"name": &"taunt_west",
+"name": &"taunt_east",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4826,7 +4826,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_3_7")
 }],
 "loop": false,
-"name": &"taunt_northWest",
+"name": &"taunt_northEast",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4884,7 +4884,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_5_7")
 }],
 "loop": false,
-"name": &"taunt_northEast",
+"name": &"taunt_northWest",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4913,7 +4913,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_6_7")
 }],
 "loop": false,
-"name": &"taunt_east",
+"name": &"taunt_west",
 "speed": 10.0
 }, {
 "frames": [{
@@ -4942,7 +4942,7 @@ animations = [{
 "texture": SubResource("Atlas_taunt_7_7")
 }],
 "loop": false,
-"name": &"taunt_southEast",
+"name": &"taunt_southWest",
 "speed": 10.0
 }, {
 "frames": [{
