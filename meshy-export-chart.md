@@ -1,19 +1,40 @@
-# PixelOver export chart — every clip, 8 frames each
+# PixelOver export settings
 
-Every animation exports at **8 frames**, whatever its length, so the strips match
-Katana Kitsune's. PixelOver has no frame-count field; it samples at a rate:
+## The recipe — same for every clip, every character
 
-    Speed -> Frequency = 8 / length_in_seconds
+| setting | value |
+|---|---|
+| Unit | Frames |
+| **Length** | **9 frames** (content ending at 8.5) |
+| **Frequency** | **1 FPS** |
+| Canvas | 480 x 480 |
+| Custom Origin | 240, 336 |
+| Sprite sheet | On |
+| Constraint | Per columns |
+| Columns | 8 |
 
-Canvas **224 x 224**, Pixel/Meter **91**, feet **y = 192**, 8 directions
-(dir1=SE .. dir8=S), sprite sheet on.
+That yields **exactly 8 frames** on every clip regardless of its original length.
+Tested, not derived.
 
-A correct export computes **64 frames** per clip — 8 frames x 8 directions. If the
-progress dialog shows hundreds or thousands, Frequency is still at 30 and the clip
-is rendering every source frame.
+Fix the rate and move the length — do not compute a rate from the length.
+PixelOver will not go below 1 FPS, so any clip longer than 8 seconds cannot be
+sampled down to 8 frames by rate at all, and it truncates rather than rounds, so
+a rate that looks right to two decimals loses a frame whenever the product lands
+just under an integer. At 1 FPS neither problem exists.
 
-Clips with a **folder** go into the game. The rest are listed so the rate is to
-hand if you want them later. `Armature|clip0|baselayer` is the bind pose — skip it.
+A correct export writes **3840 x 480** per direction — 8 frames of 480. Any sheet
+that comes out **960 tall has wrapped**, meaning the clip produced 9 frames and
+the ninth went onto a second row. That is the check worth doing in the file
+listing before importing anything.
+
+Files land as `<Name>_<Clip>_dir<N>.png` in a folder per clip, which is already
+exactly what `tools/build_enemy_scene.py` reads.
+
+`tools/fps.py` computes a rate from a length. It is only needed if a clip ever
+has to come out at something other than 8 frames; the recipe above covers the
+normal case.
+
+---
 
 ## Jorogumo
 
