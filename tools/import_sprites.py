@@ -25,7 +25,7 @@ from PIL import Image
 ROOT = "/home/emanzi/GODOT/Projects/KatanaKitsune"
 EXPORTS = "/home/emanzi/GODOT/Projects/KatanaKitsuneWorkshop/meshy/pixelOverProjects"
 ART = os.path.join(ROOT, "assets/sprites/monsters")
-CELL = 480
+CELL = 560
 
 ## PixelOver clip name -> the folder the game reads it from. Clips absent here
 ## are not imported: every character exports more than the game uses.

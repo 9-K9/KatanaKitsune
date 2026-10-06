@@ -23,12 +23,12 @@ TEMPLATE = os.path.join(SCENES, "undeadRonin.tscn")
 BASE_CLIPS = ("Idle", "Walk", "Attack", "Hurt", "Death")
 EXTRA_CLIPS = ("Block", "Draw", "Charge")
 LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
-## The sprite cell. 480 to match Katana Kitsune, because these animations move:
-## backflips, flying kicks and spin jumps all leave a 224 box, and the enemies
-## that convention came from barely shifted their feet. Raising it costs texture
-## memory and nothing else — the character still draws at ~155px, it just has
-## room to leave the ground.
-FRAME = 480
+## The sprite cell. 560, wider than Katana Kitsune's 480, because these
+## animations move: backflips, spin dodges and flying kicks all leave a smaller
+## box and the export clips them. Raising it costs texture memory and nothing
+## else. The character draws at about 200px inside it — a little larger than she
+## is, which is right for something meant to threaten her.
+FRAME = 560
 ## dirN in a PixelOver export, in its order: dir1 is south-EAST, not south and
 ## not south-west. Getting this wrong costs nothing at build time and produces a
 ## monster that moonwalks — facing one way while travelling another — with no
@@ -53,12 +53,12 @@ HEIGHT = {
 }
 
 ## Where the feet sit inside a frame, measured from the sprite's centre.
-## 336 in a 480 cell — the origin PixelOver exports with, 96 below the 240
-## centre. That number is the art's, not ours: it was chosen so a jump or a
+## 380 in a 560 cell — the origin PixelOver exports with, 100 below the 280
+## centre, measured as the median across all 768 frames of a finished export. That number is the art's, not ours: it was chosen so a jump or a
 ## death still has headroom and nothing gets its head cut off, and it has been
 ## tested. The code bends to it. Scaling the sprite scales this gap too, so the
 ## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 336.0
+FEET_IN_FRAME = 380.0
 FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
@@ -89,12 +89,12 @@ ROSTER = {
 }
 
 ## Where the feet sit inside a frame, measured from the sprite's centre.
-## 336 in a 480 cell — the origin PixelOver exports with, 96 below the 240
-## centre. That number is the art's, not ours: it was chosen so a jump or a
+## 380 in a 560 cell — the origin PixelOver exports with, 100 below the 280
+## centre, measured as the median across all 768 frames of a finished export. That number is the art's, not ours: it was chosen so a jump or a
 ## death still has headroom and nothing gets its head cut off, and it has been
 ## tested. The code bends to it. Scaling the sprite scales this gap too, so the
 ## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 336.0
+FEET_IN_FRAME = 380.0
 FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
