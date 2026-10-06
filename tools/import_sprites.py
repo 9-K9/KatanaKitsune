@@ -4,17 +4,22 @@
 Usage:  import_sprites.py <Character>        # one
         import_sprites.py --all              # every character with a mapping
 
-PixelOver writes a folder per clip named after the Meshy animation, holding one
-strip per direction already named <Name>_<Clip>_dir<N>.png. The game wants the
-same files under its own clip names — `Idle_7` is an `Idle`, `mage_soell_cast`
+PixelOver writes <Character>/sprites/<Clip>/<Name>_<Clip>_dir<N>.png -- a folder
+per clip named after the Meshy animation, holding one strip per direction. The
+game wants the same files under its own clip names — `Idle_7` is an `Idle`, `mage_soell_cast`
 is an `Attack` — so this is a copy with the clip renamed in both the folder and
 the filename.
 
 It also reflows a wrapped sheet. With the sprite-sheet constraint set to eight
 columns, a nine-frame clip puts its ninth frame on a second row and the sheet
-comes out 960 tall instead of 480. Those frames are all present and in order;
-they just need laying back out in a single row. A correct export needs none of
-this, but it costs nothing to handle and saves a re-export when a clip slips.
+comes out two cells tall. Those frames are all present and in order; they just
+need laying back out in a single row. A correct export needs none of this, but it
+costs nothing to handle and saves a re-export when a clip slips.
+
+The cell size is read from the first direction of each clip rather than fixed.
+It has been 224, 480, 560, 768 and now 1024 as the art was re-exported to stop
+clipping, and a stale constant does not fail -- it divides the strip by the wrong
+number and reports a frame count that is quietly wrong.
 """
 import os
 import shutil
@@ -25,7 +30,9 @@ from PIL import Image
 ROOT = "/home/emanzi/GODOT/Projects/KatanaKitsune"
 EXPORTS = "/home/emanzi/GODOT/Projects/KatanaKitsuneWorkshop/meshy/pixelOverProjects"
 ART = os.path.join(ROOT, "assets/sprites/monsters")
-CELL = 768
+## PixelOver's sprite-sheet constraint, which every export shares. See
+## meshy-export-chart.md -- it is what makes the cell size recoverable.
+COLUMNS = 8
 
 ## PixelOver clip name -> the folder the game reads it from. Clips absent here
 ## are not imported: every character exports more than the game uses.
@@ -45,29 +52,53 @@ MAPPING = {
         "Alert": "Alert",
         "Bubble_Dance": "Taunt",
     }),
+    "Kappa": ("kappa", {
+        "Idle_03": "Idle",
+        "Walking": "Walk",
+        "Running": "Run",
+        "air_squat": "Attack",
+        "Backflip": "Attack2",
+        "Hit_Reaction": "Hurt",
+        "Dead": "Death",
+        "Block1": "Block",
+        "Alert": "Alert",
+        "Angry_To_Tantrum_Sit": "Taunt",
+    }),
+    "KarasuShinobi": ("karasuShinobi", {
+        "Idle_11": "Idle",
+        "Walking": "Walk",
+        "Running": "Run",
+        "Sweeping_Kick": "Attack",
+        "Backflip_and_Hooks": "Attack2",
+        "Hit_Reaction_1": "Hurt",
+        "Dead": "Death",
+        "Block1": "Block",
+        "Alert": "Alert",
+        "360_Power_Spin_Jump": "Taunt",
+    }),
 }
 
 
-def reflow(image):
+def reflow(image, cell):
     """One row of frames, from a sheet that may have wrapped onto several.
 
     Returns None when the sheet is already a single row, so the caller can copy
     the file untouched rather than re-encoding it.
     """
     w, h = image.size
-    if h == CELL:
+    if h == cell:
         return None
-    cols, rows = w // CELL, h // CELL
+    cols, rows = w // cell, h // cell
     frames = []
     for r in range(rows):
         for c in range(cols):
-            cell = image.crop((c * CELL, r * CELL, (c + 1) * CELL, (r + 1) * CELL))
+            box = image.crop((c * cell, r * cell, (c + 1) * cell, (r + 1) * cell))
             ## Trailing cells of the last row are empty padding, not frames.
-            if cell.split()[3].getbbox():
-                frames.append(cell)
-    out = Image.new("RGBA", (CELL * len(frames), CELL), (0, 0, 0, 0))
+            if box.split()[3].getbbox():
+                frames.append(box)
+    out = Image.new("RGBA", (cell * len(frames), cell), (0, 0, 0, 0))
     for i, f in enumerate(frames):
-        out.paste(f, (i * CELL, 0))
+        out.paste(f, (i * cell, 0))
     return out
 
 
@@ -76,7 +107,7 @@ def do(character):
         print("%s: no clip mapping" % character)
         return 0
     folder, clips = MAPPING[character]
-    src_root = os.path.join(EXPORTS, character)
+    src_root = os.path.join(EXPORTS, character, "sprites")
     if not os.path.isdir(src_root):
         print("%s: nothing exported at %s" % (character, src_root))
         return 0
@@ -98,13 +129,18 @@ def do(character):
                 continue
             dst = os.path.join(dst_dir, "%s_%s_dir%d.png" % (title, dst_clip, d))
             image = Image.open(src).convert("RGBA")
-            flat = reflow(image)
+            ## The export is constrained to COLUMNS columns, so the cell is the
+            ## sheet width divided by that -- not its height. A wrapped sheet is
+            ## square-ish, and reading the height would take a two-row sheet of
+            ## nine frames for four frames of double size.
+            cell = image.size[0] // COLUMNS
+            flat = reflow(image, cell)
             if flat is None:
                 shutil.copy2(src, dst)
             else:
                 flat.save(dst)
                 reflowed += 1
-            counts.add(Image.open(dst).size[0] // CELL)
+            counts.add(Image.open(dst).size[0] // cell)
             copied += 1
         note = "" if len(counts) == 1 else "   <-- directions disagree: %s" % sorted(counts)
         print("  %-28s -> %-8s %d frames%s"

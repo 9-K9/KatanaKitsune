@@ -40,7 +40,7 @@ SPEEDS = {
 ## backflip or a spin clips at anything smaller. Raising it costs texture memory
 ## and nothing else: the character still draws at about 195px, it just has room
 ## to move.
-FRAME = 768
+FRAME = 1024
 ## dirN in a PixelOver export, mapped to the game's SCREEN-SPACE facings — see
 ## IsoFacing.VECTORS, where south is straight down the screen and east straight
 ## right. Two of these are certain from looking at the sprites: dir4 is the back
@@ -66,24 +66,20 @@ HEIGHT = {
     "kamaitachi":  0.70,  # small and fast, and should look breakable
 }
 
-## Where the feet sit inside a frame, measured from the sprite's centre.
-## 452 in a 768 cell — where the feet land, 68 below the 384 centre, measured as
-## the median across every frame of a finished export rather than off one clip.
-## A death or a dodge can put the lowest pixel anywhere, so a single sample
-## would just be whichever clip sorted first. That number is the art's, not ours: it was chosen so a jump or a
-## death still has headroom and nothing gets its head cut off, and it has been
-## tested. The code bends to it. Scaling the sprite scales this gap too, so the
-## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 452.0
-FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
-## The template's own sprite offset, which the formula has to reproduce at 1.0.
-BASE_SPRITE_Y = -72.0
-## The head, measured the same way. These were taken in a 224 frame, where
-## content ran y=37 to y=192, putting the head 75px above the sprite's centre.
-## They are offsets from the centre, so they do not change with the cell size.
-HEAD_ABOVE_CENTRE = 75.0
-## Clear air between the head and the bar, held constant at every size — it is
-## a readability margin, not part of the monster, so it should not grow.
+## The sprite's own geometry, all measured from the art rather than configured.
+## FRAME is only the fallback for a character with no sprites yet; cell_of and
+## bounds_of are what every build actually uses.
+##
+## Hardcoding these cost a day. The cell has been 224, 480, 560, 768 and 1024,
+## and each change needed the builder, the importer and every scene moved
+## together — while a stale value is read as the wrong frame count in silence,
+## because the division still works.
+## How far the feet sink below the node origin. Read off the template, which
+## draws its feet 80px under a sprite placed at -72. Every character is planted
+## by this one number, so they all stand on the same floor.
+FOOT_SINK = 8.0
+## Clear air between the head and the health bar. A readability margin rather
+## than part of the monster, so it does not grow with the cell or the scale.
 BAR_GAP = 47.0
 BAR_HEIGHT = 6.0
 
@@ -104,27 +100,58 @@ ROSTER = {
     "yokai_Lord":    (6, 420.0, 58.0, 32.0),  # the boss
 }
 
-## Where the feet sit inside a frame, measured from the sprite's centre.
-## 452 in a 768 cell — where the feet land, 68 below the 384 centre, measured as
-## the median across every frame of a finished export rather than off one clip.
-## A death or a dodge can put the lowest pixel anywhere, so a single sample
-## would just be whichever clip sorted first. That number is the art's, not ours: it was chosen so a jump or a
-## death still has headroom and nothing gets its head cut off, and it has been
-## tested. The code bends to it. Scaling the sprite scales this gap too, so the
-## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 452.0
-FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
-## The template's own sprite offset, which the formula has to reproduce at 1.0.
-BASE_SPRITE_Y = -72.0
-## The head, measured the same way. These were taken in a 224 frame, where
-## content ran y=37 to y=192, putting the head 75px above the sprite's centre.
-## They are offsets from the centre, so they do not change with the cell size.
-HEAD_ABOVE_CENTRE = 75.0
-## Clear air between the head and the bar, held constant at every size — it is
-## a readability margin, not part of the monster, so it should not grow.
-BAR_GAP = 47.0
-BAR_HEIGHT = 6.0
 
+
+
+def cell_of(folder):
+    """The sprite cell this character was exported at, read from its own art.
+
+    It was a constant, and it has been 224, 480, 560, 768 and 1024 — each change
+    needing the builder, the importer and every scene updated together, and a
+    stale value is read as the wrong frame count in silence because the division
+    still works. Characters can also differ: one exported before a size change
+    keeps the old cell and is no less correct for it.
+    """
+    root = os.path.join(ART, folder, "sprites")
+    for clip in sorted(os.listdir(root)) if os.path.isdir(root) else []:
+        for name in sorted(os.listdir(os.path.join(root, clip))):
+            if name.endswith(".png"):
+                from PIL import Image
+                return Image.open(os.path.join(root, clip, name)).size[1]
+    return FRAME
+
+
+def bounds_of(folder, cell):
+    """How far this character's feet and head sit from its cell's centre.
+
+    The median lowest and highest opaque rows across the Idle clip. Taken from
+    the art rather than configured because both move with the cell AND with
+    whatever custom origin the export used — the two have changed together
+    several times, and the 768-cell art happened to land 81px below centre,
+    one pixel from the 224-cell template's 80, which is why a hardcoded offset
+    survived that far. At 1024 the same character sits 142px below centre and
+    the same constant buries it 60px into the floor. That reads as a rigging
+    fault and is not one, so it is measured.
+    """
+    from PIL import Image
+    idle = os.path.join(ART, folder, "sprites", "Idle")
+    lows, highs = [], []
+    if os.path.isdir(idle):
+        for name in sorted(os.listdir(idle)):
+            if not name.endswith(".png"):
+                continue
+            image = Image.open(os.path.join(idle, name)).convert("RGBA")
+            for i in range(image.size[0] // cell):
+                box = image.crop((i * cell, 0, (i + 1) * cell, cell)).split()[3].getbbox()
+                if box:
+                    lows.append(box[3])
+                    highs.append(box[1])
+    if not lows:
+        return cell * 0.14, cell * 0.33
+    lows.sort()
+    highs.sort()
+    half = cell / 2.0
+    return (lows[len(lows) // 2] - half, half - highs[len(highs) // 2])
 
 
 def sheets_for(folder):
@@ -141,6 +168,7 @@ def sheets_for(folder):
         if clip not in found:
             missing.append("%s folder" % clip)
 
+    cell = cell_of(folder)
     counts = {}
     for clip in clips:
         direction_counts = []
@@ -156,11 +184,11 @@ def sheets_for(folder):
             try:
                 from PIL import Image
                 w, h = Image.open(path).size
-                if h != FRAME or w % FRAME:
+                if h != cell or w % cell:
                     wrong.append("%s is %dx%d, want Nx%d by %d"
-                                 % (name, w, h, FRAME, FRAME))
+                                 % (name, w, h, cell, cell))
                 else:
-                    direction_counts.append(w // FRAME)
+                    direction_counts.append(w // cell)
             except Exception as exc:
                 wrong.append("%s unreadable (%s)" % (name, exc))
         if direction_counts:
@@ -172,7 +200,7 @@ def sheets_for(folder):
     return counts, missing, wrong
 
 
-def _art_resources(folder, title, clips):
+def _art_resources(folder, title, clips, cell):
     """Build texture, atlas and SpriteFrames resources for measured sheets."""
     ext, atlas, animations = [], [], []
     for clip, frames in clips.items():
@@ -182,7 +210,7 @@ def _art_resources(folder, title, clips):
                        % (folder, clip, title, clip, direction, key, direction))
             for frame in range(frames):
                 atlas.append('[sub_resource type="AtlasTexture" id="Atlas_%s_%d_%d"]\natlas = ExtResource("t_%s_%d")\nregion = Rect2(%d, 0, %d, %d)'
-                             % (key, direction, frame, key, direction, frame * FRAME, FRAME, FRAME))
+                             % (key, direction, frame, key, direction, frame * cell, cell, cell))
             frame_rows = []
             for frame in range(frames):
                 frame_rows.append('{\n"duration": 1.0,\n"texture": SubResource("Atlas_%s_%d_%d")\n}'
@@ -206,7 +234,7 @@ EXTRA_STATES = {
 }
 
 
-def _expand_template(out, folder, title, clips):
+def _expand_template(out, folder, title, clips, cell):
     """Replace the fixed art resource block and add whatever states the art supports.
 
     Driven by which clips exist rather than by tier, because tier is not a
@@ -215,7 +243,7 @@ def _expand_template(out, folder, title, clips):
     Block folder can raise its guard whatever rung it was handed, and one
     without is demoted at spawn rather than erroring.
     """
-    ext, atlas, sprite_frames = _art_resources(folder, title, clips)
+    ext, atlas, sprite_frames = _art_resources(folder, title, clips, cell)
     start = out.index('[ext_resource type="Texture2D"')
     end = out.index('[sub_resource type="StyleBoxFlat"')
     out = out[:start] + ext + "\n\n" + atlas + "\n\n" + sprite_frames + "\n\n" + out[end:]
@@ -240,19 +268,17 @@ def _expand_template(out, folder, title, clips):
     return out
 
 
-def _apply_height(out, folder):
+def _apply_height(out, folder, below, head):
     """Scale the sprite, keeping the feet on the floor.
 
-    The sprite draws centred, so its feet sit FEET_BELOW_CENTRE under its own
-    position. Scaling by k scales that gap as well, and a monster scaled about
-    its middle ends up hovering by the difference. Moving the offset to
-    8 - 80k cancels it: at k=1 that is the template's own -72, and at any other
-    k the feet land in the same place.
+    The sprite draws centred, so its feet sit `below` under its own position.
+    Scaling by k scales that gap too, and a monster scaled about its middle
+    hovers by the difference. Placing the sprite at FOOT_SINK - below*k cancels
+    both that and any change of cell: the feet always land on the floor. On the
+    template's own numbers — 80 below centre, k=1 — it gives back its -72.
     """
-    k = HEIGHT.get(folder)
-    if k is None:
-        return out
-    y = (BASE_SPRITE_Y + FEET_BELOW_CENTRE) - FEET_BELOW_CENTRE * k
+    k = HEIGHT.get(folder, 1.0)
+    y = FOOT_SINK - below * k
     anchor = '[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]\nposition = Vector2(0, -72)'
     assert anchor in out, "sprite node not where %s expected it" % folder
     out = out.replace(
@@ -266,7 +292,7 @@ def _apply_height(out, folder):
     ## floating well above a weasel. It rides the head instead: the head sits
     ## HEAD_ABOVE_CENTRE above the sprite's centre and that distance scales,
     ## so the bar follows it and keeps a constant gap above.
-    top = y - HEAD_ABOVE_CENTRE * k - BAR_GAP
+    top = y - head * k - BAR_GAP
     bar = '[node name="HealthBar" type="ProgressBar" parent="."]\noffset_left = -26.0\noffset_top = -194.0'
     assert bar in out, "health bar not where %s expected it" % folder
     return out.replace(
@@ -294,6 +320,8 @@ def build(folder, tier=None):
         if absent:
             return False, "incomplete: missing duellist clips %s" % ", ".join(absent)
 
+    cell = cell_of(folder)
+    below, head = bounds_of(folder, cell)
     title = folder[0].upper() + folder[1:]
     out = open(TEMPLATE).read()
     out = out.replace("res://assets/sprites/monsters/undeadRonin/",
@@ -309,13 +337,13 @@ def build(folder, tier=None):
     ## Preserve the historical path for template-shaped sets. This is what
     ## keeps a gashadokuro rebuild byte-identical to earlier builds.
     if clips != LEGACY_COUNTS:
-        out = _expand_template(out, folder, title, clips)
+        out = _expand_template(out, folder, title, clips, cell)
 
-    out = _apply_height(out, folder)
+    out = _apply_height(out, folder, below, head)
 
     path = os.path.join(SCENES, "%s.tscn" % folder)
     open(path, "w").write(out)
-    return True, "tier %d, %d hp, speed %d" % (tier, health, speed)
+    return True, "tier %d, %d hp, speed %d, %dpx cell, feet +%d head -%d" % (tier, health, speed, cell, below, head)
 
 
 def wire_pool():
