@@ -48,10 +48,12 @@ HEIGHT = {
 }
 
 ## Where the feet sit inside a frame, measured from the sprite's centre.
-## At FRAME=480 the feet belong at y=340, matching Katana Kitsune, so they are
-## 100px below the 240 centre. Scaling the sprite scales this gap too, so the
+## 336 in a 480 cell — the origin PixelOver exports with, 96 below the 240
+## centre. That number is the art's, not ours: it was chosen so a jump or a
+## death still has headroom and nothing gets its head cut off, and it has been
+## tested. The code bends to it. Scaling the sprite scales this gap too, so the
 ## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 340.0
+FEET_IN_FRAME = 336.0
 FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
