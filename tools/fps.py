@@ -33,12 +33,18 @@ def report(text, source_fps):
     if secs <= 0:
         print("  %-12s length must be above zero" % text)
         return
-    fps = FRAMES / secs
+    ## Rounded UP, to two decimals. PixelOver truncates length x rate rather
+    ## than rounding it, so 1.7083 x 4.68 = 7.995 exports as SEVEN frames. The
+    ## nearest-value rate is one frame short on any clip where the product lands
+    ## just under an integer.
+    import math
+    fps = math.ceil((FRAMES / secs) * 100.0) / 100.0
     ## A whole export is 8 frames across 8 directions. If PixelOver's progress
     ## dialog shows anything other than 64, the rate did not take and it is
     ## rendering every source frame instead.
-    print("  %-12s %6.2f s  ->  Frequency %6.2f     (expect 64 frames: 8 x 8 dirs)"
-          % (text, secs, fps))
+    got = int(secs * fps)
+    print("  %-12s %6.2f s  ->  Frequency %6.2f   gives %d frames%s"
+          % (text, secs, fps, got, "" if got == FRAMES else "   <-- CHECK"))
 
 
 def main():
