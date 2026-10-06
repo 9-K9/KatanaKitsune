@@ -35,12 +35,12 @@ SPEEDS = {
     "Taunt": 8.0,
 }
 
-## The sprite cell. 560, wider than Katana Kitsune's 480, because these
-## animations move: backflips, spin dodges and flying kicks all leave a smaller
-## box and the export clips them. Raising it costs texture memory and nothing
-## else. The character draws at about 200px inside it — a little larger than she
-## is, which is right for something meant to threaten her.
-FRAME = 560
+## The sprite cell. 768, well beyond Katana Kitsune's 480, because the monsters
+## are taller than she is and their attacks and dodges leave the frame — a
+## backflip or a spin clips at anything smaller. Raising it costs texture memory
+## and nothing else: the character still draws at about 195px, it just has room
+## to move.
+FRAME = 768
 ## dirN in a PixelOver export, mapped to the game's SCREEN-SPACE facings — see
 ## IsoFacing.VECTORS, where south is straight down the screen and east straight
 ## right. Two of these are certain from looking at the sprites: dir4 is the back
@@ -67,12 +67,14 @@ HEIGHT = {
 }
 
 ## Where the feet sit inside a frame, measured from the sprite's centre.
-## 380 in a 560 cell — the origin PixelOver exports with, 100 below the 280
-## centre, measured as the median across all 768 frames of a finished export. That number is the art's, not ours: it was chosen so a jump or a
+## 452 in a 768 cell — where the feet land, 68 below the 384 centre, measured as
+## the median across every frame of a finished export rather than off one clip.
+## A death or a dodge can put the lowest pixel anywhere, so a single sample
+## would just be whichever clip sorted first. That number is the art's, not ours: it was chosen so a jump or a
 ## death still has headroom and nothing gets its head cut off, and it has been
 ## tested. The code bends to it. Scaling the sprite scales this gap too, so the
 ## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 380.0
+FEET_IN_FRAME = 452.0
 FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
@@ -103,12 +105,14 @@ ROSTER = {
 }
 
 ## Where the feet sit inside a frame, measured from the sprite's centre.
-## 380 in a 560 cell — the origin PixelOver exports with, 100 below the 280
-## centre, measured as the median across all 768 frames of a finished export. That number is the art's, not ours: it was chosen so a jump or a
+## 452 in a 768 cell — where the feet land, 68 below the 384 centre, measured as
+## the median across every frame of a finished export rather than off one clip.
+## A death or a dodge can put the lowest pixel anywhere, so a single sample
+## would just be whichever clip sorted first. That number is the art's, not ours: it was chosen so a jump or a
 ## death still has headroom and nothing gets its head cut off, and it has been
 ## tested. The code bends to it. Scaling the sprite scales this gap too, so the
 ## offset has to move with it or a scaled monster floats.
-FEET_IN_FRAME = 380.0
+FEET_IN_FRAME = 452.0
 FEET_BELOW_CENTRE = FEET_IN_FRAME - FRAME / 2.0
 ## The template's own sprite offset, which the formula has to reproduce at 1.0.
 BASE_SPRITE_Y = -72.0
