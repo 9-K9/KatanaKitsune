@@ -1,163 +1,178 @@
-# PixelOver export chart
+# PixelOver export chart — every clip, 8 frames each
 
-Set `Speed -> Frequency` per clip to the FPS below. That samples the clip to
-exactly eight frames without altering it — the Rescale dialog also works but
-rewrites the animation itself.
+Every animation exports at **8 frames**, whatever its length, so the strips match
+Katana Kitsune's. PixelOver has no frame-count field; it samples at a rate:
 
-    FPS = 8 / length_in_seconds
+    Speed -> Frequency = 8 / length_in_seconds
 
-Canvas **224 x 224**, Pixel/Meter **91**, feet at **y = 192**, eight directions
-(dir1=SE through dir8=S). Export as a sprite sheet so each clip is one strip.
+Canvas **224 x 224**, Pixel/Meter **91**, feet **y = 192**, 8 directions
+(dir1=SE .. dir8=S), sprite sheet on.
 
-Folder names are what `tools/build_enemy_scene.py` matches on, not the Meshy
-clip name — `Idle_7` goes into a folder called `Idle`.
+A correct export computes **64 frames** per clip — 8 frames x 8 directions. If the
+progress dialog shows hundreds or thousands, Frequency is still at 30 and the clip
+is rendering every source frame.
 
-Durations are read from the GLB accessors, so they are exact rather than the
-rounded values the UI shows.
+Clips with a **folder** go into the game. The rest are listed so the rate is to
+hand if you want them later. `Armature|clip0|baselayer` is the bind pose — skip it.
 
 ## Jorogumo
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_7 | Idle | 8.83 | **0.91** |
-| Quick_Walk | Walk | 3.04 | **2.63** |
 | Running | Run | 0.71 | **11.29** |
+| Walking | — | 1.08 | **7.38** |
+| Alert | Alert | 4.04 | **1.98** |
+| Block10 | Block | 0.62 | **12.80** |
+| Bubble_Dance | Taunt | 8.12 | **0.98** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.71 | **4.68** |
+| Idle_7 | Idle | 8.83 | **0.91** |
+| Quick_Step_and_Spin_Dodge | — | 1.25 | **6.40** |
+| Quick_Walk | Walk | 3.04 | **2.63** |
 | mage_soell_cast | Attack | 2.33 | **3.43** |
 | mage_soell_cast_3 | Attack2 | 3.38 | **2.37** |
-| Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Block10 | Block | 0.62 | **12.80** |
-| Alert | Alert | 4.04 | **1.98** |
-
-Block10 is only 0.62s — the shortest clip in the set. If eight frames read as a twitch, `Quick_Step_and_Spin_Dodge` (1.25s, 6.40 FPS) is the alternative, and a spider dodging suits her anyway.
 
 ## Kappa
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_03 | Idle | 5.38 | **1.49** |
-| Walking | Walk | 1.08 | **7.38** |
 | Running | Run | 0.71 | **11.29** |
-| air_squat | Attack | 1.96 | **4.09** |
-| Backflip | Attack2 | 2.21 | **3.62** |
-| Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Block1 | Block | 3.50 | **2.29** |
+| Walking | Walk | 1.08 | **7.38** |
+| Agree_Gesture | — | 13.04 | **0.61** |
 | Alert | Alert | 4.04 | **1.98** |
-
-`air_squat` is the nearest thing to a lunge. Kappa wrestle in the folklore, so a grapple would suit better if Meshy has one.
+| Angry_To_Tantrum_Sit | Taunt | 8.54 | **0.94** |
+| Arise | — | 1.88 | **4.27** |
+| Backflip | Attack2 | 2.21 | **3.62** |
+| Block1 | Block | 3.50 | **2.29** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.71 | **4.68** |
+| Idle_02 | — | 2.38 | **3.37** |
+| Idle_03 | Idle | 5.38 | **1.49** |
+| air_squat | Attack | 1.96 | **4.09** |
 
 ## KarasuShinobi
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_11 | Idle | 1.96 | **4.09** |
-| Walking | Walk | 1.08 | **7.38** |
 | Running | Run | 0.71 | **11.29** |
-| Sweeping_Kick | Attack | 2.38 | **3.37** |
-| Backflip_and_Hooks | Attack2 | 5.88 | **1.36** |
-| Hit_Reaction_1 | Hurt | 1.29 | **6.19** |
-| Dead | Death | 3.00 | **2.67** |
-| Block1 | Block | 3.50 | **2.29** |
+| Walking | Walk | 1.08 | **7.38** |
+| 360_Power_Spin_Jump | Taunt | 3.12 | **2.56** |
 | Alert | Alert | 4.04 | **1.98** |
+| Backflip | — | 2.21 | **3.62** |
+| Backflip_and_Hooks | Attack2 | 5.88 | **1.36** |
+| Backflip_and_Rise | — | 2.75 | **2.91** |
+| Block1 | Block | 3.50 | **2.29** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction_1 | Hurt | 1.29 | **6.19** |
+| Idle_11 | Idle | 1.96 | **4.09** |
+| Sweeping_Kick | Attack | 2.38 | **3.37** |
 
 ## Kasha
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_7 | Idle | 8.83 | **0.91** |
-| Quick_Walk | Walk | 3.04 | **2.63** |
 | Running | Run | 0.71 | **11.29** |
-| Lunge_Spin_Kick | Attack | 1.71 | **4.68** |
-| Step_in_High_Kick | Attack2 | 1.33 | **6.00** |
-| Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Block1 | Block | 3.50 | **2.29** |
+| Walking | — | 1.08 | **7.38** |
 | Alert | Alert | 4.04 | **1.98** |
+| Backflip_Jump | — | 4.17 | **1.92** |
+| Block1 | Block | 3.50 | **2.29** |
+| Breakdance_1990 | Taunt | 0.54 | **14.77** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.71 | **4.68** |
+| Idle_7 | Idle | 8.83 | **0.91** |
+| Lunge_Spin_Kick | Attack | 1.71 | **4.68** |
+| Quick_Walk | Walk | 3.04 | **2.63** |
+| Step_in_High_Kick | Attack2 | 1.33 | **6.00** |
 
 ## Ninja
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_6 | Idle | 7.46 | **1.07** |
-| Quick_Walk | Walk | 3.04 | **2.63** |
 | Running | Run | 0.71 | **11.29** |
-| Lunge_Roundhouse_Kick | Attack | 3.04 | **2.63** |
+| Walking | — | 1.08 | **7.38** |
+| Alert | Alert | 4.04 | **1.98** |
+| Angry_Stomp | Taunt | 8.04 | **0.99** |
+| Backflip | — | 2.21 | **3.62** |
+| Backflip_and_Hooks | — | 5.88 | **1.36** |
+| Backflip_and_Rise | — | 2.75 | **2.91** |
+| Block1 | Block | 3.50 | **2.29** |
+| Dead | Death | 3.00 | **2.67** |
 | Flying_Fist_Kick | Attack2 | 4.71 | **1.70** |
 | Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Block1 | Block | 3.50 | **2.29** |
-| Alert | Alert | 4.04 | **1.98** |
-
-Eighteen clips, the richest set. `Flying_Fist_Kick` and `Lunge_Roundhouse_Kick` are both strong attacks; swap if the other reads better.
+| Idle_6 | Idle | 7.46 | **1.07** |
+| Lunge_Roundhouse_Kick | Attack | 3.04 | **2.63** |
+| Quick_Walk | Walk | 3.04 | **2.63** |
+| Rising_Flying_Kick | — | 1.54 | **5.19** |
+| Step_in_High_Kick | — | 1.33 | **6.00** |
+| mage_soell_cast_3 | — | 3.38 | **2.37** |
 
 ## Oni
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_10 | Idle | 3.71 | **2.16** |
-| Walking | Walk | 1.08 | **7.38** |
 | Running | Run | 0.71 | **11.29** |
-| Punch_Combo | Attack | 2.50 | **3.20** |
-| Axe_Spin_Attack | Attack2 | 2.54 | **3.15** |
-| Hit_Reaction_1 | Hurt | 1.29 | **6.19** |
-| Dead | Death | 3.00 | **2.67** |
-| Block2 | Block | 1.67 | **4.80** |
+| Walking | Walk | 1.08 | **7.38** |
 | Alert | Alert | 4.04 | **1.98** |
+| Angry_Ground_Stomp | Taunt | 1.46 | **5.49** |
+| Axe_Spin_Attack | Attack2 | 2.54 | **3.15** |
+| Backflip | — | 2.21 | **3.62** |
+| Block2 | Block | 1.67 | **4.80** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction_1 | Hurt | 1.29 | **6.19** |
+| Idle_02 | — | 2.38 | **3.37** |
+| Idle_10 | Idle | 3.71 | **2.16** |
+| Punch_Combo | Attack | 2.50 | **3.20** |
+| Punch_Combo_1 | — | 2.29 | **3.49** |
 
 ## Tengu
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_3 | Idle | 10.00 | **0.80** |
-| Walking | Walk | 1.08 | **7.38** |
 | Running | Run | 0.71 | **11.29** |
-| Roundhouse_Kick | Attack | 2.75 | **2.91** |
-| Rising_Flying_Kick | Attack2 | 1.54 | **5.19** |
-| Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Backflip | Block | 2.21 | **3.62** |
+| Walking | Walk | 1.08 | **7.38** |
+| 360_Power_Spin_Jump | Taunt | 3.12 | **2.56** |
 | Alert | Alert | 4.04 | **1.98** |
-
-No Block clip of its own, so `Backflip` stands in — which fits: a winged mountain spirit evades rather than guards, and `enemyBlock` gives ground while the clip plays.
+| Backflip | Block | 2.21 | **3.62** |
+| Backflip_and_Hooks | — | 5.88 | **1.36** |
+| Backflip_and_Rise | — | 2.75 | **2.91** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.71 | **4.68** |
+| Idle_3 | Idle | 10.00 | **0.80** |
+| Rising_Flying_Kick | Attack2 | 1.54 | **5.19** |
+| Roundhouse_Kick | Attack | 2.75 | **2.91** |
+| Spartan_Kick | — | 1.50 | **5.33** |
 
 ## Yokai_Lord
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
-| Idle_10 | Idle | 3.71 | **2.16** |
-| Walking | Walk | 1.08 | **7.38** |
 | Running | Run | 0.71 | **11.29** |
-| Charged_Spell_Cast | Attack | 2.71 | **2.95** |
-| mage_soell_cast_2 | Attack2 | 3.04 | **2.63** |
-| Hit_Reaction | Hurt | 1.71 | **4.68** |
-| Dead | Death | 3.00 | **2.67** |
-| Block2 | Block | 1.67 | **4.80** |
+| Walking | Walk | 1.08 | **7.38** |
 | Alert | Alert | 4.04 | **1.98** |
+| Block2 | Block | 1.67 | **4.80** |
+| Charged_Spell_Cast | Attack | 2.71 | **2.95** |
+| Charged_Spell_Cast_1 | Taunt | 4.33 | **1.85** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.71 | **4.68** |
+| Hit_Reaction_1 | — | 1.29 | **6.19** |
+| Idle_02 | — | 2.38 | **3.37** |
+| Idle_10 | Idle | 3.71 | **2.16** |
+| mage_soell_cast_2 | Attack2 | 3.04 | **2.63** |
 
 ## Yuki_Onna
 
 | clip | folder | sec | FPS |
 |---|---|---|---|
+| Running | Run | 0.67 | **12.00** |
+| Walking | — | 1.04 | **7.68** |
+| Alert | Alert | 4.00 | **2.00** |
+| Block2 | Block | 1.62 | **4.92** |
+| Bubble_Dance | Taunt | 8.04 | **0.99** |
+| Dead | Death | 3.00 | **2.67** |
+| Hit_Reaction | Hurt | 1.67 | **4.80** |
 | Idle_7 | Idle | 8.75 | **0.91** |
 | Quick_Walk | Walk | 3.00 | **2.67** |
-| Running | Run | 0.67 | **12.00** |
 | Step_in_High_Kick | Attack | 1.33 | **6.00** |
+| Angry_Stomp | — | 8.00 | **1.00** |
 | Backflip_Jump | Attack2 | 4.12 | **1.94** |
-| Hit_Reaction | Hurt | 1.67 | **4.80** |
-| Dead | Death | 3.00 | **2.67** |
-| Block2 | Block | 1.62 | **4.92** |
-| Alert | Alert | 4.00 | **2.00** |
-
-## Notes
-
-Every model ships `Armature|clip0|baselayer` at 0.04s. That is the bind pose,
-not an animation — do not export it.
-
-`Walking` (1.08s) and `Quick_Walk` (3.04s) are different clips with very
-different rates. Jorogumo, Kasha, Ninja and Yuki_Onna use Quick_Walk; the rest
-use Walking.
-
-`Running` is 0.71s on every model and needs **11.29 FPS** — far higher than
-anything else, because it is the shortest clip.
 
