@@ -13,6 +13,12 @@ extends Node2D
 ## Everything is drawn over the world, never mind y-sorting.
 const OVERLAY_Z: int = 4096
 
+## How far above a monster's origin its readout sits. Clear of the health bar,
+## which the builder puts a little over 100 above the head at scale 1.
+const LABEL_LIFT: float = 150.0
+const COLOUR_LABEL := Color(1.0, 1.0, 1.0, 0.95)
+const COLOUR_LABEL_BACK := Color(0.0, 0.0, 0.0, 0.55)
+
 const COLOUR_PLAYER := Color(0.30, 1.00, 0.45, 0.85)
 const COLOUR_ZONE := Color(0.35, 0.80, 1.00, 0.75)
 const COLOUR_SOLID := Color(1.00, 0.60, 0.20, 0.70)
@@ -92,6 +98,8 @@ func _draw() -> void:
 	for node in get_tree().get_nodes_in_group("enemy"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_ENEMY)
+		if node is Node2D:
+			_label_enemy(node as Node2D)
 	for node in get_tree().get_nodes_in_group("breakable"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_SOLID)
@@ -208,3 +216,47 @@ func _cross(where: Vector2, colour: Color, label: String) -> void:
 		draw_string(font, p + Vector2(11, -4), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, colour)
 
 
+
+
+## What a monster is playing and which way it thinks it is facing.
+##
+## The two faults this is for are invisible in a screenshot and obvious in two
+## lines of text. A clip bound to the wrong direction makes a monster travel one
+## way while facing another, and raises no error because every name resolves.
+## And a clip whose speed does not suit its frame count reads as a blur rather
+## than a stride, which looks like bad art until the number is on screen.
+func _label_enemy(node: Node2D) -> void:
+	var sprite := node.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if sprite == null:
+		return
+	var clip: String = str(sprite.animation)
+	var frames: int = 0
+	if sprite.sprite_frames != null and sprite.sprite_frames.has_animation(clip):
+		frames = sprite.sprite_frames.get_frame_count(clip)
+	var fps: float = 0.0
+	if sprite.sprite_frames != null and sprite.sprite_frames.has_animation(clip):
+		fps = sprite.sprite_frames.get_animation_speed(clip)
+
+	## The facing the monster believes it has, beside the direction it is
+	## actually travelling. When those disagree, the sprite sheet is mis-wired.
+	var facing: String = str(node.get("facing_dir")) if "facing_dir" in node else "?"
+	var moving: String = ""
+	if node is CharacterBody2D:
+		var v: Vector2 = (node as CharacterBody2D).velocity
+		if v.length() > 1.0:
+			moving = IsoFacing.name_of(Vector2(signf(v.x), signf(v.y)))
+
+	## Frame on screen, so a clip that is blurring can be read off directly.
+	var line1 := "%s  %dfr @ %.0ffps  [%d]" % [clip, frames, fps, sprite.frame]
+	var line2 := "facing %s%s" % [facing,
+			("   moving %s   <-- MISMATCH" % moving) if (moving != "" and moving != facing) else ""]
+
+	var font := ThemeDB.fallback_font
+	var at: Vector2 = node.global_position - global_position + Vector2(0.0, -LABEL_LIFT)
+	for i in 2:
+		var text: String = line1 if i == 0 else line2
+		var size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
+		var where: Vector2 = at + Vector2(-size.x * 0.5, float(i) * 15.0)
+		draw_rect(Rect2(where + Vector2(-3.0, -11.0), size + Vector2(6.0, 4.0)),
+				COLOUR_LABEL_BACK, true)
+		draw_string(font, where, text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOUR_LABEL)

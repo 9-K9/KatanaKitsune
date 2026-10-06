@@ -29,13 +29,15 @@ LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
 ## else. The character draws at about 200px inside it — a little larger than she
 ## is, which is right for something meant to threaten her.
 FRAME = 560
-## dirN in a PixelOver export, in its order: dir1 is south-EAST, not south and
-## not south-west. Getting this wrong costs nothing at build time and produces a
-## monster that moonwalks — facing one way while travelling another — with no
-## error anywhere. The previous order here was the PixelLab one and is why
-## Jorogumo walked backwards.
-DIRECTIONS = ("southEast", "east", "northEast", "north",
-              "northWest", "west", "southWest", "south")
+## dirN in a PixelOver export, mapped to the game's SCREEN-SPACE facings — see
+## IsoFacing.VECTORS, where south is straight down the screen and east straight
+## right. Two of these are certain from looking at the sprites: dir4 is the back
+## view and dir8 the front, so dir4 is north and dir8 south. The rest follow
+## from which way the circle turns, and that is the part worth checking by
+## walking a monster around rather than reasoning about, because it produces no
+## error either way — the monster simply travels one way while facing another.
+DIRECTIONS = ("southWest", "west", "northWest", "north",
+              "northEast", "east", "southEast", "south")
 
 ## How tall each one stands against a human, which the art cannot carry on its
 ## own: a generator normalises every model it makes, so a giant skeleton and a
