@@ -35,7 +35,7 @@ CELL = 560
 MAPPING = {
     "Jorogumo": ("jorogumo", {
         "Idle_7": "Idle",
-        "Quick_Walk": "Walk",
+        "Walking": "Walk",
         "Running": "Run",
         "mage_soell_cast": "Attack",
         "mage_soell_cast_3": "Attack2",
