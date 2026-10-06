@@ -2913,7 +2913,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_southWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -2942,7 +2942,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_west",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -2971,7 +2971,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_northWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -3000,7 +3000,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -3029,7 +3029,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_northEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -3058,7 +3058,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_east",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -3087,7 +3087,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_southEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -3116,7 +3116,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4073,7 +4073,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_southWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4102,7 +4102,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_west",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4131,7 +4131,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_northWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4160,7 +4160,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_north",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4189,7 +4189,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_northEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4218,7 +4218,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_east",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4247,7 +4247,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_southEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4276,7 +4276,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"alert_south",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4537,7 +4537,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_southWest",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4566,7 +4566,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_west",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4595,7 +4595,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_northWest",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4624,7 +4624,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_north",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4653,7 +4653,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_northEast",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4682,7 +4682,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_east",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4711,7 +4711,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_southEast",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4740,7 +4740,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"run_south",
-"speed": 10.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4769,7 +4769,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_southWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4798,7 +4798,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_west",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4827,7 +4827,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_northWest",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4856,7 +4856,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_north",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4885,7 +4885,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_northEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4914,7 +4914,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_east",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4943,7 +4943,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_southEast",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -4972,7 +4972,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"taunt_south",
-"speed": 10.0
+"speed": 8.0
 }]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpbg"]

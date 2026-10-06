@@ -15,7 +15,9 @@ const OVERLAY_Z: int = 4096
 
 ## How far above a monster's origin its readout sits. Clear of the health bar,
 ## which the builder puts a little over 100 above the head at scale 1.
-const LABEL_LIFT: float = 150.0
+const LABEL_LIFT: float = 170.0
+## Text size. 13 was unreadable at play distance once a few monsters bunched up.
+const LABEL_SIZE: int = 20
 const COLOUR_LABEL := Color(1.0, 1.0, 1.0, 0.95)
 const COLOUR_LABEL_BACK := Color(0.0, 0.0, 0.0, 0.55)
 
@@ -34,6 +36,9 @@ const CHAIR_BASE_BELOW_SPRITE: float = 44.0
 
 var _on: bool = false
 var _player: CharacterBody2D = null
+## Label positions already used this frame, so two monsters standing together do
+## not print over each other.
+var _taken: Array[Vector2] = []
 
 
 func _ready() -> void:
@@ -60,6 +65,7 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if not _on:
 		return
+	_taken.clear()
 	var player := Roster.nearest_to(get_tree(), Vector2.ZERO)
 
 	## Chairs: the zone she has to be inside, the origin, and the seat she is
@@ -253,10 +259,20 @@ func _label_enemy(node: Node2D) -> void:
 
 	var font := ThemeDB.fallback_font
 	var at: Vector2 = node.global_position - global_position + Vector2(0.0, -LABEL_LIFT)
+	## Monsters bunch up and their readouts land on top of each other, which is
+	## worse than no readout — two overlapping lines are unreadable and look like
+	## one corrupted one. Nudge each label up until it clears the ones already
+	## drawn this frame.
+	var step: float = float(LABEL_SIZE) * 2.4
+	while _taken.any(func(p: Vector2) -> bool:
+			return absf(p.x - at.x) < 220.0 and absf(p.y - at.y) < step):
+		at.y -= step
+	_taken.append(at)
+
 	for i in 2:
 		var text: String = line1 if i == 0 else line2
-		var size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
-		var where: Vector2 = at + Vector2(-size.x * 0.5, float(i) * 15.0)
-		draw_rect(Rect2(where + Vector2(-3.0, -11.0), size + Vector2(6.0, 4.0)),
-				COLOUR_LABEL_BACK, true)
-		draw_string(font, where, text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, COLOUR_LABEL)
+		var size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE)
+		var where: Vector2 = at + Vector2(-size.x * 0.5, float(i) * (LABEL_SIZE + 4))
+		draw_rect(Rect2(where + Vector2(-4.0, -float(LABEL_SIZE) + 2.0),
+				size + Vector2(8.0, 5.0)), COLOUR_LABEL_BACK, true)
+		draw_string(font, where, text, HORIZONTAL_ALIGNMENT_LEFT, -1, LABEL_SIZE, COLOUR_LABEL)

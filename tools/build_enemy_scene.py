@@ -23,6 +23,18 @@ TEMPLATE = os.path.join(SCENES, "undeadRonin.tscn")
 BASE_CLIPS = ("Idle", "Walk", "Attack", "Hurt", "Death")
 EXTRA_CLIPS = ("Block", "Draw", "Charge")
 LEGACY_COUNTS = {"Idle": 6, "Walk": 8, "Attack": 8, "Hurt": 4, "Death": 8}
+## Playback rate per clip. These were one number for everything when clips ran
+## four to six frames; at eight a walk at 10fps cycles in under a second and
+## reads as a blur rather than a stride. A walk wants to match the legs, an idle
+## wants to breathe, and a hit wants to snap.
+SPEEDS = {
+    "Idle": 6.0,
+    "Walk": 8.0,
+    "Run": 12.0,
+    "Alert": 8.0,
+    "Taunt": 8.0,
+}
+
 ## The sprite cell. 560, wider than Katana Kitsune's 480, because these
 ## animations move: backflips, spin dodges and flying kicks all leave a smaller
 ## box and the export clips them. Raising it costs texture memory and nothing
@@ -175,7 +187,7 @@ def _art_resources(folder, title, clips):
                               % (", ".join(frame_rows),
                                  "true" if clip in ("Idle", "Walk") else "false",
                                  key, DIRECTIONS[direction - 1],
-                                 6.0 if clip == "Idle" else 10.0))
+                                 SPEEDS.get(clip, 10.0)))
     sprite_frames = '[sub_resource type="SpriteFrames" id="SpriteFrames_mummy"]\nanimations = [%s]' % ", ".join(animations)
     return "\n".join(ext), "\n\n".join(atlas), sprite_frames
 
