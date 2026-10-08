@@ -36,9 +36,3 @@ func _on_new_game_pressed():
 
 func _on_quit_pressed():
 	get_tree().quit()
-
-
-func _on_audio_stream_player_2d_finished():
-	var music := get_node_or_null("AudioStreamPlayer2D")
-	if is_instance_valid(music):
-		music.play()

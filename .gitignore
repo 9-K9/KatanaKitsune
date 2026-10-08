@@ -17,3 +17,10 @@ assets/sprites/characters/_tests/
 # Python bytecode from the sprite-generation tools. Regenerated on every run and
 # machine-specific, so it has no business in the history.
 __pycache__/
+
+# Audio, deliberately out of the project until it is worked on properly. sound/
+# was ~1 GB of NOX_SOUND WAV against ~280 MB for every sprite, and not one scene
+# or script referenced it, so it was stripped from history rather than carried.
+# Ignored here so a stray copy of the library cannot walk back in. When audio is
+# picked up again, drop this rule and add only the files the game actually uses.
+sound/
