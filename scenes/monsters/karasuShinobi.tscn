@@ -11373,6 +11373,7 @@ attack_cooldown = 1.4
 polygon = PackedVector2Array(-32, 0, -22, -13, 0, -17, 22, -13, 32, 0, 22, 13, 0, 17, -22, 13)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_mummy")
 offset = Vector2(0, 32)
 
 [node name="HealthBar" type="ProgressBar" parent="."]

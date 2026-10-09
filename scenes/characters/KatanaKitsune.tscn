@@ -39658,6 +39658,7 @@ _animatedsprite2D = NodePath("../../AnimationManager/AnimatedSprite2D")
 position = Vector2(-8, -83)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="AnimationManager"]
+sprite_frames = SubResource("SpriteFrames_kicbp")
 offset = Vector2(0, 11)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationManager"]
