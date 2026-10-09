@@ -1,5 +1,6 @@
 [gd_scene load_steps=1651 format=3]
 
+[ext_resource type="Shader" path="res://shaders/powerState.gdshader" id="soften_shader"]
 [ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="enemy_script"]
 [ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="fsm"]
 [ext_resource type="Script" path="res://scripts/components/TauntComponent.gd" id="taunt_component"]
@@ -11358,6 +11359,9 @@ border_color = Color(0, 0, 0, 0.7)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpfill"]
 bg_color = Color(0.66, 0.15, 0.15, 1)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soften"]
+shader = ExtResource("soften_shader")
+
 [node name="Jorogumo" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 3
 script = ExtResource("enemy_script")
@@ -11374,6 +11378,7 @@ attack_cooldown = 1.4
 polygon = PackedVector2Array(-32, 0, -22, -13, 0, -17, 22, -13, 32, 0, 22, 13, 0, 17, -22, 13)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_soften")
 sprite_frames = SubResource("SpriteFrames_mummy")
 offset = Vector2(0, 27)
 

@@ -1,5 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dc7sel3ctkitsu"]
 
+[ext_resource type="Shader" path="res://shaders/powerState.gdshader" id="ps_shader_sel"]
 [ext_resource type="Script" path="res://scripts/system/CharacterSelect.gd" id="1_sel"]
 [ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover.png" id="3_cover"]
@@ -27,6 +28,12 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_selPowerState"]
+shader = ExtResource("ps_shader_sel")
+shader_parameter/enabled = false
+shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
+shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
 
 [node name="CharacterSelect" type="Control"]
 layout_mode = 3
@@ -63,6 +70,7 @@ offset_right = 620.0
 mouse_filter = 2
 
 [node name="Preview" type="AnimatedSprite2D" parent="PreviewHolder"]
+material = SubResource("ShaderMaterial_selPowerState")
 texture_filter = 1
 position = Vector2(300, 398)
 scale = Vector2(3.4, 3.4)
