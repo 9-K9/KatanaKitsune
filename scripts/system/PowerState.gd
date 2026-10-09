@@ -27,23 +27,35 @@ const COVERS := "res://assets/sprites/ui/title_power_states"
 ## Used when a state has no cover of its own — Fire currently has none.
 const DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
 
-## The original art the player scene ships with, and the folder names it uses.
-## Those predate this session's clip renames, so seven of them differ from the
-## names the power-state folders now carry.
-const BASE_SPRITES := "res://assets/sprites/characters/KatanaKitsune/sprites"
-const FOLDER_ALIAS := {
-	"IdleStanding": "idle", "Walking": "walk", "SneakWalk": "stealthWalk",
-	"StealthToCrouch": "stealthCrouch", "Sitting": "sittingChair",
-	"RuningJump": "runningJump", "SwitchDirectionIdle": "switchDirections",
+## Shadow -> highlight ramp per state, matching tools/generate_kitsune_power_palettes.py.
+##
+## These used to be baked into a recoloured copy of every sheet. At the old
+## 480px frame size that was 1.9 GB of texture per state; at the current 768px
+## it would be 9.9 GB per state, on top of the 9.9 GB the base sprites already
+## cost. So the recolour moved to shaders/powerState.gdshader, which does the
+## same arithmetic per fragment and costs two colours.
+const RAMPS := {
+	"01_Wood_JadeDragon":         [Color8(4, 38, 23),   Color8(48, 196, 105)],
+	"02_Fire_VermilionPhoenix":   [Color8(72, 4, 1),    Color8(242, 58, 20)],
+	"03_Earth_GoldenQilin":       [Color8(65, 34, 4),   Color8(218, 154, 31)],
+	"04_Metal_WhiteTiger":        [Color8(42, 48, 60),  Color8(224, 234, 240)],
+	"05_Water_BlackTortoise":     [Color8(3, 18, 58),   Color8(29, 116, 226)],
+	"06_Lightning_ThunderDragon": [Color8(34, 13, 78),  Color8(177, 91, 255)],
+	"07_Ice_MoonFrost":           [Color8(16, 61, 88),  Color8(158, 237, 255)],
+	"08_Darkness_Eclipse":        [Color8(12, 5, 21),   Color8(91, 34, 118)],
+	"09_Light_SolarYang":         [Color8(93, 61, 18),  Color8(255, 239, 159)],
+	"10_Wind_AzureGale":          [Color8(0, 56, 61),   Color8(70, 224, 203)],
+	"11_Poison_JadeSerpent":      [Color8(31, 52, 5),   Color8(159, 219, 34)],
+	"12_Spirit_CelestialQi":      [Color8(70, 17, 63),  Color8(245, 99, 207)],
 }
 
 ## Vermilion Phoenix, the red one. Index 1, not 0 — the order here follows the
 ## elemental cycle the art was generated in, which starts on Wood.
 var chosen: int = 1
 
-## Textures are shared between many frames, so loading each one once turns
-## ~2000 lookups into ~256 loads.
-var _texture_cache: Dictionary = {}
+## Each player instance gets its own ShaderMaterial, so two characters on
+## screen can wear different schemes.
+var _materials: Dictionary = {}
 
 
 func count() -> int:
@@ -75,52 +87,45 @@ func cover_path(index: int = -1) -> String:
 
 ## Repaints an AnimatedSprite2D in the chosen scheme.
 ##
-## Every frame is an AtlasTexture carving a region out of a per-direction sheet,
-## so only the sheet behind it has to change — the regions, timings and
-## animation names are all left alone. The SpriteFrames is duplicated first
-## because the resource is shared with every other instance of the scene.
+## The clothing is painted in pure red, with the red value carrying the shading
+## ramp, so a fragment shader can map it onto any two-colour ramp without
+## touching hair or skin. Sheets, regions, timings and animation names are all
+## left alone — only two shader parameters change, which makes switching
+## instant and free of load hitches.
+##
+## One caveat against the old baked sheets: the offline script also excluded a
+## detected face box, which a shader cannot reproduce. About 0.13% of character
+## pixels — dark red shade near the face — now recolour where they previously
+## did not.
 func apply_to(sprite: AnimatedSprite2D, index: int = -1) -> void:
 	var i := _clamp(index)
-	var frames: SpriteFrames = sprite.sprite_frames
-	if frames == null:
+	var mat: ShaderMaterial = _material_for(sprite)
+	if mat == null:
+		push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
 		return
-	frames = frames.duplicate(true)
-	var swapped := 0
-	for anim in frames.get_animation_names():
-		for f in frames.get_frame_count(anim):
-			var tex: Texture2D = frames.get_frame_texture(anim, f)
-			if not (tex is AtlasTexture):
-				continue
-			var atlas: AtlasTexture = tex
-			if atlas.atlas == null:
-				continue
-			var repainted := _recolour(atlas.atlas.resource_path, i)
-			if repainted != null:
-				atlas.atlas = repainted
-				swapped += 1
-	sprite.sprite_frames = frames
-	if swapped == 0:
-		push_warning("PowerState: nothing repainted for %s" % STATES[i]["id"])
+	var ramp: Array = RAMPS.get(STATES[i]["id"], [])
+	if ramp.is_empty():
+		push_warning("PowerState: no ramp for %s" % STATES[i]["id"])
+		return
+	## Raw sRGB components, matching the 8-bit arithmetic in the shader.
+	mat.set_shader_parameter("shadow_color", Vector3(ramp[0].r, ramp[0].g, ramp[0].b))
+	mat.set_shader_parameter("highlight_color", Vector3(ramp[1].r, ramp[1].g, ramp[1].b))
+	mat.set_shader_parameter("enabled", true)
 
 
-## Maps a sheet in the stock art onto the same sheet in a power state.
-func _recolour(base_path: String, index: int) -> Texture2D:
-	if not base_path.begins_with(BASE_SPRITES):
+## The scene's material is shared between instances, so each sprite gets its
+## own copy the first time it is repainted.
+func _material_for(sprite: AnimatedSprite2D) -> ShaderMaterial:
+	var id := sprite.get_instance_id()
+	if _materials.has(id) and is_instance_valid(sprite):
+		return _materials[id]
+	var mat := sprite.material as ShaderMaterial
+	if mat == null:
 		return null
-	## .../sprites/<Folder>/KatanaKitsune_<Folder>_dirN.png
-	var parts := base_path.substr(BASE_SPRITES.length() + 1).split("/")
-	if parts.size() < 2:
-		return null
-	var folder: String = parts[0]
-	var clip: String = FOLDER_ALIAS.get(folder, folder.substr(0, 1).to_lower() + folder.substr(1))
-	var dir := parts[1].get_basename().split("_")[-1]
-	var path := "%s/%s/sprites/%s/katanaKitsune_%s_%s.png" % [
-			SPRITES, STATES[index]["id"], clip, clip, dir]
-	if _texture_cache.has(path):
-		return _texture_cache[path]
-	var loaded: Texture2D = load(path) if ResourceLoader.exists(path) else null
-	_texture_cache[path] = loaded
-	return loaded
+	mat = mat.duplicate() as ShaderMaterial
+	sprite.material = mat
+	_materials[id] = mat
+	return mat
 
 
 func _clamp(index: int) -> int:

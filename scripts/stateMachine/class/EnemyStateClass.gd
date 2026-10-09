@@ -9,6 +9,14 @@ class_name EnemyBase
 ## Which rung of the bestiary this monster is, 1 to 6. Drives what it is worth
 ## and, later, which behaviours it is allowed.
 @export var tier: int = 1
+
+## What makes this monster itself, as opposed to how far up the ladder it is.
+## Merged over the tier's traits in apply_tier, so it survives any rung the
+## generator rolls. Set on the scene.
+##
+##   shell — damage multiplier for blows landing behind it (0.1 = a tenth
+##           through). Kappa's carapace; the inverse of the boss's blind spot.
+@export var species_traits: Dictionary = {}
 ## What this tier can do, read once on ready. Looked up rather than duplicated
 ## onto every monster scene, so retuning a rung is one table edit.
 var traits: Dictionary = {}
@@ -64,6 +72,11 @@ func apply_tier(to: int, wave: int = 1) -> void:
 	## its table, so trimming it in place would strip the skill from every
 	## monster of that rung for the rest of the run.
 	traits = EnemyTier.of(to).duplicate()
+	## Species traits go on top of the rung's. A tier says how dangerous a
+	## monster is; this says what kind of monster it is, and that does not change
+	## when the generator hands it a different rung. Kappa keeps his shell at
+	## tier 1 and at tier 6.
+	traits.merge(species_traits, true)
 	_drop_skills_without_states()
 	## Scaled by the rung and then by how deep the run has gone, capped so a
 	## long run does not become arithmetic rather than a fight.
@@ -433,6 +446,22 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 				## A guard it chose to raise stops far more than merely facing
 				## the right way does.
 				amount *= 0.15 if guarding else 0.45
+	## Kappa's shell, and the exact inverse of the boss's blind spot: a blow from
+	## behind glances off the carapace, so he has to be met head on rather than
+	## circled. Set as a damage multiplier — 0.1 leaves a tenth of the hit.
+	var shell: float = traits.get("shell", 1.0)
+	if shell < 1.0 and from != Vector2.INF:
+		var carapace: Vector2 = stateDirection(facing_dir)
+		if carapace != Vector2.ZERO:
+			var incoming: Vector2 = from - global_position
+			incoming.y /= 0.5
+			carapace.y /= 0.5
+			if absf(incoming.normalized().angle_to(carapace.normalized())) > deg_to_rad(110.0):
+				amount *= shell
+	## Flat on his back the armour points at the ceiling, so the shell is worth
+	## nothing and the opening is real. Set by enemyStumble while he is down.
+	if has_meta("exposed"):
+		amount *= float(get_meta("exposed"))
 	## The boss never learned to watch its own back. This is the only way in.
 	var weak: float = traits.get("stealth_weak", 1.0)
 	if weak > 1.0 and _last_hit_by >= 0:
