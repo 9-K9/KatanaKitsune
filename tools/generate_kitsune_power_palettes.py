@@ -2,6 +2,8 @@
 """Generate clothing-only elemental power-state palettes for Katana Kitsune."""
 
 from collections import deque
+from concurrent.futures import ThreadPoolExecutor
+import argparse
 import json
 from pathlib import Path
 
@@ -10,8 +12,11 @@ from PIL import Image, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "assets/sprites/characters/KatanaKitsune"
-OUTPUT = SOURCE / "power_states"
+SOURCE = Path("/home/emanzi/Apps/PixelOver/exports/katanakitsune/katanakitsune")
+OUTPUT = SOURCE.parent / "katanakitsune_power_states"
+HUD_SOURCE = ROOT / "assets/sprites/characters/KatanaKitsune/HUDicon.png"
+FRAME_SIZE = 768
+GROUPS = ("katana", "nokatana")
 
 # Shadow and highlight ramps. The five classical Chinese elements come first,
 # followed by seven mythology-inspired power states.
@@ -89,7 +94,7 @@ def clothing_mask(image: Image.Image) -> np.ndarray:
         & (rgb[:, :, 2] < rgb[:, :, 0] * 0.35)
     )
 
-    frame_width = 480 if image.width % 480 == 0 and image.height == 480 else image.width
+    frame_width = FRAME_SIZE if image.width % FRAME_SIZE == 0 and image.height == FRAME_SIZE else image.width
     for left in range(0, image.width, frame_width):
         frame = image.crop((left, 0, left + frame_width, image.height))
         protected = face_box(frame)
@@ -119,17 +124,33 @@ def generate_asset(source: Path, relative_destination: Path) -> None:
         apply_palette(image, mask, ramp).save(destination, optimize=True)
 
 
-def make_preview() -> None:
+def generate_sheet(job: tuple[Path, str, str, list[str]]) -> str:
+    source, group, animation, states = job
+    image = Image.open(source).convert("RGBA")
+    mask = clothing_mask(image)
+    for state in states:
+        destination = OUTPUT / state / group / animation / source.name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        apply_palette(image, mask, PALETTES[state]).save(destination, compress_level=6)
+    return f"{group}/{animation}/{source.name}"
+
+
+def make_preview(states: list[str]) -> None:
     cells: list[Image.Image] = []
-    for state in PALETTES:
-        sheet = OUTPUT / state / "sprites/IdleStanding" / "KatanaKitsune_IdleStanding_dir1.png"
-        frame = Image.open(sheet).convert("RGBA").crop((0, 0, 480, 480))
+    for state in states:
+        sheet = OUTPUT / state / "nokatana/IdleStanding" / "KatanaKitsumeRPG_export_IdleStanding_dir1.png"
+        frame = Image.open(sheet).convert("RGBA").crop((0, 0, FRAME_SIZE, FRAME_SIZE))
         bbox = frame.getbbox()
         if bbox is None:
             continue
-        bbox = (max(0, bbox[0] - 6), max(0, bbox[1] - 6), min(480, bbox[2] + 6), min(480, bbox[3] + 6))
-        frame = frame.crop(bbox).resize(((bbox[2] - bbox[0]) * 4, (bbox[3] - bbox[1]) * 4), Image.Resampling.NEAREST)
+        bbox = (max(0, bbox[0] - 6), max(0, bbox[1] - 6), min(FRAME_SIZE, bbox[2] + 6), min(FRAME_SIZE, bbox[3] + 6))
+        frame = frame.crop(bbox)
         cell = Image.new("RGBA", (280, 430), (36, 38, 44, 255))
+        scale = min(264 / frame.width, 390 / frame.height)
+        frame = frame.resize(
+            (max(1, round(frame.width * scale)), max(1, round(frame.height * scale))),
+            Image.Resampling.NEAREST,
+        )
         cell.alpha_composite(frame, ((280 - frame.width) // 2, max(24, (410 - frame.height) // 2)))
         label = state.split("_", 1)[1].replace("_", " ")
         ImageDraw.Draw(cell).text((8, 8), label, fill=(240, 240, 244, 255))
@@ -141,43 +162,76 @@ def make_preview() -> None:
     preview.save(OUTPUT / "preview_12_power_states.png", optimize=True)
 
 
-def main() -> None:
-    animation_dirs = sorted(path for path in (SOURCE / "sprites").iterdir() if path.is_dir())
-    for animation_index, animation_dir in enumerate(animation_dirs, start=1):
-        sources = sorted(animation_dir.glob("*.png"))
-        print(f"[{animation_index:02d}/{len(animation_dirs):02d}] {animation_dir.name}: {len(sources)} directions", flush=True)
-        for source in sources:
-            image = Image.open(source).convert("RGBA")
-            mask = clothing_mask(image)
-            for state, ramp in PALETTES.items():
-                destination = OUTPUT / state / "sprites" / animation_dir.name / source.name
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                apply_palette(image, mask, ramp).save(destination, compress_level=6)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--states",
+        nargs="+",
+        choices=tuple(PALETTES),
+        default=list(PALETTES),
+        metavar="STATE",
+        help="palette state(s) to render; defaults to all 12",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=4,
+        help="number of sheets to render concurrently; defaults to 4",
+    )
+    return parser.parse_args()
 
-    hud = Image.open(SOURCE / "HUDicon.png").convert("RGBA")
+
+def main() -> None:
+    args = parse_args()
+    if args.workers < 1:
+        raise SystemExit("--workers must be at least 1")
+    states = list(dict.fromkeys(args.states))
+    animation_dirs = {
+        group: sorted(path for path in (SOURCE / group).iterdir() if path.is_dir())
+        for group in GROUPS
+    }
+    jobs = [
+        (source, group, animation_dir.name, states)
+        for group, group_dirs in animation_dirs.items()
+        for animation_dir in group_dirs
+        for source in sorted(animation_dir.glob("*.png"))
+    ]
+    print(f"Writing {len(states)} state(s) to new directory: {OUTPUT}", flush=True)
+    if len(states) == len(PALETTES):
+        print("Full run: 3,168 sprite sheets (approximately 540 MB).", flush=True)
+    print(f"Rendering {len(jobs)} source sheets with {args.workers} workers.", flush=True)
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        for completed, relative_path in enumerate(executor.map(generate_sheet, jobs), start=1):
+            if completed % 8 == 0 or completed == len(jobs):
+                print(f"[{completed:03d}/{len(jobs):03d}] {relative_path}", flush=True)
+
+    hud = Image.open(HUD_SOURCE).convert("RGBA")
     hud_mask = clothing_mask(hud)
-    for state, ramp in PALETTES.items():
+    for state in states:
         destination = OUTPUT / state / "HUDicon.png"
-        apply_palette(hud, hud_mask, ramp).save(destination, compress_level=6)
+        apply_palette(hud, hud_mask, PALETTES[state]).save(destination, compress_level=6)
 
     manifest = {
         "base_character": "KatanaKitsune",
-        "frame_size": [480, 480],
-        "frames_per_sheet": 8,
+        "frame_size": [FRAME_SIZE, FRAME_SIZE],
+        "frames_per_sheet": 16,
         "directions": 8,
-        "animations": [path.name for path in animation_dirs],
+        "groups": {
+            group: [path.name for path in paths]
+            for group, paths in animation_dirs.items()
+        },
         "states": [
             {
                 "id": state,
                 "name": state.split("_", 1)[1].replace("_", " "),
                 "path": state,
             }
-            for state in PALETTES
+            for state in states
         ],
     }
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "power_states_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    make_preview()
+    make_preview(states)
 
 
 if __name__ == "__main__":

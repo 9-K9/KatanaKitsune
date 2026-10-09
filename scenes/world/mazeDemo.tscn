@@ -1,45 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://cmaze7kq2wvn3"]
+[gd_scene load_steps=32 format=3 uid="uid://cmaze7kq2wvn3"]
 
-[ext_resource type="PackedScene" path="res://scenes/monsters/jorogumo.tscn" id="90_jorogumo"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/kappa.tscn" id="91_kappa"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/karasuShinobi.tscn" id="92_karasu"]
+[ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
+[ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
+[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/ironBrazier.tscn" id="70_ironBrazier"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/stoneLantern.tscn" id="70_stoneLantern"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/stakeTorch.tscn" id="70_stakeTorch"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/paperLantern.tscn" id="70_paperLantern"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/spiritCenser.tscn" id="70_spiritCenser"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/bambooTorch.tscn" id="70_bambooTorch"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/yurei.tscn" id="90_yurei"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/onryo.tscn" id="90_onryo"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/tengu.tscn" id="90_tengu"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/oni.tscn" id="90_oni"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/nureOnna.tscn" id="90_nureOnna"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/kamaitachi.tscn" id="90_kamaitachi"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/jikininki.tscn" id="90_jikininki"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/hannya.tscn" id="90_hannya"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/nurarihyon.tscn" id="90_nurarihyon"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/kitsuneBi.tscn" id="90_kitsuneBi"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/yukiOnna.tscn" id="90_yukiOnna"]
-[ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
-[ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
-[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
-[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="4_mummy"]
-[ext_resource type="PackedScene" uid="uid://drn8k4pwxvq7s" path="res://scenes/monsters/undeadRonin.tscn" id="5_ronin"]
 [ext_resource type="PackedScene" uid="uid://bq7urn2xkd9lm" path="res://scenes/props/breakableUrn.tscn" id="6_urn"]
 [ext_resource type="PackedScene" uid="uid://dch5t3nwqa8vb" path="res://scenes/props/breakableChest.tscn" id="7_chest"]
 [ext_resource type="PackedScene" uid="uid://cst9v2mxlr4qe" path="res://scenes/props/breakableStatue.tscn" id="8_statue"]
 [ext_resource type="PackedScene" uid="uid://bbrz4k8nxw2pt" path="res://scenes/props/brazier.tscn" id="9_brazier"]
-[ext_resource type="PackedScene" uid="uid://cxt5st4rsdn8w" path="res://scenes/props/exitStairs.tscn" id="12_exit"]
-[ext_resource type="Script" path="res://scripts/system/Radar.gd" id="10_radar"]
-[ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="11_hud"]
 [ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="10_chair"]
-[ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="13_pausemenu"]
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
-[ext_resource type="PackedScene" uid="uid://cq8gk2mvxr4n7" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
-[ext_resource type="Script" path="res://scripts/system/DebugShapes.gd" id="12_dbg"]
 [ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="22_trap"]
-[ext_resource type="PackedScene" path="res://scenes/monsters/gashadokuro.tscn" id="23_gasha"]
-
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar.tscn" id="20_ceramic_jar"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set.tscn" id="20_tea_set"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel.tscn" id="20_sake_barrel"]
@@ -50,14 +26,19 @@
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen.tscn" id="20_folding_screen"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern.tscn" id="20_stone_lantern"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table.tscn" id="21_table"]
+[ext_resource type="Script" path="res://scripts/system/Radar.gd" id="10_radar"]
+[ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="11_hud"]
+[ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="13_pausemenu"]
+[ext_resource type="PackedScene" uid="uid://cq8gk2mvxr4n7" path="res://scenes/menuscreens/gameOver.tscn" id="14_gover"]
+[ext_resource type="Script" path="res://scripts/system/DebugShapes.gd" id="12_dbg"]
+
 [node name="MazeDemo" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_maze")
 room_scene = ExtResource("2_room")
 player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
-enemy_scenes = Array[PackedScene]([ExtResource("90_jorogumo"), ExtResource("91_kappa"), ExtResource("92_karasu")])
-exit_scene = ExtResource("12_exit")
+enemy_scene_paths = Array[String](["res://scenes/monsters/jorogumo.tscn", "res://scenes/monsters/kappa.tscn", "res://scenes/monsters/karasuShinobi.tscn"])
 torch_scenes = Array[PackedScene]([ExtResource("70_ironBrazier"), ExtResource("70_stoneLantern"), ExtResource("70_stakeTorch"), ExtResource("70_paperLantern"), ExtResource("70_spiritCenser"), ExtResource("70_bambooTorch")])
 prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair"), ExtResource("20_ceramic_jar"), ExtResource("20_tea_set"), ExtResource("20_sake_barrel"), ExtResource("20_storage_chest"), ExtResource("20_offering_box"), ExtResource("20_zabuton_stack"), ExtResource("20_katana_rack"), ExtResource("20_folding_screen"), ExtResource("20_stone_lantern")])
 pillar_scene = ExtResource("11_pillar")

@@ -10,7 +10,17 @@ extends Node2D
 
 @export var room_scene: PackedScene = null
 @export var player_scene: PackedScene = null
-@export var enemy_scenes: Array[PackedScene] = []
+## Paths rather than PackedScenes, and a floor draws from one of them.
+##
+## As exported PackedScenes these were ext_resources on the scene, so all three
+## monster types were resident from the moment the dungeon opened whether or not
+## a wave used them. Their sheets are 1024x1024 a frame — about 2.7 GB of RGBA
+## each — so three co-resident types was 8 GB of texture to support a room that
+## only ever contains one kind of monster at a time.
+##
+## Loading by path defers that to _load_wave_monster, which brings in the one
+## type this floor rolled and drops it again on the way down.
+@export var enemy_scene_paths: Array[String] = []
 @export var prop_scenes: Array[PackedScene] = []
 ## Stood at the ends of every opening and spaced across it, so a knocked-out
 ## wall reads as a deliberate colonnade instead of a severed run of stone.
@@ -217,6 +227,14 @@ var _rooms: Dictionary = {}
 ## How deep the run has gone. HUD reads this; each floor adds monsters.
 var depth: int = 1
 var _player: Node2D = null
+## This floor's monster type, and where it came from. One at a time — see
+## enemy_scene_paths for why.
+var _wave_monster: PackedScene = null
+var _wave_monster_path: String = ""
+## A build runs across several frames now, so it can be in progress when
+## something else would start another. Guards the rebuild on the stairs against
+## a wave that reports itself cleared mid-build.
+var _building: bool = false
 
 
 func _ready() -> void:
@@ -229,7 +247,12 @@ func _ready() -> void:
 	## specific floor while debugging.
 	if maze_seed == 0:
 		maze_seed = randi()
-	_build()
+	## Keeps the loading screen up through the build. A no-op when there is no
+	## screen — running this scene straight from the editor still works, it just
+	## builds without anything covering it.
+	SceneLoader.hold()
+	await _build()
+	SceneLoader.finish()
 
 
 ## Next floor. Rebuilds around the player rather than reloading the scene, so
@@ -267,7 +290,15 @@ func descend() -> void:
 	_rooms.clear()
 	_wave_live = false
 	_clearing = false
-	_build()
+	## One frame for the queue_free calls above to actually happen. They are
+	## deferred, so until the frame ends every monster on the old floor is still
+	## alive and still holding a reference to its sprite sheets — dropping the
+	## PackedScene now would free nothing, and the next floor's type would load
+	## on top of the last one's instead of in place of it.
+	await get_tree().process_frame
+	SceneLoader.begin("DESCENDING", "WAVE %d" % depth)
+	await _build()
+	SceneLoader.finish()
 	_announce_floor()
 
 
@@ -471,11 +502,23 @@ func _announce_floor(text: String = "") -> void:
 	fade.tween_property(note, "modulate:a", 0.0, 0.9)
 
 
+## Builds the floor across several frames rather than all inside one.
+##
+## Sixteen rooms, their monsters, props, torches and columns used to be built in
+## a single pass inside _ready, which meant the window was frozen from the moment
+## the dungeon opened until it was finished. Yielding a frame between rooms costs
+## nothing in total time and lets the loading screen draw, so the wait reads as a
+## wait rather than as a hang.
 func _build() -> void:
+	_building = true
 	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
 	_roll_theme()
+	await _load_wave_monster()
+
 	var step := _lattice_step()
+	var rooms_total: float = float(maxi(grid.x * grid.y, 1))
+	var built: float = 0.0
 	for iy in grid.y:
 		for ix in grid.x:
 			var cell := Vector2i(ix, iy)
@@ -492,17 +535,70 @@ func _build() -> void:
 				if roofs:
 					roofs.queue_free()
 			_rooms[cell] = room
+			built += 1.0
+			SceneLoader.step(0.25 + 0.35 * (built / rooms_total),
+					"BUILDING ROOMS  %d/%d" % [int(built), int(rooms_total)])
+			await get_tree().process_frame
 
+	SceneLoader.step(0.62, "CARVING THE MAZE")
 	_carve()
+	await get_tree().process_frame
+	SceneLoader.step(0.68, "RAISING COLUMNS")
 	_place_pillars()
+	await get_tree().process_frame
+	SceneLoader.step(0.74, "LIGHTING THE FLOOR")
 	_spawn_player(step)
 	_place_starting_chair()
-	_populate(step)
-	_clear_buried_chairs()
+	await get_tree().process_frame
+	await _populate(step)
+	SceneLoader.step(0.98, "CLEARING THE WAY")
+	await _clear_buried_chairs()
 	## Armed only now: _populate has run, so an empty room from here really does
 	## mean the wave was cleared rather than that it has not started.
 	_wave_live = true
 	_light()
+	_building = false
+
+
+## Brings in this floor's monster type and drops the last one.
+##
+## Threaded, so the loading screen keeps drawing while 80 sprite sheets come off
+## disk. The old type is released first and only then replaced — holding both at
+## once is the thing this is here to avoid.
+func _load_wave_monster() -> void:
+	if enemy_scene_paths.is_empty():
+		_wave_monster = null
+		return
+	var wanted: String = enemy_scene_paths[_rng.randi() % enemy_scene_paths.size()]
+	## A floor that rolled the same type as the last keeps what it already has,
+	## so a run that comes up jorogumo twice does not pay to load it twice.
+	if wanted == _wave_monster_path and _wave_monster != null:
+		SceneLoader.step(0.25, "WAVE %d" % depth)
+		return
+
+	_wave_monster = null
+	_wave_monster_path = ""
+	if not ResourceLoader.exists(wanted):
+		push_error("MazeDemo: no monster scene at %s" % wanted)
+		return
+
+	ResourceLoader.load_threaded_request(wanted, "", true)
+	while true:
+		var progress: Array = []
+		var status := ResourceLoader.load_threaded_get_status(wanted, progress)
+		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			var done: float = float(progress[0]) if not progress.is_empty() else 0.0
+			SceneLoader.step(done * 0.25,
+					"SUMMONING %s" % wanted.get_file().get_basename().to_upper())
+			await get_tree().process_frame
+			continue
+		if status == ResourceLoader.THREAD_LOAD_LOADED:
+			_wave_monster = ResourceLoader.load_threaded_get(wanted) as PackedScene
+			_wave_monster_path = wanted
+		else:
+			push_error("MazeDemo: failed to load %s" % wanted)
+		break
+	SceneLoader.step(0.25, "WAVE %d" % depth)
 
 
 ## Drops monsters and breakables into the rooms. The room the player starts in
@@ -512,16 +608,18 @@ func _populate(step: Vector2) -> void:
 	_boss_placed = false
 	_scale_party()
 	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	var rooms_total: float = float(maxi(_rooms.size(), 1))
+	var filled: float = 0.0
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
-		if not enemy_scenes.is_empty() and cell != start:
+		if _wave_monster != null and cell != start:
 			## Scaled by the party. A floor built for one is a walkover for four,
 			## and the extra bodies also have to be worth the extra katanas.
 			var party: int = maxi(Roster.count(), 1)
 			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) \
 					+ depth - 1 + int(round(float(party - 1) * party_enemy_bonus))
 			for i in n:
-				var monster = _place(here, enemy_scenes[_rng.randi_range(0, enemy_scenes.size() - 1)])
+				var monster = _place(here, _wave_monster)
 				if monster != null and monster.has_method("apply_tier"):
 					## Boss waves put one lord in the middle room's neighbour and
 					## fill the rest from the pool, so a boss wave reads as a
