@@ -186,7 +186,24 @@ func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: i
 	mat.set_shader_parameter("shadow_color", Vector3(ramp[0].r, ramp[0].g, ramp[0].b))
 	mat.set_shader_parameter("highlight_color", Vector3(ramp[1].r, ramp[1].g, ramp[1].b))
 	mat.set_shader_parameter("enabled", true)
+	_apply_hair_skin(mat, hair, skin)
 
+
+## Monster cosmetic variety: hair/skin tone only, with the clothing band left
+## at the shader's own default (off). PowerState's twelve elemental ramps are
+## Katana Kitsune's own aspects, not a general monster palette, so a monster
+## never touches `enabled`/scheme — only recolor_hair/recolor_skin, which is
+## all a duplicated Kappa needs to stop looking identical to the three others
+## in its wave.
+func apply_to_enemy(sprite: AnimatedSprite2D, hair: int = -1, skin: int = -1) -> void:
+	var mat: ShaderMaterial = _material_for(sprite)
+	if mat == null:
+		push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
+		return
+	_apply_hair_skin(mat, hair, skin)
+
+
+func _apply_hair_skin(mat: ShaderMaterial, hair: int, skin: int) -> void:
 	var hi := _clamp_hair(hair)
 	var hair_ramp: Array = HAIR_TONES[hi]["ramp"]
 	mat.set_shader_parameter("hair_shadow_color", Vector3(hair_ramp[0].r, hair_ramp[0].g, hair_ramp[0].b))
