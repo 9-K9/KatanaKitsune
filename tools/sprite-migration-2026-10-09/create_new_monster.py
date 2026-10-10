@@ -22,6 +22,36 @@ EXPORT_ROOT = "/home/emanzi/Apps/PixelOver/exports/katanakitsune"
 ART = os.path.join(ROOT, "assets/sprites/monsters")
 SCENES = os.path.join(ROOT, "scenes/monsters")
 
+## Matches one top-level `[node ...]` block: its own header line plus every
+## property line under it, up to (but not including) the next `[` heading or
+## end of file.
+import re
+_NODE_BLOCK = r'\[node name="%s"[^\]]*\](?:\n(?!\[).*)*'
+
+
+def _preserve_hand_edits(existing_text, generated_text, node_name):
+    """Keeps whatever a person last saved for every node with this name,
+    splicing them back into a freshly regenerated scene in order.
+
+    This generator used to overwrite the whole .tscn unconditionally,
+    including both CollisionShape2D nodes (the body circle and the HitBox
+    capsule) it hardcodes from the same template every time — so any
+    hand-tuned collision/hit box got silently reset back to the generator's
+    guess the next time this ran again for that monster (e.g. to add a
+    clip it was missing). A scene has two nodes sharing this name (the body
+    and the HitBox's own), so matches are paired up by position rather than
+    assuming there is only one. Splicing the previous file's own blocks back
+    in means a human edit in the Godot editor always wins over this script;
+    everything else (art, frame counts, stats) still updates freely.
+    """
+    pattern = _NODE_BLOCK % re.escape(node_name)
+    saved = iter(re.finditer(pattern, existing_text))
+    def _keep_saved(found):
+        prior = next(saved, None)
+        return prior.group(0) if prior is not None else found.group(0)
+    return re.sub(pattern, _keep_saved, generated_text)
+
+
 CELL = 768
 FRAMES = 16
 DIRECTIONS = ("southWest", "west", "northWest", "north",
@@ -337,6 +367,9 @@ def main():
         copy_assets(monster, cfg)
         text = build_scene(monster, cfg, taken)
         out_path = os.path.join(SCENES, "%s.tscn" % monster)
+        if os.path.exists(out_path):
+            existing = open(out_path).read()
+            text = _preserve_hand_edits(existing, text, "CollisionShape2D")
         with open(out_path, "w") as fh:
             fh.write(text)
         print("wrote", out_path)

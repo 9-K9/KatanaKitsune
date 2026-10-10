@@ -129,6 +129,12 @@ func _draw() -> void:
 	for node in get_tree().get_nodes_in_group("breakable"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_SOLID)
+	## A caster's shot in flight — the other half of "attacks", alongside the
+	## blade's ActionArea above. It is its own CollisionObject2D, so the same
+	## body drawing that handles everything else handles this.
+	for node in get_tree().get_nodes_in_group("projectile"):
+		if node is CollisionObject2D:
+			_draw_body(node as CollisionObject2D, COLOUR_WEAPON)
 	## Columns are not in a group; they are the scene's own static bodies.
 	for node in get_parent().get_children():
 		if node is StaticBody2D:

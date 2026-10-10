@@ -42,6 +42,9 @@ func _ready() -> void:
 	## Areas only, so a shot does not stop on the caster's own body collider.
 	body_entered.connect(_on_body_entered)
 	_start_offset = _sprite.position.y
+	## So F3's debug overlay can find and draw every shot in flight — a ranged
+	## attack is as much an "attack hitbox" as the blade's, and was invisible.
+	add_to_group("projectile")
 
 
 func _physics_process(delta: float) -> void:

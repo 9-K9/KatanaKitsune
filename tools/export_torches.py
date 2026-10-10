@@ -157,6 +157,35 @@ texture_scale = %(reach).2f
 '''
 
 
+## Matches one top-level `[node ...]` block: its own header line plus every
+## property line under it, up to (but not including) the next `[` heading or
+## end of file.
+import re
+_NODE_BLOCK = r'\[node name="%s"[^\]]*\](?:\n(?!\[).*)*'
+
+
+def _preserve_hand_edits(existing_text, generated_text, node_name):
+    """Keeps whatever a person last saved for every node with this name,
+    splicing them back into a freshly regenerated scene in order.
+
+    This tool used to overwrite the whole .tscn unconditionally, including
+    the CollisionShape2D every regeneration hardcodes from the same template
+    — so any hand-tuned collision box got silently reset back to the
+    template's guess the next time art changed and this ran again. A scene
+    can have more than one node sharing a name (a body CollisionShape2D and a
+    HitBox's own), so matches are paired up by position rather than assuming
+    there is only one. Splicing the previous file's own blocks back in means
+    a human edit in the Godot editor always wins over this script; everything
+    else (art, frame counts, light colour, stats) still updates freely.
+    """
+    pattern = _NODE_BLOCK % re.escape(node_name)
+    saved = iter(re.finditer(pattern, existing_text))
+    def _keep_saved(found):
+        prior = next(saved, None)
+        return prior.group(0) if prior is not None else found.group(0)
+    return re.sub(pattern, _keep_saved, generated_text)
+
+
 def write_scene(name):
     """A torch scene, sized from the strips that were just exported."""
     lit_path = os.path.join(OUT, "%s_lit.png" % name)
@@ -181,7 +210,11 @@ def write_scene(name):
         ## source rather than every flame lighting the same circle.
         "reach": 2.0 + energy,
     }
-    open(os.path.join(SCENES, "%s.tscn" % name), "w").write(body)
+    scene_path = os.path.join(SCENES, "%s.tscn" % name)
+    if os.path.exists(scene_path):
+        existing = open(scene_path).read()
+        body = _preserve_hand_edits(existing, body, "CollisionShape2D")
+    open(scene_path, "w").write(body)
     return "%s.tscn (lit %df, broken %df)" % (name, lit_n, broken_n)
 
 
