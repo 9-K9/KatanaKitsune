@@ -123,6 +123,7 @@ func _ready() -> void:
 	health = max_health
 	_refresh_health_bar()
 	_scale_ranges_to_sprite()
+	_position_collision_shape()
 	_position_health_bar()
 	_position_hit_box()
 
@@ -162,6 +163,48 @@ func _scale_ranges_to_sprite() -> void:
 ## Small on purpose: the bar should read as sitting on the monster's head, not
 ## floating somewhere above the room.
 const HEALTH_BAR_GAP: float = 14.0
+
+## How far a character's feet sit below their own sprite's bottom edge — the
+## same constant tools/build_enemy_scene.py bakes in when it places a sprite,
+## so the two stay in agreement about where the ground actually is.
+const FOOT_SINK: float = 8.0
+
+
+## Puts the walking CollisionShape2D at the sprite's own feet instead of
+## trusting the scene's static position, which the node was left at (0, 0) —
+## the origin, not the floor — back when it was still the shared octagon.
+##
+## The scene's own exported position only lands on the feet when a monster was
+## actually built (or rebuilt) against build_enemy_scene.py's FOOT_SINK
+## convention; several were not, the same gap that left health bars floating a
+## head too high until _position_health_bar started reading the live sprite
+## instead. Doing the same thing here — measuring the sprite that is actually
+## on screen, at runtime — means the collision a player bumps into sits where
+## her eyes say the monster is standing, on every monster, independent of
+## whether its scene file has been touched since.
+func _position_collision_shape() -> void:
+	if not is_instance_valid(animated_sprite):
+		return
+	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D")
+	if shape_node == null or not (shape_node.shape is CircleShape2D):
+		return
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if frames == null:
+		return
+	var clip: String = animated_sprite.animation
+	if not frames.has_animation(clip):
+		var names: PackedStringArray = frames.get_animation_names()
+		if names.is_empty():
+			return
+		clip = names[0]
+	if frames.get_frame_count(clip) == 0:
+		return
+	var texture: Texture2D = frames.get_frame_texture(clip, 0)
+	if texture == null:
+		return
+	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
+	var sprite_bottom: float = animated_sprite.position.y + half_height
+	shape_node.position = Vector2(0, sprite_bottom - FOOT_SINK)
 
 
 ## Puts the health bar just above whatever is actually on screen, instead of
