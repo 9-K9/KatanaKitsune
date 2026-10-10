@@ -1,24 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbrz4k8nxw2pt"]
+[gd_scene format=3 uid="uid://bbr04k8nxw2pt"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/props/brazier.png" id="1_t"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="2_glow"]
+[ext_resource type="Texture2D" uid="uid://dk175ukgdcgmm" path="res://assets/sprites/props/brazier.png" id="1_t"]
+[ext_resource type="Texture2D" uid="uid://cjf4pj7gmpegy" path="res://assets/sprites/ui/glow.tres" id="2_glow"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_b"]
-points = PackedVector2Array(-14, 0, 0, -7, 14, 0, 0, 7)
-
-[node name="Brazier" type="StaticBody2D"]
+[node name="Brazier" type="StaticBody2D" unique_id=902370992]
 collision_layer = 3
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=232804910]
 position = Vector2(0, -14)
 texture = ExtResource("1_t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("ConvexPolygonShape2D_b")
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1395439942]
+polygon = PackedVector2Array(-31, 2, -31, -4, 0, -19, 31, -3, 31, 2, 1, 17)
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1568092653]
 position = Vector2(0, -26)
-texture = ExtResource("2_glow")
 color = Color(1, 0.62, 0.28, 1)
 energy = 1.35
+texture = ExtResource("2_glow")
 texture_scale = 1.9

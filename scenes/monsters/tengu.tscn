@@ -1,123 +1,141 @@
-[gd_scene load_steps=1785 format=3]
+[gd_scene format=3 uid="uid://v11dw0k3l46v"]
 
-[ext_resource type="Shader" path="res://shaders/powerState.gdshader" id="soften_shader"]
-[ext_resource type="Script" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="enemy_script"]
-[ext_resource type="Script" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="fsm"]
-[ext_resource type="Script" path="res://scripts/components/TauntComponent.gd" id="taunt_component"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyIdle.gd" id="st_idle"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyAlert.gd" id="st_alert"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyTaunt.gd" id="st_taunt"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyWalk.gd" id="st_walk"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyAttack.gd" id="st_attack"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyHurt.gd" id="st_hurt"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyDeath.gd" id="st_death"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir6.png" id="tx_aerial_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir4.png" id="tx_aerial_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir5.png" id="tx_aerial_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir3.png" id="tx_aerial_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir8.png" id="tx_aerial_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir7.png" id="tx_aerial_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir1.png" id="tx_aerial_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir2.png" id="tx_aerial_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir6.png" id="tx_alert_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir4.png" id="tx_alert_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir5.png" id="tx_alert_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir3.png" id="tx_alert_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir8.png" id="tx_alert_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir7.png" id="tx_alert_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir1.png" id="tx_alert_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir2.png" id="tx_alert_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir6.png" id="tx_arise_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir4.png" id="tx_arise_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir5.png" id="tx_arise_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir3.png" id="tx_arise_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir8.png" id="tx_arise_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir7.png" id="tx_arise_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir1.png" id="tx_arise_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir2.png" id="tx_arise_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir6.png" id="tx_attack_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir4.png" id="tx_attack_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir5.png" id="tx_attack_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir3.png" id="tx_attack_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir8.png" id="tx_attack_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir7.png" id="tx_attack_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir1.png" id="tx_attack_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir2.png" id="tx_attack_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir6.png" id="tx_attack2_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir4.png" id="tx_attack2_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir5.png" id="tx_attack2_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir3.png" id="tx_attack2_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir8.png" id="tx_attack2_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir7.png" id="tx_attack2_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir1.png" id="tx_attack2_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir2.png" id="tx_attack2_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir6.png" id="tx_crit_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir4.png" id="tx_crit_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir5.png" id="tx_crit_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir3.png" id="tx_crit_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir8.png" id="tx_crit_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir7.png" id="tx_crit_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir1.png" id="tx_crit_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir2.png" id="tx_crit_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir6.png" id="tx_death_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir4.png" id="tx_death_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir5.png" id="tx_death_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir3.png" id="tx_death_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir8.png" id="tx_death_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir7.png" id="tx_death_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir1.png" id="tx_death_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir2.png" id="tx_death_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir6.png" id="tx_dodge_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir4.png" id="tx_dodge_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir5.png" id="tx_dodge_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir3.png" id="tx_dodge_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir8.png" id="tx_dodge_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir7.png" id="tx_dodge_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir1.png" id="tx_dodge_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir2.png" id="tx_dodge_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir6.png" id="tx_hurt_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir4.png" id="tx_hurt_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir5.png" id="tx_hurt_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir3.png" id="tx_hurt_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir8.png" id="tx_hurt_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir7.png" id="tx_hurt_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir1.png" id="tx_hurt_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir2.png" id="tx_hurt_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir6.png" id="tx_idle_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir4.png" id="tx_idle_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir5.png" id="tx_idle_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir3.png" id="tx_idle_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir8.png" id="tx_idle_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir7.png" id="tx_idle_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir1.png" id="tx_idle_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir2.png" id="tx_idle_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir6.png" id="tx_run_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir4.png" id="tx_run_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir5.png" id="tx_run_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir3.png" id="tx_run_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir8.png" id="tx_run_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir7.png" id="tx_run_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir1.png" id="tx_run_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir2.png" id="tx_run_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir6.png" id="tx_shove_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir4.png" id="tx_shove_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir5.png" id="tx_shove_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir3.png" id="tx_shove_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir8.png" id="tx_shove_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir7.png" id="tx_shove_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir1.png" id="tx_shove_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir2.png" id="tx_shove_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir6.png" id="tx_walk_6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir4.png" id="tx_walk_4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir5.png" id="tx_walk_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir3.png" id="tx_walk_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir8.png" id="tx_walk_8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir7.png" id="tx_walk_7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir1.png" id="tx_walk_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir2.png" id="tx_walk_2"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyCrit.gd" id="st_crit"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyArise.gd" id="st_arise"]
-[ext_resource type="Script" path="res://scripts/stateMachine/enemyState/enemyDodge.gd" id="st_dodge"]
+[ext_resource type="Script" uid="uid://c0k3po474ljt8" path="res://scripts/stateMachine/unit/EnemyUnit.gd" id="enemy_script"]
+[ext_resource type="Script" uid="uid://ciq77fttx01rl" path="res://addons/finite_state_machine/scripts/finite_state_machine.gd" id="fsm"]
+[ext_resource type="Shader" uid="uid://b7wlcman4m8dk" path="res://shaders/powerState.gdshader" id="soften_shader"]
+[ext_resource type="Script" uid="uid://cdnm3u4k8yokd" path="res://scripts/stateMachine/enemyState/enemyAlert.gd" id="st_alert"]
+[ext_resource type="Script" uid="uid://dfwdrixc8i4a7" path="res://scripts/stateMachine/enemyState/enemyArise.gd" id="st_arise"]
+[ext_resource type="Script" uid="uid://bi8sqlh885usf" path="res://scripts/stateMachine/enemyState/enemyAttack.gd" id="st_attack"]
+[ext_resource type="Script" uid="uid://bu06g37f1lcip" path="res://scripts/stateMachine/enemyState/enemyCrit.gd" id="st_crit"]
+[ext_resource type="Script" uid="uid://qhi5wu5tw664" path="res://scripts/stateMachine/enemyState/enemyDeath.gd" id="st_death"]
+[ext_resource type="Script" uid="uid://n5vpaya0ud2" path="res://scripts/stateMachine/enemyState/enemyDodge.gd" id="st_dodge"]
+[ext_resource type="Script" uid="uid://craqxbew6ba3y" path="res://scripts/stateMachine/enemyState/enemyHurt.gd" id="st_hurt"]
+[ext_resource type="Script" uid="uid://cncsf706jkruh" path="res://scripts/stateMachine/enemyState/enemyIdle.gd" id="st_idle"]
+[ext_resource type="Script" uid="uid://bpo4asbpcd3j8" path="res://scripts/stateMachine/enemyState/enemyTaunt.gd" id="st_taunt"]
+[ext_resource type="Script" uid="uid://bf816vqk133sa" path="res://scripts/stateMachine/enemyState/enemyWalk.gd" id="st_walk"]
+[ext_resource type="Script" uid="uid://ws3hybtfrc2h" path="res://scripts/components/TauntComponent.gd" id="taunt_component"]
+[ext_resource type="Texture2D" uid="uid://oftnn1q2r278" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir1.png" id="tx_aerial_1"]
+[ext_resource type="Texture2D" uid="uid://cnlxoi5dy157k" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir2.png" id="tx_aerial_2"]
+[ext_resource type="Texture2D" uid="uid://d0slk13xcp3od" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir3.png" id="tx_aerial_3"]
+[ext_resource type="Texture2D" uid="uid://dcwuhw6kmfh4m" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir4.png" id="tx_aerial_4"]
+[ext_resource type="Texture2D" uid="uid://dksm6drqdjqro" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir5.png" id="tx_aerial_5"]
+[ext_resource type="Texture2D" uid="uid://6mc0kjg4jmfb" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir6.png" id="tx_aerial_6"]
+[ext_resource type="Texture2D" uid="uid://cmq68bhb8uar7" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir7.png" id="tx_aerial_7"]
+[ext_resource type="Texture2D" uid="uid://qbuqexaf25rp" path="res://assets/sprites/monsters/tengu/sprites/Aerial/tengu_Aerial_dir8.png" id="tx_aerial_8"]
+[ext_resource type="Texture2D" uid="uid://77hbql1xstrs" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir1.png" id="tx_alert_1"]
+[ext_resource type="Texture2D" uid="uid://cg7s4ekk5cepc" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir2.png" id="tx_alert_2"]
+[ext_resource type="Texture2D" uid="uid://blve5ns10wj68" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir3.png" id="tx_alert_3"]
+[ext_resource type="Texture2D" uid="uid://dutqh6qvkeia0" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir4.png" id="tx_alert_4"]
+[ext_resource type="Texture2D" uid="uid://d26ww6qsrr2tq" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir5.png" id="tx_alert_5"]
+[ext_resource type="Texture2D" uid="uid://cmn3l7nw0qdv8" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir6.png" id="tx_alert_6"]
+[ext_resource type="Texture2D" uid="uid://06rieul2uc6m" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir7.png" id="tx_alert_7"]
+[ext_resource type="Texture2D" uid="uid://2g75qf6fk71u" path="res://assets/sprites/monsters/tengu/sprites/Alert/tengu_Alert_dir8.png" id="tx_alert_8"]
+[ext_resource type="Texture2D" uid="uid://cobxh623g07cv" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir1.png" id="tx_arise_1"]
+[ext_resource type="Texture2D" uid="uid://ca6iahdn5pyjp" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir2.png" id="tx_arise_2"]
+[ext_resource type="Texture2D" uid="uid://bg57dbieqjj8s" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir3.png" id="tx_arise_3"]
+[ext_resource type="Texture2D" uid="uid://tu4r3bonq2pg" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir4.png" id="tx_arise_4"]
+[ext_resource type="Texture2D" uid="uid://br07iunb74syl" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir5.png" id="tx_arise_5"]
+[ext_resource type="Texture2D" uid="uid://d37vlju61y3kw" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir6.png" id="tx_arise_6"]
+[ext_resource type="Texture2D" uid="uid://b1tedvp17diu6" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir7.png" id="tx_arise_7"]
+[ext_resource type="Texture2D" uid="uid://c08at856bf5me" path="res://assets/sprites/monsters/tengu/sprites/Arise/tengu_Arise_dir8.png" id="tx_arise_8"]
+[ext_resource type="Texture2D" uid="uid://bcu61ndgu6keq" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir1.png" id="tx_attack2_1"]
+[ext_resource type="Texture2D" uid="uid://c2kkf10sxpblc" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir2.png" id="tx_attack2_2"]
+[ext_resource type="Texture2D" uid="uid://bb1d8ihh4jlhv" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir3.png" id="tx_attack2_3"]
+[ext_resource type="Texture2D" uid="uid://u4jwj760bua7" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir4.png" id="tx_attack2_4"]
+[ext_resource type="Texture2D" uid="uid://jc65t2b54ofu" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir5.png" id="tx_attack2_5"]
+[ext_resource type="Texture2D" uid="uid://4uo262jfyujx" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir6.png" id="tx_attack2_6"]
+[ext_resource type="Texture2D" uid="uid://bsinqly41vitf" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir7.png" id="tx_attack2_7"]
+[ext_resource type="Texture2D" uid="uid://dtc2edu541c6a" path="res://assets/sprites/monsters/tengu/sprites/Attack2/tengu_Attack2_dir8.png" id="tx_attack2_8"]
+[ext_resource type="Texture2D" uid="uid://u8e3g4a7vopc" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir1.png" id="tx_attack_1"]
+[ext_resource type="Texture2D" uid="uid://dm0kef7nrcwqd" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir2.png" id="tx_attack_2"]
+[ext_resource type="Texture2D" uid="uid://v2rmr0gyuxtr" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir3.png" id="tx_attack_3"]
+[ext_resource type="Texture2D" uid="uid://d3lydkjylgpa7" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir4.png" id="tx_attack_4"]
+[ext_resource type="Texture2D" uid="uid://bw0y0re5obo12" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir5.png" id="tx_attack_5"]
+[ext_resource type="Texture2D" uid="uid://c0p44tkidn27i" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir6.png" id="tx_attack_6"]
+[ext_resource type="Texture2D" uid="uid://ceskwx42eaiim" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir7.png" id="tx_attack_7"]
+[ext_resource type="Texture2D" uid="uid://6cmiolpljh81" path="res://assets/sprites/monsters/tengu/sprites/Attack/tengu_Attack_dir8.png" id="tx_attack_8"]
+[ext_resource type="Texture2D" uid="uid://kbqplxk62ha7" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir1.png" id="tx_crit_1"]
+[ext_resource type="Texture2D" uid="uid://fb0s2bf4y47a" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir2.png" id="tx_crit_2"]
+[ext_resource type="Texture2D" uid="uid://dtwxevokox8vm" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir3.png" id="tx_crit_3"]
+[ext_resource type="Texture2D" uid="uid://cyfy4td6deb88" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir4.png" id="tx_crit_4"]
+[ext_resource type="Texture2D" uid="uid://cdbxxhvdoxfvw" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir5.png" id="tx_crit_5"]
+[ext_resource type="Texture2D" uid="uid://byhk36tp8vj2h" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir6.png" id="tx_crit_6"]
+[ext_resource type="Texture2D" uid="uid://l6vl4fphmp50" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir7.png" id="tx_crit_7"]
+[ext_resource type="Texture2D" uid="uid://cnoihim7pufdi" path="res://assets/sprites/monsters/tengu/sprites/Crit/tengu_Crit_dir8.png" id="tx_crit_8"]
+[ext_resource type="Texture2D" uid="uid://d2nq7kf5vuyus" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir1.png" id="tx_death_1"]
+[ext_resource type="Texture2D" uid="uid://b8s42byt7h8qf" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir2.png" id="tx_death_2"]
+[ext_resource type="Texture2D" uid="uid://d0ji1wc5vftnp" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir3.png" id="tx_death_3"]
+[ext_resource type="Texture2D" uid="uid://1ne83te0sds7" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir4.png" id="tx_death_4"]
+[ext_resource type="Texture2D" uid="uid://blx3fjdplisth" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir5.png" id="tx_death_5"]
+[ext_resource type="Texture2D" uid="uid://b05baxqsfk627" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir6.png" id="tx_death_6"]
+[ext_resource type="Texture2D" uid="uid://botxlg6hkrqys" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir7.png" id="tx_death_7"]
+[ext_resource type="Texture2D" uid="uid://daqhs4qkasl6u" path="res://assets/sprites/monsters/tengu/sprites/Death/tengu_Death_dir8.png" id="tx_death_8"]
+[ext_resource type="Texture2D" uid="uid://cn7enuoy1teel" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir1.png" id="tx_dodge_1"]
+[ext_resource type="Texture2D" uid="uid://dixyrq8bnsrf3" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir2.png" id="tx_dodge_2"]
+[ext_resource type="Texture2D" uid="uid://x2h4f4xxo0fp" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir3.png" id="tx_dodge_3"]
+[ext_resource type="Texture2D" uid="uid://dm540heqjjfd0" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir4.png" id="tx_dodge_4"]
+[ext_resource type="Texture2D" uid="uid://ckk4riq1ytbwk" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir5.png" id="tx_dodge_5"]
+[ext_resource type="Texture2D" uid="uid://cmj3ue835q4n4" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir6.png" id="tx_dodge_6"]
+[ext_resource type="Texture2D" uid="uid://b1lah1a4yrmts" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir7.png" id="tx_dodge_7"]
+[ext_resource type="Texture2D" uid="uid://dnhscqrf7t8ri" path="res://assets/sprites/monsters/tengu/sprites/Dodge/tengu_Dodge_dir8.png" id="tx_dodge_8"]
+[ext_resource type="Texture2D" uid="uid://cquhhcuuht16c" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir1.png" id="tx_hurt_1"]
+[ext_resource type="Texture2D" uid="uid://blc05lo76tpkd" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir2.png" id="tx_hurt_2"]
+[ext_resource type="Texture2D" uid="uid://lgntea55yjew" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir3.png" id="tx_hurt_3"]
+[ext_resource type="Texture2D" uid="uid://dx77nwjx238x0" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir4.png" id="tx_hurt_4"]
+[ext_resource type="Texture2D" uid="uid://bpbk5uofefn4s" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir5.png" id="tx_hurt_5"]
+[ext_resource type="Texture2D" uid="uid://dlt65fw48utsm" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir6.png" id="tx_hurt_6"]
+[ext_resource type="Texture2D" uid="uid://dbao6qa4frvde" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir7.png" id="tx_hurt_7"]
+[ext_resource type="Texture2D" uid="uid://b4rbumuvgldm7" path="res://assets/sprites/monsters/tengu/sprites/Hurt/tengu_Hurt_dir8.png" id="tx_hurt_8"]
+[ext_resource type="Texture2D" uid="uid://emlyqtinen71" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir1.png" id="tx_idle_1"]
+[ext_resource type="Texture2D" uid="uid://hrnfvj0rkfnv" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir2.png" id="tx_idle_2"]
+[ext_resource type="Texture2D" uid="uid://brp34j46qb081" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir3.png" id="tx_idle_3"]
+[ext_resource type="Texture2D" uid="uid://djgkhxg5xqmrt" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir4.png" id="tx_idle_4"]
+[ext_resource type="Texture2D" uid="uid://dpfjlncrjjpby" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir5.png" id="tx_idle_5"]
+[ext_resource type="Texture2D" uid="uid://4tpbb2cdqn4j" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir6.png" id="tx_idle_6"]
+[ext_resource type="Texture2D" uid="uid://do7x37qbm2jm4" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir7.png" id="tx_idle_7"]
+[ext_resource type="Texture2D" uid="uid://bi84xs7m6lwfr" path="res://assets/sprites/monsters/tengu/sprites/Idle/tengu_Idle_dir8.png" id="tx_idle_8"]
+[ext_resource type="Texture2D" uid="uid://dee7tl05cgfm8" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir1.png" id="tx_run_1"]
+[ext_resource type="Texture2D" uid="uid://cgu3m23wlr50f" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir2.png" id="tx_run_2"]
+[ext_resource type="Texture2D" uid="uid://b2u0c7l3yty3o" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir3.png" id="tx_run_3"]
+[ext_resource type="Texture2D" uid="uid://dbgxsfkbc0c3q" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir4.png" id="tx_run_4"]
+[ext_resource type="Texture2D" uid="uid://d0ghsng7dlegc" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir5.png" id="tx_run_5"]
+[ext_resource type="Texture2D" uid="uid://do520n782taey" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir6.png" id="tx_run_6"]
+[ext_resource type="Texture2D" uid="uid://du5decu31glqg" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir7.png" id="tx_run_7"]
+[ext_resource type="Texture2D" uid="uid://c0hfw8f0i0yol" path="res://assets/sprites/monsters/tengu/sprites/Run/tengu_Run_dir8.png" id="tx_run_8"]
+[ext_resource type="Texture2D" uid="uid://crdal38oxfcvv" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir1.png" id="tx_shove_1"]
+[ext_resource type="Texture2D" uid="uid://drhbtqsyxwke0" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir2.png" id="tx_shove_2"]
+[ext_resource type="Texture2D" uid="uid://c488aiielkuur" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir3.png" id="tx_shove_3"]
+[ext_resource type="Texture2D" uid="uid://051b7e5omyxt" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir4.png" id="tx_shove_4"]
+[ext_resource type="Texture2D" uid="uid://bjtkr3k2pcj27" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir5.png" id="tx_shove_5"]
+[ext_resource type="Texture2D" uid="uid://bslicatgudgg" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir6.png" id="tx_shove_6"]
+[ext_resource type="Texture2D" uid="uid://cd4fscioc4jia" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir7.png" id="tx_shove_7"]
+[ext_resource type="Texture2D" uid="uid://d2hxklsdh6wtw" path="res://assets/sprites/monsters/tengu/sprites/Shove/tengu_Shove_dir8.png" id="tx_shove_8"]
+[ext_resource type="Texture2D" uid="uid://qn2etg7iotvo" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir1.png" id="tx_walk_1"]
+[ext_resource type="Texture2D" uid="uid://1dmgldf5pooi" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir2.png" id="tx_walk_2"]
+[ext_resource type="Texture2D" uid="uid://bvga3mvnl5gmu" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir3.png" id="tx_walk_3"]
+[ext_resource type="Texture2D" uid="uid://jhrupywrg45t" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir4.png" id="tx_walk_4"]
+[ext_resource type="Texture2D" uid="uid://d2hfggqc0f5yx" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir5.png" id="tx_walk_5"]
+[ext_resource type="Texture2D" uid="uid://36aspu23423g" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir6.png" id="tx_walk_6"]
+[ext_resource type="Texture2D" uid="uid://c80uqkmia5qh6" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir7.png" id="tx_walk_7"]
+[ext_resource type="Texture2D" uid="uid://b642wad2r2j0q" path="res://assets/sprites/monsters/tengu/sprites/Walk/tengu_Walk_dir8.png" id="tx_walk_8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 40.112343
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
+resource_local_to_scene = true
+radius = 40.0
+height = 174.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soften"]
+shader = ExtResource("soften_shader")
+shader_parameter/enabled = false
+shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
+shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
+shader_parameter/soften_highlights = true
+shader_parameter/soften_amount = 0.85
+shader_parameter/spike_threshold = 0.1
+shader_parameter/spike_range = 0.35
 
 [sub_resource type="AtlasTexture" id="Ax_00_6_00"]
 atlas = ExtResource("tx_aerial_6")
@@ -1655,518 +1673,6 @@ region = Rect2(9520, 0, 680, 452)
 atlas = ExtResource("tx_arise_2")
 region = Rect2(10200, 0, 680, 452)
 
-[sub_resource type="AtlasTexture" id="Ax_03_6_00"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_01"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_02"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_03"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_04"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_05"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_06"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_07"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_08"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_09"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_10"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_11"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_12"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_13"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_14"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_6_15"]
-atlas = ExtResource("tx_attack_6")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_00"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_01"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_02"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_03"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_04"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_05"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_06"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_07"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_08"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_09"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_10"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_11"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_12"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_13"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_14"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_4_15"]
-atlas = ExtResource("tx_attack_4")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_00"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_01"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_02"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_03"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_04"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_05"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_06"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_07"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_08"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_09"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_10"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_11"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_12"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_13"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_14"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_5_15"]
-atlas = ExtResource("tx_attack_5")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_00"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_01"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_02"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_03"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_04"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_05"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_06"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_07"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_08"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_09"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_10"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_11"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_12"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_13"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_14"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_3_15"]
-atlas = ExtResource("tx_attack_3")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_00"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_01"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_02"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_03"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_04"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_05"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_06"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_07"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_08"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_09"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_10"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_11"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_12"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_13"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_14"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_8_15"]
-atlas = ExtResource("tx_attack_8")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_00"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_01"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_02"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_03"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_04"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_05"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_06"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_07"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_08"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_09"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_10"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_11"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_12"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_13"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_14"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_7_15"]
-atlas = ExtResource("tx_attack_7")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_00"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_01"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_02"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_03"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_04"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_05"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_06"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_07"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_08"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_09"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_10"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_11"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_12"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_13"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_14"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_1_15"]
-atlas = ExtResource("tx_attack_1")
-region = Rect2(10200, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_00"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(0, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_01"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(680, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_02"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(1360, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_03"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(2040, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_04"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(2720, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_05"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(3400, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_06"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(4080, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_07"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(4760, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_08"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(5440, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_09"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(6120, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_10"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(6800, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_11"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(7480, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_12"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(8160, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_13"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(8840, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_14"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(9520, 0, 680, 452)
-
-[sub_resource type="AtlasTexture" id="Ax_03_2_15"]
-atlas = ExtResource("tx_attack_2")
-region = Rect2(10200, 0, 680, 452)
-
 [sub_resource type="AtlasTexture" id="Ax_04_6_00"]
 atlas = ExtResource("tx_attack2_6")
 region = Rect2(0, 0, 680, 452)
@@ -2677,6 +2183,518 @@ region = Rect2(9520, 0, 680, 452)
 
 [sub_resource type="AtlasTexture" id="Ax_04_2_15"]
 atlas = ExtResource("tx_attack2_2")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_00"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_01"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_02"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_03"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_04"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_05"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_06"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_07"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_08"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_09"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_10"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_11"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_12"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_13"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_14"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_6_15"]
+atlas = ExtResource("tx_attack_6")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_00"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_01"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_02"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_03"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_04"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_05"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_06"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_07"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_08"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_09"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_10"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_11"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_12"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_13"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_14"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_4_15"]
+atlas = ExtResource("tx_attack_4")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_00"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_01"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_02"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_03"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_04"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_05"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_06"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_07"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_08"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_09"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_10"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_11"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_12"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_13"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_14"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_5_15"]
+atlas = ExtResource("tx_attack_5")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_00"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_01"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_02"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_03"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_04"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_05"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_06"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_07"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_08"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_09"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_10"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_11"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_12"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_13"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_14"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_3_15"]
+atlas = ExtResource("tx_attack_3")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_00"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_01"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_02"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_03"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_04"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_05"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_06"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_07"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_08"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_09"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_10"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_11"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_12"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_13"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_14"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_8_15"]
+atlas = ExtResource("tx_attack_8")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_00"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_01"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_02"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_03"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_04"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_05"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_06"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_07"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_08"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_09"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_10"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_11"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_12"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_13"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_14"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_7_15"]
+atlas = ExtResource("tx_attack_7")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_00"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_01"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_02"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_03"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_04"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_05"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_06"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_07"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_08"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_09"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_10"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_11"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_12"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_13"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_14"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_1_15"]
+atlas = ExtResource("tx_attack_1")
+region = Rect2(10200, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_00"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(0, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_01"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(680, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_02"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(1360, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_03"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(2040, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_04"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(2720, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_05"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(3400, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_06"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(4080, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_07"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(4760, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_08"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(5440, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_09"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(6120, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_10"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(6800, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_11"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(7480, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_12"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(8160, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_13"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(8840, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_14"]
+atlas = ExtResource("tx_attack_2")
+region = Rect2(9520, 0, 680, 452)
+
+[sub_resource type="AtlasTexture" id="Ax_03_2_15"]
+atlas = ExtResource("tx_attack_2")
 region = Rect2(10200, 0, 680, 452)
 
 [sub_resource type="AtlasTexture" id="Ax_05_6_00"]
@@ -6826,7 +6844,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_east",
 "speed": 20.0
 }, {
@@ -6879,7 +6897,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_north",
 "speed": 20.0
 }, {
@@ -6932,7 +6950,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_northEast",
 "speed": 20.0
 }, {
@@ -6985,7 +7003,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_northWest",
 "speed": 20.0
 }, {
@@ -7038,7 +7056,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_south",
 "speed": 20.0
 }, {
@@ -7091,7 +7109,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_southEast",
 "speed": 20.0
 }, {
@@ -7144,7 +7162,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_southWest",
 "speed": 20.0
 }, {
@@ -7197,7 +7215,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_00_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"aerial_west",
 "speed": 20.0
 }, {
@@ -7250,7 +7268,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_east",
 "speed": 10.0
 }, {
@@ -7303,7 +7321,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_north",
 "speed": 10.0
 }, {
@@ -7356,7 +7374,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_northEast",
 "speed": 10.0
 }, {
@@ -7409,7 +7427,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_northWest",
 "speed": 10.0
 }, {
@@ -7462,7 +7480,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_south",
 "speed": 10.0
 }, {
@@ -7515,7 +7533,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_southEast",
 "speed": 10.0
 }, {
@@ -7568,7 +7586,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_southWest",
 "speed": 10.0
 }, {
@@ -7621,7 +7639,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_01_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"alert_west",
 "speed": 10.0
 }, {
@@ -7674,7 +7692,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_east",
 "speed": 16.0
 }, {
@@ -7727,7 +7745,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_north",
 "speed": 16.0
 }, {
@@ -7780,7 +7798,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_northEast",
 "speed": 16.0
 }, {
@@ -7833,7 +7851,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_northWest",
 "speed": 16.0
 }, {
@@ -7886,7 +7904,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_south",
 "speed": 16.0
 }, {
@@ -7939,7 +7957,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_southEast",
 "speed": 16.0
 }, {
@@ -7992,7 +8010,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_southWest",
 "speed": 16.0
 }, {
@@ -8045,433 +8063,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_02_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"arise_west",
 "speed": 16.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_6_15")
-}],
-"loop": false,
-"name": &"attack_east",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_4_15")
-}],
-"loop": false,
-"name": &"attack_north",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_5_15")
-}],
-"loop": false,
-"name": &"attack_northEast",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_3_15")
-}],
-"loop": false,
-"name": &"attack_northWest",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_8_15")
-}],
-"loop": false,
-"name": &"attack_south",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_7_15")
-}],
-"loop": false,
-"name": &"attack_southEast",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_1_15")
-}],
-"loop": false,
-"name": &"attack_southWest",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_00")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_01")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_02")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_03")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_04")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_05")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_06")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_07")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_08")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_09")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_10")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_11")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_12")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_14")
-}, {
-"duration": 1.0,
-"texture": SubResource("Ax_03_2_15")
-}],
-"loop": false,
-"name": &"attack_west",
-"speed": 20.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -8522,7 +8116,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_east",
 "speed": 20.0
 }, {
@@ -8575,7 +8169,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_north",
 "speed": 20.0
 }, {
@@ -8628,7 +8222,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_northEast",
 "speed": 20.0
 }, {
@@ -8681,7 +8275,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_northWest",
 "speed": 20.0
 }, {
@@ -8734,7 +8328,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_south",
 "speed": 20.0
 }, {
@@ -8787,7 +8381,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_southEast",
 "speed": 20.0
 }, {
@@ -8840,7 +8434,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_southWest",
 "speed": 20.0
 }, {
@@ -8893,8 +8487,432 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_04_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack2_west",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_6_15")
+}],
+"loop": 0,
+"name": &"attack_east",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_4_15")
+}],
+"loop": 0,
+"name": &"attack_north",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_5_15")
+}],
+"loop": 0,
+"name": &"attack_northEast",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_3_15")
+}],
+"loop": 0,
+"name": &"attack_northWest",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_8_15")
+}],
+"loop": 0,
+"name": &"attack_south",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_7_15")
+}],
+"loop": 0,
+"name": &"attack_southEast",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_1_15")
+}],
+"loop": 0,
+"name": &"attack_southWest",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_00")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_01")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_02")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_03")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_04")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_05")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_06")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_07")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_08")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_09")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_11")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_12")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_13")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_14")
+}, {
+"duration": 1.0,
+"texture": SubResource("Ax_03_2_15")
+}],
+"loop": 0,
+"name": &"attack_west",
 "speed": 20.0
 }, {
 "frames": [{
@@ -8946,7 +8964,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_east",
 "speed": 20.0
 }, {
@@ -8999,7 +9017,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_north",
 "speed": 20.0
 }, {
@@ -9052,7 +9070,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_northEast",
 "speed": 20.0
 }, {
@@ -9105,7 +9123,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_northWest",
 "speed": 20.0
 }, {
@@ -9158,7 +9176,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_south",
 "speed": 20.0
 }, {
@@ -9211,7 +9229,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_southEast",
 "speed": 20.0
 }, {
@@ -9264,7 +9282,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_southWest",
 "speed": 20.0
 }, {
@@ -9317,7 +9335,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_05_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crit_west",
 "speed": 20.0
 }, {
@@ -9370,7 +9388,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_east",
 "speed": 10.0
 }, {
@@ -9423,7 +9441,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_north",
 "speed": 10.0
 }, {
@@ -9476,7 +9494,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_northEast",
 "speed": 10.0
 }, {
@@ -9529,7 +9547,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_northWest",
 "speed": 10.0
 }, {
@@ -9582,7 +9600,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_south",
 "speed": 10.0
 }, {
@@ -9635,7 +9653,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_southEast",
 "speed": 10.0
 }, {
@@ -9688,7 +9706,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_southWest",
 "speed": 10.0
 }, {
@@ -9741,7 +9759,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_06_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death_west",
 "speed": 10.0
 }, {
@@ -9794,7 +9812,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_east",
 "speed": 20.0
 }, {
@@ -9847,7 +9865,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_north",
 "speed": 20.0
 }, {
@@ -9900,7 +9918,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_northEast",
 "speed": 20.0
 }, {
@@ -9953,7 +9971,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_northWest",
 "speed": 20.0
 }, {
@@ -10006,7 +10024,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_south",
 "speed": 20.0
 }, {
@@ -10059,7 +10077,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_southEast",
 "speed": 20.0
 }, {
@@ -10112,7 +10130,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_southWest",
 "speed": 20.0
 }, {
@@ -10165,7 +10183,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_07_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dodge_west",
 "speed": 20.0
 }, {
@@ -10218,7 +10236,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_east",
 "speed": 16.0
 }, {
@@ -10271,7 +10289,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_north",
 "speed": 16.0
 }, {
@@ -10324,7 +10342,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_northEast",
 "speed": 16.0
 }, {
@@ -10377,7 +10395,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_northWest",
 "speed": 16.0
 }, {
@@ -10430,7 +10448,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_south",
 "speed": 16.0
 }, {
@@ -10483,7 +10501,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_southEast",
 "speed": 16.0
 }, {
@@ -10536,7 +10554,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_southWest",
 "speed": 16.0
 }, {
@@ -10589,7 +10607,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_08_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt_west",
 "speed": 16.0
 }, {
@@ -10642,7 +10660,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_6_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_east",
 "speed": 10.0
 }, {
@@ -10695,7 +10713,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_4_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_north",
 "speed": 10.0
 }, {
@@ -10748,7 +10766,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_5_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_northEast",
 "speed": 10.0
 }, {
@@ -10801,7 +10819,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_3_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_northWest",
 "speed": 10.0
 }, {
@@ -10854,7 +10872,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_8_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_south",
 "speed": 10.0
 }, {
@@ -10907,7 +10925,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_7_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_southEast",
 "speed": 10.0
 }, {
@@ -10960,7 +10978,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_1_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_southWest",
 "speed": 10.0
 }, {
@@ -11013,7 +11031,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_09_2_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_west",
 "speed": 10.0
 }, {
@@ -11066,7 +11084,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_6_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_east",
 "speed": 24.0
 }, {
@@ -11119,7 +11137,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_4_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_north",
 "speed": 24.0
 }, {
@@ -11172,7 +11190,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_5_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_northEast",
 "speed": 24.0
 }, {
@@ -11225,7 +11243,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_3_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_northWest",
 "speed": 24.0
 }, {
@@ -11278,7 +11296,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_8_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_south",
 "speed": 24.0
 }, {
@@ -11331,7 +11349,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_7_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_southEast",
 "speed": 24.0
 }, {
@@ -11384,7 +11402,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_1_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_southWest",
 "speed": 24.0
 }, {
@@ -11437,7 +11455,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_10_2_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run_west",
 "speed": 24.0
 }, {
@@ -11490,7 +11508,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_6_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_east",
 "speed": 20.0
 }, {
@@ -11543,7 +11561,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_4_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_north",
 "speed": 20.0
 }, {
@@ -11596,7 +11614,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_5_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_northEast",
 "speed": 20.0
 }, {
@@ -11649,7 +11667,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_3_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_northWest",
 "speed": 20.0
 }, {
@@ -11702,7 +11720,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_8_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_south",
 "speed": 20.0
 }, {
@@ -11755,7 +11773,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_7_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_southEast",
 "speed": 20.0
 }, {
@@ -11808,7 +11826,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_1_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_southWest",
 "speed": 20.0
 }, {
@@ -11861,7 +11879,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_11_2_15")
 }],
-"loop": false,
+"loop": 0,
 "name": &"shove_west",
 "speed": 20.0
 }, {
@@ -11914,7 +11932,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_6_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_east",
 "speed": 16.0
 }, {
@@ -11967,7 +11985,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_4_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_north",
 "speed": 16.0
 }, {
@@ -12020,7 +12038,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_5_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_northEast",
 "speed": 16.0
 }, {
@@ -12073,7 +12091,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_3_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_northWest",
 "speed": 16.0
 }, {
@@ -12126,7 +12144,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_8_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_south",
 "speed": 16.0
 }, {
@@ -12179,7 +12197,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_7_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_southEast",
 "speed": 16.0
 }, {
@@ -12232,7 +12250,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_1_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_southWest",
 "speed": 16.0
 }, {
@@ -12285,7 +12303,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Ax_12_2_15")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_west",
 "speed": 16.0
 }]
@@ -12301,45 +12319,36 @@ border_color = Color(0, 0, 0, 0.7)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpfill"]
 bg_color = Color(0.66, 0.15, 0.15, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_soften"]
-shader = ExtResource("soften_shader")
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 32.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
-resource_local_to_scene = true
-radius = 20.0
-height = 100.0
-
-[node name="Tengu" type="CharacterBody2D" groups=["enemy"]]
+[node name="Tengu" type="CharacterBody2D" unique_id=1883794603 groups=["enemy"]]
 collision_layer = 3
 script = ExtResource("enemy_script")
 tier = 3
 max_health = 160.0
 move_speed = 52.0
-attack_damage = 18.0
 attack_damage = 22.0
 attack_cooldown = 1.4
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1062292534]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1256742300]
 shape = SubResource("CircleShape2D_body")
 
-[node name="HitBox" type="Area2D" parent="." groups=["enemy_hitbox"]]
+[node name="HitBox" type="Area2D" parent="." unique_id=771499790 groups=["enemy_hitbox"]]
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=1234155148]
+position = Vector2(0, -48)
 shape = SubResource("CapsuleShape2D_hitbox")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1799920035]
 material = SubResource("ShaderMaterial_soften")
+position = Vector2(0, -80)
 sprite_frames = SubResource("SpriteFrames_mummy")
+animation = &"aerial_east"
 offset = Vector2(0, 30)
 
-[node name="HealthBar" type="ProgressBar" parent="."]
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1564197853]
 offset_left = -26.0
 offset_top = -194.0
 offset_right = 26.0
@@ -12349,46 +12358,45 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
 show_percentage = false
 
-[node name="TauntComponent" type="Node" parent="."]
+[node name="TauntComponent" type="Node" parent="." unique_id=1943578459]
 script = ExtResource("taunt_component")
 timeline = "res://dialogue/enemies/undeadRonin_taunt.dtl"
 
-[node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+[node name="FiniteStateMachine" type="Node" parent="." unique_id=1150315273 node_paths=PackedStringArray("current_state")]
 script = ExtResource("fsm")
 current_state = NodePath("idle")
 
-[node name="idle" type="Node" parent="FiniteStateMachine"]
+[node name="idle" type="Node" parent="FiniteStateMachine" unique_id=1250182636]
 script = ExtResource("st_idle")
 
-[node name="alert" type="Node" parent="FiniteStateMachine"]
+[node name="alert" type="Node" parent="FiniteStateMachine" unique_id=724271120]
 script = ExtResource("st_alert")
 
-[node name="taunt" type="Node" parent="FiniteStateMachine"]
+[node name="taunt" type="Node" parent="FiniteStateMachine" unique_id=1887487113]
 script = ExtResource("st_taunt")
 
-[node name="walk" type="Node" parent="FiniteStateMachine"]
+[node name="walk" type="Node" parent="FiniteStateMachine" unique_id=1112669048]
 script = ExtResource("st_walk")
 
-[node name="attack" type="Node" parent="FiniteStateMachine"]
+[node name="attack" type="Node" parent="FiniteStateMachine" unique_id=813142163]
 script = ExtResource("st_attack")
 
-[node name="hurt" type="Node" parent="FiniteStateMachine"]
+[node name="hurt" type="Node" parent="FiniteStateMachine" unique_id=248202917]
 script = ExtResource("st_hurt")
 
-[node name="death" type="Node" parent="FiniteStateMachine"]
+[node name="death" type="Node" parent="FiniteStateMachine" unique_id=2114646138]
 script = ExtResource("st_death")
 
-[node name="crit" type="Node" parent="FiniteStateMachine"]
+[node name="crit" type="Node" parent="FiniteStateMachine" unique_id=1184796394]
 script = ExtResource("st_crit")
-hit_frame = 8
 reach = 1.6
 damage_multiplier = 2.0
 whiff_chance = 0.35
 
-[node name="arise" type="Node" parent="FiniteStateMachine"]
+[node name="arise" type="Node" parent="FiniteStateMachine" unique_id=802130582]
 script = ExtResource("st_arise")
 
-[node name="dodge" type="Node" parent="FiniteStateMachine"]
+[node name="dodge" type="Node" parent="FiniteStateMachine" unique_id=591150639]
 script = ExtResource("st_dodge")
 distance = 165.0
 duration = 0.38

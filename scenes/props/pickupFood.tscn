@@ -1,31 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfood1pkup001"]
+[gd_scene format=3 uid="uid://cfood1pkup001"]
 
-[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/food/onigiri.png" id="2_t"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
+[ext_resource type="Script" uid="uid://cth2jwb3pa1ah" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" uid="uid://benep1ge8u16v" path="res://assets/sprites/props/food/onigiri.png" id="2_t"]
+[ext_resource type="Texture2D" uid="uid://cjf4pj7gmpegy" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
-radius = 30.0
+radius = 13.038404
 
-[node name="pickupFood" type="Area2D"]
-collision_mask = 1
+[node name="pickupFood" type="Area2D" unique_id=219819959]
 monitorable = false
 script = ExtResource("1_s")
-kind = 0
 amount = 22.0
 duration = 0.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=23875336]
 position = Vector2(0, -20)
-scale = Vector2(1, 1)
 texture = ExtResource("2_t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1939222768]
+position = Vector2(0, -9)
 shape = SubResource("CircleShape2D_p")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=934045436]
 position = Vector2(0, -20)
-texture = ExtResource("3_glow")
 color = Color(1, 0.82, 0.45, 1)
 energy = 0.75
+texture = ExtResource("3_glow")
 texture_scale = 0.55

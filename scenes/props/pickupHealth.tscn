@@ -1,31 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://bh1lth7pkq3xa"]
+[gd_scene format=3 uid="uid://bh1lth7pkq3xa"]
 
-[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/health_potion.png" id="2_t"]
+[ext_resource type="Script" uid="uid://cth2jwb3pa1ah" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" uid="uid://biadp14lxypbi" path="res://assets/sprites/props/health_potion.png" id="2_t"]
+[ext_resource type="Texture2D" uid="uid://cjf4pj7gmpegy" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
-radius = 30.0
+radius = 12.0
 
-[node name="pickupHealth" type="Area2D"]
-collision_mask = 1
+[node name="pickupHealth" type="Area2D" unique_id=625122615]
 monitorable = false
 script = ExtResource("1_s")
-kind = 0
 amount = 35.0
 duration = 0.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=831236241]
 position = Vector2(0, -20)
-scale = Vector2(1, 1)
 texture = ExtResource("2_t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=495210851]
+position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_p")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1096129062]
 position = Vector2(0, -20)
-texture = ExtResource("3_glow")
 color = Color(1, 0.35, 0.35, 1)
-energy = 1.0
+texture = ExtResource("3_glow")
 texture_scale = 0.7

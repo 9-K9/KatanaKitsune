@@ -1,31 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0pwr8mzv4nyq"]
+[gd_scene format=3 uid="uid://c0pwr8m0v4nyq"]
 
-[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/power_orb.png" id="2_t"]
+[ext_resource type="Script" uid="uid://cth2jwb3pa1ah" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" uid="uid://bj4xmqmyh01y0" path="res://assets/sprites/props/power_orb.png" id="2_t"]
+[ext_resource type="Texture2D" uid="uid://cjf4pj7gmpegy" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
-radius = 30.0
+radius = 13.152946
 
-[node name="pickupPower" type="Area2D"]
-collision_mask = 1
+[node name="pickupPower" type="Area2D" unique_id=1177238285]
 monitorable = false
 script = ExtResource("1_s")
 kind = 1
 amount = 1.6
-duration = 12.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1898797504]
 position = Vector2(0, -20)
-scale = Vector2(1, 1)
 texture = ExtResource("2_t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2110618008]
+position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_p")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=503202580]
 position = Vector2(0, -20)
-texture = ExtResource("3_glow")
 color = Color(0.55, 0.75, 1, 1)
-energy = 1.0
+texture = ExtResource("3_glow")
 texture_scale = 0.7

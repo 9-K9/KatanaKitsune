@@ -1,19 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://cspk3trp9wq2n"]
+[gd_scene format=3 uid="uid://cspk3trqawq2n"]
 
-[ext_resource type="Script" path="res://scripts/system/SpikeTrap.gd" id="1_s"]
-[ext_resource type="Texture2D" path="res://assets/sprites/props/spike_trap.png" id="2_t"]
+[ext_resource type="Script" uid="uid://qqik4jd4xfx5" path="res://scripts/system/SpikeTrap.gd" id="1_s"]
+[ext_resource type="Texture2D" uid="uid://eahh70b1sqqu" path="res://assets/sprites/props/spike_trap.png" id="2_t"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_t"]
-points = PackedVector2Array(-22, 0, 0, -11, 22, 0, 0, 11)
-
-[node name="SpikeTrap" type="Area2D"]
+[node name="SpikeTrap" type="Area2D" unique_id=1649296786]
 collision_mask = 3
 monitorable = false
 script = ExtResource("1_s")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -8)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=147914443]
+position = Vector2(0, 1)
 texture = ExtResource("2_t")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("ConvexPolygonShape2D_t")
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1516147461]
+position = Vector2(0, 8)
+polygon = PackedVector2Array(-28, -7, 0, -22, 27, -8, 28, -3, 0, 13, -28, -3)
