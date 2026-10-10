@@ -125,6 +125,12 @@ shader = ExtResource("soften_shader")
 shader_parameter/enabled = false
 shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
 shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
+shader_parameter/recolor_hair = false
+shader_parameter/hair_shadow_color = Vector3(0, 0, 0)
+shader_parameter/hair_highlight_color = Vector3(0.659, 0.659, 0.659)
+shader_parameter/recolor_skin = false
+shader_parameter/skin_shadow_color = Vector3(0.423529, 0.25098, 0.188235)
+shader_parameter/skin_highlight_color = Vector3(0.933333, 0.666667, 0.556863)
 shader_parameter/soften_highlights = true
 shader_parameter/soften_amount = 0.85
 shader_parameter/spike_threshold = 0.1
@@ -11376,6 +11382,242 @@ border_color = Color(0, 0, 0, 0.7)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpfill"]
 bg_color = Color(0.66, 0.15, 0.15, 1)
 
+[sub_resource type="Animation" id="Anim_dodge_east_collision"]
+resource_name = "dodge_east"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(134.59, -71.85)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(134.59, -121.85)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_north_collision"]
+resource_name = "dodge_north"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(-140.80, -67.30)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(-140.80, -117.30)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_northEast_collision"]
+resource_name = "dodge_northEast"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(-4.52, -93.80)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(-4.52, -143.80)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_northWest_collision"]
+resource_name = "dodge_northWest"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(-195.88, 2.54)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(-195.88, -47.46)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_south_collision"]
+resource_name = "dodge_south"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(141.13, 65.05)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(141.13, 15.05)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_southEast_collision"]
+resource_name = "dodge_southEast"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(196.42, -3.65)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(196.42, -53.65)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_southWest_collision"]
+resource_name = "dodge_southWest"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(4.49, 96.77)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(4.49, 46.77)]
+}
+
+[sub_resource type="Animation" id="Anim_dodge_west_collision"]
+resource_name = "dodge_west"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, 1.0), Vector2(-134.33, 69.04)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.0, -49.0), Vector2(-134.33, 19.04)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimLib_jorogumo_dodge_collision"]
+_data = {
+&"dodge_east": SubResource("Anim_dodge_east_collision"),
+&"dodge_north": SubResource("Anim_dodge_north_collision"),
+&"dodge_northEast": SubResource("Anim_dodge_northEast_collision"),
+&"dodge_northWest": SubResource("Anim_dodge_northWest_collision"),
+&"dodge_south": SubResource("Anim_dodge_south_collision"),
+&"dodge_southEast": SubResource("Anim_dodge_southEast_collision"),
+&"dodge_southWest": SubResource("Anim_dodge_southWest_collision"),
+&"dodge_west": SubResource("Anim_dodge_west_collision")
+}
+
 [node name="Jorogumo" type="CharacterBody2D" unique_id=741210177 groups=["enemy"]]
 collision_layer = 3
 script = ExtResource("enemy_script")
@@ -11460,3 +11702,8 @@ script = ExtResource("st_weave")
 [node name="dodge" type="Node" parent="FiniteStateMachine" unique_id=568265914]
 script = ExtResource("st_dodge")
 distance = 145.0
+
+[node name="CollisionTween" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimLib_jorogumo_dodge_collision")
+}

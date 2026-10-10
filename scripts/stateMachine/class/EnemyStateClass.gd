@@ -62,6 +62,14 @@ var is_dead: bool = false
 ## the walking CollisionShape2D so the two can be shaped for what they each
 ## do: one keeps the monster out of walls, the other says where a swing lands.
 @onready var hit_box: Area2D = get_node_or_null("HitBox")
+## Optional. Present only on monsters whose dodge/leap art visibly displaces
+## the sprite within its own frame (a hop, a spin) — the engine's real
+## movement never accounts for that, so CollisionShape2D/HitBox would
+## otherwise sit at the sprite's resting spot while it's drawn somewhere
+## else entirely. When this player has an animation sharing the AnimatedSprite2D
+## clip's exact name, play_once/play_loop start it in lockstep so the shapes
+## tween along with the sprite instead of trailing behind it.
+@onready var collision_tween: AnimationPlayer = get_node_or_null("CollisionTween")
 
 var _player: CharacterBody2D = null
 var _flash_tween: Tween = null
@@ -132,6 +140,7 @@ func _ready() -> void:
 	_position_health_bar()
 	_position_hit_box()
 	_apply_random_cosmetics()
+	_cache_collision_tween_deltas()
 
 
 ## A fresh hair/skin tone per spawn, so a wave of four Kappa does not read as
@@ -552,11 +561,79 @@ func play_loop(state_name: String) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
 	if animated_sprite.animation != clip or not animated_sprite.is_playing():
 		animated_sprite.play(clip)
+		_sync_collision_tween(clip)
 
 
 ## Plays a one-shot clip from the top. Only call this from a state's on_enter.
 func play_once(state_name: String) -> void:
-	animated_sprite.play("%s_%s" % [state_name, facing_dir])
+	var clip: String = "%s_%s" % [state_name, facing_dir]
+	animated_sprite.play(clip)
+	_sync_collision_tween(clip)
+
+
+## Starts the collision tween that shares this clip's exact name, so it plays
+## in lockstep with the sprite that just started. A monster with no
+## CollisionTween node, or a clip with no matching animation on it (most of
+## them — only dodges/leaps need this), simply does nothing here. If a
+## previous clip's tween is still running when a clip with no tween of its
+## own starts, stop() (default keep_state=false) snaps the shapes back to
+## their pre-tween rest position instead of leaving them stranded mid-hop.
+func _sync_collision_tween(clip: String) -> void:
+	if collision_tween == null:
+		return
+	if collision_tween.has_animation(clip):
+		_rebase_collision_tween(clip)
+		collision_tween.play(clip)
+	elif collision_tween.is_playing():
+		collision_tween.stop()
+
+
+## clip name -> {"body": Vector2, "hitbox": Vector2}: how far each shape is
+## meant to drift across the clip, captured once from the authored keys
+## before _rebase_collision_tween starts overwriting them in place.
+var _collision_tween_deltas: Dictionary = {}
+
+
+## _position_collision_shape()/_position_hit_box() compute the actual resting
+## spot once at spawn from whichever sprite animation happens to be playing
+## at that instant — which, depending on state-machine startup order, is not
+## guaranteed to be the same frame the CollisionTween's keys were authored
+## against. Caching the *displacement* each clip's keys represent (rather
+## than trusting their absolute values) keeps the tween correct regardless of
+## where the shapes actually ended up resting.
+func _cache_collision_tween_deltas() -> void:
+	if collision_tween == null:
+		return
+	for clip in collision_tween.get_animation_list():
+		var anim: Animation = collision_tween.get_animation(clip)
+		if anim.get_track_count() < 2:
+			continue
+		_collision_tween_deltas[clip] = {
+			"body": anim.track_get_key_value(0, 1) - anim.track_get_key_value(0, 0),
+			"hitbox": anim.track_get_key_value(1, 1) - anim.track_get_key_value(1, 0),
+		}
+
+
+## Re-anchors a clip's two keys to wherever the shapes actually sit right
+## now, so playing it always tweens from the shape's real current position
+## (no snap) out to that same current position plus the clip's own baked
+## displacement — instead of a fixed absolute spot that may not match
+## whatever this monster's own idle frame happened to rest at.
+func _rebase_collision_tween(clip: String) -> void:
+	var anim: Animation = collision_tween.get_animation(clip)
+	var deltas: Dictionary = _collision_tween_deltas.get(clip, {})
+	if anim == null or deltas.is_empty():
+		return
+	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D")
+	if shape_node != null:
+		anim.track_set_key_value(0, 0, shape_node.position)
+		anim.track_set_key_value(0, 1, shape_node.position + deltas["body"])
+	if is_instance_valid(hit_box):
+		var hitbox_shape: CollisionShape2D = hit_box.get_node_or_null("CollisionShape2D")
+		if hitbox_shape != null:
+			anim.track_set_key_value(1, 0, hitbox_shape.position)
+			anim.track_set_key_value(1, 1, hitbox_shape.position + deltas["hitbox"])
+
 
 
 func animation_finished() -> bool:
