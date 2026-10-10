@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://qotf2l58oqn6" path="res://scripts/system/Breakable.gd" id="1_s"]
 [ext_resource type="Texture2D" uid="uid://b03gdbr5clr3f" path="res://assets/sprites/props/statue.png" id="2_t"]
 [ext_resource type="PackedScene" uid="uid://c0pwr8m0v4nyq" path="res://scenes/props/pickupPower.tscn" id="3_l"]
-[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="4_s"]
+[ext_resource type="PackedScene" uid="uid://p1s1d852wrw" path="res://scenes/monsters/karasuShinobi.tscn" id="4_s"]
 [ext_resource type="Texture2D" uid="uid://cb6ote4x7io1k" path="res://assets/sprites/props/statue_break.png" id="5_break"]
 
 [node name="breakableStatue" type="StaticBody2D" unique_id=1437646420 groups=["breakable"]]

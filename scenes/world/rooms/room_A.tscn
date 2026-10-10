@@ -1,7 +1,6 @@
 [gd_scene format=4 uid="uid://b854xsndpebqb"]
 
 [ext_resource type="Script" path="res://scripts/system/RoomWalls.gd" id="rw_script"]
-[ext_resource type="PackedScene" uid="uid://ci2xfyyt30bpm" path="res://scenes/monsters/enemy.tscn" id="2_01x0e"]
 [ext_resource type="Texture2D" uid="uid://ckr0vt8iluh1i" path="res://assets/crocotile/isometrictiles/grounds/checkeredFloorIsometric_dir1.png" id="3_il42g"]
 [ext_resource type="Texture2D" uid="uid://1bqu4e3j644v" path="res://assets/crocotile/isometrictiles/blocks/grassBlock_dir1.png" id="4_2jv5f"]
 [ext_resource type="Texture2D" uid="uid://dkjfm5dtmvgye" path="res://assets/crocotile/isometrictiles/grounds/checkeredFloorIsometric_dir3.png" id="5_bebx4"]
