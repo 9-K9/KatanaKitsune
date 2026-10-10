@@ -34,13 +34,22 @@ shader_type canvas_item;
 //    monster can get fur variety without the clothing-red logic running at
 //    all.
 //
+//    The near-black lineart that traces the whole silhouette (body, clothing
+//    edges, face) is the exact same (0,0,0) value as the darkest hair ramp
+//    step, so it can't be told apart from fur by colour alone. recolour()
+//    takes a `hair_context` flag - true when most of a pixel's opaque
+//    neighbours are also near-grey (fur interior), false when they're mostly
+//    skin/clothing/background (an outline edge) - computed once per fragment
+//    from an 3x3 neighbour sample. Outline pixels keep their original black
+//    instead of picking up the chosen hair tone.
+//
 //    Known limitation: the katana blade and any other genuinely neutral-grey
-//    metal/prop pixels share the exact same ramp as fur with no separate
-//    channel to tell them apart, so recolour_hair retints them too. A
-//    fragment shader cannot do the connected-component face/material split
-//    the offline prototypes (tools/recolor_kitsune_*_test.py) used; accepted
-//    here the same way the clothing recolour already accepts its own small
-//    face-pixel inaccuracy, documented below.
+//    metal/prop pixels are themselves a solid grey blob (neighbours are also
+//    grey), so they still read as "fur interior" and recolour_hair retints
+//    them too. A fragment shader cannot do the connected-component
+//    face/material split the offline prototypes (tools/recolor_kitsune_*_test.py)
+//    used; accepted here the same way the clothing recolour already accepts
+//    its own small face-pixel inaccuracy, documented below.
 //
 // Known difference from the baked clothing PNGs: the Python version
 // additionally excluded a detected face bounding box. A fragment shader
@@ -86,7 +95,15 @@ float luma(vec3 c) {
 // Clothing/hair/skin recolour for one already-sampled texel, so it can be
 // applied identically to the centre pixel and to each neighbour before they
 // are averaged together by the softening pass below.
-vec3 recolour(vec4 c) {
+//
+// `hair_context` says whether this pixel sits inside a fur/hair blob (most of
+// its opaque neighbours are also near-grey) as opposed to a near-black
+// lineart edge tracing the silhouette against skin, clothing or background
+// (whose neighbours are mostly NOT grey). The ramp maths can't tell a hair
+// shadow pixel apart from an outline pixel in isolation - both are the same
+// (0,0,0) - so this is the only way to keep outline black while still
+// recolouring the fur it borders.
+vec3 recolour(vec4 c, bool hair_context) {
 	if (c.a <= 0.0) {
 		return c.rgb;
 	}
@@ -126,22 +143,38 @@ vec3 recolour(vec4 c) {
 		// saturation ratio blows up to "fully saturated" on the near-black
 		// AA fringe around fur, which is still fur). The shared
 		// fur/hair/base-clothing ramp.
-		float amount = clamp(luma(c.rgb), 0.0, 1.0);
-		return mix(hair_shadow_color, hair_highlight_color, amount);
+		if (hair_context) {
+			float amount = clamp(luma(c.rgb), 0.0, 1.0);
+			return mix(hair_shadow_color, hair_highlight_color, amount);
+		}
+		// Outline pixel (lineart against skin/clothing/background, not fur
+		// interior) - leave it exactly as painted so it stays black instead
+		// of picking up the chosen hair tone.
+		return c.rgb;
 	}
 
 	return c.rgb;
 }
 
+// How much of a pixel's near-grey-ness it takes for its neighbourhood to
+// count as "fur interior" rather than "outline". Majority vote among opaque
+// neighbours.
+const float HAIR_CONTEXT_RATIO = 0.5;
+
 void fragment() {
 	vec4 t = texture(TEXTURE, UV);
-	vec3 color = recolour(t);
 
-	if (soften_highlights && t.a > 0.0) {
-		vec3 acc = vec3(0.0);
-		float lum_acc = 0.0;
-		float count = 0.0;
+	// Single 3x3 neighbour pass feeding both the hair/outline split above and
+	// the highlight-softening blend below, so each neighbour texel is only
+	// sampled once per fragment.
+	float grey_neighbours = 0.0;
+	float opaque_neighbours = 0.0;
+	vec4 neighbour_texels[8];
+	bool neighbour_opaque[8];
+	int n_idx = 0;
 
+	bool need_neighbours = (recolor_hair || soften_highlights) && t.a > 0.0;
+	if (need_neighbours) {
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = -1; dy <= 1; dy++) {
 				if (dx == 0 && dy == 0) {
@@ -149,12 +182,44 @@ void fragment() {
 				}
 				vec2 offset = vec2(float(dx), float(dy)) * TEXTURE_PIXEL_SIZE;
 				vec4 n = texture(TEXTURE, UV + offset);
-				if (n.a > 0.0) {
-					vec3 nc = recolour(n);
-					acc += nc;
-					lum_acc += luma(nc);
-					count += 1.0;
+				neighbour_texels[n_idx] = n;
+				bool n_opaque = n.a > 0.0;
+				neighbour_opaque[n_idx] = n_opaque;
+				n_idx += 1;
+				if (n_opaque) {
+					opaque_neighbours += 1.0;
+					float nmx = max(n.r, max(n.g, n.b));
+					float nmn = min(n.r, min(n.g, n.b));
+					if ((nmx - nmn) <= 0.035) {
+						grey_neighbours += 1.0;
+					}
 				}
+			}
+		}
+	}
+
+	// Fewer than 3 opaque neighbours means this pixel is itself a thin
+	// isolated speck (e.g. a corner); default to "is fur" so it still gets
+	// recoloured rather than popping out as a stray black dot.
+	bool hair_context = opaque_neighbours < 3.0
+		|| (grey_neighbours / max(opaque_neighbours, 1.0)) >= HAIR_CONTEXT_RATIO;
+
+	vec3 color = recolour(t, hair_context);
+
+	if (soften_highlights && t.a > 0.0) {
+		vec3 acc = vec3(0.0);
+		float lum_acc = 0.0;
+		float count = 0.0;
+
+		for (int i = 0; i < 8; i++) {
+			if (neighbour_opaque[i]) {
+				// Softening doesn't recompute each neighbour's own context -
+				// assume fur interior, same small accepted imprecision as
+				// the clothing/face exception documented above.
+				vec3 nc = recolour(neighbour_texels[i], true);
+				acc += nc;
+				lum_acc += luma(nc);
+				count += 1.0;
 			}
 		}
 
