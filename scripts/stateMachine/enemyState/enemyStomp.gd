@@ -34,7 +34,7 @@ func on_physics_process(delta: float) -> void:
 	enemy.stop()
 	if not _hit and enemy.animated_sprite.frame >= impact_frame:
 		_hit = true
-		enemy.strike(reach, damage_multiplier)
+		enemy.strike(reach, damage_multiplier, enemy.STRIKE_ARC_OMNI)
 	if not enemy.animation_finished():
 		return
 	## Clip is done but he is not. Hold the last frame through the recovery so

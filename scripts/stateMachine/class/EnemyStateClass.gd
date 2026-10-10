@@ -656,8 +656,11 @@ func start_attack_cooldown() -> void:
 
 ## Lands a claw hit if the player is still inside the swing. `reach` is a
 ## multiplier on attack_range, so a player backing off mid-swing can still be
-## clipped by the follow-through.
-func strike(reach: float = 1.35, damage_multiplier: float = 1.0) -> void:
+## clipped by the follow-through. `arc_cos` is how narrow the forward arc the
+## swing must land within is, in cosine terms; pass STRIKE_ARC_OMNI for an
+## attack (like Oni's stomp) that is meant to hit all around rather than along
+## a facing.
+func strike(reach: float = 1.35, damage_multiplier: float = 1.0, arc_cos: float = STRIKE_ARC_COS) -> void:
 	if is_dead:
 		return
 	var target := player()
@@ -665,16 +668,43 @@ func strike(reach: float = 1.35, damage_multiplier: float = 1.0) -> void:
 		return
 	if ground_distance_to(target.global_position) > attack_range * reach:
 		return
+	if not _in_strike_arc(target.global_position, arc_cos):
+		return
 	if target.has_method("take_damage"):
 		## Tells her guard where the blow came from.
 		target.take_damage(attack_damage * damage_multiplier, global_position)
-	_strike_breakables(reach, damage_multiplier)
+	_strike_breakables(reach, damage_multiplier, arc_cos)
+
+
+## How wide, in cosine terms, a swing's forward arc is. 0.3 is roughly 70°
+## either side of facing — wide enough that a target strafing mid-swing is
+## still caught by the follow-through, but no longer hittable from directly
+## behind or beside the monster, which a distance-only check could not tell
+## apart from a target standing right in front of the claws.
+const STRIKE_ARC_COS: float = 0.3
+## Every direction counts — for a shockwave/AoE strike with no "front".
+const STRIKE_ARC_OMNI: float = -1.0
+
+## True when `target_position` sits within the forward arc the swing is aimed
+## along. Facing is snapped once at the swing's start (on_enter), so this asks
+## where the attack actually reaches rather than trusting a bare radius around
+## the monster's own centre, which read as hits landing from any direction at
+## all as long as something was merely nearby.
+func _in_strike_arc(target_position: Vector2, arc_cos: float = STRIKE_ARC_COS) -> bool:
+	var facing: Vector2 = stateDirection(facing_dir)
+	if facing == Vector2.ZERO:
+		return true
+	var to_target: Vector2 = target_position - global_position
+	to_target.y /= ISO_Y_SCALE
+	if to_target.length() < 0.01:
+		return true
+	return facing.normalized().dot(to_target.normalized()) >= arc_cos
 
 
 ## Enemy swings may smash props caught in the same attack radius. This query
 ## runs only on the attack animation's hit frame; walking into a prop cannot
 ## damage it.
-func _strike_breakables(reach: float, damage_multiplier: float = 1.0) -> void:
+func _strike_breakables(reach: float, damage_multiplier: float = 1.0, arc_cos: float = STRIKE_ARC_COS) -> void:
 	var shape := CircleShape2D.new()
 	shape.radius = attack_range * reach
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -686,8 +716,11 @@ func _strike_breakables(reach: float, damage_multiplier: float = 1.0) -> void:
 	query.collide_with_areas = false
 	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
 		var body = hit.get("collider")
-		if is_instance_valid(body) and body.is_in_group("breakable") and body.has_method("take_damage"):
-			body.take_damage(attack_damage * damage_multiplier, global_position)
+		if not is_instance_valid(body) or not body.is_in_group("breakable") or not body.has_method("take_damage"):
+			continue
+		if not _in_strike_arc(body.global_position, arc_cos):
+			continue
+		body.take_damage(attack_damage * damage_multiplier, global_position)
 
 
 ## Called when the player interacts with this monster — an Action press or the

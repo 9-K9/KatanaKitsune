@@ -13,6 +13,10 @@ extends StateMachineState
 @onready var pc: CharacterBody2D = get_node(_CharacterBody2D)
 @onready var animated_sprite : AnimatedSprite2D = get_node(_animatedsprite2D)
 @onready var action_timer : Timer = get_node(_action_timer)
+## Keys the blade's actual reach through a swing, so the weapon hitbox rides
+## the katana instead of sitting in one big static circle for the whole clip.
+## Null on any state whose scene has no WeaponTween node — callers no-op.
+@onready var weapon_tween: AnimationPlayer = get_node_or_null("../../CollisionChecker/WeaponTween")
 
 ## True once the current swing has already dealt its damage.
 var _swing_connected: bool = false
@@ -116,6 +120,35 @@ func _chair_position(chair: Node2D) -> Vector2:
 ## Arms the next swing. Call from an attack state's on_enter.
 func beginAttack():
 	_swing_connected = false
+
+## Starts the weapon-reach tween for a swing clip, in lockstep with the sprite
+## that just started it. `rate` must match whatever play_oneshot()/stateAnimation
+## sped the sprite up by, so the blade's keyed reach lines up with the actual
+## hit-frame rather than drifting out of sync with a rate-scaled sprite.
+## A clip with no matching animation (kicks, anything not a katana swing) just
+## leaves the hitbox at its static resting spot, same as before this existed.
+func _sync_weapon_tween(clip: String, rate: float = 1.0) -> void:
+	if weapon_tween == null:
+		return
+	var anim := "%s_%s" % [clip, pc.facing_dir]
+	if not weapon_tween.has_animation(anim):
+		return
+	if weapon_tween.current_animation == anim and weapon_tween.is_playing():
+		return
+	weapon_tween.speed_scale = rate
+	weapon_tween.play(anim)
+
+## Undoes _sync_weapon_tween. Call from every attack state's on_exit — a swing
+## interrupted mid-clip (staggered out of it, or simply not reached its last
+## key yet) would otherwise leave the hitbox stranded out at the blade's last
+## keyed position instead of snapping back to the resting reach the next state
+## expects, the same stuck-shape bug already fixed once for the monsters.
+func _reset_weapon_tween() -> void:
+	if weapon_tween == null:
+		return
+	weapon_tween.stop()
+	if pc.has_method("setRayCast2D"):
+		pc.setRayCast2D(pc.stateDirection(pc.facing_dir))
 
 ##attack enemy body when the swing reaches its hit frame
 func playerAttack(hit_frame: int = 3):

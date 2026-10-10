@@ -39,6 +39,11 @@ func on_process(delta):
 
 func on_physics_process(_delta):
 	if _released and action_timer.is_stopped():
+		## The swing has played out in full; this is "the end of the charge
+		## attack animation" the arc is meant to leave on, not the instant
+		## Attack was released (which used to fire it before the blade had
+		## even started moving).
+		_throw_arc()
 		change_state("katanaIdle")
 
 func _release() -> void:
@@ -46,10 +51,10 @@ func _release() -> void:
 	animated_sprite.modulate = Color.WHITE
 	pc.damage = _base_damage * (1.0 + (MAX_BONUS - 1.0) * (_charge / MAX_CHARGE))
 	beginAttack()
-	_throw_arc()
 	## The swing itself is a one-shot, and must outlast the clip it plays.
 	action_timer.wait_time = play_oneshot("katanaSlashMid", SWING_RATE)
 	action_timer.start()
+	_sync_weapon_tween("katanaSlashMid", SWING_RATE)
 
 ## An untouched swing throws its arc. Anything less and the swing is just a
 ## swing, which is the point: the reach is the reward for not being hit.
@@ -68,3 +73,4 @@ func on_exit():
 	pc.damage = _base_damage
 	pc.actionBlockInput = false
 	action_timer.stop()
+	_reset_weapon_tween()

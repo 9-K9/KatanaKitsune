@@ -48,6 +48,7 @@ func lock_seconds() -> float:
 
 func on_process(_delta: float) -> void:
 	stateAnimation(clip)
+	_sync_weapon_tween(clip)
 	playerAttack()
 
 
@@ -61,3 +62,4 @@ func on_exit() -> void:
 	pc.actionBlockInput = false
 	pc.timerTimeOut = true
 	action_timer.stop()
+	_reset_weapon_tween()

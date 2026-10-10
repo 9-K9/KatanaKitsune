@@ -14,6 +14,7 @@ func on_enter():
 	beginAttack()
 	action_timer.wait_time = play_oneshot("katanaSlashMid", RATE)
 	action_timer.start()
+	_sync_weapon_tween("katanaSlashMid", RATE)
 
 func on_process(_delta):
 	playerAttack(3)
@@ -26,3 +27,4 @@ func on_exit():
 	pc.actionBlockInput = false
 	animated_sprite.speed_scale = 1.0
 	action_timer.stop()
+	_reset_weapon_tween()

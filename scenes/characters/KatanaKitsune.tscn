@@ -39507,7 +39507,7 @@ radius = 35.0
 height = 172.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pw1rk"]
-radius = 48.0
+radius = 20.0
 
 [sub_resource type="Curve" id="Curve_ns8hn"]
 _limits = [-553.51, 1.0, 0.0, 1.0]
@@ -39526,6 +39526,282 @@ polygon = PackedVector2Array(-26, -1, 0, -18, 26, -1, 0, 14)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 35.22783
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_east_weapon"]
+resource_name = "katanaSlashCrouched_east"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, 0), Vector2(48, -2), Vector2(60, -43), Vector2(48, 0)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_north_weapon"]
+resource_name = "katanaSlashCrouched_north"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -48), Vector2(16, -47), Vector2(4, -33), Vector2(0, -48)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_northEast_weapon"]
+resource_name = "katanaSlashCrouched_northEast"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, -24), Vector2(40, -21), Vector2(72, 7), Vector2(48, -24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_northWest_weapon"]
+resource_name = "katanaSlashCrouched_northWest"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, -24), Vector2(-17, -32), Vector2(-51, -8), Vector2(-48, -24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_south_weapon"]
+resource_name = "katanaSlashCrouched_south"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 48), Vector2(0, 48), Vector2(0, 48), Vector2(0, 48)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_southEast_weapon"]
+resource_name = "katanaSlashCrouched_southEast"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, 24), Vector2(48, 24), Vector2(48, 24), Vector2(48, 24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_southWest_weapon"]
+resource_name = "katanaSlashCrouched_southWest"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, 24), Vector2(-48, 24), Vector2(-48, 24), Vector2(-48, 24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashCrouched_west_weapon"]
+resource_name = "katanaSlashCrouched_west"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, 0), Vector2(-48, -3), Vector2(-60, -62), Vector2(-48, 0)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_east_weapon"]
+resource_name = "katanaSlashMid_east"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, 0), Vector2(37, -34), Vector2(11, 9), Vector2(48, 0)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_north_weapon"]
+resource_name = "katanaSlashMid_north"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -48), Vector2(-5, -74), Vector2(-10, -70), Vector2(0, -48)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_northEast_weapon"]
+resource_name = "katanaSlashMid_northEast"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, -24), Vector2(36, -54), Vector2(2, -58), Vector2(48, -24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_northWest_weapon"]
+resource_name = "katanaSlashMid_northWest"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, -24), Vector2(-43, -51), Vector2(-16, -51), Vector2(-48, -24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_south_weapon"]
+resource_name = "katanaSlashMid_south"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 48), Vector2(4, 45), Vector2(4, 45), Vector2(0, 48)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_southEast_weapon"]
+resource_name = "katanaSlashMid_southEast"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(48, 24), Vector2(46, 19), Vector2(45, 20), Vector2(48, 24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_southWest_weapon"]
+resource_name = "katanaSlashMid_southWest"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, 24), Vector2(-40, 23), Vector2(-69, 2), Vector2(-48, 24)]
+}
+
+[sub_resource type="Animation" id="Anim_player_katanaSlashMid_west_weapon"]
+resource_name = "katanaSlashMid_west"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RayCast2D/ActionArea/CollisionShape2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.1875, 0.9375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-48, 0), Vector2(-37, -28), Vector2(-11, 32), Vector2(-48, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimLib_player_weapon"]
+_data = {
+&"katanaSlashCrouched_east": SubResource("Anim_player_katanaSlashCrouched_east_weapon"),
+&"katanaSlashCrouched_north": SubResource("Anim_player_katanaSlashCrouched_north_weapon"),
+&"katanaSlashCrouched_northEast": SubResource("Anim_player_katanaSlashCrouched_northEast_weapon"),
+&"katanaSlashCrouched_northWest": SubResource("Anim_player_katanaSlashCrouched_northWest_weapon"),
+&"katanaSlashCrouched_south": SubResource("Anim_player_katanaSlashCrouched_south_weapon"),
+&"katanaSlashCrouched_southEast": SubResource("Anim_player_katanaSlashCrouched_southEast_weapon"),
+&"katanaSlashCrouched_southWest": SubResource("Anim_player_katanaSlashCrouched_southWest_weapon"),
+&"katanaSlashCrouched_west": SubResource("Anim_player_katanaSlashCrouched_west_weapon"),
+&"katanaSlashMid_east": SubResource("Anim_player_katanaSlashMid_east_weapon"),
+&"katanaSlashMid_north": SubResource("Anim_player_katanaSlashMid_north_weapon"),
+&"katanaSlashMid_northEast": SubResource("Anim_player_katanaSlashMid_northEast_weapon"),
+&"katanaSlashMid_northWest": SubResource("Anim_player_katanaSlashMid_northWest_weapon"),
+&"katanaSlashMid_south": SubResource("Anim_player_katanaSlashMid_south_weapon"),
+&"katanaSlashMid_southEast": SubResource("Anim_player_katanaSlashMid_southEast_weapon"),
+&"katanaSlashMid_southWest": SubResource("Anim_player_katanaSlashMid_southWest_weapon"),
+&"katanaSlashMid_west": SubResource("Anim_player_katanaSlashMid_west_weapon")
+}
 
 [node name="KatanaKitsune" type="CharacterBody2D" unique_id=2020086524 groups=["player"]]
 safe_margin = 1.0
@@ -39743,6 +40019,11 @@ antialiased = true
 points = PackedVector2Array(0, 0, -48, 24)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
+
+[node name="WeaponTween" type="AnimationPlayer" parent="CollisionChecker"]
+libraries = {
+"": SubResource("AnimLib_player_weapon")
+}
 
 [node name="LightingEffects" type="Node2D" parent="." unique_id=844239605]
 

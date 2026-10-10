@@ -25,7 +25,9 @@ func on_physics_process(_delta: float) -> void:
 	enemy.stop()
 	if not _hit and enemy.animated_sprite.frame >= hit_frame:
 		_hit = true
-		enemy.strike(reach, damage_multiplier)
+		## A spin has no front — it is the thing a forward-arc check would
+		## otherwise wrongly take away from.
+		enemy.strike(reach, damage_multiplier, enemy.STRIKE_ARC_OMNI)
 	if enemy.animation_finished():
 		change_state("walk")
 
