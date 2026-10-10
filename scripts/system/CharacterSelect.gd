@@ -24,6 +24,14 @@ const DIRECTION := "southEast"
 @onready var clip_label: Label = $PreviewHolder/ClipName
 @onready var cover: TextureRect = $Cover
 
+## Built at runtime rather than in the scene file, the same reason Icons'
+## buttons are: there is one per HAIR_TONES/SKIN_TONES entry, and that list is
+## PowerState's to own, not something to keep in sync by hand in the .tscn.
+var hair_icons: GridContainer = null
+var skin_icons: GridContainer = null
+var _highlighted_hair: int = 0
+var _highlighted_skin: int = 0
+
 var _highlighted: int = 0
 var _clip: int = 0
 var _elapsed: float = 0.0
@@ -35,7 +43,7 @@ var _base_frames: SpriteFrames = null
 ## device-blind — it answers to every pad at once — so once players are picking
 ## in turn the highlight is driven by hand from the active player's own device
 ## and focus is left out of it entirely.
-enum Phase { COUNT, CLAIM, COLOUR }
+enum Phase { COUNT, CLAIM, COLOUR, HAIR, SKIN }
 
 var _phase: int = Phase.COUNT
 var _wanted: int = 1
@@ -65,6 +73,8 @@ func _ready() -> void:
 	player.queue_free()
 
 	_build_icons()
+	_build_hair_icons()
+	_build_skin_icons()
 	_link_focus()
 	_highlighted = PowerState.chosen
 	_show(_highlighted)
@@ -109,6 +119,71 @@ func _build_icons() -> void:
 		icons.add_child(button)
 
 
+## A swatch button has no art of its own — it's a tone, not a costume — so it
+## shows as a plain coloured square in the highlight shade of its ramp,
+## bordered the same way as every other button on this screen.
+func _make_swatch_button(highlight: Color, tooltip: String) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(56, 56)
+	button.focus_mode = Control.FOCUS_ALL
+	button.tooltip_text = tooltip
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = highlight
+	normal.set_border_width_all(3)
+	normal.border_color = Color(0.72, 0.52, 0.24, 1)
+	normal.set_corner_radius_all(3)
+	var focused := StyleBoxFlat.new()
+	focused.bg_color = highlight
+	focused.set_border_width_all(3)
+	focused.border_color = Color(0.96, 0.78, 0.4, 1)
+	focused.set_corner_radius_all(3)
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", focused)
+	button.add_theme_stylebox_override("pressed", focused)
+	button.add_theme_stylebox_override("focus", focused)
+	return button
+
+
+## Built after Icons so VBoxContainer order puts it right below the clothing
+## grid; hidden until the COLOUR choice is confirmed and HAIR begins.
+func _build_hair_icons() -> void:
+	hair_icons = GridContainer.new()
+	hair_icons.columns = 8
+	hair_icons.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	hair_icons.add_theme_constant_override("h_separation", 12)
+	hair_icons.add_theme_constant_override("v_separation", 12)
+	hair_icons.visible = false
+	var right: VBoxContainer = $Right
+	right.add_child(hair_icons)
+	right.move_child(hair_icons, icons.get_index() + 1)
+	for i in PowerState.hair_count():
+		var tone: Dictionary = PowerState.hair_info(i)
+		var ramp: Array = tone["ramp"]
+		var button := _make_swatch_button(ramp[1], tone["name"])
+		button.pressed.connect(_on_hair_pressed.bind(i))
+		button.focus_entered.connect(_show_hair.bind(i))
+		hair_icons.add_child(button)
+
+
+func _build_skin_icons() -> void:
+	skin_icons = GridContainer.new()
+	skin_icons.columns = 7
+	skin_icons.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	skin_icons.add_theme_constant_override("h_separation", 12)
+	skin_icons.add_theme_constant_override("v_separation", 12)
+	skin_icons.visible = false
+	var right: VBoxContainer = $Right
+	right.add_child(skin_icons)
+	right.move_child(skin_icons, hair_icons.get_index() + 1)
+	for i in PowerState.skin_count():
+		var tone: Dictionary = PowerState.skin_info(i)
+		var ramp: Array = tone["ramp"]
+		var button := _make_swatch_button(ramp[1], tone["name"])
+		button.pressed.connect(_on_skin_pressed.bind(i))
+		button.focus_entered.connect(_show_skin.bind(i))
+		skin_icons.add_child(button)
+
+
 ## Wires the grid by hand. Godot works focus neighbours out geometrically, and
 ## it was not finding the icons from the buttons at all — navigation just cycled
 ## BACK and BEGIN. Stating them removes the guesswork.
@@ -148,6 +223,16 @@ func _on_icon_pressed(index: int) -> void:
 		begin.grab_focus()
 
 
+func _on_hair_pressed(index: int) -> void:
+	_show_hair(index)
+	_take_hair()
+
+
+func _on_skin_pressed(index: int) -> void:
+	_show_skin(index)
+	_take_skin()
+
+
 ## Back to the icons. Cancel is the pad's right-hand face button — B on an Xbox
 ## pad, Circle on a DualShock, A on a Switch controller.
 func _unhandled_input(event: InputEvent) -> void:
@@ -170,7 +255,7 @@ func _show(index: int) -> void:
 	cover.texture = load(PowerState.cover_path(index))
 
 	preview.sprite_frames = _base_frames
-	PowerState.apply_to(preview, index)
+	PowerState.apply_to(preview, index, _highlighted_hair, _highlighted_skin)
 	_clip = 0
 	_elapsed = 0.0
 	_play_current()
@@ -185,6 +270,37 @@ func _show(index: int) -> void:
 			button.modulate = Color.WHITE
 		else:
 			button.modulate = Color(0.45, 0.42, 0.45)
+		if button.has_focus():
+			button.modulate = Color(1.35, 1.3, 1.1)
+
+
+## Same trick as _show, but for the hair row: the clothing scheme, skin tone
+## and preview keep whatever they already were, only hair changes.
+func _show_hair(index: int) -> void:
+	_highlighted_hair = index
+	scheme_name.text = PowerState.hair_info(index)["name"]
+	element.text = "◆  HAIR  ◆"
+	preview.sprite_frames = _base_frames
+	PowerState.apply_to(preview, _highlighted, index, _highlighted_skin)
+	_dim_swatches(hair_icons, index)
+
+
+func _show_skin(index: int) -> void:
+	_highlighted_skin = index
+	scheme_name.text = PowerState.skin_info(index)["name"]
+	element.text = "◆  SKIN TONE  ◆"
+	preview.sprite_frames = _base_frames
+	PowerState.apply_to(preview, _highlighted, _highlighted_hair, index)
+	_dim_swatches(skin_icons, index)
+
+
+func _dim_swatches(grid: GridContainer, index: int) -> void:
+	for i in grid.get_child_count():
+		var button: Button = grid.get_child(i)
+		if i == index:
+			button.modulate = Color.WHITE
+		else:
+			button.modulate = Color(0.55, 0.52, 0.55)
 		if button.has_focus():
 			button.modulate = Color(1.35, 1.3, 1.1)
 
@@ -210,7 +326,13 @@ func _process(delta: float) -> void:
 
 func _on_confirm_pressed() -> void:
 	## The on-screen button belongs to whoever is choosing now.
-	_take_colour()
+	match _phase:
+		Phase.HAIR:
+			_take_hair()
+		Phase.SKIN:
+			_take_skin()
+		_:
+			_take_colour()
 
 
 func _on_back_pressed() -> void:
@@ -229,6 +351,10 @@ func _drive(delta: float) -> void:
 			_drive_claim()
 		Phase.COLOUR:
 			_drive_colour()
+		Phase.HAIR:
+			_drive_hair()
+		Phase.SKIN:
+			_drive_skin()
 
 
 ## Before anyone has claimed anything, so any device may set the number.
@@ -303,6 +429,60 @@ func _drive_colour() -> void:
 	_show(_highlighted)
 
 
+## Same stepping as _drive_colour, but over the hair row — no uniqueness
+## constraint, since two players can share a hairstyle.
+func _drive_hair() -> void:
+	if _driver == null:
+		return
+	if _driver.cancel_pressed():
+		_go_back()
+		return
+	if _driver.confirm_pressed():
+		_take_hair()
+		return
+	if _repeat > 0.0:
+		return
+	var across: int = hair_icons.columns if hair_icons.columns > 0 else 8
+	var step: int = _nav_step(across)
+	if step == 0:
+		return
+	_repeat = REPEAT_DELAY
+	_show_hair(wrapi(_highlighted_hair + step, 0, PowerState.hair_count()))
+
+
+func _drive_skin() -> void:
+	if _driver == null:
+		return
+	if _driver.cancel_pressed():
+		_go_back()
+		return
+	if _driver.confirm_pressed():
+		_take_skin()
+		return
+	if _repeat > 0.0:
+		return
+	var across: int = skin_icons.columns if skin_icons.columns > 0 else 7
+	var step: int = _nav_step(across)
+	if step == 0:
+		return
+	_repeat = REPEAT_DELAY
+	_show_skin(wrapi(_highlighted_skin + step, 0, PowerState.skin_count()))
+
+
+## Shared four-way reading of the driving device, factored out once a third
+## screen needed the exact same Right/Left/Down/Up -> step mapping as COLOUR.
+func _nav_step(across: int) -> int:
+	if _driver.pressed("Right"):
+		return 1
+	elif _driver.pressed("Left"):
+		return -1
+	elif _driver.pressed("Down"):
+		return across
+	elif _driver.pressed("Up"):
+		return -across
+	return 0
+
+
 ## Keyboard plus every connected pad, for the phases open to all comers.
 func _all_devices() -> Array[PlayerInput]:
 	if _menu_probes.is_empty():
@@ -348,6 +528,9 @@ func _enter_colour() -> void:
 	## it count as already-down, so the colour screen waits for a fresh press
 	## instead of confirming the first scheme and skipping the choice entirely.
 	_driver.prime()
+	icons.visible = true
+	hair_icons.visible = false
+	skin_icons.visible = false
 	## Opens on a scheme nobody has taken, so the first thing shown is a legal
 	## choice rather than one that silently refuses to confirm.
 	_highlighted = _first_free_scheme()
@@ -367,6 +550,39 @@ func _take_colour() -> void:
 	if _phase != Phase.COLOUR or Roster.scheme_taken(_highlighted, _active):
 		return
 	Roster.set_scheme(_active, _highlighted)
+	_enter_hair()
+
+
+func _enter_hair() -> void:
+	_phase = Phase.HAIR
+	icons.visible = false
+	hair_icons.visible = true
+	skin_icons.visible = false
+	_highlighted_hair = Roster.hair_of(_active)
+	_show_hair(_highlighted_hair)
+	_banner("PLAYER %d — CHOOSE A HAIR COLOUR" % (_active + 1))
+
+
+func _take_hair() -> void:
+	if _phase != Phase.HAIR:
+		return
+	Roster.set_hair(_active, _highlighted_hair)
+	_enter_skin()
+
+
+func _enter_skin() -> void:
+	_phase = Phase.SKIN
+	hair_icons.visible = false
+	skin_icons.visible = true
+	_highlighted_skin = Roster.skin_of(_active)
+	_show_skin(_highlighted_skin)
+	_banner("PLAYER %d — CHOOSE A SKIN TONE" % (_active + 1))
+
+
+func _take_skin() -> void:
+	if _phase != Phase.SKIN:
+		return
+	Roster.set_skin(_active, _highlighted_skin)
 	_active += 1
 	if _active >= _wanted:
 		_start_game()
@@ -395,6 +611,11 @@ func _go_back() -> void:
 			## wrong pad can hand it back.
 			Roster.drop_last()
 			_enter_claim()
+		Phase.HAIR:
+			## One step back into the scheme grid, same player, same device.
+			_enter_colour()
+		Phase.SKIN:
+			_enter_hair()
 
 
 func _start_game() -> void:
@@ -402,6 +623,8 @@ func _start_game() -> void:
 	## else still reading PowerState.chosen keeps working.
 	if Roster.count() > 0:
 		PowerState.select(Roster.scheme_of(0))
+		PowerState.select_hair(Roster.hair_of(0))
+		PowerState.select_skin(Roster.skin_of(0))
 	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
 
 
@@ -412,10 +635,16 @@ func _count_bar() -> String:
 	return bar
 
 
+## True while the live preview labels (scheme/hair/skin name) own
+## SchemeName/Element, so a status banner must not stomp on them.
+func _showing_preview_labels() -> bool:
+	return _phase == Phase.COLOUR or _phase == Phase.HAIR or _phase == Phase.SKIN
+
+
 func _banner(text: String) -> void:
 	var label := get_node_or_null("Right/SchemeName") as Label
-	if label != null and _phase != Phase.COLOUR:
+	if label != null and not _showing_preview_labels():
 		label.text = text
 	var hint := get_node_or_null("Right/Element") as Label
 	if hint != null:
-		hint.text = text if _phase != Phase.COLOUR else hint.text
+		hint.text = text if not _showing_preview_labels() else hint.text
