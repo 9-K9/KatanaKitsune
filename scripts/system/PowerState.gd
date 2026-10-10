@@ -1,11 +1,15 @@
 extends Node
 
-## The twelve elemental colour schemes, and the one currently chosen.
+## The twelve elemental colour schemes, and the one currently chosen -
+## plus hair and skin tone, the other two bands shaders/powerState.gdshader
+## can now recolour independently of clothing.
 ##
 ## Autoloaded, so the title screen, the character select and the player all read
 ## the same answer without passing it between scenes.
 
 signal changed(index: int)
+signal hair_changed(index: int)
+signal skin_changed(index: int)
 
 const STATES: Array[Dictionary] = [
 	{"id": "01_Wood_JadeDragon",         "element": "WOOD",      "name": "JADE DRAGON"},
@@ -49,9 +53,41 @@ const RAMPS := {
 	"12_Spirit_CelestialQi":      [Color8(70, 17, 63),  Color8(245, 99, 207)],
 }
 
+## Hair shadow -> highlight ramps. Index 0 is "natural" and matches the
+## shader's own defaults exactly, so selecting it is indistinguishable from
+## recolor_hair being off.
+const HAIR_TONES: Array[Dictionary] = [
+	{"name": "RAVEN BLACK",  "ramp": [Color8(0, 0, 0),       Color8(168, 168, 168)]},
+	{"name": "CHESTNUT",     "ramp": [Color8(36, 16, 10),    Color8(168, 112, 78)]},
+	{"name": "ASH BROWN",    "ramp": [Color8(28, 24, 22),    Color8(150, 134, 120)]},
+	{"name": "CRIMSON",      "ramp": [Color8(40, 4, 6),      Color8(198, 48, 58)]},
+	{"name": "SILVER",       "ramp": [Color8(60, 64, 70),    Color8(230, 235, 240)]},
+	{"name": "SNOW WHITE",   "ramp": [Color8(90, 90, 96),    Color8(250, 250, 252)]},
+	{"name": "OCEAN BLUE",   "ramp": [Color8(6, 10, 40),     Color8(70, 130, 220)]},
+	{"name": "EMERALD",      "ramp": [Color8(4, 32, 16),     Color8(68, 196, 110)]},
+]
+
+## Skin shadow -> highlight ramps. Index 0 matches the painted ramp exactly
+## (same values as the shader's own defaults), so it is the "no change" option.
+const SKIN_TONES: Array[Dictionary] = [
+	{"name": "NATURAL",   "ramp": [Color8(108, 64, 48),  Color8(238, 170, 142)]},
+	{"name": "PORCELAIN", "ramp": [Color8(150, 104, 90), Color8(252, 224, 206)]},
+	{"name": "IVORY",     "ramp": [Color8(132, 86, 68),  Color8(246, 202, 176)]},
+	{"name": "TAWNY",     "ramp": [Color8(96, 56, 38),   Color8(214, 150, 110)]},
+	{"name": "BRONZE",    "ramp": [Color8(70, 38, 24),   Color8(176, 110, 72)]},
+	{"name": "UMBER",     "ramp": [Color8(46, 24, 16),   Color8(132, 78, 54)]},
+	{"name": "DEEP EBONY","ramp": [Color8(30, 16, 12),   Color8(96, 56, 42)]},
+]
+
 ## Vermilion Phoenix, the red one. Index 1, not 0 — the order here follows the
 ## elemental cycle the art was generated in, which starts on Wood.
 var chosen: int = 1
+
+## Natural black hair / natural skin, both index 0 — matches the shader's
+## own hair/skin defaults, so a player who never opens that picker sees no
+## change from before these two bands existed.
+var chosen_hair: int = 0
+var chosen_skin: int = 0
 
 ## Each player instance gets its own ShaderMaterial, so two characters on
 ## screen can wear different schemes.
@@ -60,6 +96,38 @@ var _materials: Dictionary = {}
 
 func count() -> int:
 	return STATES.size()
+
+
+func hair_count() -> int:
+	return HAIR_TONES.size()
+
+
+func skin_count() -> int:
+	return SKIN_TONES.size()
+
+
+func hair_info(index: int = -1) -> Dictionary:
+	return HAIR_TONES[_clamp_hair(index)]
+
+
+func skin_info(index: int = -1) -> Dictionary:
+	return SKIN_TONES[_clamp_skin(index)]
+
+
+func select_hair(index: int) -> void:
+	var i := _clamp_hair(index)
+	if i == chosen_hair:
+		return
+	chosen_hair = i
+	hair_changed.emit(i)
+
+
+func select_skin(index: int) -> void:
+	var i := _clamp_skin(index)
+	if i == chosen_skin:
+		return
+	chosen_skin = i
+	skin_changed.emit(i)
 
 
 func info(index: int = -1) -> Dictionary:
@@ -97,7 +165,14 @@ func cover_path(index: int = -1) -> String:
 ## detected face box, which a shader cannot reproduce. About 0.13% of character
 ## pixels — dark red shade near the face — now recolour where they previously
 ## did not.
-func apply_to(sprite: AnimatedSprite2D, index: int = -1) -> void:
+##
+## hair/skin are independent of the clothing scheme and of each other: pass -1
+## for either (the default) to use whatever is currently chosen, or pass a
+## specific index — e.g. for a monster instance that should keep its own fixed
+## variety choice rather than following the player's picker. recolor_hair /
+## recolor_skin are left enabled whenever this is called, since index 0 in
+## each ramp list already matches the shader's natural/no-change defaults.
+func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: int = -1) -> void:
 	var i := _clamp(index)
 	var mat: ShaderMaterial = _material_for(sprite)
 	if mat == null:
@@ -111,6 +186,18 @@ func apply_to(sprite: AnimatedSprite2D, index: int = -1) -> void:
 	mat.set_shader_parameter("shadow_color", Vector3(ramp[0].r, ramp[0].g, ramp[0].b))
 	mat.set_shader_parameter("highlight_color", Vector3(ramp[1].r, ramp[1].g, ramp[1].b))
 	mat.set_shader_parameter("enabled", true)
+
+	var hi := _clamp_hair(hair)
+	var hair_ramp: Array = HAIR_TONES[hi]["ramp"]
+	mat.set_shader_parameter("hair_shadow_color", Vector3(hair_ramp[0].r, hair_ramp[0].g, hair_ramp[0].b))
+	mat.set_shader_parameter("hair_highlight_color", Vector3(hair_ramp[1].r, hair_ramp[1].g, hair_ramp[1].b))
+	mat.set_shader_parameter("recolor_hair", true)
+
+	var si := _clamp_skin(skin)
+	var skin_ramp: Array = SKIN_TONES[si]["ramp"]
+	mat.set_shader_parameter("skin_shadow_color", Vector3(skin_ramp[0].r, skin_ramp[0].g, skin_ramp[0].b))
+	mat.set_shader_parameter("skin_highlight_color", Vector3(skin_ramp[1].r, skin_ramp[1].g, skin_ramp[1].b))
+	mat.set_shader_parameter("recolor_skin", true)
 
 
 ## The scene's material is shared between instances, so each sprite gets its
@@ -130,3 +217,11 @@ func _material_for(sprite: AnimatedSprite2D) -> ShaderMaterial:
 
 func _clamp(index: int) -> int:
 	return clampi(index if index >= 0 else chosen, 0, STATES.size() - 1)
+
+
+func _clamp_hair(index: int) -> int:
+	return clampi(index if index >= 0 else chosen_hair, 0, HAIR_TONES.size() - 1)
+
+
+func _clamp_skin(index: int) -> int:
+	return clampi(index if index >= 0 else chosen_skin, 0, SKIN_TONES.size() - 1)

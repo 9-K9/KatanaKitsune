@@ -71,10 +71,17 @@ func _ready() -> void:
 		Roster.device_regained.connect(_rebind)
 	## Repaint into this player's chosen aspect. Only the sheets behind each
 	## frame change, so every animation, region and timing is untouched. The
-	## index is per-player now: four players wear four different colours.
+	## index is per-player now: four players wear four different colours, and
+	## their own hair/skin tone besides.
 	var sprite := get_node_or_null("AnimationManager/AnimatedSprite2D")
 	if sprite != null:
-		PowerState.apply_to(sprite, Roster.scheme_of(slot) if Roster.count() > slot else -1)
+		var has_slot := Roster.count() > slot
+		PowerState.apply_to(
+			sprite,
+			Roster.scheme_of(slot) if has_slot else -1,
+			Roster.hair_of(slot) if has_slot else -1,
+			Roster.skin_of(slot) if has_slot else -1
+		)
 	var hitbox = $CollisionChecker/PlayerHitBox
 	hitbox.body_entered.connect(_on_player_hit_box_body_entered)
 

@@ -27,7 +27,8 @@ const SLOT_COLOURS: Array[Color] = [
 	Color(1.00, 0.85, 0.35),	## gold
 ]
 
-## One entry per joined player: {"device": int, "scheme": int, "lost": bool}
+## One entry per joined player:
+## {"device": int, "scheme": int, "hair": int, "skin": int, "lost": bool}
 var players: Array[Dictionary] = []
 
 
@@ -47,11 +48,14 @@ func count() -> int:
 
 
 ## Adds a player on a device. Returns the slot, or -1 if the roster is full or
-## that device is already playing.
-func join(device: int, scheme: int = -1) -> int:
+## that device is already playing. hair/skin default to -1, meaning "follow
+## whatever PowerState's own picker is set to" — unlike scheme, hair and skin
+## are not locked unique per player, so leaving them unset is a sensible
+## default rather than something every caller must think about.
+func join(device: int, scheme: int = -1, hair: int = -1, skin: int = -1) -> int:
 	if players.size() >= MAX_PLAYERS or has_device(device):
 		return -1
-	players.append({"device": device, "scheme": scheme, "lost": false})
+	players.append({"device": device, "scheme": scheme, "hair": hair, "skin": skin, "lost": false})
 	roster_changed.emit()
 	return players.size() - 1
 
@@ -93,6 +97,34 @@ func scheme_of(slot: int) -> int:
 		return PowerState.chosen
 	var value: int = players[slot]["scheme"]
 	return value if value >= 0 else PowerState.chosen
+
+
+func set_hair(slot: int, hair: int) -> void:
+	if slot < 0 or slot >= players.size():
+		return
+	players[slot]["hair"] = hair
+	roster_changed.emit()
+
+
+func hair_of(slot: int) -> int:
+	if slot < 0 or slot >= players.size():
+		return PowerState.chosen_hair
+	var value: int = players[slot].get("hair", -1)
+	return value if value >= 0 else PowerState.chosen_hair
+
+
+func set_skin(slot: int, skin: int) -> void:
+	if slot < 0 or slot >= players.size():
+		return
+	players[slot]["skin"] = skin
+	roster_changed.emit()
+
+
+func skin_of(slot: int) -> int:
+	if slot < 0 or slot >= players.size():
+		return PowerState.chosen_skin
+	var value: int = players[slot].get("skin", -1)
+	return value if value >= 0 else PowerState.chosen_skin
 
 
 func device_of(slot: int) -> int:
