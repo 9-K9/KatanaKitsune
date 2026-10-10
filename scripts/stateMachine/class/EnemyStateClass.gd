@@ -574,18 +574,24 @@ func play_once(state_name: String) -> void:
 ## Starts the collision tween that shares this clip's exact name, so it plays
 ## in lockstep with the sprite that just started. A monster with no
 ## CollisionTween node, or a clip with no matching animation on it (most of
-## them — only dodges/leaps need this), simply does nothing here. If a
-## previous clip's tween is still running when a clip with no tween of its
-## own starts, stop() (default keep_state=false) snaps the shapes back to
-## their pre-tween rest position instead of leaving them stranded mid-hop.
+## them — only one-shot leaps/lunges need this), simply does nothing here.
+## Otherwise the shapes are re-measured from the new clip's own frame right
+## away: a tween clip's displacement is only ever meant to last as long as
+## that one clip is playing, and by the time a later clip starts the earlier
+## tween has usually already finished on its own (same duration as the sprite
+## clip it rode along with), so waiting on is_playing() would almost never
+## fire and the shapes would be left stranded at the last clip's displaced
+## end position instead of snapping back to wherever this new clip belongs.
 func _sync_collision_tween(clip: String) -> void:
 	if collision_tween == null:
 		return
 	if collision_tween.has_animation(clip):
 		_rebase_collision_tween(clip)
 		collision_tween.play(clip)
-	elif collision_tween.is_playing():
-		collision_tween.stop()
+		return
+	collision_tween.stop()
+	_position_collision_shape()
+	_position_hit_box()
 
 
 ## clip name -> {"body": Vector2, "hitbox": Vector2}: how far each shape is
