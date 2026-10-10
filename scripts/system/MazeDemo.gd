@@ -231,6 +231,11 @@ var _player: Node2D = null
 ## enemy_scene_paths for why.
 var _wave_monster: PackedScene = null
 var _wave_monster_path: String = ""
+## Shuffle bag for monster-type rotation: a shuffled copy of enemy_scene_paths
+## that gets drawn from one at a time, so every type is seen once before any
+## of them repeats, instead of a plain random roll that can land on the same
+## monster floor after floor by chance.
+var _wave_bag: Array[String] = []
 ## A build runs across several frames now, so it can be in progress when
 ## something else would start another. Guards the rebuild on the stairs against
 ## a wave that reports itself cleared mid-build.
@@ -560,6 +565,27 @@ func _build() -> void:
 	_building = false
 
 
+## Draws one monster type from the shuffle bag, refilling and reshuffling once
+## it runs dry. Keeps the previous floor's pick out of the reshuffle's first
+## slot where possible, so a refill cannot hand back the same type twice in a
+## row right as the bag turns over. Shuffled with _rng rather than the global
+## RNG, so a seeded run reshuffles the same way every time.
+func _next_wave_path() -> String:
+	if _wave_bag.is_empty():
+		_wave_bag = enemy_scene_paths.duplicate()
+		for i in range(_wave_bag.size() - 1, 0, -1):
+			var j: int = _rng.randi_range(0, i)
+			var tmp: String = _wave_bag[i]
+			_wave_bag[i] = _wave_bag[j]
+			_wave_bag[j] = tmp
+		if _wave_bag.size() > 1 and _wave_bag[0] == _wave_monster_path:
+			var swap_with: int = 1 + _rng.randi() % (_wave_bag.size() - 1)
+			var first: String = _wave_bag[0]
+			_wave_bag[0] = _wave_bag[swap_with]
+			_wave_bag[swap_with] = first
+	return _wave_bag.pop_back()
+
+
 ## Brings in this floor's monster type and drops the last one.
 ##
 ## Threaded, so the loading screen keeps drawing while 80 sprite sheets come off
@@ -569,7 +595,7 @@ func _load_wave_monster() -> void:
 	if enemy_scene_paths.is_empty():
 		_wave_monster = null
 		return
-	var wanted: String = enemy_scene_paths[_rng.randi() % enemy_scene_paths.size()]
+	var wanted: String = _next_wave_path()
 	## A floor that rolled the same type as the last keeps what it already has,
 	## so a run that comes up jorogumo twice does not pay to load it twice.
 	if wanted == _wave_monster_path and _wave_monster != null:
