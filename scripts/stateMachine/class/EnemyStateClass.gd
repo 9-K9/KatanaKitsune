@@ -164,54 +164,79 @@ func _scale_ranges_to_sprite() -> void:
 ## floating somewhere above the room.
 const HEALTH_BAR_GAP: float = 14.0
 
-## Every monster frame is painted on the same canvas, with the same dead
-## space left under the feet so a tall gashadokuro swing and a low kamaitachi
-## dash both read off the same drawing board — measured directly off the PNGs
-## (mummy, gashadokuro, hannya, kamaitachi, yurei all agree): a 224-tall frame
-## always has its lowest opaque pixel at y=192, i.e. 32px of transparent
-## margin under the feet, regardless of species or per-monster scale.
-const SPRITE_BOTTOM_MARGIN: float = 32.0
+## Fraction of the sprite's own measured content height the hit-box capsule's
+## radius gets. Calibrated against mummy's idle crop (a 158px-tall, 78px-wide
+## silhouette): a tight torso reads at roughly three tenths of its own
+## content height, wide pose or narrow, template or boss.
+const HIT_BOX_RADIUS_RATIO: float = 0.30
+
+
+## Measures where the sprite's own opaque pixels actually sit, in the same
+## parent-local space AnimatedSprite2D itself draws in.
+##
+## The monster roster was built under two incompatible conventions: templates
+## from build_enemy_scene.py push the whole sprite up via a negative
+## AnimatedSprite2D.position (offset left at zero), while several hand-placed
+## scenes (kappa, jorogumo, karasuShinobi, tengu, oni, yukiOnna) instead leave
+## position at zero and use a positive AnimatedSprite2D.offset. A fixed
+## "bottom margin" constant measured off the first group reads as correct
+## there and wrong everywhere else, because offset was never being read at
+## all — the same silent gap that kept landing the collision circle, hit box,
+## and health bar in the wrong place for exactly those six species.
+##
+## Reading the frame's actual opaque pixels via Image.get_used_rect() sidesteps
+## guessing either a margin or a shared "content height" entirely: whichever
+## convention a given scene uses, this always finds the real silhouette.
+## Image.get_image() reads texture bytes directly rather than rendering, so it
+## works in headless/editor contexts the same as in a full game window.
+func _measure_sprite_content() -> Dictionary:
+	if not is_instance_valid(animated_sprite):
+		return {}
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if frames == null:
+		return {}
+	var clip: String = animated_sprite.animation
+	if not frames.has_animation(clip):
+		var names: PackedStringArray = frames.get_animation_names()
+		if names.is_empty():
+			return {}
+		clip = names[0]
+	if frames.get_frame_count(clip) == 0:
+		return {}
+	var texture: Texture2D = frames.get_frame_texture(clip, 0)
+	if texture == null:
+		return {}
+	var image: Image = texture.get_image()
+	if image == null:
+		return {}
+	var used: Rect2i = image.get_used_rect()
+	if used.size == Vector2i.ZERO:
+		return {}
+	var scale_y: float = animated_sprite.scale.y
+	## AnimatedSprite2D centres the frame on `offset` before drawing (see its
+	## _get_rect(): ofs = offset - size/2), so the frame's local top is offset
+	## minus half the texture height, and the used rect locates the real
+	## silhouette inside that frame from there.
+	var local_top: float = animated_sprite.offset.y - texture.get_height() * 0.5 \
+			+ used.position.y
+	var local_bottom: float = local_top + used.size.y
+	return {
+		"top": animated_sprite.position.y + local_top * scale_y,
+		"bottom": animated_sprite.position.y + local_bottom * scale_y,
+	}
 
 
 ## Puts the walking CollisionShape2D at the sprite's own feet instead of
 ## trusting the scene's static position, which the node was left at (0, 0) —
 ## the origin, not the floor — back when it was still the shared octagon.
-##
-## The scene's own exported position only lands on the feet when a monster was
-## actually built (or rebuilt) against build_enemy_scene.py's convention;
-## several were not, the same gap that left health bars floating a head too
-## high until _position_health_bar started reading the live sprite instead.
-##
-## The first pass at this used the sprite's raw texture height, which counts
-## the 32px of transparent padding every frame leaves under the feet as if it
-## were solid — the circle landed a third of the way into empty air below the
-## monster, reading as "too low". Subtracting that same padding here (measured
-## off the actual PNGs, not guessed) lands the circle on the lowest opaque
-## pixel instead — the feet themselves.
 func _position_collision_shape() -> void:
-	if not is_instance_valid(animated_sprite):
-		return
 	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D")
 	if shape_node == null or not (shape_node.shape is CircleShape2D):
 		return
-	var frames: SpriteFrames = animated_sprite.sprite_frames
-	if frames == null:
+	var content: Dictionary = _measure_sprite_content()
+	if content.is_empty():
 		return
-	var clip: String = animated_sprite.animation
-	if not frames.has_animation(clip):
-		var names: PackedStringArray = frames.get_animation_names()
-		if names.is_empty():
-			return
-		clip = names[0]
-	if frames.get_frame_count(clip) == 0:
-		return
-	var texture: Texture2D = frames.get_frame_texture(clip, 0)
-	if texture == null:
-		return
-	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
-	var margin: float = SPRITE_BOTTOM_MARGIN * animated_sprite.scale.y
-	var feet_y: float = animated_sprite.position.y + half_height - margin
-	shape_node.position = Vector2(0, feet_y)
+	shape_node.position = Vector2(0, content["bottom"])
 
 
 ## Puts the health bar just above whatever is actually on screen, instead of
@@ -220,45 +245,19 @@ func _position_collision_shape() -> void:
 ## build_enemy_scene.py measures each character's own art and writes a bar
 ## position to match, but that only happened for the monsters it has actually
 ## rebuilt since — the rest kept whatever the template shipped with, which is
-## a flat 194px regardless of how tall that monster draws. The result is a
-## boss towering under its own bar and a template-sized monster with its bar a
-## head-height too high. Reading the sprite at runtime fixes every monster at
-## once, is immune to a scene nobody has re-run the tool on, and costs nothing
-## since it only runs once on spawn.
+## a flat 194px regardless of how tall that monster draws. Reading the sprite
+## at runtime fixes every monster at once, is immune to a scene nobody has
+## re-run the tool on, and costs nothing since it only runs once on spawn.
 func _position_health_bar() -> void:
-	if not is_instance_valid(health_bar) or not is_instance_valid(animated_sprite):
+	if not is_instance_valid(health_bar):
 		return
-	var frames: SpriteFrames = animated_sprite.sprite_frames
-	if frames == null:
+	var content: Dictionary = _measure_sprite_content()
+	if content.is_empty():
 		return
-	var clip: String = animated_sprite.animation
-	if not frames.has_animation(clip):
-		var names: PackedStringArray = frames.get_animation_names()
-		if names.is_empty():
-			return
-		clip = names[0]
-	if frames.get_frame_count(clip) == 0:
-		return
-	var texture: Texture2D = frames.get_frame_texture(clip, 0)
-	if texture == null:
-		return
-	## Sprites are cropped to their own content plus a small margin (see
-	## tools/sprite-migration-2026-10-09/recrop.py; the older, unmigrated sheets
-	## were hand-sized the same way), so the frame's own height is a close
-	## stand-in for how tall the character reads, whatever scale it was given.
-	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
-	var sprite_top: float = animated_sprite.position.y - half_height
 	## Keep the bar's own height, just relocate the pair of offsets together.
 	var bar_height: float = health_bar.offset_bottom - health_bar.offset_top
-	health_bar.offset_top = sprite_top - HEALTH_BAR_GAP
+	health_bar.offset_top = content["top"] - HEALTH_BAR_GAP
 	health_bar.offset_bottom = health_bar.offset_top + bar_height
-
-
-## Fraction of the sprite's own height the hit-box capsule's radius gets.
-## Calibrated against a measured frame (mummy's idle crop is a 158px-tall,
-## 78px-wide silhouette inside a 224px frame): a tight torso reads at roughly
-## three tenths of its own height, wide pose or narrow, template or boss.
-const HIT_BOX_RADIUS_RATIO: float = 0.30
 
 
 ## Sizes and places the hit box the same way _position_health_bar reads the
@@ -273,30 +272,21 @@ const HIT_BOX_RADIUS_RATIO: float = 0.30
 ## uniform circle is a terrible stand-in for "where a blade actually lands",
 ## which is what this hit box is for instead.
 func _position_hit_box() -> void:
-	if not is_instance_valid(hit_box) or not is_instance_valid(animated_sprite):
+	if not is_instance_valid(hit_box):
 		return
 	var shape_node: CollisionShape2D = hit_box.get_node_or_null("CollisionShape2D")
 	if shape_node == null or not (shape_node.shape is CapsuleShape2D):
 		return
-	var frames: SpriteFrames = animated_sprite.sprite_frames
-	if frames == null:
+	var content: Dictionary = _measure_sprite_content()
+	if content.is_empty():
 		return
-	var clip: String = animated_sprite.animation
-	if not frames.has_animation(clip):
-		var names: PackedStringArray = frames.get_animation_names()
-		if names.is_empty():
-			return
-		clip = names[0]
-	if frames.get_frame_count(clip) == 0:
-		return
-	var texture: Texture2D = frames.get_frame_texture(clip, 0)
-	if texture == null:
-		return
-	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
+	var top: float = content["top"]
+	var bottom: float = content["bottom"]
+	var content_height: float = bottom - top
 	var capsule: CapsuleShape2D = shape_node.shape as CapsuleShape2D
-	capsule.radius = half_height * HIT_BOX_RADIUS_RATIO
-	capsule.height = half_height * 2.0
-	shape_node.position = Vector2(0, animated_sprite.position.y)
+	capsule.radius = content_height * HIT_BOX_RADIUS_RATIO
+	capsule.height = content_height
+	shape_node.position = Vector2(0, (top + bottom) * 0.5)
 
 
 ## The player's body. Resolved lazily because the monster is spawned from code
