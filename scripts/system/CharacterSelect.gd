@@ -225,12 +225,16 @@ func _on_icon_pressed(index: int) -> void:
 
 func _on_hair_pressed(index: int) -> void:
 	_show_hair(index)
-	_take_hair()
+	var begin := get_node_or_null("Right/Buttons/Confirm") as Control
+	if begin != null:
+		begin.grab_focus()
 
 
 func _on_skin_pressed(index: int) -> void:
 	_show_skin(index)
-	_take_skin()
+	var begin := get_node_or_null("Right/Buttons/Confirm") as Control
+	if begin != null:
+		begin.grab_focus()
 
 
 ## Back to the icons. Cancel is the pad's right-hand face button — B on an Xbox
