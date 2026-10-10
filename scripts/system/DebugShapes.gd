@@ -25,6 +25,10 @@ const COLOUR_PLAYER := Color(0.30, 1.00, 0.45, 0.85)
 const COLOUR_ZONE := Color(0.35, 0.80, 1.00, 0.75)
 const COLOUR_SOLID := Color(1.00, 0.60, 0.20, 0.70)
 const COLOUR_ENEMY := Color(1.00, 0.35, 0.35, 0.75)
+## Her own hurtbox: what an enemy's attack actually has to land inside.
+const COLOUR_HURTBOX := Color(0.55, 0.85, 1.00, 0.70)
+## The blade's own hit area: what has to reach an enemy for a swing to land.
+const COLOUR_WEAPON := Color(1.00, 0.20, 0.85, 0.70)
 ## Wall tiles, which collide as their drawn silhouette rather than a footprint.
 const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
 ## The chair she would sit on if she stood still long enough.
@@ -101,6 +105,17 @@ func _draw() -> void:
 	if player != null:
 		_draw_body(player, COLOUR_PLAYER)
 		_cross(player.global_position, COLOUR_PLAYER, "her origin")
+		## Her own hurtbox and her blade's hitbox. Both sit a couple of levels
+		## under CollisionChecker rather than directly on the body, so _draw_body
+		## never reaches them — they were invisible under F3 even though the
+		## body collision right next to them drew fine.
+		var hurt_box := player.get_node_or_null("CollisionChecker/PlayerHitBox") as Area2D
+		if hurt_box != null:
+			_draw_area(hurt_box, COLOUR_HURTBOX)
+		var action_area := player.get_node_or_null(
+				"CollisionChecker/RayCast2D/ActionArea") as Area2D
+		if action_area != null:
+			_draw_area(action_area, COLOUR_WEAPON)
 	for node in get_tree().get_nodes_in_group("enemy"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_ENEMY)
@@ -175,6 +190,11 @@ func _draw_area(area: Area2D, colour: Color) -> void:
 		if child is CollisionShape2D:
 			_draw_shape((child as CollisionShape2D).shape,
 					(child as CollisionShape2D).global_transform, colour)
+		elif child is CollisionPolygon2D:
+			## PlayerHitBox is built from one of these, not a CollisionShape2D —
+			## without this branch her own hurtbox silently never drew.
+			_outline((child as CollisionPolygon2D).polygon,
+					(child as CollisionPolygon2D).global_transform, colour)
 
 
 func _draw_shape(shape: Shape2D, at: Transform2D, colour: Color) -> void:

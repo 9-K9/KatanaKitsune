@@ -119,6 +119,7 @@ func _ready() -> void:
 	health = max_health
 	_refresh_health_bar()
 	_scale_ranges_to_sprite()
+	_position_health_bar()
 
 
 ## Stretches the ground ranges to match how big the monster actually reads on
@@ -150,6 +151,52 @@ func _scale_ranges_to_sprite() -> void:
 	attack_range *= sprite_scale
 	detection_range *= sprite_scale
 	aware_radius *= sprite_scale
+
+
+## Clear air between the top of the sprite and the bar, in screen pixels.
+## Small on purpose: the bar should read as sitting on the monster's head, not
+## floating somewhere above the room.
+const HEALTH_BAR_GAP: float = 14.0
+
+
+## Puts the health bar just above whatever is actually on screen, instead of
+## trusting the offset baked into the scene.
+##
+## build_enemy_scene.py measures each character's own art and writes a bar
+## position to match, but that only happened for the monsters it has actually
+## rebuilt since — the rest kept whatever the template shipped with, which is
+## a flat 194px regardless of how tall that monster draws. The result is a
+## boss towering under its own bar and a template-sized monster with its bar a
+## head-height too high. Reading the sprite at runtime fixes every monster at
+## once, is immune to a scene nobody has re-run the tool on, and costs nothing
+## since it only runs once on spawn.
+func _position_health_bar() -> void:
+	if not is_instance_valid(health_bar) or not is_instance_valid(animated_sprite):
+		return
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if frames == null:
+		return
+	var clip: String = animated_sprite.animation
+	if not frames.has_animation(clip):
+		var names: PackedStringArray = frames.get_animation_names()
+		if names.is_empty():
+			return
+		clip = names[0]
+	if frames.get_frame_count(clip) == 0:
+		return
+	var texture: Texture2D = frames.get_frame_texture(clip, 0)
+	if texture == null:
+		return
+	## Sprites are cropped to their own content plus a small margin (see
+	## tools/sprite-migration-2026-10-09/recrop.py; the older, unmigrated sheets
+	## were hand-sized the same way), so the frame's own height is a close
+	## stand-in for how tall the character reads, whatever scale it was given.
+	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
+	var sprite_top: float = animated_sprite.position.y - half_height
+	## Keep the bar's own height, just relocate the pair of offsets together.
+	var bar_height: float = health_bar.offset_bottom - health_bar.offset_top
+	health_bar.offset_top = sprite_top - HEALTH_BAR_GAP
+	health_bar.offset_bottom = health_bar.offset_top + bar_height
 
 
 ## The player's body. Resolved lazily because the monster is spawned from code
