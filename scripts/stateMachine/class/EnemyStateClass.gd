@@ -69,6 +69,11 @@ var _attack_ready_at_ms: int = 0
 var _nav_checked: bool = false
 var _nav_usable: bool = false
 
+## Real knockback from the last hit, decaying toward zero as enemyHurt
+## consumes it. Separate from `velocity` so entering hurt can still zero out
+## whatever the monster was doing (chasing, etc.) without erasing this.
+var knockback_velocity: Vector2 = Vector2.ZERO
+
 
 func apply_tier(to: int, wave: int = 1) -> void:
 	tier = to
@@ -501,6 +506,27 @@ func stop() -> void:
 	move_and_slide()
 
 
+## Sets a real knockback impulse along `direction` (already isometric-squashed,
+## same convention as the `away` vector below — not re-scaled here). Covers
+## RECOIL_PIXELS over RECOIL_TIME, decelerating to zero.
+func apply_knockback(direction: Vector2) -> void:
+	if direction == Vector2.ZERO:
+		return
+	var speed: float = 2.0 * RECOIL_PIXELS / RECOIL_TIME
+	knockback_velocity = direction.normalized() * speed
+
+
+## Moves the body along any pending knockback instead of standing still, so a
+## stagger is an actual position change — wherever `move_and_slide` lets it
+## travel before colliding — rather than a sprite trick that snaps back once
+## the hurt animation ends. Call this instead of stop() while staggered.
+func consume_knockback(delta: float) -> void:
+	var decel: float = (2.0 * RECOIL_PIXELS / RECOIL_TIME) / RECOIL_TIME
+	velocity = knockback_velocity
+	knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, decel * delta)
+	move_and_slide()
+
+
 ## Loops a clip in the current facing. Restarts only when the clip or the
 ## direction actually changed — calling play() every frame would pin the
 ## animation to frame 0 forever.
@@ -689,14 +715,16 @@ func _change_state(state_name: String) -> void:
 		state_machine.change_state(state_name)
 
 
-## Reaction to being hit: a blown-out flash, a recoil away from the blade, and a
-## squash that springs back.
+## Reaction to being hit: a blown-out flash, a real knockback away from the
+## blade, and a squash that springs back.
 ##
 ## A tint fading over 0.18s was all there used to be, which on a dark sprite in a
 ## dark dungeon is close to invisible — and a killing blow swapped straight to
 ## the death clip in the same frame, so a one-shot backstab read as the monster
-## blinking out of existence. The recoil moves the sprite, not the body, so it
-## cannot shove a monster through a wall.
+## blinking out of existence. The knockback moves the body itself via
+## move_and_slide (see apply_knockback/consume_knockback), so a wall still
+## stops it rather than it clipping through — it just no longer snaps back to
+## its pre-hit spot once the stagger ends.
 const RECOIL_PIXELS: float = 22.0
 const RECOIL_TIME: float = 0.13
 ## Well above white, so a hit reads even against lantern light.
@@ -709,7 +737,6 @@ func _flash(fatal: bool = false) -> void:
 	if not is_instance_valid(animated_sprite):
 		return
 
-	var rest_offset: Vector2 = animated_sprite.offset
 	var rest_scale: Vector2 = animated_sprite.scale
 
 	## Away from whoever is swinging, with the isometric squash applied so the
@@ -723,7 +750,7 @@ func _flash(fatal: bool = false) -> void:
 	away.y *= 0.5
 
 	animated_sprite.modulate = HIT_BLOWOUT
-	animated_sprite.offset = rest_offset + away * RECOIL_PIXELS
+	apply_knockback(away)
 	animated_sprite.scale = rest_scale * Vector2(1.18, 0.86)
 
 	_flash_tween = create_tween()
@@ -732,8 +759,6 @@ func _flash(fatal: bool = false) -> void:
 	## the hold is what sells the moment.
 	_flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE,
 			0.34 if fatal else 0.2)
-	_flash_tween.tween_property(animated_sprite, "offset", rest_offset, RECOIL_TIME) \
-			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_flash_tween.tween_property(animated_sprite, "scale", rest_scale, RECOIL_TIME) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 

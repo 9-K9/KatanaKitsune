@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0tn7kxq2wvl5"]
+[gd_scene format=3 uid="uid://b0tn7kxq2wvl5"]
 
-[ext_resource type="Script" path="res://scripts/system/TitleScreen.gd" id="1_title"]
-[ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover.png" id="4_cover"]
+[ext_resource type="Script" uid="uid://eu8ko3xkjysk" path="res://scripts/system/TitleScreen.gd" id="1_title"]
+[ext_resource type="Theme" uid="uid://cs0g1velfuv2p" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://di3ld0tsgxfg8" path="res://assets/sprites/ui/title_cover.png" id="4_cover"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_normal"]
 bg_color = Color(0.075, 0.055, 0.085, 0.94)
@@ -11,20 +11,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.72, 0.52, 0.24, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-shadow_color = Color(0.04, 0.02, 0.05, 0.8)
-shadow_size = 3
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_button_hover"]
-bg_color = Color(0.28, 0.075, 0.075, 0.96)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.96, 0.78, 0.4, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -44,12 +30,26 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="TitleScreen" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBox_button_hover"]
+bg_color = Color(0.28, 0.075, 0.075, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.78, 0.4, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_color = Color(0.04, 0.02, 0.05, 0.8)
+shadow_size = 3
+
+[node name="TitleScreen" type="Node2D" unique_id=1296536740]
 script = ExtResource("1_title")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=632420014]
 
-[node name="Background" type="TextureRect" parent="UI"]
+[node name="Background" type="TextureRect" parent="UI" unique_id=484605662]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -59,8 +59,8 @@ texture = ExtResource("4_cover")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="SafeArea" type="MarginContainer" parent="UI"]
-anchors_preset = 15
+[node name="SafeArea" type="MarginContainer" parent="UI" unique_id=494921527]
+anchors_preset = -1
 anchor_right = 0.4
 anchor_bottom = 1.0
 offset_left = 42.0
@@ -69,13 +69,13 @@ offset_right = -28.0
 offset_bottom = -54.0
 theme = ExtResource("2_theme")
 
-[node name="VBox" type="VBoxContainer" parent="UI/SafeArea"]
+[node name="VBox" type="VBoxContainer" parent="UI/SafeArea" unique_id=2118327929]
 custom_minimum_size = Vector2(334, 0)
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="TitleKicker" type="Label" parent="UI/SafeArea/VBox"]
+[node name="TitleKicker" type="Label" parent="UI/SafeArea/VBox" unique_id=1908937608]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.56, 0.28, 1)
 theme_override_colors/font_shadow_color = Color(0.08, 0.02, 0.04, 1)
@@ -85,19 +85,20 @@ theme_override_font_sizes/font_size = 15
 text = "◆  狐 の 剣  ◆"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="UI/SafeArea/VBox"]
+[node name="Title" type="Label" parent="UI/SafeArea/VBox" unique_id=873219586]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.87, 0.57, 1)
-theme_override_colors/font_outline_color = Color(0.22, 0.045, 0.045, 1)
 theme_override_colors/font_shadow_color = Color(0.035, 0.025, 0.08, 1)
-theme_override_constants/outline_size = 5
+theme_override_colors/font_outline_color = Color(0.22, 0.045, 0.045, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 43
-text = "KATANA\nKITSUNE"
+text = "KATANA
+KITSUNE"
 horizontal_alignment = 1
 
-[node name="Tagline" type="Label" parent="UI/SafeArea/VBox"]
+[node name="Tagline" type="Label" parent="UI/SafeArea/VBox" unique_id=1722748151]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.7, 0.38, 1)
 theme_override_colors/font_shadow_color = Color(0.06, 0.025, 0.06, 1)
@@ -107,41 +108,41 @@ theme_override_font_sizes/font_size = 13
 text = "BLADE OF THE NINE TAILS"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="UI/SafeArea/VBox"]
+[node name="Spacer" type="Control" parent="UI/SafeArea/VBox" unique_id=350193756]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
-[node name="ButtonBox" type="VBoxContainer" parent="UI/SafeArea/VBox"]
+[node name="ButtonBox" type="VBoxContainer" parent="UI/SafeArea/VBox" unique_id=430169379]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="NewGame" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
+[node name="NewGame" type="Button" parent="UI/SafeArea/VBox/ButtonBox" unique_id=1372785551]
 custom_minimum_size = Vector2(310, 38)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.78, 0.45, 1)
-theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.95, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBox_button_normal")
-theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/pressed = SubResource("StyleBox_button_pressed")
+theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆   NEW GAME   ◆"
 
-[node name="Quit" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
+[node name="Quit" type="Button" parent="UI/SafeArea/VBox/ButtonBox" unique_id=2136939214]
 custom_minimum_size = Vector2(310, 38)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.78, 0.45, 1)
-theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.95, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBox_button_normal")
-theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/pressed = SubResource("StyleBox_button_pressed")
+theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆      QUIT      ◆"
 
-[node name="Credit" type="Label" parent="UI/SafeArea/VBox"]
+[node name="Credit" type="Label" parent="UI/SafeArea/VBox" unique_id=1418643452]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.56, 0.48, 0.5, 1)
 theme_override_font_sizes/font_size = 10

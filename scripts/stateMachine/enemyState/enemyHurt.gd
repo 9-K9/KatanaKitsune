@@ -19,7 +19,9 @@ func on_enter() -> void:
 
 
 func on_physics_process(delta: float) -> void:
-	enemy.stop()
+	## Rides out the real knockback from the hit instead of standing still, so
+	## the stagger is an actual position change that sticks once it ends.
+	enemy.consume_knockback(delta)
 	_elapsed += delta
 	if _elapsed < enemy.hurt_lock:
 		return

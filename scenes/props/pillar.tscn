@@ -12,10 +12,10 @@ max_health = 80.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1748635490]
 texture_filter = 1
-position = Vector2(0, -44)
+position = Vector2(0, -94)
 scale = Vector2(2, 2)
 texture = ExtResource("1_pillar")
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1443318207]
-position = Vector2(0, 48)
-polygon = PackedVector2Array(-65, 3, -64, 21, 2, 52, 69, 22, 70, 3, 62, -1, 50, -23, 55, -26, 54, -33, 46, -35, 46, -48, 1, -73, -42, -48, -43, -35, -50, -34, -49, -25, -45, -23, -56, -1)
+position = Vector2(0, -2)
+polygon = PackedVector2Array(-65, 3, -66, 20, 2, 52, 69, 22, 70, 3, 62, -1, 49, -22, 0, -42, -45, -23, -56, -1)
