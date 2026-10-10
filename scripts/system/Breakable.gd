@@ -241,13 +241,14 @@ func _lay_out_loot() -> void:
 	if not ("armed" in thing):
 		return
 	thing.armed = false
-	## Centred on the prop and left at its base — the lift moves the picture, not
-	## the node, so Y-sort still treats the meal as standing where the table
-	## stands rather than up in the air behind it.
+	## Centred on the prop before it enters the tree: Pickup's _ready() biases
+	## its own position for Y-sort the moment it is added (see Pickup._raise),
+	## and _ready runs synchronously inside add_child. Setting position after
+	## add_child would stomp that bias right back to zero.
+	(thing as Node2D).position = Vector2.ZERO
 	if "display_lift" in thing:
 		thing.display_lift = loot_display_lift
 	add_child(thing)
-	(thing as Node2D).position = Vector2.ZERO
 	_displayed = thing
 	## Already decided, so _break must not roll a second time.
 	_drop_spawned = true

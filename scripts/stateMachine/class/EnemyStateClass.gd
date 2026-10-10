@@ -118,6 +118,38 @@ const WAVE_CAP: float = 2.5
 func _ready() -> void:
 	health = max_health
 	_refresh_health_bar()
+	_scale_ranges_to_sprite()
+
+
+## Stretches the ground ranges to match how big the monster actually reads on
+## screen.
+##
+## AnimatedSprite2D carries a per-species scale — gashadokuro is 2.6, kamaitachi
+## 0.7 — set once in the scene to make a tier read as the size it is meant to be
+## (see build_enemy_scene.py's HEIGHT table and its own comment: the collision
+## body is deliberately left alone, or a gashadokuro three times the size would
+## wedge itself in the corridors it has to come down). That was the right call
+## for the body a player's blade has to land on, but attack_range, aware_radius
+## and detection_range are not a hitbox — they are how far this monster reaches
+## and how far it notices, and those numbers were tuned once against a sprite
+## that was not wearing a scale at all. Left alone, a gashadokuro swings from
+## the same 110 units as a kamaitachi a third its visual size: a hugely telegraphed
+## axe that connects from a distance that still reads as a miss, and an
+## apparently cautious weasel that is already in your face. Scaling the three
+## ranges by the same factor the sprite itself was scaled by keeps the mismatch
+## that was fixed, fixed, instead of fixing it for everything that looks at the
+## sprite and leaving everything that measures from the body still wrong.
+func _scale_ranges_to_sprite() -> void:
+	if not is_instance_valid(animated_sprite):
+		return
+	var sprite_scale: float = animated_sprite.scale.x
+	## No custom scale, or a degenerate one from a scene not built this way —
+	## leave the exported numbers exactly as tuned.
+	if is_zero_approx(sprite_scale) or is_equal_approx(sprite_scale, 1.0):
+		return
+	attack_range *= sprite_scale
+	detection_range *= sprite_scale
+	aware_radius *= sprite_scale
 
 
 ## The player's body. Resolved lazily because the monster is spawned from code

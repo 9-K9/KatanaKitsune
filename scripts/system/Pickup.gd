@@ -23,13 +23,22 @@ enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA }
 ## get at it. Armed by Breakable when the prop shatters.
 @export var armed: bool = true
 ## How far above this node's own origin the art is drawn while it is laid out
-## on something. The node itself stays down at the furniture's base so Y-sort
-## places it with the furniture; only the picture climbs onto the tabletop.
+## on something.
 ##
-## Same reasoning as Chair.sort_bias, inverted: sorting compares raw node
-## positions, so an item parked at tabletop height sorts as though it stood
-## 110px further up the screen and drew behind the table it is sitting on.
+## Same reasoning as Chair.sort_bias and MazeDemo's pillar_sort_bias: Y-sort
+## compares raw node positions, so an item parked at tabletop height sorts as
+## though it stood further up the screen than the table it is sitting on, and
+## loses to it. The fix is the same one used there — push this node's own
+## position down by the lift so its sort key reads as "in front of the
+## table", then pull every visible/functional child back up by the same
+## amount so nothing actually moves on screen. z_index must never be used for
+## this: a non-zero z_index is compared globally across the whole canvas, not
+## just against the table, which is exactly what let a lifted item draw over
+## pillars and anything else elsewhere in the room.
 var display_lift: float = 0.0
+
+@onready var _collision: CollisionShape2D = $CollisionShape2D
+@onready var _light: PointLight2D = get_node_or_null("PointLight2D") as PointLight2D
 
 @onready var sprite: Sprite2D = $Sprite2D
 
@@ -40,10 +49,7 @@ var _rest_y: float = 0.0
 
 func _ready() -> void:
 	if display_lift != 0.0:
-		sprite.position.y -= display_lift
-		## Over the furniture, never behind it. Relative so the whole prop still
-		## sorts against the room as one thing.
-		sprite.z_index = 1
+		_raise(display_lift)
 	_rest_y = sprite.position.y
 	_bob = randf() * TAU
 	body_entered.connect(_on_body_entered)
@@ -71,13 +77,35 @@ func arm(falls_to: Vector2) -> void:
 	## Back down to the floor as the furniture goes: the lift was the tabletop,
 	## and there is no tabletop any more.
 	if display_lift != 0.0:
-		sprite.position.y += display_lift
-		sprite.z_index = 0
+		_lower(display_lift)
 		_rest_y = sprite.position.y
 		display_lift = 0.0
 	var fall := create_tween()
 	fall.tween_property(self, "global_position", falls_to, 0.3) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+
+## Pushes this node's own position down by `amount` (so its Y-sort key reads
+## as standing in front of the table) and pulls every child that actually
+## draws or collides back up by the same amount, so nothing visibly moves.
+func _raise(amount: float) -> void:
+	position.y += amount
+	sprite.position.y -= amount
+	if _collision != null:
+		_collision.position.y -= amount
+	if _light != null:
+		_light.position.y -= amount
+
+
+## Undoes _raise: used once the item falls and no longer needs to sort
+## against the furniture it was sitting on.
+func _lower(amount: float) -> void:
+	position.y -= amount
+	sprite.position.y += amount
+	if _collision != null:
+		_collision.position.y += amount
+	if _light != null:
+		_light.position.y += amount
 
 
 func _hover(delta: float) -> void:
