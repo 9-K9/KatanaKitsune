@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-// Two things, one shader, because a CanvasItem only takes one material:
+// Three things, one shader, because a CanvasItem only takes one material:
 //
 // 1. Clothing-only elemental recolour for Katana Kitsune (unchanged from
 //    before). The sprites carry their clothing as pure-red pixels (green and
@@ -22,6 +22,26 @@ shader_type canvas_item;
 // above its surroundings, so it gets a large spike and is pulled down
 // toward them.
 //
+// 3. Hair/fur and skin recolour, same trick as clothing but on two more
+//    colour bands. Every sprite in the project - player and monster alike -
+//    paints its fur/hair/base-clothing as a neutral grey ramp (0, 67, 168,
+//    ~227 - the same four steps everywhere, confirmed across both the player
+//    and karasuShinobi), and exposed skin as a warm brown ramp distinct enough
+//    in hue that it never overlaps the grey or the clothing red. Recolouring
+//    each independently is what lets duplicate monsters in a wave look
+//    different, and lets the player pick a hair/skin tone at the select
+//    screen. Gated separately from `enabled` and from each other, so a
+//    monster can get fur variety without the clothing-red logic running at
+//    all.
+//
+//    Known limitation: the katana blade and any other genuinely neutral-grey
+//    metal/prop pixels share the exact same ramp as fur with no separate
+//    channel to tell them apart, so recolour_hair retints them too. A
+//    fragment shader cannot do the connected-component face/material split
+//    the offline prototypes (tools/recolor_kitsune_*_test.py) used; accepted
+//    here the same way the clothing recolour already accepts its own small
+//    face-pixel inaccuracy, documented below.
+//
 // Known difference from the baked clothing PNGs: the Python version
 // additionally excluded a detected face bounding box. A fragment shader
 // cannot do that connected-component pass, so roughly 0.13% of character
@@ -37,6 +57,18 @@ uniform bool enabled = false;
 uniform vec3 shadow_color = vec3(0.282353, 0.015686, 0.003922);
 uniform vec3 highlight_color = vec3(0.949020, 0.227451, 0.078431);
 
+// Hair/fur recolour. Defaults match the natural black-fur look, so turning
+// this on with nothing chosen yet changes nothing.
+uniform bool recolor_hair = false;
+uniform vec3 hair_shadow_color = vec3(0.0, 0.0, 0.0);
+uniform vec3 hair_highlight_color = vec3(0.659, 0.659, 0.659);
+
+// Skin recolour. Defaults match the painted skin ramp exactly (108..238 raw),
+// so turning this on with nothing chosen yet changes nothing either.
+uniform bool recolor_skin = false;
+uniform vec3 skin_shadow_color = vec3(0.423529, 0.250980, 0.188235);
+uniform vec3 skin_highlight_color = vec3(0.933333, 0.666667, 0.556863);
+
 uniform bool soften_highlights = true;
 // How much of the neighbourhood average to mix in for the spikiest pixels.
 uniform float soften_amount : hint_range(0.0, 1.0) = 0.85;
@@ -51,29 +83,54 @@ float luma(vec3 c) {
 	return dot(c, vec3(0.299, 0.587, 0.114));
 }
 
-// Clothing recolour for one already-sampled texel, so it can be applied
-// identically to the centre pixel and to each neighbour before they are
-// averaged together.
+// Clothing/hair/skin recolour for one already-sampled texel, so it can be
+// applied identically to the centre pixel and to each neighbour before they
+// are averaged together by the softening pass below.
 vec3 recolour(vec4 c) {
-	if (!enabled || c.a <= 0.0) {
+	if (c.a <= 0.0) {
 		return c.rgb;
 	}
 	float mx = max(c.r, max(c.g, c.b));
 	float mn = min(c.r, min(c.g, c.b));
 	float sat = (mx - mn) / max(mx, 0.00392157); // guard matches max(mx,1) at 8-bit
 
-	bool is_clothing =
-		c.r >= mx
-		&& c.r > 0.137255          // red > 35 at 8-bit
-		&& sat > 0.72
-		&& c.g < c.r * 0.42
-		&& c.b < c.r * 0.35;
-
-	if (!is_clothing) {
-		return c.rgb;
+	if (enabled) {
+		bool is_clothing =
+			c.r >= mx
+			&& c.r > 0.137255          // red > 35 at 8-bit
+			&& sat > 0.72
+			&& c.g < c.r * 0.42
+			&& c.b < c.r * 0.35;
+		if (is_clothing) {
+			float amount = clamp((c.r * 255.0 - 45.0) / 85.0, 0.0, 1.0);
+			return mix(shadow_color, highlight_color, amount);
+		}
 	}
-	float amount = clamp((c.r * 255.0 - 45.0) / 85.0, 0.0, 1.0);
-	return mix(shadow_color, highlight_color, amount);
+
+	if (recolor_skin && c.r > 0.0) {
+		float g_ratio = c.g / c.r;
+		float b_ratio = c.b / c.r;
+		bool is_skin =
+			c.r > 0.078431             // red > 20 at 8-bit, skips near-black noise
+			&& c.r > c.g && c.g > c.b
+			&& g_ratio > 0.55 && g_ratio < 0.85
+			&& b_ratio > 0.40 && b_ratio < 0.75;
+		if (is_skin) {
+			float amount = clamp((c.r * 255.0 - 20.0) / 220.0, 0.0, 1.0);
+			return mix(skin_shadow_color, skin_highlight_color, amount);
+		}
+	}
+
+	if (recolor_hair && (mx - mn) <= 0.035) {
+		// Near-perfect grey (absolute spread, not relative - a relative
+		// saturation ratio blows up to "fully saturated" on the near-black
+		// AA fringe around fur, which is still fur). The shared
+		// fur/hair/base-clothing ramp.
+		float amount = clamp(luma(c.rgb), 0.0, 1.0);
+		return mix(hair_shadow_color, hair_highlight_color, amount);
+	}
+
+	return c.rgb;
 }
 
 void fragment() {
