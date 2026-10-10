@@ -1328,11 +1328,6 @@ func _place_pillars() -> void:
 				pillar.add_child(fade)
 				add_child(pillar)
 				(pillar as Node2D).global_position = world + Vector2(0.0, pillar_sort_bias)
-				## Sprite back up by the same amount, so the stone stays where it
-				## was and only the sort position has changed.
-				var art := pillar.get_node_or_null("Sprite2D") as Node2D
-				if art != null:
-					art.position.y -= pillar_sort_bias
 
 
 ## Where a grid cell sits on screen.
