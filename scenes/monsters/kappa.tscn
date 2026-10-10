@@ -11363,6 +11363,14 @@ bg_color = Color(0.66, 0.15, 0.15, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_soften"]
 shader = ExtResource("soften_shader")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 32.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hitbox"]
+resource_local_to_scene = true
+radius = 20.0
+height = 100.0
+
 [node name="Kappa" type="CharacterBody2D" groups=["enemy"]]
 species_traits = {"shell": 0.12}
 collision_layer = 3
@@ -11376,8 +11384,15 @@ attack_cooldown = 1.4
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-32, 0, -22, -13, 0, -17, 22, -13, 32, 0, 22, 13, 0, 17, -22, 13)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="HitBox" type="Area2D" parent="." groups=["enemy_hitbox"]]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CapsuleShape2D_hitbox")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_soften")

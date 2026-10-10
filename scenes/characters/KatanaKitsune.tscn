@@ -39507,6 +39507,10 @@ polygon = PackedVector2Array(-26, -1, 0, -18, 26, -1, 0, 14)
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 33.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_playerhitbox"]
+radius = 25.0
+height = 168.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_powerState"]
 shader = ExtResource("ps_shader")
 shader_parameter/enabled = false
@@ -39697,10 +39701,9 @@ polygon = PackedVector2Array(4.00001, -23.912, -6.66667, 13, 4.00001, 49.816, 14
 
 [node name="PlayerHitBox" type="Area2D" parent="CollisionChecker" groups=["player"]]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CollisionChecker/PlayerHitBox"]
-position = Vector2(-9.60939, -5.62152)
-scale = Vector2(2.40234, 0.434028)
-polygon = PackedVector2Array(4.00001, -466.28, -17.6455, -392.552, -17.6455, -23.912, 4.00001, 49.816, 25.6456, -23.912, 25.6456, -392.552)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionChecker/PlayerHitBox"]
+position = Vector2(0, -76)
+shape = SubResource("CapsuleShape2D_playerhitbox")
 
 [node name="RayCast2D" type="RayCast2D" parent="CollisionChecker"]
 visible = false

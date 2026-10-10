@@ -96,6 +96,21 @@ func blade_targets() -> Array[Node2D]:
 			if body.is_in_group(group):
 				found.append(body)
 				break
+	## Enemies also carry a HitBox — a tight capsule over the torso, separate
+	## from the wide walking collision — so a swing can land through that too,
+	## not only through the body shape a monster uses to not wedge into walls.
+	for area in action_area.get_overlapping_areas():
+		if not is_instance_valid(area):
+			continue
+		var owner_body: Node2D = area.get_parent() as Node2D
+		if not is_instance_valid(owner_body) or not owner_body.has_method("take_damage"):
+			continue
+		if found.has(owner_body):
+			continue
+		for group in HITTABLE_GROUPS:
+			if owner_body.is_in_group(group):
+				found.append(owner_body)
+				break
 	return found
 
 

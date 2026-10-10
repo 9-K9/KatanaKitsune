@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/props/power_orb.png" id="2_t"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
-radius = 20.0
+radius = 30.0
 
 [node name="pickupPower" type="Area2D"]
 collision_mask = 1

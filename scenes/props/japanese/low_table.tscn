@@ -43,5 +43,6 @@ scale = Vector2(2.1, 2.1)
 texture = ExtResource("2_intact")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2.1, 2.1)
 shape = SubResource("ConvexPolygonShape2D_prop")
 

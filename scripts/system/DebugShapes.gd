@@ -121,6 +121,11 @@ func _draw() -> void:
 			_draw_body(node as CollisionObject2D, COLOUR_ENEMY)
 		if node is Node2D:
 			_label_enemy(node as Node2D)
+		## Each monster's own hit box — the tight capsule a blade actually has
+		## to land in, separate from the wider walking body drawn above.
+		var monster_hit_box := (node as Node).get_node_or_null("HitBox") as Area2D
+		if monster_hit_box != null:
+			_draw_area(monster_hit_box, COLOUR_HURTBOX)
 	for node in get_tree().get_nodes_in_group("breakable"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_SOLID)
@@ -191,8 +196,6 @@ func _draw_area(area: Area2D, colour: Color) -> void:
 			_draw_shape((child as CollisionShape2D).shape,
 					(child as CollisionShape2D).global_transform, colour)
 		elif child is CollisionPolygon2D:
-			## PlayerHitBox is built from one of these, not a CollisionShape2D —
-			## without this branch her own hurtbox silently never drew.
 			_outline((child as CollisionPolygon2D).polygon,
 					(child as CollisionPolygon2D).global_transform, colour)
 
@@ -204,6 +207,25 @@ func _draw_shape(shape: Shape2D, at: Transform2D, colour: Color) -> void:
 		for i in 32:
 			var a: float = TAU * float(i) / 32.0
 			ring.append(to_local(at * (Vector2(cos(a), sin(a)) * radius)))
+		_fill(ring, colour)
+	elif shape is CapsuleShape2D:
+		var cap := shape as CapsuleShape2D
+		## A capsule is a stadium: two semicircle caps joined by a straight run,
+		## stood up along local Y the way Godot orients CapsuleShape2D by
+		## default. `half_run` is how far each cap's centre sits from the
+		## shape's own centre.
+		var half_run: float = maxf(cap.height * 0.5 - cap.radius, 0.0)
+		var points := PackedVector2Array()
+		var segments := 16
+		for i in range(segments + 1):
+			var a: float = -PI * 0.5 + PI * float(i) / float(segments)
+			points.append(Vector2(cos(a), sin(a)) * cap.radius + Vector2(0, half_run))
+		for i in range(segments + 1):
+			var a: float = PI * 0.5 + PI * float(i) / float(segments)
+			points.append(Vector2(cos(a), sin(a)) * cap.radius + Vector2(0, -half_run))
+		var ring := PackedVector2Array()
+		for p in points:
+			ring.append(to_local(at * p))
 		_fill(ring, colour)
 	elif shape is ConvexPolygonShape2D:
 		_outline((shape as ConvexPolygonShape2D).points, at, colour)

@@ -58,6 +58,10 @@ var is_dead: bool = false
 @onready var state_machine: FiniteStateMachine = get_node_or_null("FiniteStateMachine")
 ## Optional. A monster without one simply never taunts and fights on sight.
 @onready var taunt: TauntComponent = get_node_or_null("TauntComponent")
+## The blade's actual target — a tight capsule over the torso, separate from
+## the walking CollisionShape2D so the two can be shaped for what they each
+## do: one keeps the monster out of walls, the other says where a swing lands.
+@onready var hit_box: Area2D = get_node_or_null("HitBox")
 
 var _player: CharacterBody2D = null
 var _flash_tween: Tween = null
@@ -120,6 +124,7 @@ func _ready() -> void:
 	_refresh_health_bar()
 	_scale_ranges_to_sprite()
 	_position_health_bar()
+	_position_hit_box()
 
 
 ## Stretches the ground ranges to match how big the monster actually reads on
@@ -197,6 +202,51 @@ func _position_health_bar() -> void:
 	var bar_height: float = health_bar.offset_bottom - health_bar.offset_top
 	health_bar.offset_top = sprite_top - HEALTH_BAR_GAP
 	health_bar.offset_bottom = health_bar.offset_top + bar_height
+
+
+## Fraction of the sprite's own height the hit-box capsule's radius gets.
+## Calibrated against a measured frame (mummy's idle crop is a 158px-tall,
+## 78px-wide silhouette inside a 224px frame): a tight torso reads at roughly
+## three tenths of its own height, wide pose or narrow, template or boss.
+const HIT_BOX_RADIUS_RATIO: float = 0.30
+
+
+## Sizes and places the hit box the same way _position_health_bar reads the
+## bar: from the live sprite, at runtime, so a scaled-up boss and an unscaled
+## template both get a capsule that actually fits what is on screen, rather
+## than one static size nobody has retuned per monster.
+##
+## This capsule is deliberately separate from the walking CollisionShape2D.
+## That shape stays a uniform circle on purpose (see _scale_ranges_to_sprite's
+## note on why the body is left alone) so a gashadokuro three times the size
+## does not wedge itself in a corridor a kamaitachi fits down — but the same
+## uniform circle is a terrible stand-in for "where a blade actually lands",
+## which is what this hit box is for instead.
+func _position_hit_box() -> void:
+	if not is_instance_valid(hit_box) or not is_instance_valid(animated_sprite):
+		return
+	var shape_node: CollisionShape2D = hit_box.get_node_or_null("CollisionShape2D")
+	if shape_node == null or not (shape_node.shape is CapsuleShape2D):
+		return
+	var frames: SpriteFrames = animated_sprite.sprite_frames
+	if frames == null:
+		return
+	var clip: String = animated_sprite.animation
+	if not frames.has_animation(clip):
+		var names: PackedStringArray = frames.get_animation_names()
+		if names.is_empty():
+			return
+		clip = names[0]
+	if frames.get_frame_count(clip) == 0:
+		return
+	var texture: Texture2D = frames.get_frame_texture(clip, 0)
+	if texture == null:
+		return
+	var half_height: float = texture.get_height() * 0.5 * animated_sprite.scale.y
+	var capsule: CapsuleShape2D = shape_node.shape as CapsuleShape2D
+	capsule.radius = half_height * HIT_BOX_RADIUS_RATIO
+	capsule.height = half_height * 2.0
+	shape_node.position = Vector2(0, animated_sprite.position.y)
 
 
 ## The player's body. Resolved lazily because the monster is spawned from code
