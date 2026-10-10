@@ -14,6 +14,15 @@ const SHOWCASE: Array[String] = [
 const SECONDS_PER_CLIP: float = 1.6
 const DIRECTION := "southEast"
 
+## Hair/skin recolour turned out to be unreliable in practice — it also
+## retints boots, straps and other grey-painted gear that happens to share
+## the exact same ramp as hair/fur, with no clean way to mask it out per
+## pixel. Archived rather than deleted: PowerState/Roster/the shader all
+## still carry full hair/skin support in case a future masked version fixes
+## it, but the selection screen skips straight from COLOUR to the next
+## player (or BEGIN) without ever showing the HAIR/SKIN steps.
+const HAIR_SKIN_SELECTION_ENABLED := false
+
 ## The preview is a Node2D, so it sits in a plain Control rather than a
 ## container — containers do not lay out Node2D children, which left it pinned
 ## tiny in the corner.
@@ -73,8 +82,9 @@ func _ready() -> void:
 	player.queue_free()
 
 	_build_icons()
-	_build_hair_icons()
-	_build_skin_icons()
+	if HAIR_SKIN_SELECTION_ENABLED:
+		_build_hair_icons()
+		_build_skin_icons()
 	_link_focus()
 	_highlighted = PowerState.chosen
 	_show(_highlighted)
@@ -554,7 +564,14 @@ func _take_colour() -> void:
 	if _phase != Phase.COLOUR or Roster.scheme_taken(_highlighted, _active):
 		return
 	Roster.set_scheme(_active, _highlighted)
-	_enter_hair()
+	if HAIR_SKIN_SELECTION_ENABLED:
+		_enter_hair()
+	else:
+		_active += 1
+		if _active >= _wanted:
+			_start_game()
+			return
+		_enter_claim()
 
 
 func _enter_hair() -> void:
