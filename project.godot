@@ -28,6 +28,7 @@ PowerState="*res://scripts/system/PowerState.gd"
 Roster="*res://scripts/system/Roster.gd"
 Score="*res://scripts/system/Score.gd"
 SceneLoader="*res://scripts/system/SceneLoader.gd"
+RetroFX="*res://scripts/system/RetroFX.gd"
 
 [dialogic]
 

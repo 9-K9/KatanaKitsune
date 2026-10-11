@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://eu8ko3xkjysk" path="res://scripts/system/TitleScreen.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://cs0g1velfuv2p" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
+[ext_resource type="Script" path="res://scripts/system/SettingsPanel.gd" id="5_settings"]
 [ext_resource type="Texture2D" uid="uid://di3ld0tsgxfg8" path="res://assets/sprites/ui/title_cover.png" id="4_cover"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_normal"]
@@ -129,6 +130,19 @@ theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆   NEW GAME   ◆"
 
+[node name="Settings" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
+custom_minimum_size = Vector2(310, 38)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.78, 0.45, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.95, 0.75, 1)
+theme_override_colors/font_hover_color = Color(1, 0.93, 0.66, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBox_button_normal")
+theme_override_styles/pressed = SubResource("StyleBox_button_pressed")
+theme_override_styles/hover = SubResource("StyleBox_button_hover")
+theme_override_styles/focus = SubResource("StyleBox_button_hover")
+text = "◆   SETTINGS   ◆"
+
 [node name="Quit" type="Button" parent="UI/SafeArea/VBox/ButtonBox" unique_id=2136939214]
 custom_minimum_size = Vector2(310, 38)
 layout_mode = 2
@@ -142,6 +156,14 @@ theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆      QUIT      ◆"
 
+[node name="SettingsPanel" type="VBoxContainer" parent="UI/SafeArea/VBox"]
+visible = false
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+script = ExtResource("5_settings")
+font_size = 16
+
 [node name="Credit" type="Label" parent="UI/SafeArea/VBox" unique_id=1418643452]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.56, 0.48, 0.5, 1)
@@ -151,3 +173,5 @@ horizontal_alignment = 1
 
 [connection signal="pressed" from="UI/SafeArea/VBox/ButtonBox/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="UI/SafeArea/VBox/ButtonBox/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="UI/SafeArea/VBox/ButtonBox/Settings" to="." method="_on_settings_pressed"]
+[connection signal="back_pressed" from="UI/SafeArea/VBox/SettingsPanel" to="." method="_on_settings_back_pressed"]

@@ -34,5 +34,19 @@ func _on_new_game_pressed():
 	get_tree().change_scene_to_file(SELECT)
 
 
+func _on_settings_pressed() -> void:
+	$UI/SafeArea/VBox/ButtonBox.visible = false
+	var panel := $UI/SafeArea/VBox/SettingsPanel
+	panel.visible = true
+	focus_first_button(panel)
+
+
+func _on_settings_back_pressed() -> void:
+	$UI/SafeArea/VBox/SettingsPanel.visible = false
+	var buttons := $UI/SafeArea/VBox/ButtonBox
+	buttons.visible = true
+	focus_first_button(buttons)
+
+
 func _on_quit_pressed():
 	get_tree().quit()

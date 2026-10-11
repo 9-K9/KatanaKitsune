@@ -5,6 +5,7 @@ var game_paused : bool = false
 @onready var gameManager = get_parent()
 @onready var main_menu: VBoxContainer = $Center/Panel/Margin/MainMenu
 @onready var cheats_menu: VBoxContainer = $Center/Panel/Margin/CheatsMenu
+@onready var settings_menu: VBoxContainer = $Center/Panel/Margin/SettingsMenu
 @onready var immortality_toggle: CheckButton = $Center/Panel/Margin/CheatsMenu/Immortality
 
 func _ready():
@@ -104,9 +105,18 @@ func _on_immortality_toggled(enabled: bool) -> void:
 func _on_cheats_back_pressed() -> void:
 	_show_main_menu()
 
+func _on_settings_pressed() -> void:
+	main_menu.visible = false
+	settings_menu.visible = true
+	TitleScreen.focus_first_button(settings_menu)
+
+func _on_settings_back_pressed() -> void:
+	_show_main_menu()
+
 func _show_main_menu() -> void:
 	main_menu.visible = true
 	cheats_menu.visible = false
+	settings_menu.visible = false
 	## Focus follows whichever list is showing, so a pad can drive both.
 	TitleScreen.focus_first_button(main_menu)
 
