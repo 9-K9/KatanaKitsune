@@ -21,6 +21,11 @@ extends Node2D
 ## yokai lord never pays to load her sheet.
 @export var enemy_scene_paths: Array[String] = []
 @export var prop_scenes: Array[PackedScene] = []
+## Props drawn in the four isometric facings, one scene per facing so each has
+## a collision polygon fitted to its own art. Scenes named <prop>_<facing>.tscn
+## are grouped by prop and the group takes one slot in the prop pool, so a prop
+## with four facings is no likelier to spawn than one with a single view.
+@export var facing_prop_scenes: Array[PackedScene] = []
 ## Stood at the ends of every opening and spaced across it, so a knocked-out
 ## wall reads as a deliberate colonnade instead of a severed run of stone.
 @export var pillar_scene: PackedScene = null
@@ -701,6 +706,30 @@ func _populate(step: Vector2) -> void:
 			_place_trap_run(here)
 
 
+var _prop_pool_cache: Array = []
+
+
+## Every spawnable prop as a list of interchangeable scenes: a single scene for
+## one-view props, all four facings for the isometric ones.
+func _prop_pool() -> Array:
+	if not _prop_pool_cache.is_empty():
+		return _prop_pool_cache
+	for scene in prop_scenes:
+		if scene != null:
+			_prop_pool_cache.append([scene])
+	var facing := RegEx.create_from_string("_(south|north)(East|West)\\.tscn$")
+	var groups := {}
+	for scene in facing_prop_scenes:
+		if scene == null:
+			continue
+		var key := facing.sub(scene.resource_path, "")
+		if not groups.has(key):
+			groups[key] = []
+			_prop_pool_cache.append(groups[key])
+		groups[key].append(scene)
+	return _prop_pool_cache
+
+
 ## Puts one thing on a random floor tile of `room`, so nothing lands in a wall
 ## or out in the void.
 func _place(room: Node2D, scene: PackedScene) -> Node:
@@ -732,7 +761,15 @@ func _light() -> void:
 		add_child(tint)
 
 	for carrier in _players:
-		if not is_instance_valid(carrier) or carrier.has_node("Lantern"):
+		if not is_instance_valid(carrier):
+			continue
+		## The player must not shadow herself. Her occluder is useful only when
+		## casting onto the world, but LightOccluder2D cannot exclude its parent
+		## light's own sprite from that shadow — disable this occluder instead.
+		for occluder_node in carrier.find_children("*", "LightOccluder2D", true, false):
+			var player_occluder := occluder_node as LightOccluder2D
+			player_occluder.occluder_light_mask = 0
+		if carrier.has_node("Lantern"):
 			continue
 		var lamp := PointLight2D.new()
 		lamp.name = "Lantern"
