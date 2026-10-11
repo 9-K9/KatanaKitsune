@@ -74,10 +74,11 @@ var _ponds: Array = []             ## [Vector2 centre, Vector2 radii]
 var _solid: Array = []             ## [Vector2 position, float radius]
 var _tiles: Dictionary = {}        ## tile family number -> source id
 var _noise := FastNoiseLite.new()
-var _roofs: Array = []             ## per building: Array[TileMapLayer]
+var _roofs: Array = []             ## per building: Array[CanvasItem]
 var _roof_alpha: Array[float] = []
 var _scenes: Dictionary = {}
 var biome: ExteriorBiome = null
+var theme: LevelTheme = null
 var _biome_tileset: TileSet = null
 var _biome_tiles: Array[int] = []
 var _tree_bounds: Dictionary = {}
@@ -463,6 +464,16 @@ func _tile_for(what: Kind, cell: Vector2i, world: Vector2) -> int:
 		if what == Kind.COURTYARD:
 			return _pick(GRAVEL)
 		return _biome_tiles[_rng.randi_range(0, _biome_tiles.size() - 1)]
+	if theme != null:
+		if what == Kind.ROAD and _on_road(cell, world, ROAD_HALF_WIDTH):
+			var roll := _rng.randf()
+			if roll < theme.road_weed_chance:
+				return _pick(TUFTY)
+			if roll < theme.road_weed_chance + theme.road_earth_chance:
+				return _pick(EARTH)
+			return _pick(PAVING)
+		if what == Kind.COURTYARD and _rng.randf() < theme.courtyard_earth_chance:
+			return _pick(EARTH)
 	## The y axis doubled, so patches come out round on the ground.
 	var n: float = _noise.get_noise_2d(world.x, world.y * 2.0)
 	var roll: float = _rng.randf()
@@ -778,6 +789,11 @@ func _spot(cell: Vector2i, radius: float, off_road: bool = true) -> Variant:
 
 func _scatter(cell: Vector2i, props: Array, count: int, radius: float,
 		off_road: bool = true, canopy: float = 0.0) -> void:
+	if theme != null:
+		if canopy > 0.0:
+			count = int(round(count * theme.tree_density))
+		elif props == ["grass_tuft"]:
+			count = int(round(count * theme.grass_density))
 	for _i in count:
 		var prop: String = ""
 		var bounds := Vector2(canopy, TREE_HEIGHT)
@@ -875,7 +891,7 @@ func populate(cell: Vector2i) -> void:
 		_scatter(cell, ["garden_rocks"], _rng.randi_range(1, 2), 40.0)
 		_lanterns(cell, _rng.randi_range(1, 2))
 		return
-	var small: Array[String] = ["azalea_bush", "garden_rocks"]
+	var small: Array[String] = theme.small_props if theme != null else ["azalea_bush", "garden_rocks"]
 	var grass: Array[String] = ["grass_tuft"]
 	match kind[cell]:
 		Kind.GARDEN:
@@ -884,7 +900,7 @@ func populate(cell: Vector2i) -> void:
 			_lanterns(cell, _rng.randi_range(1, 2))
 			_scatter(cell, grass, _rng.randi_range(8, 14), 0.0)
 		Kind.COURTYARD:
-			if _rng.randf() < 0.45:
+			if _rng.randf() < (theme.ornament_chance if theme != null else 0.45):
 				_scatter(cell, ["dragon_statue"], 1, 70.0)
 			_lanterns(cell, 2)
 			_scatter(cell, small, _rng.randi_range(1, 2), 40.0)
@@ -919,7 +935,7 @@ func setup_roofs() -> void:
 	_roofs.clear()
 	_roof_alpha.clear()
 	for cells in buildings:
-		var layers: Array[TileMapLayer] = []
+		var layers: Array[CanvasItem] = []
 		for cell in cells:
 			var room: Node = _maze._rooms.get(cell)
 			var roof := room.get_node_or_null("TileMap/Roofs") as TileMapLayer \
@@ -928,8 +944,17 @@ func setup_roofs() -> void:
 				continue
 			## WallFade's own HIDE mode works per cell; this drives it instead.
 			roof.set_process(false)
-			roof.visible = true
-			layers.append(roof)
+			roof.visible = theme == null
+			if theme == null:
+				layers.append(roof)
+			else:
+				roof.clear()
+		if theme != null:
+			var japanese := JapaneseRoof.new()
+			japanese.name = "JapaneseRoof_%d" % _roofs.size()
+			_maze.add_child(japanese)
+			japanese.build(cells, _half, _centre)
+			layers.append(japanese)
 		_roofs.append(layers)
 		_roof_alpha.append(1.0)
 

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="LevelTheme" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/system/LevelTheme.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Sakura Gardens"
+description = "Flowering cherry trees, shrine courtyards and quiet ponds. Petal gusts and passing rain."
+icon_path = "res://assets/pixellab/level_icons/sakura_gardens.png"
+walls = Array[String](["japaneseWall", "japaneseWall2", "japaneseWall3"])
+trees = Array[String](["sakura_tree_a", "sakura_tree_a", "sakura_tree_c", "sakura_tree_c", "sakura_weeping", "black_pine"])
+edge_trees = Array[String](["sakura_tree_a", "sakura_tree_c", "sakura_weeping", "black_pine"])
+small_props = Array[String](["azalea_bush", "azalea_bush", "garden_rocks"])
+weather = Array[int]([0, 1, 2])
+outdoor_animals = Array[String](["fox", "cat", "tanuki", "rabbit"])
+indoor_animals = Array[String](["cat", "rat"])
+grass_density = 0.5
+road_earth_chance = 0.08
+road_weed_chance = 0.02
+moonlight = Color(0.64, 0.68, 0.9, 1)

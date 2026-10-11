@@ -67,7 +67,85 @@ on 136×136 canvases and scaled in their scenes to stand against the player:
 - Raised grass-to-earth transition: `32dbf698-d046-4612-aa87-00465c68f27d`
 - Modular building kit: `92d8ef5c-aa2b-445a-9b7e-60e2530da65d`
 
+## Japanese kawara roofs
+
+`roofs/` contains four transparent Japanese roof-slope sprites and a charcoal
+blue-gray kawara material. The slopes were generated from the existing
+Crocotile slope silhouettes, cropped at `(288,264)` to a 384x384 reference,
+reduced to the supported 192x192 generation canvas, then enlarged with nearest
+sampling and restored to the original 960x960 canvas. These are source modules,
+not drop-in replacements for the castle blocks' authored placement.
+The material's four-pixel generated bottom border was cropped away, leaving
+a 32x28 opaque tile field without decorative bands at every repeat.
+
+| File | PixelLab job | Gallery asset |
+| --- | --- | --- |
+| `kawara_slope_dir1.png` | `a4967d39-d16f-41e0-85a0-4ce0973949ce` | `45e70e29-dda0-59cd-8119-22be471cc7bb` |
+| `kawara_slope_dir3.png` | `2c7eb70b-66ce-446b-a79a-e3204f0ade8b` | `bcf6efa6-9c93-5dbb-917e-5aacd1a513f4` |
+| `kawara_slope_dir5.png` | `ad29d9a1-9944-444e-81d7-852dde8d6d31` | `7658ba45-8a36-542e-b341-7aadb41d55d4` |
+| `kawara_slope_dir7.png` | `8e807625-d8ac-452f-8b7f-426c16d43371` | `d9a1160f-c28b-5bbb-8f67-554053d13f37` |
+| `kawara_tiles.png` | `4f53d1b9-d5cb-4f9c-a6a7-f49d1399f66d` | `a94fe828-5d33-57fe-97b1-e2e4d29d207a` |
+
+Selected Japanese compounds use `JapaneseRoof.gd` to assemble fitted hipped
+roof wings from that material, with timber eaves, raised ridge/hip caps and
+slightly upturned corners. Wings follow the native **2:1 isometric** lattice.
+Occupied cells are partitioned into rectangles: an L-shaped building keeps its
+empty courtyard open rather than covering its bounding box. `OVERHANG` extends
+eaves beyond the wall by 0.08 room-axis units (about 54 horizontal pixels per
+axis on the default lattice). The legacy castle wall-reskin shader is not
+applied. Roof surfaces ignore indoor point lights, so lamps inside cannot
+shine through the tiles.
+
+Roofs remain grouped and faded per whole building, including joined wings.
+Collision, entrances, occluders, ground-anchor sorting and weather occupancy
+are unchanged; overhanging artwork does not enlarge the indoor weather mask.
+Pause freezes fading, and floor teardown frees the generated roof nodes.
+Legacy interior-only/forced non-Japanese biome rendering retains its original
+roof behavior.
+
 ## Biome and weather asset slots
+
+### Selectable level themes
+
+After the last player confirms their character, Player 1 chooses **Sakura
+Gardens**, **Bamboo Woodland**, or **Abandoned Shrines**. Left/right or up/down
+changes the selected card; a fresh confirm begins the run. Mouse users select
+a card and press Begin. Back returns to the last player's character choice
+without discarding the party. The selection lasts through every floor in that
+run and resets when character selection starts again.
+
+`resources/level_themes/*.tres` defines weighted vegetation, wildlife, compatible
+weather, ground preferences and allowed architecture. Every floor still
+randomizes its compound layout, planting, props and terrain patches. Architecture
+cycles within the selected palette before repeating; unrelated industrial,
+castle or sci-fi wall themes cannot enter these runs. Enemy types, tier
+progression, combat and weather's visual-only behavior remain unchanged.
+
+| Theme | Palette |
+| --- | --- |
+| Sakura Gardens | Cherry trees, azalea, mostly paved paths, Japanese halls, petals/rain |
+| Bamboo Woodland | Bamboo and pine, earth trails, rocks, Japanese/wooden halls, rain |
+| Abandoned Shrines | Sparse pine/bamboo with occasional cherry trees, weeds/earth through paving, weathered wood/brick, rain |
+
+Wildlife uses separate indoor/outdoor palettes. Frogs and turtles are only
+eligible in outdoor pond cells; the archived deer is never selected. Existing
+safe placement, trunk collisions, canopy clearance and ground-anchor sorting
+are reused rather than changing the maze's traversal rules.
+
+`MazeDemo.level_theme` overrides the run choice for editor testing; its default
+uses `Roster.level_theme`, or Sakura Gardens when launched without character
+selection. The theme is selected once per maze instance and retained on descent.
+An explicitly forced desert/snow biome still uses its own gated environment
+palette, not Japanese woodland vegetation.
+
+Menu icons are transparent 128x128 PixelLab miniatures in
+`assets/pixellab/level_icons/`, displayed with nearest filtering:
+
+| Icon | PixelLab job | Gallery asset |
+| --- | --- | --- |
+| Sakura Gardens | `48e984fe-6edb-417c-a084-78fd9c3da74b` | `44a9c970-3383-5b75-a553-20fca28c6ef8` |
+| Bamboo Woodland | `51be914c-a97d-45b3-b457-8a6aa9b69d2c` | `33eeea2b-de01-592e-adb7-d87a2c82158c` |
+| Abandoned Shrines | `c7c5ce99-d2de-4a1f-8b2e-baef4be5a32c` | `fdd7ba41-5e13-5a54-9911-7349332f9828` |
 
 The gameplay side uses explicit resource slots rather than implicit asset names:
 
@@ -192,6 +270,11 @@ uses (`dir3`, `dir5`, `dir7`), all 240×384 like the wall tiles:
 - `window_dir*.png` / `window_broken_dir*.png`: only the window, transparent
   elsewhere. `MazeDemo` paints it over each floor's themed wall texture, so a
   window always matches the stone it is set into.
+
+The generated direction-3 and direction-7 overlays included a baked gray
+masonry strip beside the frame. That strip is now transparent in both intact
+and broken versions; the 240x384 canvas, window frame, pane and placement pivot
+are unchanged. Direction 5 already had no masonry strip.
 
 `MazeDemo` adds these as runtime sources of the rooms' shared wall TileSet,
 places doors in some carved openings (`door_chance`) and windows in some closed

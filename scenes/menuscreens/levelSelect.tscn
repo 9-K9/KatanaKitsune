@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/system/LevelSelect.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2"]
+
+[node name="LevelSelect" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.025, 0.015, 0.04, 0.97)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Content" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(1000, 0)
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "CHOOSE YOUR DESTINATION"
+horizontal_alignment = 1
+
+[node name="Instructions" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "PLAYER 1 CHOOSES FOR THE PARTY — THEME LASTS THE WHOLE RUN"
+horizontal_alignment = 1
+
+[node name="Cards" type="HBoxContainer" parent="Center/Content"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Description" type="Label" parent="Center/Content"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 28
+
+[node name="Back" type="Button" parent="Center/Content/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(150, 58)
+focus_mode = 0
+text = "BACK"
+
+[node name="Begin" type="Button" parent="Center/Content/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(430, 58)
+focus_mode = 0
+text = "BEGIN"
+
+[connection signal="pressed" from="Center/Content/Buttons/Back" to="." method="_back"]
+[connection signal="pressed" from="Center/Content/Buttons/Begin" to="." method="_begin"]

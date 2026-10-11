@@ -173,6 +173,8 @@ const THEMES: Array[Dictionary] = [
 ## Rooms per building.
 @export var building_size: Vector2i = Vector2i(2, 5)
 @export var max_ponds: int = 2
+## Run selection unless overridden for a direct editor launch.
+@export_enum("Run selection:-1", "Sakura Gardens:0", "Bamboo Woodland:1", "Abandoned Shrines:2") var level_theme: int = -1
 @export_range(0.0, 1.0, 0.05) var outdoor_enemy_chance: float = 0.6
 @export_enum("Automatic:-1", "Sakura:0", "Desert:1", "Snow:2") var outdoor_biome: int = -1
 @export_enum("Automatic:-1", "Calm:0", "Petals:1", "Rain:2", "Snowfall:3", "Sandstorm:4") var outdoor_weather: int = -1
@@ -314,6 +316,7 @@ var _building: bool = false
 var _door_skip: Dictionary = {}
 ## This floor's compound plan when `exteriors` is on, otherwise null.
 var _ext: MazeExterior = null
+var _level_theme: LevelTheme = null
 var _weather: OutdoorWeather = null
 ## Where the party arrives and the one room left free of monsters.
 var _start_cell := Vector2i.ZERO
@@ -399,13 +402,25 @@ func descend() -> void:
 func _roll_theme() -> void:
 	if THEMES.is_empty():
 		return
-	for _try in 24:
-		var pick: int = _rng.randi() % THEMES.size()
-		if not _themes_used.has(pick):
-			_theme_index = pick
-			_themes_used.append(pick)
-			return
-	_theme_index = _rng.randi() % THEMES.size()
+	var allowed: Array[int] = []
+	for i in THEMES.size():
+		if _level_theme == null or _level_theme.walls.has(THEMES[i]["wall"]):
+			allowed.append(i)
+	if allowed.is_empty():
+		push_error("MazeDemo: selected level theme has no compatible architecture.")
+		return
+	var fresh: Array[int] = []
+	for i in allowed:
+		if not _themes_used.has(i):
+			fresh.append(i)
+	if fresh.is_empty():
+		for i in allowed:
+			_themes_used.erase(i)
+		fresh = allowed
+	var visual_rng := RandomNumberGenerator.new()
+	visual_rng.seed = maze_seed ^ 0x5448454d
+	_theme_index = fresh[visual_rng.randi_range(0, fresh.size() - 1)]
+	_themes_used.append(_theme_index)
 
 
 ## Dresses every room in this depth's theme: walls, ground and floor layer.
@@ -424,6 +439,8 @@ func _theme_floor() -> void:
 	_theme_roofs(theme["wall"])
 
 	var layer_name: String = theme["floor"]
+	if _level_theme != null and theme["wall"].begins_with("japanese"):
+		layer_name = "Floor_JP_Indoor"
 	for cell in _rooms:
 		var room: Node = _rooms[cell]
 		var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
@@ -554,6 +571,8 @@ var _roof_material: ShaderMaterial
 ## roof layers share one shader that paints the wall set's face onto each side
 ## of the roof blocks.
 func _theme_roofs(prefix: String) -> void:
+	if _ext != null and _ext.theme != null:
+		return
 	var right: String = WALL_ART % [prefix, 3]
 	var left: String = WALL_ART % [prefix, 5]
 	if prefix == "" or not ResourceLoader.exists(right) or not ResourceLoader.exists(left):
@@ -633,6 +652,8 @@ func _build() -> void:
 	_building = true
 	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
+	if _level_theme == null:
+		_level_theme = LevelTheme.definition(level_theme if level_theme >= 0 else maxi(Roster.level_theme, 0))
 	_roll_theme()
 	var step := _lattice_step()
 	_start_cell = Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
@@ -640,6 +661,9 @@ func _build() -> void:
 	if exteriors:
 		_ext = MazeExterior.new(self, _rng, grid, step)
 		_ext.biome = ExteriorBiome.select(outdoor_biome, maze_seed)
+		if _ext.biome.id == ExteriorBiome.Id.SAKURA:
+			_ext.theme = _level_theme
+			_ext.biome = _level_theme.exterior_biome()
 		_ext.plan()
 		_start_cell = _ext.start_cell
 	await _load_floor_monsters(_start_cell)
@@ -786,6 +810,21 @@ func _load_floor_monsters(start: Vector2i) -> void:
 
 ## Drops monsters and breakables into the rooms. The room the player starts in
 ## is left clear so she is not swung at before taking a step.
+func _animal_palette(cell: Vector2i, outdoors: bool) -> Array[PackedScene]:
+	if _level_theme == null:
+		return animal_scenes
+	var names: Array[String] = _level_theme.outdoor_animals.duplicate() if outdoors else _level_theme.indoor_animals.duplicate()
+	if outdoors and _ext.is_pond(cell):
+		names.append_array(_level_theme.pond_animals)
+	var result: Array[PackedScene] = []
+	for name in names:
+		for scene in animal_scenes:
+			if scene.resource_path.get_file().get_basename() == name:
+				result.append(scene)
+				break
+	return result
+
+
 func _populate(step: Vector2) -> void:
 	_wave_started = Time.get_ticks_msec() * 0.001
 	enemies_killed = 0
@@ -838,10 +877,12 @@ func _populate(step: Vector2) -> void:
 				_place(here, torch_scenes[_rng.randi_range(0, torch_scenes.size() - 1)])
 		## Not in the start room, so nothing bolts from under the player's feet
 		## the moment the floor appears.
-		if not animal_scenes.is_empty() and cell != start:
-			var critters: int = _rng.randi_range(animals_per_room.x, animals_per_room.y)
+		var wildlife := _animal_palette(cell, outdoors)
+		if not wildlife.is_empty() and cell != start:
+			var density: float = _level_theme.animal_density if _level_theme != null else 1.0
+			var critters: int = int(round(_rng.randi_range(animals_per_room.x, animals_per_room.y) * density))
 			for i in critters:
-				_place(here, animal_scenes[_rng.randi_range(0, animal_scenes.size() - 1)])
+				_place(here, wildlife[_rng.randi_range(0, wildlife.size() - 1)])
 		if not table_scenes.is_empty() and not outdoors and _rng.randf() < table_chance:
 			_place_dining_set(here)
 		if trap_scene != null and cell != start and not outdoors and _rng.randf() < trap_chance:

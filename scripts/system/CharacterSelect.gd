@@ -59,7 +59,9 @@ var _base_frames: SpriteFrames = null
 ## device-blind — it answers to every pad at once — so once players are picking
 ## in turn the highlight is driven by hand from the active player's own device
 ## and focus is left out of it entirely.
-enum Phase { COUNT, CLAIM, COLOUR, HAIR, SKIN }
+enum Phase { COUNT, CLAIM, COLOUR, HAIR, SKIN, LEVEL }
+
+var _level_select: Control = null
 
 var _phase: int = Phase.COUNT
 var _wanted: int = 1
@@ -89,6 +91,10 @@ func _ready() -> void:
 	player.queue_free()
 
 	_build_icons()
+	_level_select = preload("res://scenes/menuscreens/levelSelect.tscn").instantiate()
+	add_child(_level_select)
+	_level_select.selected.connect(_take_level)
+	_level_select.cancelled.connect(_go_back)
 	if HAIR_SKIN_SELECTION_ENABLED:
 		_build_hair_icons()
 		_build_skin_icons()
@@ -348,6 +354,8 @@ func _process(delta: float) -> void:
 func _on_confirm_pressed() -> void:
 	## The on-screen button belongs to whoever is choosing now.
 	match _phase:
+		Phase.LEVEL:
+			return
 		Phase.HAIR:
 			_take_hair()
 		Phase.SKIN:
@@ -537,7 +545,7 @@ func _enter_claim() -> void:
 	if _probes.is_empty():
 		## Nothing left to claim with — more players were asked for than there
 		## are devices, so settle for the ones already in.
-		_start_game()
+		_enter_level()
 		return
 	_show_claim_prompt()
 
@@ -551,8 +559,10 @@ func _enter_colour() -> void:
 	## instead of confirming the first scheme and skipping the choice entirely.
 	_driver.prime()
 	icons.visible = true
-	hair_icons.visible = false
-	skin_icons.visible = false
+	if hair_icons != null:
+		hair_icons.visible = false
+	if skin_icons != null:
+		skin_icons.visible = false
 	## Opens on a scheme nobody has taken, so the first thing shown is a legal
 	## choice rather than one that silently refuses to confirm.
 	_highlighted = _first_free_scheme()
@@ -577,7 +587,7 @@ func _take_colour() -> void:
 	else:
 		_active += 1
 		if _active >= _wanted:
-			_start_game()
+			_enter_level()
 			return
 		_enter_claim()
 
@@ -614,7 +624,7 @@ func _take_skin() -> void:
 	Roster.set_skin(_active, _highlighted_skin)
 	_active += 1
 	if _active >= _wanted:
-		_start_game()
+		_enter_level()
 		return
 	_enter_claim()
 
@@ -623,6 +633,13 @@ func _take_skin() -> void:
 ## press away from being redone rather than a reason to restart the screen.
 func _go_back() -> void:
 	match _phase:
+		Phase.LEVEL:
+			_active = maxi(Roster.count() - 1, 0)
+			$Right.visible = true
+			$PreviewHolder.visible = true
+			_enter_colour()
+			_highlighted = Roster.scheme_of(_active)
+			_show(_highlighted)
 		Phase.COUNT:
 			get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
 		Phase.CLAIM:
@@ -645,6 +662,25 @@ func _go_back() -> void:
 			_enter_colour()
 		Phase.SKIN:
 			_enter_hair()
+
+
+func _enter_level() -> void:
+	if Roster.count() == 0:
+		_enter_count()
+		return
+	_phase = Phase.LEVEL
+	_hide_prompt()
+	$Right.visible = false
+	$PreviewHolder.visible = false
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused != null:
+		focused.release_focus()
+	_level_select.open()
+
+
+func _take_level(index: int) -> void:
+	Roster.level_theme = index
+	_start_game()
 
 
 func _start_game() -> void:

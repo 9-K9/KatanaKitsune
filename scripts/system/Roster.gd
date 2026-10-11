@@ -30,6 +30,7 @@ const SLOT_COLOURS: Array[Color] = [
 ## One entry per joined player:
 ## {"device": int, "scheme": int, "hair": int, "skin": int, "lost": bool}
 var players: Array[Dictionary] = []
+var level_theme: int = -1
 
 
 func _ready() -> void:
@@ -40,6 +41,7 @@ func _ready() -> void:
 ## backing out to the title and starting again does not stack players up.
 func clear() -> void:
 	players.clear()
+	level_theme = -1
 	roster_changed.emit()
 
 
