@@ -51,6 +51,7 @@ const FRAME_PORTRAIT := preload("res://assets/sprites/ui/frame_portrait.png")
 const FRAME_BAR := preload("res://assets/sprites/ui/bar_frame.png")
 
 @onready var depth_label: Label = $Depth
+var _kill_count_label: Label = null
 
 ## One entry per player: the nodes that make up their cell.
 var _cells: Array[Dictionary] = []
@@ -75,6 +76,16 @@ func _ready() -> void:
 	_rings.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_rings.draw.connect(_draw_rings)
 	add_child(_rings)
+
+	_kill_count_label = Label.new()
+	_kill_count_label.name = "KillCount"
+	_kill_count_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 98.0)
+	_kill_count_label.size = Vector2(240.0, 22.0)
+	_kill_count_label.add_theme_font_size_override("font_size", 13)
+	_kill_count_label.add_theme_color_override("font_color", Color(0.92, 0.78, 0.42))
+	_kill_count_label.add_theme_color_override("font_outline_color", Color(0.04, 0.03, 0.05, 0.95))
+	_kill_count_label.add_theme_constant_override("outline_size", 3)
+	add_child(_kill_count_label)
 
 	## Deferred a frame: the players are spawned by the maze during its own
 	## _ready, so asking for them now finds nobody and the row comes out empty.
@@ -187,6 +198,7 @@ func _process(delta: float) -> void:
 	if _rings != null:
 		_rings.queue_redraw()
 	_show_depth()
+	_show_kill_count()
 
 
 func _update_cell(index: int, delta: float) -> void:
@@ -305,3 +317,21 @@ func _show_depth() -> void:
 	var text: String = "FLOOR %d" % level.depth
 	if depth_label.text != text:
 		depth_label.text = text
+
+
+## Shows floor kills over the number of enemies actually spawned.
+func _show_kill_count() -> void:
+	if _kill_count_label == null:
+		return
+	var level = get_tree().current_scene
+	if level == null or not ("enemies_killed" in level) \
+			or not ("enemies_total" in level):
+		_kill_count_label.visible = false
+		return
+	_kill_count_label.visible = true
+	var killed: int = level.enemies_killed
+	var total: int = level.enemies_total
+	var remaining: int = maxi(total - killed, 0)
+	var text: String = "KILLS %d / %d   LEFT %d" % [killed, total, remaining]
+	if _kill_count_label.text != text:
+		_kill_count_label.text = text

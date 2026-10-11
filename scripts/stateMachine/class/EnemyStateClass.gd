@@ -1,6 +1,8 @@
 extends AI_Class
 class_name EnemyBase
 
+signal died
+
 ## Base class for the roaming monsters.
 ## Owns the stats, health and hit reactions; the behaviour itself lives in the
 ## states under scripts/stateMachine/enemyState/, driven by the monster's
@@ -865,7 +867,10 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 ## Drops the corpse out of collision immediately so it stops blocking movement
 ## and the player's ActionArea releases it as a target.
 func begin_death() -> void:
+	if is_dead:
+		return
 	is_dead = true
+	died.emit()
 	## Scored here rather than in the death state, so it lands the instant the
 	## monster is out of the fight — the streak window has to open now, not when
 	## the collapse animation finishes.

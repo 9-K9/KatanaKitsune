@@ -218,6 +218,11 @@ var _theme_index: int = -1
 ## the next wave would start instantly and forever.
 var _wave_live: bool = false
 var _clearing: bool = false
+## Per-floor kill progress shown on the HUD. Total counts only enemies that
+## were successfully instantiated; killed increments from each enemy's death
+## signal before its corpse starts the fade/free sequence.
+var enemies_killed: int = 0
+var enemies_total: int = 0
 ## When this wave began, for the speed bonus.
 var _wave_started: float = 0.0
 var _boss_placed: bool = false
@@ -664,6 +669,8 @@ func _load_floor_monsters(start: Vector2i) -> void:
 ## is left clear so she is not swung at before taking a step.
 func _populate(step: Vector2) -> void:
 	_wave_started = Time.get_ticks_msec() * 0.001
+	enemies_killed = 0
+	enemies_total = 0
 	_boss_placed = false
 	_scale_party()
 	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
@@ -680,6 +687,9 @@ func _populate(step: Vector2) -> void:
 					+ depth - 1 + int(round(float(party - 1) * party_enemy_bonus))
 			for i in n:
 				var monster = _place(here, monster_scene)
+				if monster is EnemyBase:
+					enemies_total += 1
+					monster.died.connect(_on_enemy_died)
 				if monster != null and monster.has_method("apply_tier"):
 					## Boss waves put one lord in the middle room's neighbour and
 					## fill the rest from the pool, so a boss wave reads as a
@@ -704,6 +714,10 @@ func _populate(step: Vector2) -> void:
 			_place_dining_set(here)
 		if trap_scene != null and cell != start and _rng.randf() < trap_chance:
 			_place_trap_run(here)
+
+
+func _on_enemy_died() -> void:
+	enemies_killed = mini(enemies_killed + 1, enemies_total)
 
 
 var _prop_pool_cache: Array = []
