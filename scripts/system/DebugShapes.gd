@@ -282,10 +282,10 @@ func _draw_shape(shape: Shape2D, at: Transform2D, colour: Color) -> void:
 		var points := PackedVector2Array()
 		var segments := 16
 		for i in range(segments + 1):
-			var a: float = -PI * 0.5 + PI * float(i) / float(segments)
+			var a: float = PI * float(i) / float(segments)
 			points.append(Vector2(cos(a), sin(a)) * cap.radius + Vector2(0, half_run))
 		for i in range(segments + 1):
-			var a: float = PI * 0.5 + PI * float(i) / float(segments)
+			var a: float = PI + PI * float(i) / float(segments)
 			points.append(Vector2(cos(a), sin(a)) * cap.radius + Vector2(0, -half_run))
 		var ring := PackedVector2Array()
 		for p in points:
