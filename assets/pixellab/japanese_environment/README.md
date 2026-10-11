@@ -143,6 +143,22 @@ sakura trees (`sakura_tree_a`, `sakura_tree_c`, `sakura_weeping`), `black_pine`,
 `scenes/props/japanese/exterior/`; tall canopies use `scripts/system/ExteriorProp.gd`
 to fade when the player walks behind them.
 
+The five trees were regenerated at 400px tall (roughly twice the old height;
+backgrounds removed locally) and drawn at 1.2–1.3x scale:
+
+| Tree | Gallery id |
+|---|---|
+| `sakura_tree_a` | `ad87f943-9bd8-454f-acee-de76c595b941` |
+| `sakura_tree_c` | `0d4b20e8-35e6-4046-b7d1-d08da2871e82` |
+| `sakura_weeping` | `4a805fa2-e825-4481-80b9-38453c033ac3` |
+| `black_pine` | `23139814-2551-4963-9e4e-e64f4319e381` |
+| `bamboo_clump` | `3279f81e-6840-4df6-a365-53ad3a75db72` |
+
+Building walls are single long tiles y-sorted at one point, so a canopy that
+crosses one gets cut or drawn out of order. `MazeExterior._clips_building`
+rejects any tree spot whose canopy (`TREE_CANOPY` x `TREE_HEIGHT`) overlaps a
+wall tile's art.
+
 `scripts/system/MazeExterior.gd` turns the maze into a shrine compound: separate
 buildings (roofed, entered through shoji doors guarded by komainu) set among
 courtyards, gardens, ponds (`shaders/water.gdshader`) and an abandoned road,
