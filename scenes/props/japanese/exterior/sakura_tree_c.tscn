@@ -4,19 +4,20 @@
 [ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
 
 [sub_resource type="OccluderPolygon2D" id="Occ_0"]
-polygon = PackedVector2Array(10, 0, 8.66, 2.5, 5, 4.33, 0, 5, -5, 4.33, -8.66, 2.5, -10, 0, -8.66, -2.5, -5, -4.33, -0, -5, 5, -4.33, 8.66, -2.5)
+polygon = PackedVector2Array(16.0, 0.0, 13.86, 4.0, 8.0, 6.93, 0.0, 8.0, -8.0, 6.93, -13.86, 4.0, -16.0, 0.0, -13.86, -4.0, -8.0, -6.93, -0.0, -8.0, 8.0, -6.93, 13.86, -4.0)
 
 [node name="SakuraTreeC" type="StaticBody2D" groups=["exterior_prop"]]
 y_sort_enabled = true
 script = ExtResource("2_scr")
-fade_rect = Rect2(-70, -165, 140, 130)
+fade_rect = Rect2(-86, -417, 172, 357)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(4, -73)
+position = Vector2(0, -194.3)
+scale = Vector2(1.3, 1.3)
 texture = ExtResource("1_tex")
 
 [node name="Collision0" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(10, 0, 8.66, 2.5, 5, 4.33, 0, 5, -5, 4.33, -8.66, 2.5, -10, 0, -8.66, -2.5, -5, -4.33, -0, -5, 5, -4.33, 8.66, -2.5)
+polygon = PackedVector2Array(16.0, 0.0, 13.86, 4.0, 8.0, 6.93, 0.0, 8.0, -8.0, 6.93, -13.86, 4.0, -16.0, 0.0, -13.86, -4.0, -8.0, -6.93, -0.0, -8.0, 8.0, -6.93, 13.86, -4.0)
 
 [node name="Occluder0" type="LightOccluder2D" parent="."]
 occluder = SubResource("Occ_0")

@@ -51,6 +51,9 @@ const ROAD_HALF_WIDTH: float = 150.0
 ## Nothing solid within this of a cell's middle: the spawn point, the chairs
 ## and the way across all go through there.
 const CENTRE_CLEARANCE: float = 170.0
+## Half the width of the tall trees' canopies, kept clear of building walls.
+const TREE_CANOPY: float = 150.0
+const TREE_HEIGHT: float = 420.0
 
 ## Exterior tile families, as the N in the tiles' `_each_N.png` file names.
 const TUFTY: Array[int] = [0, 1]
@@ -519,9 +522,9 @@ func build_perimeter() -> void:
 						continue
 					var inset: float = [0.05, 0.14][row] + _rng.randf_range(-0.02, 0.02)
 					var spot: Vector2 = a.lerp(b, t).lerp(centre, inset)
-					if _crowded(spot, 60.0):
+					if _crowded(spot, 90.0) or _clips_building(spot, TREE_CANOPY):
 						continue
-					_put(EDGE_TREES[_rng.randi_range(0, EDGE_TREES.size() - 1)], spot, 60.0)
+					_put(EDGE_TREES[_rng.randi_range(0, EDGE_TREES.size() - 1)], spot, 90.0)
 			if gate:
 				var mid: Vector2 = a.lerp(b, 0.5).lerp(centre, 0.1)
 				## The gate's crossbeam runs along +x, so it straddles a road
@@ -733,11 +736,45 @@ func _spot(cell: Vector2i, radius: float, off_road: bool = true) -> Variant:
 
 
 func _scatter(cell: Vector2i, props: Array, count: int, radius: float,
-		off_road: bool = true) -> void:
+		off_road: bool = true, canopy: float = 0.0) -> void:
 	for _i in count:
 		var p: Variant = _spot(cell, radius, off_road)
+		if p != null and canopy > 0.0 and _clips_building(p, canopy):
+			p = _spot(cell, radius, off_road)
+			if p != null and _clips_building(p, canopy):
+				p = null
 		if p != null:
 			_put(props[_rng.randi_range(0, props.size() - 1)], p, radius)
+
+
+## Whether a tall prop's canopy at `world` would overlap any wall's art.
+## Each wall tile is one long slab y-sorted at a single point, so a canopy
+## that crosses one is either cut by it or drawn over it out of order.
+func _clips_building(world: Vector2, canopy: float) -> bool:
+	var crown := Rect2(world.x - canopy, world.y - TREE_HEIGHT, canopy * 2.0, TREE_HEIGHT - 60.0)
+	var home: Vector2i = cell_at(world)
+	for dx in range(-2, 3):
+		for dy in range(-2, 3):
+			var room := _maze._rooms.get(home + Vector2i(dx, dy)) as Node2D
+			if room == null:
+				continue
+			for side in ["NW", "NE", "SW", "SE"]:
+				var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+				if layer == null or not layer.visible:
+					continue
+				for c in layer.get_used_cells():
+					var source := layer.tile_set.get_source(layer.get_cell_source_id(c)) \
+							as TileSetAtlasSource
+					if source == null:
+						continue
+					var atlas: Vector2i = layer.get_cell_atlas_coords(c)
+					var data: TileData = source.get_tile_data(atlas, layer.get_cell_alternative_tile(c))
+					var size := Vector2(source.texture_region_size * source.get_tile_size_in_atlas(atlas))
+					var middle: Vector2 = layer.map_to_local(c) - Vector2(data.texture_origin)
+					var art := Rect2(layer.to_global(middle - size * 0.5), size * layer.global_scale)
+					if art.intersects(crown):
+						return true
+	return false
 
 
 func _lanterns(cell: Vector2i, count: int) -> void:
@@ -772,7 +809,7 @@ func populate(cell: Vector2i) -> void:
 	var grass: Array[String] = ["grass_tuft"]
 	match kind[cell]:
 		Kind.GARDEN:
-			_scatter(cell, TREES, _rng.randi_range(2, 4), 70.0)
+			_scatter(cell, TREES, _rng.randi_range(2, 4), 110.0, true, TREE_CANOPY)
 			_scatter(cell, small, _rng.randi_range(2, 3), 40.0)
 			_lanterns(cell, _rng.randi_range(1, 2))
 			_scatter(cell, grass, _rng.randi_range(8, 14), 0.0)
@@ -781,11 +818,11 @@ func populate(cell: Vector2i) -> void:
 				_scatter(cell, ["dragon_statue"], 1, 70.0)
 			_lanterns(cell, 2)
 			_scatter(cell, small, _rng.randi_range(1, 2), 40.0)
-			_scatter(cell, TREES, _rng.randi_range(0, 1), 70.0)
+			_scatter(cell, TREES, _rng.randi_range(0, 1), 110.0, true, TREE_CANOPY)
 			_scatter(cell, grass, _rng.randi_range(3, 6), 0.0)
 		Kind.ROAD:
 			_lanterns(cell, _rng.randi_range(1, 2))
-			_scatter(cell, TREES, _rng.randi_range(1, 2), 70.0)
+			_scatter(cell, TREES, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
 			_scatter(cell, ["garden_rocks"], _rng.randi_range(0, 1), 40.0)
 			## Weeds straight through the paving: nobody has walked it in years.
 			_scatter(cell, grass, _rng.randi_range(6, 10), 0.0, false)
@@ -799,7 +836,7 @@ func populate(cell: Vector2i) -> void:
 					var p: Vector2 = pond[0] + Vector2(cos(angle), sin(angle)) * pond[1] \
 							* _rng.randf_range(1.0, 1.1)
 					_put("pond_reeds", p, 0.0)
-			_scatter(cell, TREES, _rng.randi_range(1, 2), 70.0)
+			_scatter(cell, TREES, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
 			_scatter(cell, small, _rng.randi_range(1, 2), 40.0)
 			_lanterns(cell, 1)
 
