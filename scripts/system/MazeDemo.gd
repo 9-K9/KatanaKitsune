@@ -195,6 +195,16 @@ const THEMES: Array[Dictionary] = [
 @export var torch_scenes: Array[PackedScene] = []
 @export var torches_per_room: Vector2i = Vector2i(1, 3)
 
+## Shoji doors and windows set into the walls, as tiles in the wall layers so
+## fading, sorting and light occlusion treat them exactly like the stone.
+##
+## A door goes into an opening the maze already carved, so it never changes the
+## route — it closes one side of the gap with a doorway wall and slides open for
+## whoever comes near. A window replaces a stretch of closed wall; smashed, it
+## lets light, sight and slashes through but still not feet.
+@export_range(0.0, 1.0) var door_chance: float = 0.3
+@export_range(0.0, 1.0) var window_chance: float = 0.25
+
 const SIDES: Array[String] = ["NE", "NW", "SE", "SW"]
 ## Which lattice step each side faces. This follows from the isometric transform
 ## rather than from looking at a render: +x moves right and down, which is SE,
@@ -204,6 +214,26 @@ const NEIGHBOUR := {
 	"SW": Vector2i(0, 1),
 	"SE": Vector2i(1, 0),
 	"NW": Vector2i(-1, 0),
+}
+## The side of the neighbouring room that faces back across the same wall.
+const FACING_BACK := {"SE": "NW", "NW": "SE", "SW": "NE", "NE": "SW"}
+
+const ARCH_DIR := "res://assets/pixellab/japanese_environment/architecture/"
+## Runtime tile sources, offset from the wall direction they stand in for.
+const DOOR_SOURCE: int = 100
+const WINDOW_SOURCE: int = 110
+const SMASHED_WINDOW_SOURCE: int = 120
+## Physics bit for smashed windows: characters collide with it, but sight
+## lines and slash projectiles test bit 1 alone, so they pass straight through.
+const SMASHED_LAYER: int = 8
+## Wall directions that have door and window art.
+const ARCH_DIRS: Array[int] = [3, 5, 7]
+## Each door's opening in its art, in texture pixels: left jamb x, right jamb
+## x, and the gradient of the wall's ground line.
+const DOORWAYS := {
+	3: Vector3(56, 195, -0.5),
+	5: Vector3(51, 173, 0.5),
+	7: Vector3(68, 194, -0.5),
 }
 
 var _rng := RandomNumberGenerator.new()
@@ -260,12 +290,19 @@ var _wave_bag: Array[String] = []
 ## something else would start another. Guards the rebuild on the stairs against
 ## a wave that reports itself cleared mid-build.
 var _building: bool = false
+## "<room name>/<side>" for the open half of every doored gap, so no column is
+## stood in the doorway.
+var _door_skip: Dictionary = {}
 
 
 func _ready() -> void:
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
 		return
+	## Smashed windows still stop anyone walking through them, on a physics bit
+	## of their own. Everything that collides with walls gets that bit as it
+	## arrives, so players, monsters and summons need no per-scene setup.
+	get_tree().node_added.connect(_on_node_added)
 	## Zero means roll one. The scene used to carry maze_seed = 12345, so every
 	## run of the game built the identical dungeon — same maze, same rooms, same
 	## props, every launch. Set it to a fixed number again only to reproduce a
@@ -568,6 +605,7 @@ func _build() -> void:
 
 	SceneLoader.step(0.62, "CARVING THE MAZE")
 	_carve()
+	_place_architecture()
 	_build_wall_occluders()
 	await get_tree().process_frame
 	SceneLoader.step(0.68, "RAISING COLUMNS")
@@ -575,6 +613,9 @@ func _build() -> void:
 	await get_tree().process_frame
 	SceneLoader.step(0.74, "LIGHTING THE FLOOR")
 	_spawn_player(step)
+	## After _spawn_player, which is where the floor is themed: the windows are
+	## painted onto whichever wall texture this floor ended up with.
+	_paint_windows()
 	_place_starting_chair()
 	await get_tree().process_frame
 	await _populate(step)
@@ -919,6 +960,272 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 	for back in SIDES:
 		if other + NEIGHBOUR[back] == cell:
 			walls[other][back] = false
+
+
+func _on_node_added(node: Node) -> void:
+	var body := node as CharacterBody2D
+	if body != null and (body.collision_mask & 1) != 0:
+		body.collision_mask |= SMASHED_LAYER
+
+
+## Doors into some of the carved openings, windows into some of the closed
+## walls. Runs after _carve, which decides which is which, and before the light
+## occluders and columns, which both read the finished wall tiles.
+func _place_architecture() -> void:
+	_door_skip.clear()
+	var tiles: TileSet = null
+	for room in _rooms.values():
+		var probe := room.get_node_or_null("TileMap/Walls_SE") as TileMapLayer
+		if probe != null and probe.tile_set != null:
+			tiles = probe.tile_set
+			break
+	if tiles == null:
+		return
+	_add_architecture_sources(tiles)
+
+	## Doors. Each shared gap is visited once, from the room on its NW/NE side,
+	## and either room's half of the pair may carry the door.
+	for cell in _rooms:
+		for side in ["SE", "SW"]:
+			var other: Vector2i = cell + NEIGHBOUR[side]
+			if not _rooms.has(other):
+				continue
+			var host: Node = _rooms[cell]
+			var guest: Node = _rooms[other]
+			var host_side: String = side
+			var guest_side: String = FACING_BACK[side]
+			if not host.has_method("open_sides") \
+					or not host_side in host.open_sides() \
+					or not guest_side in guest.open_sides():
+				continue
+			if _rng.randf() >= door_chance:
+				continue
+			if _rng.randf() < 0.5:
+				var swap_room: Node = host
+				host = guest
+				guest = swap_room
+				var swap_side: String = host_side
+				host_side = guest_side
+				guest_side = swap_side
+			var layer := host.get_node_or_null("TileMap/Walls_" + host_side) as TileMapLayer
+			if layer == null:
+				continue
+			var cells := _architecture_cells(layer)
+			if cells.is_empty():
+				continue
+			host.set_side(host_side, true)
+			var door_cell: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+			var dir: int = layer.get_cell_source_id(door_cell)
+			layer.set_cell(door_cell, DOOR_SOURCE + dir, Vector2i.ZERO)
+			_add_door(layer, door_cell, dir)
+			_door_skip["%s/%s" % [guest.name, guest_side]] = true
+
+	## Windows, only in the wall of a pair that draws in front. The one behind
+	## is lower on screen in its own room but hidden here, so it loses the
+	## matching stretch of stone, or there would be nothing to see through.
+	for cell in _rooms:
+		var room: Node = _rooms[cell]
+		for side in SIDES:
+			if not room.get("wall_" + side.to_lower()):
+				continue
+			var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+			if layer == null:
+				continue
+			var partner: TileMapLayer = null
+			var other: Vector2i = cell + NEIGHBOUR[side]
+			if _rooms.has(other):
+				if side == "SE" or side == "NE":
+					continue
+				partner = _rooms[other].get_node_or_null(
+						"TileMap/Walls_" + FACING_BACK[side]) as TileMapLayer
+				if partner != null and not partner.enabled:
+					partner = null
+			if _rng.randf() >= window_chance:
+				continue
+			var cells := _architecture_cells(layer)
+			if cells.is_empty():
+				continue
+			var window_cell: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+			var dir: int = layer.get_cell_source_id(window_cell)
+			layer.set_cell(window_cell, WINDOW_SOURCE + dir, Vector2i.ZERO)
+			if partner != null:
+				_erase_nearest(partner, layer.to_global(layer.map_to_local(window_cell)))
+			_add_window(layer, window_cell, dir)
+
+
+## Middle cells of a wall that still show plain stone, so a door or window
+## never lands on a corner piece or on top of another.
+func _architecture_cells(layer: TileMapLayer) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = layer.get_used_cells()
+	cells.sort_custom(func(a, b): return a.x + a.y < b.x + b.y)
+	var out: Array[Vector2i] = []
+	for i in range(1, cells.size() - 1):
+		if layer.get_cell_source_id(cells[i]) in ARCH_DIRS:
+			out.append(cells[i])
+	return out
+
+
+func _erase_nearest(layer: TileMapLayer, world: Vector2) -> void:
+	var best := Vector2i.ZERO
+	var best_distance: float = INF
+	for cell in layer.get_used_cells():
+		var distance: float = layer.to_global(layer.map_to_local(cell)).distance_to(world)
+		if distance < best_distance:
+			best_distance = distance
+			best = cell
+	if best_distance < INF:
+		layer.erase_cell(best)
+
+
+## The door frame, window and smashed window tiles, added to the rooms' shared
+## TileSet once. They copy everything but their art from the plain wall they
+## replace, so they line up, sort and fade exactly like it.
+func _add_architecture_sources(tiles: TileSet) -> void:
+	if tiles.get_physics_layers_count() < 2:
+		tiles.add_physics_layer()
+		tiles.set_physics_layer_collision_layer(1, SMASHED_LAYER)
+		tiles.set_physics_layer_collision_mask(1, 0)
+	for dir in ARCH_DIRS:
+		if not tiles.has_source(dir):
+			continue
+		var wall := tiles.get_source(dir) as TileSetAtlasSource
+		var footprint := _wall_polygon(wall)
+		if footprint.is_empty():
+			continue
+		var half_width: float = _wall_art_size(wall).x * 0.5
+		var span: Vector3 = DOORWAYS[dir]
+		if not tiles.has_source(DOOR_SOURCE + dir):
+			## The jambs either side of the opening; the door fills the gap.
+			var jambs: Array = Geometry2D.clip_polygons(footprint,
+					_doorway_band(footprint, span, half_width))
+			_add_wall_source(tiles, DOOR_SOURCE + dir,
+					load(ARCH_DIR + "shoji_door_frame_dir%d.png" % dir), wall, jambs, 0)
+		## Plain stone until _paint_windows has this floor's wall art to work on.
+		if not tiles.has_source(WINDOW_SOURCE + dir):
+			_add_wall_source(tiles, WINDOW_SOURCE + dir, wall.texture, wall, [footprint], 0)
+		if not tiles.has_source(SMASHED_WINDOW_SOURCE + dir):
+			_add_wall_source(tiles, SMASHED_WINDOW_SOURCE + dir, wall.texture, wall,
+					[footprint], 1)
+
+
+func _add_wall_source(tiles: TileSet, id: int, texture: Texture2D,
+		like: TileSetAtlasSource, polygons: Array, physics_layer: int) -> void:
+	var source := TileSetAtlasSource.new()
+	source.texture = texture
+	source.texture_region_size = like.texture_region_size
+	tiles.add_source(source, id)
+	source.create_tile(Vector2i.ZERO, like.get_tile_size_in_atlas(Vector2i.ZERO))
+	var data := source.get_tile_data(Vector2i.ZERO, 0)
+	var ref := like.get_tile_data(Vector2i.ZERO, 0)
+	data.texture_origin = ref.texture_origin
+	data.y_sort_origin = ref.y_sort_origin
+	data.z_index = ref.z_index
+	for polygon in polygons:
+		if (polygon as PackedVector2Array).size() < 3:
+			continue
+		var index: int = data.get_collision_polygons_count(physics_layer)
+		data.add_collision_polygon(physics_layer)
+		data.set_collision_polygon_points(physics_layer, index, polygon)
+
+
+func _wall_polygon(wall: TileSetAtlasSource) -> PackedVector2Array:
+	var data := wall.get_tile_data(Vector2i.ZERO, 0)
+	if data == null or data.get_collision_polygons_count(0) == 0:
+		return PackedVector2Array()
+	return data.get_collision_polygon_points(0, 0)
+
+
+func _wall_art_size(wall: TileSetAtlasSource) -> Vector2:
+	return Vector2(wall.texture_region_size * wall.get_tile_size_in_atlas(Vector2i.ZERO))
+
+
+## The doorway's passage through a wall footprint: the strip between the two
+## jambs, straight down the screen. The footprint is a slanted slab about 100px
+## deep and overlaps the next cell along by 24px either side, so a cut along
+## the other isometric axis would shear the opening into the neighbouring
+## stone. A straight strip stays clear of it, and anyone walking diagonally
+## into a jamb slides along it and through.
+func _doorway_band(_footprint: PackedVector2Array, span: Vector3,
+		half_width: float) -> PackedVector2Array:
+	var left: float = span.x - half_width
+	var right: float = span.y - half_width
+	return PackedVector2Array([Vector2(left, -10000.0), Vector2(right, -10000.0),
+			Vector2(right, 10000.0), Vector2(left, 10000.0)])
+
+
+## The sliding panels for a door frame tile. They hang off the tile's own sort
+## line, so they sort against characters exactly as the frame around them does.
+func _add_door(layer: TileMapLayer, cell: Vector2i, dir: int) -> void:
+	var wall := layer.tile_set.get_source(dir) as TileSetAtlasSource
+	var ref := wall.get_tile_data(Vector2i.ZERO, 0)
+	var sort := Vector2(0.0, float(ref.y_sort_origin))
+	var half_width: float = _wall_art_size(wall).x * 0.5
+	var span: Vector3 = DOORWAYS[dir]
+	var opening := Geometry2D.intersect_polygons(_wall_polygon(wall),
+			_doorway_band(_wall_polygon(wall), span, half_width))
+	if opening.is_empty():
+		return
+	var doorway := PackedVector2Array()
+	for p in opening[0]:
+		doorway.append(p - sort)
+	var door := SlidingDoor.new()
+	door.name = "Door_%d_%d" % [cell.x, cell.y]
+	door.panel_texture = load(ARCH_DIR + "shoji_door_panel_dir%d.png" % dir)
+	door.broken_texture = load(ARCH_DIR + "shoji_door_broken_dir%d.png" % dir)
+	door.split_x = (span.x + span.y) * 0.5
+	door.half_width = (span.y - span.x) * 0.5
+	door.slope = span.z
+	## A tile's art is centred on its cell minus texture_origin.
+	door.sprite_offset = -Vector2(ref.texture_origin) - sort
+	door.doorway = doorway
+	layer.add_child(door)
+	door.position = layer.map_to_local(cell) + sort
+
+
+## Something for a blade to hit. The glass itself is the tile.
+func _add_window(layer: TileMapLayer, cell: Vector2i, dir: int) -> void:
+	var wall := layer.tile_set.get_source(dir) as TileSetAtlasSource
+	var pane := WindowPane.new()
+	pane.name = "Window_%d_%d" % [cell.x, cell.y]
+	pane.layer = layer
+	pane.cell = cell
+	pane.broken_source = SMASHED_WINDOW_SOURCE + dir
+	var shape := CollisionPolygon2D.new()
+	shape.polygon = _wall_polygon(wall)
+	pane.add_child(shape)
+	layer.add_child(pane)
+	pane.position = layer.map_to_local(cell)
+
+
+## Paints the window art over this floor's own wall texture, intact and
+## smashed, so a window always sits in matching stone whatever the theme.
+func _paint_windows() -> void:
+	var tiles: TileSet = null
+	for room in _rooms.values():
+		var probe := room.get_node_or_null("TileMap/Walls_SE") as TileMapLayer
+		if probe != null and probe.tile_set != null:
+			tiles = probe.tile_set
+			break
+	if tiles == null:
+		return
+	for dir in ARCH_DIRS:
+		if not tiles.has_source(dir) or not tiles.has_source(WINDOW_SOURCE + dir):
+			continue
+		var wall_image := (tiles.get_source(dir) as TileSetAtlasSource).texture.get_image()
+		if wall_image == null:
+			continue
+		if wall_image.is_compressed():
+			wall_image.decompress()
+		wall_image.convert(Image.FORMAT_RGBA8)
+		for pair in [[WINDOW_SOURCE, "window"], [SMASHED_WINDOW_SOURCE, "window_broken"]]:
+			var overlay := (load(ARCH_DIR + "%s_dir%d.png" % [pair[1], dir]) as Texture2D).get_image()
+			if overlay.is_compressed():
+				overlay.decompress()
+			overlay.convert(Image.FORMAT_RGBA8)
+			var image := wall_image.duplicate() as Image
+			image.blend_rect(overlay, Rect2i(Vector2i.ZERO, overlay.get_size()), Vector2i.ZERO)
+			(tiles.get_source(pair[0] + dir) as TileSetAtlasSource).texture = \
+					ImageTexture.create_from_image(image)
 
 
 ## Chairs to rest at: one beside the spawn, and a few more out on open floor so
@@ -1414,6 +1721,8 @@ func _place_pillars() -> void:
 		if not room.has_method("open_sides"):
 			continue
 		for side in room.open_sides():
+			if _door_skip.has("%s/%s" % [room.name, side]):
+				continue
 			var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
 			if layer == null:
 				continue

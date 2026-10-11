@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_x898g"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupFood.tscn" id="2_cbg1n"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupDrink.tscn" id="3_noczc"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/butsudan_shrine_broken_southWest.png" id="4_fw1i5"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/butsudan_shrine_southWest.png" id="5_frbjr"]
+
+[node name="ButsudanShrineSouthWest" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_x898g")
+loot_scenes = Array[PackedScene]([ExtResource("2_cbg1n"), ExtResource("3_noczc")])
+display_loot = true
+loot_display_lift = 131.2
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 40.0
+always_drops = true
+break_texture = ExtResource("4_fw1i5")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(5.15, -63.79)
+scale = Vector2(1.471, 1.471)
+texture = ExtResource("5_frbjr")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+scale = Vector2(1.471, 1.471)
+polygon = PackedVector2Array(0, -17.64, 35.27, 0, 0, 17.64, -35.27, 0)

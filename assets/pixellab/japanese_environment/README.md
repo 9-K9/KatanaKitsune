@@ -48,6 +48,18 @@ isometric perspective and was removed; the IDs below are those originals.
 | tea_set | `8a779f51-c548-459c-a19a-e0ca7200d2bb` | `14d90eb0-e51b-4ce5-8e00-e56535cae98f` |
 | zabuton_stack | `c6212a0c-48da-4111-a652-b392f8151ac5` | `d18635aa-0a50-48bb-b6b3-28567252a3df` |
 
+The larger props below were generated directly in the four isometric facings
+on 136×136 canvases and scaled in their scenes to stand against the player:
+
+| Prop | Base PixelLab ID | Broken PixelLab ID |
+| --- | --- | --- |
+| tansu_chest | `f0e6e4a2-5477-48fe-b870-6aeaabea759e` | `d48f3427-dc13-4e4a-8130-f59c78eda911` |
+| samurai_armour_stand | `d92e8abb-77c3-4895-a1fa-d42c76421ff5` | `9cceaefe-a7de-4afa-bc6e-0a739f572b1b` |
+| taiko_drum | `809c360d-84ec-49d4-b746-b6b8680d039e` | `37d58454-414b-450a-b41a-562c3750d1f1` |
+| rice_bales | `47af6b04-38b9-4352-826c-c597aab56902` | `7b38705f-e083-4deb-8e44-26a479bbce8d` |
+| supply_crates | `dfa8363b-f4ef-48b9-8e6c-f6803e86cc6d` | `af2fa78e-03f8-45ac-b5b1-e9f37416fb8e` |
+| butsudan_shrine | `04dd9e0e-523c-4238-a338-d9c2bc0b71f7` | `caec1cc3-c44f-4043-b42c-903fa3becc75` |
+
 ## Tile PixelLab IDs
 
 - Floors: `dfefff55-78cd-4797-9603-9b78964c723b`
@@ -67,10 +79,28 @@ navigation, and placement metadata remain implementation work.
 
 ## Reusable prop scenes
 
-The forty game-ready scenes are under `res://scenes/props/japanese/`, one per
+The sixty-four game-ready scenes are under `res://scenes/props/japanese/`, one per
 prop and facing (`<prop>_<facing>.tscn`). Each is a Y-sorted `StaticBody2D`
 with a collision polygon fitted to that facing's art, intact texture,
 single-frame broken texture, and persistent debris after destruction.
+
+## Doors and windows
+
+`architecture/` holds wall-tile art for the three wall directions the maze
+uses (`dir3`, `dir5`, `dir7`), all 240×384 like the wall tiles:
+
+- `shoji_door_frame_dir*.png`: the wall with an empty doorway.
+- `shoji_door_panel_dir*.png` / `shoji_door_broken_dir*.png`: only the paper
+  interior of the doorway, intact and torn. `SlidingDoor` slides it apart into
+  the jambs with `shaders/shojiSlide.gdshader`.
+- `window_dir*.png` / `window_broken_dir*.png`: only the window, transparent
+  elsewhere. `MazeDemo` paints it over each floor's themed wall texture, so a
+  window always matches the stone it is set into.
+
+`MazeDemo` adds these as runtime sources of the rooms' shared wall TileSet,
+places doors in some carved openings (`door_chance`) and windows in some closed
+walls (`window_chance`). Smashed windows collide on physics bit 8 only, which
+characters walk into but sight lines, light and slash projectiles ignore.
 
 The original chair scene now exposes a `SitAnchor` and sitting direction.
 Katana Kitsune snaps to that anchor before playing the existing directional

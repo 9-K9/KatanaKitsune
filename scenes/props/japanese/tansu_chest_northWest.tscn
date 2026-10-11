@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_rh5f5"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupFood.tscn" id="2_f7ijn"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupDrink.tscn" id="3_fkc2a"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tansu_chest_broken_northWest.png" id="4_da0jc"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tansu_chest_northWest.png" id="5_vljxc"]
+
+[node name="TansuChestNorthWest" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_rh5f5")
+loot_scenes = Array[PackedScene]([ExtResource("2_f7ijn"), ExtResource("3_fkc2a")])
+display_loot = true
+loot_display_lift = 127.5
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 40.0
+always_drops = true
+break_texture = ExtResource("4_da0jc")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1.38, -61.02)
+scale = Vector2(1.382, 1.382)
+texture = ExtResource("5_vljxc")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+scale = Vector2(1.382, 1.382)
+polygon = PackedVector2Array(0, -17.85, 35.7, 0, 0, 17.85, -35.7, 0)

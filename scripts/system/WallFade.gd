@@ -145,6 +145,14 @@ func _slope(cell: Vector2i) -> float:
 	if source != null:
 		var data: TileData = source.get_tile_data(get_cell_atlas_coords(cell),
 			get_cell_alternative_tile(cell))
+		## Door and window tiles are MazeDemo's runtime copies of a plain wall,
+		## numbered 100 + its id. A door frame's footprint is cut into jambs whose
+		## longest edges run across the wall, and a smashed window's sits on
+		## another physics layer, so read the plain wall's footprint instead.
+		if source_id >= 100 and tile_set.has_source(source_id % 10):
+			var plain := tile_set.get_source(source_id % 10) as TileSetAtlasSource
+			if plain != null:
+				data = plain.get_tile_data(Vector2i.ZERO, 0)
 		if data != null and data.get_collision_polygons_count(0) > 0:
 			var points := data.get_collision_polygon_points(0, 0)
 			## The footprint's longest edge runs along the wall.
