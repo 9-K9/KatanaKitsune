@@ -14,11 +14,10 @@ kind = 1
 amount = 1.6
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1898797504]
-position = Vector2(0, -20)
+position = Vector2(0, -4)
 texture = ExtResource("2_t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2110618008]
-position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_p")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=503202580]

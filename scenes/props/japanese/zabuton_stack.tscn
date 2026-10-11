@@ -1,38 +1,33 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene format=3 uid="uid://cgdc4q06oyyjw"]
 
-[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack.png" id="2_intact"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken.png" id="3_broken"]
+[ext_resource type="Script" uid="uid://qotf2l58oqn6" path="res://scripts/system/Breakable.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://8b7pvd04shfh" path="res://assets/pixellab/japanese_environment/props/zabuton_stack.png" id="2_intact"]
+[ext_resource type="Texture2D" uid="uid://dl60rucwftb2l" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken.png" id="3_broken"]
+[ext_resource type="Texture2D" uid="uid://crc71enps04bh" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_northEast.png" id="30_northEast"]
+[ext_resource type="Texture2D" uid="uid://c1ki036utq87o" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_northWest.png" id="30_northWest"]
+[ext_resource type="Texture2D" uid="uid://drqlt7nusk6fa" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_southEast.png" id="30_southEast"]
+[ext_resource type="Texture2D" uid="uid://ben27emslfcam" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_southWest.png" id="30_southWest"]
+[ext_resource type="Texture2D" uid="uid://bcfq8tkatya3m" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_northEast.png" id="31_bnorthEast"]
+[ext_resource type="Texture2D" uid="uid://2kaqtfh78f3k" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_northWest.png" id="31_bnorthWest"]
+[ext_resource type="Texture2D" uid="uid://c4yd3hy8pislf" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_southEast.png" id="31_bsouthEast"]
+[ext_resource type="Texture2D" uid="uid://dyb0a33lfokru" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_southWest.png" id="31_bsouthWest"]
 
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_southEast.png" id="30_southEast"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_southWest.png" id="30_southWest"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_northWest.png" id="30_northWest"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_northEast.png" id="30_northEast"]
-
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_southEast.png" id="31_bsouthEast"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_southWest.png" id="31_bsouthWest"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_northWest.png" id="31_bnorthWest"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/zabuton_stack_broken_northEast.png" id="31_bnorthEast"]
-
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_prop"]
-points = PackedVector2Array(-23, 0, 0, -10, 23, 0, 0, 10)
-
-[node name="ZabutonStack" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
+[node name="ZabutonStack" type="StaticBody2D" unique_id=1405534644 groups=["breakable", "japanese_prop"]]
 y_sort_enabled = true
 collision_layer = 3
 script = ExtResource("1_script")
 max_health = 12.0
+break_texture = ExtResource("3_broken")
 facing_textures = Array[Texture2D]([ExtResource("30_southEast"), ExtResource("30_southWest"), ExtResource("30_northWest"), ExtResource("30_northEast")])
 facing_break_textures = Array[Texture2D]([ExtResource("31_bsouthEast"), ExtResource("31_bsouthWest"), ExtResource("31_bnorthWest"), ExtResource("31_bnorthEast")])
-break_texture = ExtResource("3_broken")
 break_frames = 1
 persist_broken = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -32)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1140881929]
+position = Vector2(0, -8)
 texture = ExtResource("2_intact")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1140451109]
+position = Vector2(0, 8)
 scale = Vector2(1.3, 1.3)
-shape = SubResource("ConvexPolygonShape2D_prop")
-
+polygon = PackedVector2Array(-18.46154, 8.461539, -18.46154, 11.538464, -23.846157, 11.538464, -23.846157, -14.615386, -19.23077, -23.846157, 19.23077, -23.846157, 23.846157, -14.615386, 23.846157, 12.3076935, 18.46154, 12.3076935, 18.46154, 8.461539)

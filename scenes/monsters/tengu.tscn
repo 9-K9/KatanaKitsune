@@ -132,6 +132,12 @@ shader = ExtResource("soften_shader")
 shader_parameter/enabled = false
 shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
 shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
+shader_parameter/recolor_hair = false
+shader_parameter/hair_shadow_color = Vector3(0, 0, 0)
+shader_parameter/hair_highlight_color = Vector3(0.659, 0.659, 0.659)
+shader_parameter/recolor_skin = false
+shader_parameter/skin_shadow_color = Vector3(0.423529, 0.25098, 0.188235)
+shader_parameter/skin_highlight_color = Vector3(0.933333, 0.666667, 0.556863)
 shader_parameter/soften_highlights = true
 shader_parameter/soften_amount = 0.85
 shader_parameter/spike_threshold = 0.1
@@ -12321,7 +12327,6 @@ bg_color = Color(0.66, 0.15, 0.15, 1)
 
 [sub_resource type="Animation" id="Anim_tengu_arise_east_collision"]
 resource_name = "arise_east"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12329,7 +12334,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-176.12, 22.96)]
@@ -12341,7 +12346,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-176.12, 22.96)]
@@ -12349,7 +12354,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_north_collision"]
 resource_name = "arise_north"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12357,7 +12361,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(11.33, 108.68)]
@@ -12369,7 +12373,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(11.33, 108.68)]
@@ -12377,7 +12381,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_northEast_collision"]
 resource_name = "arise_northEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12385,7 +12388,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-117.04, 86.02)]
@@ -12397,7 +12400,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-117.04, 86.02)]
@@ -12405,7 +12408,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_northWest_collision"]
 resource_name = "arise_northWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12413,7 +12415,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(128.62, 80.68)]
@@ -12425,7 +12427,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(128.62, 80.68)]
@@ -12433,7 +12435,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_south_collision"]
 resource_name = "arise_south"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12441,7 +12442,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-8.94, -66.05)]
@@ -12453,7 +12454,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-8.94, -66.05)]
@@ -12461,7 +12462,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_southEast_collision"]
 resource_name = "arise_southEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12469,7 +12469,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-127.44, -35.72)]
@@ -12481,7 +12481,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-127.44, -35.72)]
@@ -12489,7 +12489,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_southWest_collision"]
 resource_name = "arise_southWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12497,7 +12496,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(111.52, -43.82)]
@@ -12509,7 +12508,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(111.52, -43.82)]
@@ -12517,7 +12516,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_arise_west_collision"]
 resource_name = "arise_west"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12525,7 +12523,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(171.64, 15.32)]
@@ -12537,7 +12535,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(171.64, 15.32)]
@@ -12556,7 +12554,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(116.91, 100.90)]
+"values": [Vector2(0, 0), Vector2(116.91, 100.9)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12568,7 +12566,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(116.91, 100.90)]
+"values": [Vector2(0, 0), Vector2(116.91, 100.9)]
 }
 
 [sub_resource type="Animation" id="Anim_tengu_attack_north_collision"]
@@ -12668,7 +12666,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-204.30, 58.14)]
+"values": [Vector2(0, 0), Vector2(-204.3, 58.14)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12680,7 +12678,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-204.30, 58.14)]
+"values": [Vector2(0, 0), Vector2(-204.3, 58.14)]
 }
 
 [sub_resource type="Animation" id="Anim_tengu_attack_southEast_collision"]
@@ -12752,7 +12750,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-116.70, -103.30)]
+"values": [Vector2(0, 0), Vector2(-116.7, -103.3)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12764,7 +12762,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-116.70, -103.30)]
+"values": [Vector2(0, 0), Vector2(-116.7, -103.3)]
 }
 
 [sub_resource type="Animation" id="Anim_tengu_crit_east_collision"]
@@ -13217,7 +13215,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_east_collision"]
 resource_name = "hurt_east"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13225,7 +13222,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-0.37, -59.16)]
@@ -13237,7 +13234,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-0.37, -59.16)]
@@ -13245,7 +13242,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_north_collision"]
 resource_name = "hurt_north"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13253,10 +13249,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-118.21, 0.30)]
+"values": [Vector2(0, 0), Vector2(-118.21, 0.3)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -13265,15 +13261,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-118.21, 0.30)]
+"values": [Vector2(0, 0), Vector2(-118.21, 0.3)]
 }
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_northEast_collision"]
 resource_name = "hurt_northEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13281,7 +13276,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-83.85, -41.81)]
@@ -13293,7 +13288,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-83.85, -41.81)]
@@ -13301,7 +13296,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_northWest_collision"]
 resource_name = "hurt_northWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13309,7 +13303,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-83.43, 41.93)]
@@ -13321,7 +13315,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-83.43, 41.93)]
@@ -13329,7 +13323,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_south_collision"]
 resource_name = "hurt_south"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13337,10 +13330,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(118.32, 0.00)]
+"values": [Vector2(0, 0), Vector2(118.32, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -13349,15 +13342,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(118.32, 0.00)]
+"values": [Vector2(0, 0), Vector2(118.32, 0)]
 }
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_southEast_collision"]
 resource_name = "hurt_southEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13365,7 +13357,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(83.49, -42.15)]
@@ -13377,7 +13369,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(83.49, -42.15)]
@@ -13385,7 +13377,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_southWest_collision"]
 resource_name = "hurt_southWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13393,7 +13384,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(83.86, 41.52)]
@@ -13405,7 +13396,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(83.86, 41.52)]
@@ -13413,7 +13404,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_tengu_hurt_west_collision"]
 resource_name = "hurt_west"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -13421,7 +13411,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0.34, 59.11)]
@@ -13433,7 +13423,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0.34, 59.11)]
@@ -13514,9 +13504,9 @@ offset = Vector2(0, 30)
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1564197853]
 offset_left = -26.0
-offset_top = -194.0
+offset_top = -154.0
 offset_right = 26.0
-offset_bottom = -188.0
+offset_bottom = -148.0
 theme_override_styles/background = SubResource("StyleBoxFlat_hpbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
@@ -13565,7 +13555,5 @@ script = ExtResource("st_dodge")
 distance = 165.0
 duration = 0.38
 
-[node name="CollisionTween" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimLib_tengu_collision")
-}
+[node name="CollisionTween" type="AnimationPlayer" parent="." unique_id=505144239]
+libraries/ = SubResource("AnimLib_tengu_collision")

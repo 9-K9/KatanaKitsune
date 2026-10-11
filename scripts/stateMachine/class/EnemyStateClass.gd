@@ -371,7 +371,10 @@ const WALL_MASK: int = 1
 ## How wide a monster's view is, in degrees. Vision is a cone rather than a
 ## circle so that getting behind one is worth doing — which is the whole point
 ## of a stealth system.
-@export var vision_arc_degrees: float = 130.0
+## 130° read on the radar as a half-circle rather than a cone pointed
+## somewhere — this is the angle a forward-facing wedge actually looks like one
+## at a glance.
+@export var vision_arc_degrees: float = 100.0
 ## Inside this it notices her regardless of which way it is looking. Without it
 ## she could stand on a monster's toes unseen, which reads as broken rather than
 ## as stealthy.

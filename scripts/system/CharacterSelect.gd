@@ -32,6 +32,13 @@ const HAIR_SKIN_SELECTION_ENABLED := false
 @onready var element: Label = $Right/Element
 @onready var clip_label: Label = $PreviewHolder/ClipName
 @onready var cover: TextureRect = $Cover
+## Full-screen cover for "set the player count" and "press a button to join" —
+## both used to share a thin label with the colour-pick screen behind them,
+## easy to mistake for the character grid itself rather than a step of its own.
+@onready var prompt_overlay: Control = $PromptOverlay
+@onready var prompt_title: Label = $PromptOverlay/Box/Title
+@onready var prompt_count_row: Label = $PromptOverlay/Box/CountRow
+@onready var prompt_devices: Label = $PromptOverlay/Box/Devices
 
 ## Built at runtime rather than in the scene file, the same reason Icons'
 ## buttons are: there is one per HAIR_TONES/SKIN_TONES entry, and that list is
@@ -388,7 +395,7 @@ func _drive_count() -> void:
 			return
 	if step != 0:
 		_wanted = clampi(_wanted + step, 1, Roster.MAX_PLAYERS)
-		_banner("HOW MANY PLAYERS?   %s" % _count_bar())
+		_show_count_prompt()
 
 
 ## Whichever free device presses first takes this slot.
@@ -515,7 +522,7 @@ func _rebuild_menu_probes() -> void:
 func _enter_count() -> void:
 	_phase = Phase.COUNT
 	_wanted = maxi(_wanted, 1)
-	_banner("HOW MANY PLAYERS?   %s" % _count_bar())
+	_show_count_prompt()
 
 
 func _enter_claim() -> void:
@@ -532,11 +539,12 @@ func _enter_claim() -> void:
 		## are devices, so settle for the ones already in.
 		_start_game()
 		return
-	_banner("PLAYER %d — PRESS A BUTTON" % (_active + 1))
+	_show_claim_prompt()
 
 
 func _enter_colour() -> void:
 	_phase = Phase.COLOUR
+	_hide_prompt()
 	_driver = Roster.input_for(_active)
 	## The button that claimed this pad is very likely still held. Priming makes
 	## it count as already-down, so the colour screen waits for a fresh press
@@ -654,6 +662,34 @@ func _count_bar() -> String:
 	for i in Roster.MAX_PLAYERS:
 		bar += ("[%d]" % (i + 1)) if (i + 1) == _wanted else (" %d " % (i + 1))
 	return bar
+
+
+## A full-screen stop before the character grid even shows, so setting the
+## head count reads as its own step rather than a line of text floating over
+## a screen that looks like it is already asking you to pick a colour.
+func _show_count_prompt() -> void:
+	prompt_overlay.visible = true
+	prompt_title.text = "HOW MANY PLAYERS?"
+	prompt_count_row.text = _count_bar()
+	prompt_devices.text = "LEFT / RIGHT TO CHANGE   •   %s TO CONFIRM" \
+			% PlayerInput.new(PlayerInput.KEYBOARD).confirm_button_label()
+
+
+## One overlay per unclaimed device so a PS pad, an Xbox pad and the keyboard
+## sitting at the same table are each told their own button, rather than a
+## single "press a button" nobody owns the wording of.
+func _show_claim_prompt() -> void:
+	prompt_overlay.visible = true
+	prompt_title.text = "PLAYER %d — PRESS A BUTTON TO JOIN" % (_active + 1)
+	prompt_count_row.text = ""
+	var lines: Array[String] = []
+	for probe in _probes:
+		lines.append("%s: %s" % [probe.device_name(), probe.confirm_button_label()])
+	prompt_devices.text = "   •   ".join(lines)
+
+
+func _hide_prompt() -> void:
+	prompt_overlay.visible = false
 
 
 ## True while the live preview labels (scheme/hair/skin name) own

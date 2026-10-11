@@ -126,6 +126,12 @@ shader = ExtResource("soften_shader")
 shader_parameter/enabled = false
 shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
 shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
+shader_parameter/recolor_hair = false
+shader_parameter/hair_shadow_color = Vector3(0, 0, 0)
+shader_parameter/hair_highlight_color = Vector3(0.659, 0.659, 0.659)
+shader_parameter/recolor_skin = false
+shader_parameter/skin_shadow_color = Vector3(0.423529, 0.25098, 0.188235)
+shader_parameter/skin_highlight_color = Vector3(0.933333, 0.666667, 0.556863)
 shader_parameter/soften_highlights = true
 shader_parameter/soften_amount = 0.85
 shader_parameter/spike_threshold = 0.1
@@ -11379,7 +11385,6 @@ bg_color = Color(0.66, 0.15, 0.15, 1)
 
 [sub_resource type="Animation" id="Anim_kappa_arise_east_collision"]
 resource_name = "arise_east"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11387,7 +11392,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(3.94, -46.98)]
@@ -11399,7 +11404,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(3.94, -46.98)]
@@ -11407,7 +11412,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_north_collision"]
 resource_name = "arise_north"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11415,7 +11419,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-3.36, -47.08)]
@@ -11427,7 +11431,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-3.36, -47.08)]
@@ -11435,7 +11439,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_northEast_collision"]
 resource_name = "arise_northEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11443,7 +11446,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(1.34, -46.64)]
@@ -11455,7 +11458,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(1.34, -46.64)]
@@ -11463,7 +11466,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_northWest_collision"]
 resource_name = "arise_northWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11471,7 +11473,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-4.82, -44.39)]
@@ -11483,7 +11485,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-4.82, -44.39)]
@@ -11491,7 +11493,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_south_collision"]
 resource_name = "arise_south"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11499,7 +11500,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(2.02, -44.25)]
@@ -11511,7 +11512,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(2.02, -44.25)]
@@ -11519,7 +11520,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_southEast_collision"]
 resource_name = "arise_southEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11527,7 +11527,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(2.15, -46.58)]
@@ -11539,7 +11539,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(2.15, -46.58)]
@@ -11547,7 +11547,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_arise_southWest_collision"]
 resource_name = "arise_southWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11555,10 +11554,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.00, -44.00)]
+"values": [Vector2(0, 0), Vector2(0, -44)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11567,15 +11566,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.00, -44.00)]
+"values": [Vector2(0, 0), Vector2(0, -44)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_arise_west_collision"]
 resource_name = "arise_west"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11583,7 +11581,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-2.07, -44.43)]
@@ -11595,7 +11593,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-2.07, -44.43)]
@@ -11642,7 +11640,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-0.90, -10.36)]
+"values": [Vector2(0, 0), Vector2(-0.9, -10.36)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11654,7 +11652,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-0.90, -10.36)]
+"values": [Vector2(0, 0), Vector2(-0.9, -10.36)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_attack_northEast_collision"]
@@ -11670,7 +11668,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(13.70, -7.68)]
+"values": [Vector2(0, 0), Vector2(13.7, -7.68)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11682,7 +11680,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(13.70, -7.68)]
+"values": [Vector2(0, 0), Vector2(13.7, -7.68)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_attack_northWest_collision"]
@@ -11754,7 +11752,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(14.10, 6.59)]
+"values": [Vector2(0, 0), Vector2(14.1, 6.59)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11766,7 +11764,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(14.10, 6.59)]
+"values": [Vector2(0, 0), Vector2(14.1, 6.59)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_attack_southWest_collision"]
@@ -11950,7 +11948,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(18.80, 61.72)]
+"values": [Vector2(0, 0), Vector2(18.8, 61.72)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11962,7 +11960,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(18.80, 61.72)]
+"values": [Vector2(0, 0), Vector2(18.8, 61.72)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_death_southEast_collision"]
@@ -12051,7 +12049,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_east_collision"]
 resource_name = "hurt_east"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12059,7 +12056,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-0.28, -46.03)]
@@ -12071,7 +12068,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-0.28, -46.03)]
@@ -12079,7 +12076,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_north_collision"]
 resource_name = "hurt_north"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12087,7 +12083,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-92.21, 0.48)]
@@ -12099,7 +12095,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-92.21, 0.48)]
@@ -12107,7 +12103,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_northEast_collision"]
 resource_name = "hurt_northEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12115,7 +12110,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-65.49, -32.56)]
@@ -12127,7 +12122,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-65.49, -32.56)]
@@ -12135,7 +12130,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_northWest_collision"]
 resource_name = "hurt_northWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12143,10 +12137,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-65.11, 32.80)]
+"values": [Vector2(0, 0), Vector2(-65.11, 32.8)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12155,15 +12149,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-65.11, 32.80)]
+"values": [Vector2(0, 0), Vector2(-65.11, 32.8)]
 }
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_south_collision"]
 resource_name = "hurt_south"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12171,7 +12164,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(92.21, -0.23)]
@@ -12183,7 +12176,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(92.21, -0.23)]
@@ -12191,7 +12184,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_southEast_collision"]
 resource_name = "hurt_southEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12199,7 +12191,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(65.04, -32.89)]
@@ -12211,7 +12203,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(65.04, -32.89)]
@@ -12219,7 +12211,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_southWest_collision"]
 resource_name = "hurt_southWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12227,7 +12218,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(65.45, 32.74)]
@@ -12239,7 +12230,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(65.45, 32.74)]
@@ -12247,7 +12238,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_kappa_hurt_west_collision"]
 resource_name = "hurt_west"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -12255,10 +12245,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.30, 46.14)]
+"values": [Vector2(0, 0), Vector2(0.3, 46.14)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12267,10 +12257,10 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.30, 46.14)]
+"values": [Vector2(0, 0), Vector2(0.3, 46.14)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimLib_kappa_collision"]
@@ -12340,9 +12330,9 @@ offset = Vector2(0, 39)
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=348215372]
 offset_left = -26.0
-offset_top = -224.0
+offset_top = -152.0
 offset_right = 26.0
-offset_bottom = -218.0
+offset_bottom = -146.0
 theme_override_styles/background = SubResource("StyleBoxFlat_hpbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
@@ -12395,7 +12385,5 @@ script = ExtResource("st_dodge")
 distance = 80.0
 duration = 0.45
 
-[node name="CollisionTween" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimLib_kappa_collision")
-}
+[node name="CollisionTween" type="AnimationPlayer" parent="." unique_id=710381686]
+libraries/ = SubResource("AnimLib_kappa_collision")

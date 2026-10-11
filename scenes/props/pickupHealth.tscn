@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cjf4pj7gmpegy" path="res://assets/sprites/ui/glow.tres" id="3_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p"]
-radius = 12.0
+radius = 7.0
 
 [node name="pickupHealth" type="Area2D" unique_id=625122615]
 monitorable = false
@@ -14,11 +14,10 @@ amount = 35.0
 duration = 0.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=831236241]
-position = Vector2(0, -20)
+position = Vector2(0, -4)
 texture = ExtResource("2_t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=495210851]
-position = Vector2(0, -8)
 shape = SubResource("CircleShape2D_p")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1096129062]

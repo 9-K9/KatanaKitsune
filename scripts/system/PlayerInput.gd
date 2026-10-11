@@ -227,3 +227,25 @@ func device_name() -> String:
 		return "KEYBOARD"
 	var raw := Input.get_joy_name(device)
 	return raw.to_upper() if raw != "" else "GAMEPAD %d" % (device + 1)
+
+
+## What the player actually has to press to confirm, printed rather than
+## assumed — "press a button" told nobody which one, and a bare face-button
+## letter is the wrong one for two brands out of three. Mirrors
+## _confirm_button()'s own bottom-face-button rule, so the label can never
+## disagree with what the game is actually listening for.
+func confirm_button_label() -> String:
+	if device == KEYBOARD:
+		return "SPACE"
+	if _nintendo():
+		return "B"
+	if _is_playstation():
+		return "X"
+	return "A"
+
+
+func _is_playstation() -> bool:
+	var name := Input.get_joy_name(device).to_lower()
+	return name.contains("sony") or name.contains("playstation") \
+			or name.contains("dualshock") or name.contains("dualsense") \
+			or name.contains("ps3") or name.contains("ps4") or name.contains("ps5")

@@ -1,21 +1,21 @@
-[gd_resource type="TileSet" load_steps=33 format=3]
+[gd_resource type="TileSet" format=3 uid="uid://d1bwkb3x3c15a"]
 
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_0.png" id="0_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_1.png" id="1_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_10.png" id="2_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_11.png" id="3_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_12.png" id="4_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_13.png" id="5_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_14.png" id="6_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_15.png" id="7_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_2.png" id="8_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_3.png" id="9_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_4.png" id="10_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_5.png" id="11_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_6.png" id="12_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_7.png" id="13_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_8.png" id="14_t"]
-[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_9.png" id="15_t"]
+[ext_resource type="Texture2D" uid="uid://by6oa1u7u1bc7" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_0.png" id="0_t"]
+[ext_resource type="Texture2D" uid="uid://dcpunlj7fkjwg" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_1.png" id="1_t"]
+[ext_resource type="Texture2D" uid="uid://dsyfe8v6ue571" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_10.png" id="2_t"]
+[ext_resource type="Texture2D" uid="uid://2d1l6ouyiove" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_11.png" id="3_t"]
+[ext_resource type="Texture2D" uid="uid://dk1panr3lh08j" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_12.png" id="4_t"]
+[ext_resource type="Texture2D" uid="uid://wxve5gc4ehmn" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_13.png" id="5_t"]
+[ext_resource type="Texture2D" uid="uid://yom1b4lovg6p" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_14.png" id="6_t"]
+[ext_resource type="Texture2D" uid="uid://cwlfnnqfrskfx" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_15.png" id="7_t"]
+[ext_resource type="Texture2D" uid="uid://brtnb7k1wtmo2" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_2.png" id="8_t"]
+[ext_resource type="Texture2D" uid="uid://cb5x1n2yxma0l" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_3.png" id="9_t"]
+[ext_resource type="Texture2D" uid="uid://cyaux3erek67m" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_4.png" id="10_t"]
+[ext_resource type="Texture2D" uid="uid://clpwans8bom73" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_5.png" id="11_t"]
+[ext_resource type="Texture2D" uid="uid://dd66hfm56f5bq" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_6.png" id="12_t"]
+[ext_resource type="Texture2D" uid="uid://c40kmqjtkwbe3" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_7.png" id="13_t"]
+[ext_resource type="Texture2D" uid="uid://c4mtdflsbb66s" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_8.png" id="14_t"]
+[ext_resource type="Texture2D" uid="uid://bkqd4nqhanuv8" path="res://assets/pixellab/japanese_environment/exterior_tiles/Flat_walkable_Japanese_outdoor_ground_tiles_each_9.png" id="15_t"]
 
 [sub_resource type="TileSetAtlasSource" id="Atlas_0"]
 texture = ExtResource("0_t")
@@ -24,6 +24,36 @@ texture_region_size = Vector2i(48, 48)
 
 [sub_resource type="TileSetAtlasSource" id="Atlas_1"]
 texture = ExtResource("1_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_10"]
+texture = ExtResource("10_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_11"]
+texture = ExtResource("11_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_12"]
+texture = ExtResource("12_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_13"]
+texture = ExtResource("13_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_14"]
+texture = ExtResource("14_t")
+texture_region_size = Vector2i(48, 48)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="Atlas_15"]
+texture = ExtResource("15_t")
 texture_region_size = Vector2i(48, 48)
 0:0/0 = 0
 
@@ -67,42 +97,8 @@ texture = ExtResource("9_t")
 texture_region_size = Vector2i(48, 48)
 0:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="Atlas_10"]
-texture = ExtResource("10_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="Atlas_11"]
-texture = ExtResource("11_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="Atlas_12"]
-texture = ExtResource("12_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="Atlas_13"]
-texture = ExtResource("13_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="Atlas_14"]
-texture = ExtResource("14_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="Atlas_15"]
-texture = ExtResource("15_t")
-texture_region_size = Vector2i(48, 48)
-0:0/0 = 0
-
 [resource]
-; Outdoor ground: grass, gravel, stone, moss, earth.
-; 2:1 diamond on the same 48x24 grid the rest of the game uses.
 tile_shape = 1
-tile_layout = 0
-tile_offset_axis = 0
 tile_size = Vector2i(48, 24)
 sources/0 = SubResource("Atlas_0")
 sources/1 = SubResource("Atlas_1")

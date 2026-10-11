@@ -253,11 +253,14 @@ func _outline(points: PackedVector2Array, at: Transform2D, colour: Color) -> voi
 ## overlap, and an outline alone disappears into the floor pattern.
 func _fill(points: PackedVector2Array, colour: Color) -> void:
 	var wash := colour
-	wash.a = colour.a * 0.32
+	## Bumped from 0.32 — the old wash all but disappeared against a busy
+	## floor (the lava tiles were a good example), which read as "there is no
+	## shape here" rather than "the shape is just faint".
+	wash.a = colour.a * 0.5
 	draw_colored_polygon(points, wash)
 	var closed := points.duplicate()
 	closed.append(points[0])
-	draw_polyline(closed, colour, 1.5)
+	draw_polyline(closed, colour, 2.5)
 
 
 ## A small cross with a label, so the three points that matter can be told apart.

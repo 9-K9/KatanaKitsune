@@ -124,6 +124,12 @@ shader = ExtResource("soften_shader")
 shader_parameter/enabled = false
 shader_parameter/shadow_color = Vector3(0.282353, 0.015686, 0.003922)
 shader_parameter/highlight_color = Vector3(0.94902, 0.227451, 0.078431)
+shader_parameter/recolor_hair = false
+shader_parameter/hair_shadow_color = Vector3(0, 0, 0)
+shader_parameter/hair_highlight_color = Vector3(0.659, 0.659, 0.659)
+shader_parameter/recolor_skin = false
+shader_parameter/skin_shadow_color = Vector3(0.423529, 0.25098, 0.188235)
+shader_parameter/skin_highlight_color = Vector3(0.933333, 0.666667, 0.556863)
 shader_parameter/soften_highlights = true
 shader_parameter/soften_amount = 0.85
 shader_parameter/spike_threshold = 0.1
@@ -11377,7 +11383,6 @@ bg_color = Color(0.66, 0.15, 0.15, 1)
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_east_collision"]
 resource_name = "arise_east"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11385,10 +11390,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-177.11, 25.60)]
+"values": [Vector2(0, 0), Vector2(-177.11, 25.6)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11397,15 +11402,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-177.11, 25.60)]
+"values": [Vector2(0, 0), Vector2(-177.11, 25.6)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_north_collision"]
 resource_name = "arise_north"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11413,10 +11417,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(11.45, 110.80)]
+"values": [Vector2(0, 0), Vector2(11.45, 110.8)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11425,15 +11429,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(11.45, 110.80)]
+"values": [Vector2(0, 0), Vector2(11.45, 110.8)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_northEast_collision"]
 resource_name = "arise_northEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11441,7 +11444,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-118.06, 89.27)]
@@ -11453,7 +11456,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-118.06, 89.27)]
@@ -11461,7 +11464,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_northWest_collision"]
 resource_name = "arise_northWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11469,7 +11471,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(129.49, 81.14)]
@@ -11481,7 +11483,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(129.49, 81.14)]
@@ -11489,7 +11491,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_south_collision"]
 resource_name = "arise_south"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11497,10 +11498,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-9.30, -65.34)]
+"values": [Vector2(0, 0), Vector2(-9.3, -65.34)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11509,15 +11510,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-9.30, -65.34)]
+"values": [Vector2(0, 0), Vector2(-9.3, -65.34)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_southEast_collision"]
 resource_name = "arise_southEast"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11525,10 +11525,10 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-129.48, -34.00)]
+"values": [Vector2(0, 0), Vector2(-129.48, -34)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11537,15 +11537,14 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-129.48, -34.00)]
+"values": [Vector2(0, 0), Vector2(-129.48, -34)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_southWest_collision"]
 resource_name = "arise_southWest"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11553,7 +11552,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(111.26, -43.23)]
@@ -11565,7 +11564,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(111.26, -43.23)]
@@ -11573,7 +11572,6 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_arise_west_collision"]
 resource_name = "arise_west"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11581,7 +11579,7 @@ tracks/0/path = NodePath("CollisionShape2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(171.23, 16.32)]
@@ -11593,7 +11591,7 @@ tracks/1/path = NodePath("HitBox/CollisionShape2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.0),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(171.23, 16.32)]
@@ -11640,7 +11638,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-0.30, -25.88)]
+"values": [Vector2(0, 0), Vector2(-0.3, -25.88)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11652,7 +11650,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-0.30, -25.88)]
+"values": [Vector2(0, 0), Vector2(-0.3, -25.88)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_crit_northEast_collision"]
@@ -11724,7 +11722,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.30, 26.95)]
+"values": [Vector2(0, 0), Vector2(0.3, 26.95)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11736,7 +11734,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0.30, 26.95)]
+"values": [Vector2(0, 0), Vector2(0.3, 26.95)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_crit_southEast_collision"]
@@ -11892,7 +11890,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(26.90, 21.98)]
+"values": [Vector2(0, 0), Vector2(26.9, 21.98)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11904,7 +11902,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(26.90, 21.98)]
+"values": [Vector2(0, 0), Vector2(26.9, 21.98)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_death_northWest_collision"]
@@ -11976,7 +11974,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(53.50, 66.66)]
+"values": [Vector2(0, 0), Vector2(53.5, 66.66)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -11988,7 +11986,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(53.50, 66.66)]
+"values": [Vector2(0, 0), Vector2(53.5, 66.66)]
 }
 
 [sub_resource type="Animation" id="Anim_karasuShinobi_death_southWest_collision"]
@@ -12032,7 +12030,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-58.95, 61.80)]
+"values": [Vector2(0, 0), Vector2(-58.95, 61.8)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -12044,7 +12042,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 1.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-58.95, 61.80)]
+"values": [Vector2(0, 0), Vector2(-58.95, 61.8)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimLib_karasuShinobi_collision"]
@@ -12106,9 +12104,9 @@ offset = Vector2(0, 32)
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1778886105]
 offset_left = -26.0
-offset_top = -251.0
+offset_top = -163.0
 offset_right = 26.0
-offset_bottom = -245.0
+offset_bottom = -157.0
 theme_override_styles/background = SubResource("StyleBoxFlat_hpbg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hpfill")
 value = 100.0
@@ -12154,7 +12152,5 @@ script = ExtResource("st_dodge")
 distance = 155.0
 duration = 0.38
 
-[node name="CollisionTween" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimLib_karasuShinobi_collision")
-}
+[node name="CollisionTween" type="AnimationPlayer" parent="." unique_id=787755839]
+libraries/ = SubResource("AnimLib_karasuShinobi_collision")
