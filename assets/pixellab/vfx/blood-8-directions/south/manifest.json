@@ -1,0 +1,69 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Blood (south)",
+ "fps": 19,
+ "frame_ms": 53,
+ "frames": 9,
+ "loop": true,
+ "canvas": {
+  "w": 180,
+  "h": 125
+ },
+ "anchor": {
+  "kind": "feet",
+  "x": 85,
+  "y": 67
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": true,
+   "start_frame": 0,
+   "frames": 9,
+   "frame": {
+    "w": 53,
+    "h": 39
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 9,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -26,
+    "y": -27
+   }
+  },
+  {
+   "name": "front",
+   "title": "everything in front of the character",
+   "depth": "front",
+   "loop": true,
+   "start_frame": 0,
+   "frames": 9,
+   "frame": {
+    "w": 53,
+    "h": 39
+   },
+   "sheets": [
+    {
+     "file": "front.png",
+     "first_frame": 0,
+     "frames": 9,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -26,
+    "y": -27
+   }
+  }
+ ]
+}

@@ -290,7 +290,8 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		if amount <= 0.0:
 			return
 	if amount > 0.0 and from != Vector2.INF:
-		HitEffects.blood(get_parent(), global_position + Vector2(0, -40), from, amount)
+		HitEffects.blood(get_parent(), global_position + Vector2(0, -40), from, amount,
+				global_position - from)
 	health -= amount
 	health = max(health, 0)
 	if health <= 0:

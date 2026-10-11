@@ -7,7 +7,27 @@ extends Object
 ## properties on a node that frees itself, and a scene file per effect would be
 ## four files to keep in step with four scripts for no gain.
 
-const BLOOD := Color(0.62, 0.05, 0.07)
+const BLOOD_DIRECTIONS: Array[String] = [
+	"east", "south-east", "south", "south-west",
+	"west", "north-west", "north", "north-east",
+]
+const BLOOD_SHEETS: Array[Texture2D] = [
+	preload("res://assets/pixellab/vfx/blood-8-directions/east/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/south-east/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/south/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/south-west/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/west/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/north-west/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/north/whole.png"),
+	preload("res://assets/pixellab/vfx/blood-8-directions/north-east/whole.png"),
+]
+const BLOOD_OFFSETS: Array[Vector2] = [
+	Vector2(-28, -23), Vector2(-28, -25), Vector2(-26, -27), Vector2(-23, -26),
+	Vector2(-20, -23), Vector2(-19, -20), Vector2(-20, -20), Vector2(-25, -20),
+]
+const BLOOD_FPS: float = 19.0
+const BLOOD_SCALE: int = 2
+static var _blood_frames_cache: SpriteFrames = null
 ## The arc, drawn as six frames: a faint anticipation streak, the bright sweep
 ## at its peak, then breaking up into sparks. A single still could not read as a
 ## blade passing through — it just appeared and vanished.
@@ -28,49 +48,50 @@ const SLASH_FPS: float = 22.0
 
 ## A short spray of blood, thrown away from whoever landed the blow.
 ##
-## Particles rather than a sprite because a hit should never look the same
-## twice — a fixed splash animation reads as a stamp after the third monster.
-static func blood(parent: Node, at: Vector2, from: Vector2, amount: float) -> void:
-	if not is_instance_valid(parent):
+## The sheets already encode eight screen-space directions and their projection.
+static func blood(parent: Node, at: Vector2, from: Vector2, amount: float,
+		direction: Vector2 = Vector2.ZERO) -> void:
+	if not is_instance_valid(parent) or amount <= 0.0:
 		return
-	var burst := CPUParticles2D.new()
+	var away := direction if direction != Vector2.ZERO else at - from
+	if not away.is_finite() or away.length_squared() < 0.0001:
+		away = Vector2.DOWN
+	var index := posmod(roundi(away.angle() / (TAU / 8.0)), 8)
+	var burst := AnimatedSprite2D.new()
+	burst.name = "BloodBurst"
+	burst.sprite_frames = _blood_frames()
+	burst.centered = false
+	burst.offset = BLOOD_OFFSETS[index]
+	burst.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	burst.process_mode = Node.PROCESS_MODE_PAUSABLE
 	parent.add_child(burst)
 	burst.global_position = at
+	burst.global_scale = Vector2.ONE * BLOOD_SCALE
 	burst.z_index = 60
+	burst.z_as_relative = false
+	burst.animation_finished.connect(burst.queue_free)
+	burst.play(BLOOD_DIRECTIONS[index])
 
-	## Scales with the blow, so a backstab reads differently from a jab.
-	burst.amount = clampi(int(amount * 0.6), 6, 40)
-	burst.one_shot = true
-	burst.explosiveness = 0.92
-	burst.lifetime = 0.55
-	burst.local_coords = false
 
-	var away: Vector2 = at - from
-	away.y *= 0.5
-	if away.length_squared() < 1.0:
-		away = Vector2.DOWN
-	burst.direction = away.normalized()
-	burst.spread = 42.0
-	burst.initial_velocity_min = 60.0
-	burst.initial_velocity_max = 190.0
-	## Pulled down the screen, so the spray falls to the floor rather than
-	## drifting off in whatever direction the hit came from.
-	burst.gravity = Vector2(0.0, 420.0)
-	burst.damping_min = 40.0
-	burst.damping_max = 120.0
-
-	burst.scale_amount_min = 1.0
-	burst.scale_amount_max = 2.6
-	burst.color = BLOOD
-	## Fades out rather than vanishing mid-air. CPUParticles2D takes the Gradient
-	## itself here, unlike the GPU one, which wants it wrapped in a texture.
-	var ramp := Gradient.new()
-	ramp.set_color(0, BLOOD)
-	ramp.set_color(1, Color(BLOOD.r * 0.5, 0.0, 0.0, 0.0))
-	burst.color_ramp = ramp
-
-	burst.emitting = true
-	_free_after(burst, burst.lifetime + 0.2)
+static func _blood_frames() -> SpriteFrames:
+	if _blood_frames_cache != null:
+		return _blood_frames_cache
+	var frames := SpriteFrames.new()
+	frames.remove_animation("default")
+	for i in BLOOD_DIRECTIONS.size():
+		var animation: String = BLOOD_DIRECTIONS[i]
+		var sheet: Texture2D = BLOOD_SHEETS[i]
+		var size := sheet.get_size() / 3.0
+		frames.add_animation(animation)
+		frames.set_animation_loop(animation, false)
+		frames.set_animation_speed(animation, BLOOD_FPS)
+		for frame in 9:
+			var texture := AtlasTexture.new()
+			texture.atlas = sheet
+			texture.region = Rect2(Vector2(frame % 3, frame / 3) * size, size)
+			frames.add_frame(animation, texture)
+	_blood_frames_cache = frames
+	return frames
 
 
 ## The arc a blade leaves, pointed the way the blow travelled.
@@ -115,10 +136,3 @@ static func _slash_frames() -> SpriteFrames:
 	frames.remove_animation("default")
 	_frames_cache = frames
 	return _frames_cache
-
-
-static func _free_after(node: Node, seconds: float) -> void:
-	var timer := node.get_tree().create_timer(seconds)
-	timer.timeout.connect(func():
-		if is_instance_valid(node):
-			node.queue_free())

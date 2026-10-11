@@ -1,7 +1,7 @@
 # Japanese Environment — PixelLab Source Assets
 
-Art-only source pack for Katana Kitsune. Nothing in this folder is wired into
-Godot scenes yet.
+PixelLab source and runtime art for Katana Kitsune. The resources and scenes
+described below wire reviewed assets into the game; pending biome art stays gated.
 
 ## Scale and projection
 
@@ -67,6 +67,102 @@ on 136×136 canvases and scaled in their scenes to stand against the player:
 - Raised grass-to-earth transition: `32dbf698-d046-4612-aa87-00465c68f27d`
 - Modular building kit: `92d8ef5c-aa2b-445a-9b7e-60e2530da65d`
 
+## Biome and weather asset slots
+
+The gameplay side uses explicit resource slots rather than implicit asset names:
+
+- `scripts/system/ExteriorBiome.gd`: Sakura, desert and snow definitions, each
+  with `ground_paths`, `trees`, `edge_trees`, `compatible_weather`, `ponds` and
+  the approved / unapproved gate.
+- `scripts/system/OutdoorWeather.gd`: ambient weather controllers that only load
+  `res://assets/pixellab/japanese_environment/weather/*.png` when the selected
+  biome declares that weather as approved and the texture path exists.
+- `res://resources/biomes/*.tres`: biome resources that remain in the original
+  Sakura state until art has passed the 2:1 isometric review for that biome.
+
+This keeps the project stable when art is still pending: the floor stays calm,
+indoors remain unchanged, and the game never invents missing textures or claim
+final assets before they have been checked.
+
+### Supplying reviewed art
+
+Desert and snow environment art is still pending (`art_approved = false`).
+The four particle textures below have been generated with PixelLab, inspected,
+and approved. Sakura now cycles petals and rain; snow/sand particles are wired
+but their floors remain gated until environment art is supplied. File existence
+alone does not enable a biome or approve its perspective.
+
+| Slot | Required files |
+|---|---|
+| Desert ground | `biome_tiles/sand_a.png`, `biome_tiles/sand_b.png` |
+| Snow ground | `biome_tiles/snow_a.png`, `biome_tiles/snow_b.png` |
+| Desert trees | `scenes/props/japanese/exterior/cactus_a.tscn`, `cactus_b.tscn`, `palm_a.tscn` |
+| Snow trees | `scenes/props/japanese/exterior/dead_tree_a.tscn`, `dead_tree_b.tscn` |
+| Weather particles | `weather/sakura_petal.png`, `rain_drop.png`, `snowflake.png`, `sand_grain.png` |
+
+Ground textures must be flat, seamless 48x24 **2:1 isometric** diamonds on
+transparent 48x48 canvases, aligned exactly like `exterior_tiles/`. No raised
+sides, baked shadows, front-view or top-down substitutes. Review repeated tiles
+for seams before setting `art_approved = true` in the corresponding
+`resources/biomes/*.tres`. Tree scenes must follow `ExteriorProp.gd`, use a
+ground-contact root pivot and a `Sprite2D` child, and carry fitted trunk
+collision/occlusion without overwriting existing tree scenes. Placement reads
+new trees' sprite bounds to keep their crowns clear of walls.
+
+Particle textures are small transparent isolated sprites, not environment
+tiles; keep rain streaks vertical (wind moves the ground anchor), petals and
+snowflakes centered, with no background slab. Once reviewed, add weather IDs to
+the biome resource's `approved_weather`: petals `1`, rain `2`, snowfall `3`,
+sandstorm `4`. Compatibility still applies: sakura allows `0/1/2`, desert
+`0/4`, snow `0/3`; `0` is calm. Changing paths or palettes is done in these
+resources, not the generator. Missing/invalid slots log warnings and retain
+the existing sakura floor or calm weather.
+
+### Particle provenance
+
+All particles use transparent 16x16 canvases with small centered visible bounds,
+nearest filtering and no baked shadow. PixelLab Pixen outputs were reduced with
+nearest-neighbor sampling to gameplay-sized motes. Snow's dark background
+remnants were removed; the second rain generation's vertical stem was extracted
+without its horizontal foot or opaque grey background. The first rain result
+was rejected because it depicted a cloud rather than a streak.
+
+| Texture | PixelLab job ID | Gallery asset ID | Visible size |
+|---|---|---|---|
+| `sakura_petal.png` | `12e80a72-58e1-4a20-b52a-cdfc963c32f9` | `e48ec51a-5b5e-51d9-872b-9a98e768c5d5` | 4x6 |
+| `rain_drop.png` | `37034cbf-5ba9-44e3-96d3-b62e588a4148` | `8fc310cf-7998-568f-9eb0-1bb69762d10f` | 1x7 |
+| `snowflake.png` | `922a267a-37b8-4cf4-bfe4-c27d1e169b97` | `6a807218-645f-5981-a8e2-0622c3b55fb0` | 4x3 |
+| `sand_grain.png` | `18cb3215-b093-4564-8639-ffeab9d05088` | `beb44854-1701-5e49-ad42-c0f66f3a1309` | 3x3 |
+
+### Runtime controls and exclusion
+
+`MazeDemo` exposes `outdoor_biome`, `outdoor_weather` (automatic or forced) and
+`weather_intensity` in the Exteriors inspector group. Choose once per floor;
+automatic weather alternates calm with an available compatible effect every
+35-65 gameplay seconds. Opacity changes gradually, fading to zero before
+switching effect. Biome selection and weather use separate seed streams and
+never consume the combat/layout RNG on weather ticks.
+
+`scenes/weather/outdoor_particles.tscn` is shared by all four effects.
+`outdoorWeather.gdshader` stores each particle's **ground anchor and height**
+separately, rejects indoor spawns, and traverses crossed lattice cells when
+wind moves an anchor. `outdoorWeatherDraw.gdshader` clips both the projected
+sprite and its ground footprint. Occupancy comes from measured building cells,
+not roof visibility: fading/hidden roofs and open doors do not expose indoors
+to weather. This deliberately clips outdoor sprites that project over an
+indoor footprint too, rather than drawing precipitation inside.
+
+One bounded world-space field per effect covers the current shared party
+camera, including zoom. The controller can accept up to four view rectangles
+without duplicate overlapping emitters, caps allocation at 1024 particles
+(256 per effect), and retains only recent view bounds for culling. Moving the
+camera changes future spawn coverage, not existing particle positions.
+Gameplay pause freezes weather timing and simulation; floor teardown hides
+and frees emitters. Interior-only floors never create weather. Desert omits
+ponds and lush plants; snow keeps existing impassable pond collision without
+adding ice mechanics. All weather is visual-only: no audio, damage, debuffs,
+accumulation or gameplay lighting changes.
+
 ## Godot TileSet resources
 
 - `tilesets/japanese_ground_tileset.tres`: 32 indoor and flat exterior tiles.
@@ -124,6 +220,28 @@ moves strictly along the four isometric diagonals.
 | Tanuki | `scenes/animals/tanuki.tscn` | `84ee0d48-d2f5-4446-be39-b283b60a26e6` | 46 |
 | Sika deer | `scenes/animals/deer.tscn` | `c4adb99f-26d7-4e61-82ad-fb46475e5649` | 130 |
 | Tree frog | `scenes/animals/frog.tscn` | `27767817-d034-4419-add8-e25cbd5b4ddd` | 18 |
+| Snow hare (rabbit) | `scenes/animals/rabbit.tscn` | `061522e2-cb6c-4355-abf4-3e32397688a4` | 35-49 |
+
+The rabbit has eight idle frames and six hopping frames per right-facing
+diagonal, mirrored for the left-facing diagonals like the other animals.
+Original PNG pixels are preserved on padded 104x104 canvases. Each clip's
+initial ground-contact pivot is aligned at (52, 90), with a constant offset
+throughout that clip to preserve the hopping motion. The scene uses 0.75 scale
+and a 10 px collision radius; hopping is also used while fleeing.
+
+The freshwater turtle's animations are complete in PixelLab's **Creator**
+gallery, not the character library. They need manual spritesheet or GIF export
+from the Creator UI before a game scene can be built; there is no supported
+gallery-download endpoint in the current MCP tools. No empty turtle is in the
+spawn pool. These are the existing 64x64 transparent clips (including their
+reference frame):
+
+| Turtle clip | Creator gallery ID | Frames |
+| --- | --- | --- |
+| Idle south-east | `3c3c2728-6b00-56b8-bbc4-073ffc0f2a54` | 5 |
+| Idle north-east | `abe64f2c-bc22-5eff-b322-6292e100d8ed` | 5 |
+| Walk south-east | `a89f8ea7-eedc-5b4f-ab23-94dccb5e5631` | 7 |
+| Walk north-east | `e92c00be-d8ff-51f2-8e4e-877f91865a1b` | 7 |
 
 Heights are relative to the roughly 180 px player. Animals idle, wander near
 where they spawned, and flee from anything in the `player` or `enemy` groups.

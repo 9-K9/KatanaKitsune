@@ -174,6 +174,9 @@ const THEMES: Array[Dictionary] = [
 @export var building_size: Vector2i = Vector2i(2, 5)
 @export var max_ponds: int = 2
 @export_range(0.0, 1.0, 0.05) var outdoor_enemy_chance: float = 0.6
+@export_enum("Automatic:-1", "Sakura:0", "Desert:1", "Snow:2") var outdoor_biome: int = -1
+@export_enum("Automatic:-1", "Calm:0", "Petals:1", "Rain:2", "Snowfall:3", "Sandstorm:4") var outdoor_weather: int = -1
+@export_range(0.0, 1.0, 0.05) var weather_intensity: float = 1.0
 
 @export_group("Population")
 @export var enemies_per_room: Vector2i = Vector2i(0, 2)
@@ -311,6 +314,7 @@ var _building: bool = false
 var _door_skip: Dictionary = {}
 ## This floor's compound plan when `exteriors` is on, otherwise null.
 var _ext: MazeExterior = null
+var _weather: OutdoorWeather = null
 ## Where the party arrives and the one room left free of monsters.
 var _start_cell := Vector2i.ZERO
 
@@ -341,6 +345,9 @@ func _ready() -> void:
 ## she keeps her health, her buffs and her state machine across the descent —
 ## a reload would construct a fresh one and throw all of that away.
 func descend() -> void:
+	if is_instance_valid(_weather):
+		_weather.stop()
+	_weather = null
 	depth += 1
 	maze_seed = _rng.randi()
 	## Everyone who is playing survives the descent, not just player one. This
@@ -632,6 +639,7 @@ func _build() -> void:
 	_ext = null
 	if exteriors:
 		_ext = MazeExterior.new(self, _rng, grid, step)
+		_ext.biome = ExteriorBiome.select(outdoor_biome, maze_seed)
 		_ext.plan()
 		_start_cell = _ext.start_cell
 	await _load_floor_monsters(_start_cell)
@@ -690,6 +698,11 @@ func _build() -> void:
 	## mean the wave was cleared rather than that it has not started.
 	_wave_live = true
 	_light()
+	if _ext != null:
+		_weather = OutdoorWeather.new()
+		_weather.name = "OutdoorWeather"
+		add_child(_weather)
+		_weather.setup(_ext, maze_seed, outdoor_weather, weather_intensity)
 	_building = false
 
 
@@ -1623,6 +1636,13 @@ func _physics_process(delta: float) -> void:
 	_check_wave_cleared()
 	if _ext != null and not _building:
 		_ext.update_roofs(delta, Roster.bodies(get_tree()))
+		if is_instance_valid(_weather):
+			var views: Array[Rect2] = []
+			var camera := get_viewport().get_camera_2d()
+			if camera != null:
+				var size: Vector2 = get_viewport_rect().size / camera.zoom
+				views.append(Rect2(camera.get_screen_center_position() - size * 0.5, size))
+			_weather.update_weather(delta, views)
 
 
 ## Brings the party up with the monsters, on the same curve and the same cap.

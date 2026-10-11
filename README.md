@@ -73,6 +73,13 @@ full katana kit.
 Dragon, Vermilion Phoenix, White Tiger, Black Tortoise and the rest — chosen at
 character select and read by the title screen, the maze and the player alike.
 
+**Outdoor biomes are asset-gated.** `scripts/system/ExteriorBiome.gd` owns the
+Sakura / desert / snow selection, terrain slots and weather compatibility. The
+runtime checks `res://resources/biomes/*.tres`, `res://assets/pixellab/japanese_environment/biome_tiles/*.png`
+and `res://assets/pixellab/japanese_environment/weather/*.png` before enabling a
+biome or weather effect. Missing or unapproved art keeps the floor in its calm
+state rather than crashing or inventing placeholder props.
+
 ## Layout
 
 ```

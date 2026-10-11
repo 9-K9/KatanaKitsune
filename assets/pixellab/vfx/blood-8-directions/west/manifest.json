@@ -1,0 +1,69 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Blood (west)",
+ "fps": 19,
+ "frame_ms": 53,
+ "frames": 9,
+ "loop": true,
+ "canvas": {
+  "w": 85,
+  "h": 93
+ },
+ "anchor": {
+  "kind": "feet",
+  "x": 39,
+  "y": 47
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": true,
+   "start_frame": 0,
+   "frames": 9,
+   "frame": {
+    "w": 48,
+    "h": 39
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 9,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -20,
+    "y": -23
+   }
+  },
+  {
+   "name": "front",
+   "title": "everything in front of the character",
+   "depth": "front",
+   "loop": true,
+   "start_frame": 0,
+   "frames": 9,
+   "frame": {
+    "w": 48,
+    "h": 39
+   },
+   "sheets": [
+    {
+     "file": "front.png",
+     "first_frame": 0,
+     "frames": 9,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -20,
+    "y": -23
+   }
+  }
+ ]
+}

@@ -814,7 +814,6 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	if origin == Vector2.INF:
 		var target := player()
 		origin = target.global_position if target != null else global_position
-	HitEffects.blood(get_parent(), global_position + Vector2(0, -40), origin, amount)
 	HitEffects.slash(get_parent(), global_position + Vector2(0, -40),
 			global_position - origin, 1.0 + amount / 120.0)
 	## A warden meets blows it is facing. A flat frontal soak rather than the
@@ -853,6 +852,9 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		if striker != null and (striker.get("stealthed") == true
 				or striker.get("crouched") == true):
 			amount *= weak
+	if amount > 0.0:
+		HitEffects.blood(get_parent(), global_position + Vector2(0, -40), origin, amount,
+				global_position - origin)
 	health = maxf(health - amount, 0.0)
 	_refresh_health_bar()
 	## The killing blow gets the longer hold, so a one-shot does not look like

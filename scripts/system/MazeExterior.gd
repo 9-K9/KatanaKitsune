@@ -27,12 +27,6 @@ const FACING_BACK := {"SE": "NW", "NW": "SE", "SW": "NE", "NE": "SW"}
 
 const PROP_DIR := "res://scenes/props/japanese/exterior/"
 const WATER_SHADER := "res://shaders/water.gdshader"
-const TREES: Array[String] = ["sakura_tree_a", "sakura_tree_c", "sakura_weeping",
-		"black_pine", "bamboo_clump"]
-## The compound's edge is mostly pine and bamboo, a darker screen than the
-## blossom inside it.
-const EDGE_TREES: Array[String] = ["black_pine", "black_pine", "bamboo_clump",
-		"bamboo_clump", "sakura_tree_a", "sakura_tree_c"]
 ## Each side of a cell's diamond as its two corners, in units of the half-size.
 const SIDE_ENDS := {
 	"NE": [Vector2(0, -1), Vector2(1, 0)],
@@ -45,7 +39,6 @@ const SIDE_ENDS := {
 const BEHIND: Array[Vector2i] = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(-1, -1)]
 const ROOF_BEHIND_ALPHA: float = 0.35
 const ROOF_FADE_SPEED: float = 4.0
-const MOONLIGHT := Color(0.55, 0.66, 0.95)
 ## Half-width of the paved strip, in screen pixels along the road.
 const ROAD_HALF_WIDTH: float = 150.0
 ## Nothing solid within this of a cell's middle: the spawn point, the chairs
@@ -84,6 +77,10 @@ var _noise := FastNoiseLite.new()
 var _roofs: Array = []             ## per building: Array[TileMapLayer]
 var _roof_alpha: Array[float] = []
 var _scenes: Dictionary = {}
+var biome: ExteriorBiome = null
+var _biome_tileset: TileSet = null
+var _biome_tiles: Array[int] = []
+var _tree_bounds: Dictionary = {}
 
 
 func _init(maze: Node2D, rng: RandomNumberGenerator, grid: Vector2i,
@@ -92,6 +89,7 @@ func _init(maze: Node2D, rng: RandomNumberGenerator, grid: Vector2i,
 	_rng = rng
 	_grid = grid
 	_half = step * 0.5
+	biome = ExteriorBiome.definition(ExteriorBiome.Id.SAKURA)
 
 
 func is_building(cell: Vector2i) -> bool:
@@ -222,6 +220,8 @@ func _free_for_building(cell: Vector2i) -> bool:
 
 
 func _plan_ponds() -> void:
+	if not biome.ponds:
+		return
 	var spare: Array[Vector2i] = []
 	for iy in _grid.y:
 		for ix in _grid.x:
@@ -377,6 +377,24 @@ func cell_at(world: Vector2) -> Vector2i:
 	return Vector2i(roundi((a + b) * 0.5), roundi((b - a) * 0.5))
 
 
+func weather_grid() -> Vector2i:
+	return _grid
+
+
+func weather_inverse_lattice() -> Vector4:
+	var x: Vector2 = _maze.global_transform.basis_xform(Vector2(_half.x, _half.y))
+	var y: Vector2 = _maze.global_transform.basis_xform(Vector2(-_half.x, _half.y))
+	var inverse := Transform2D(x, y, Vector2.ZERO).affine_inverse()
+	return Vector4(inverse.x.x, inverse.y.x, inverse.x.y, inverse.y.y)
+
+
+func weather_mask() -> Texture2D:
+	var image := Image.create(_grid.x, _grid.y, false, Image.FORMAT_R8)
+	for cell: Vector2i in kind:
+		image.set_pixel(cell.x, cell.y, Color.BLACK if is_building(cell) else Color.WHITE)
+	return ImageTexture.create_from_image(image)
+
+
 func _corner(cell: Vector2i, unit: Vector2) -> Vector2:
 	return cell_centre(cell) + unit * _half
 
@@ -396,6 +414,16 @@ func paint_ground() -> void:
 		var outdoor := room.get_node_or_null("TileMap/Floor_JP_Exterior") as TileMapLayer
 		if ground == null or outdoor == null or outdoor.tile_set == null:
 			continue
+		if not biome.ground_paths.is_empty():
+			if _biome_tileset == null:
+				_biome_tileset = outdoor.tile_set.duplicate() as TileSet
+				for path in biome.ground_paths:
+					var source := TileSetAtlasSource.new()
+					source.texture = load(path) as Texture2D
+					source.texture_region_size = Vector2i(48, 48)
+					source.create_tile(Vector2i.ZERO)
+					_biome_tiles.append(_biome_tileset.add_source(source))
+			outdoor.tile_set = _biome_tileset
 		if _tiles.is_empty():
 			_index_tiles(outdoor.tile_set)
 		var indoor := room.get_node_or_null("TileMap/Floor_JP_Indoor") as TileMapLayer
@@ -429,6 +457,12 @@ func _pick(family: Array[int]) -> int:
 
 
 func _tile_for(what: Kind, cell: Vector2i, world: Vector2) -> int:
+	if not _biome_tiles.is_empty():
+		if what == Kind.ROAD and _on_road(cell, world, ROAD_HALF_WIDTH):
+			return _pick(PAVING)
+		if what == Kind.COURTYARD:
+			return _pick(GRAVEL)
+		return _biome_tiles[_rng.randi_range(0, _biome_tiles.size() - 1)]
 	## The y axis doubled, so patches come out round on the ground.
 	var n: float = _noise.get_noise_2d(world.x, world.y * 2.0)
 	var roll: float = _rng.randf()
@@ -522,9 +556,16 @@ func build_perimeter() -> void:
 						continue
 					var inset: float = [0.05, 0.14][row] + _rng.randf_range(-0.02, 0.02)
 					var spot: Vector2 = a.lerp(b, t).lerp(centre, inset)
-					if _crowded(spot, 90.0) or _clips_building(spot, TREE_CANOPY):
+					var tree: String = ""
+					var bounds := Vector2(TREE_CANOPY, TREE_HEIGHT)
+					if biome.id != ExteriorBiome.Id.SAKURA:
+						tree = biome.edge_trees[_rng.randi_range(0, biome.edge_trees.size() - 1)]
+						bounds = _bounds_for_tree(tree)
+					if _crowded(spot, 90.0) or _clips_building(spot, bounds.x, bounds.y):
 						continue
-					_put(EDGE_TREES[_rng.randi_range(0, EDGE_TREES.size() - 1)], spot, 90.0)
+					if tree.is_empty():
+						tree = biome.edge_trees[_rng.randi_range(0, biome.edge_trees.size() - 1)]
+					_put(tree, spot, 90.0)
 			if gate:
 				var mid: Vector2 = a.lerp(b, 0.5).lerp(centre, 0.1)
 				## The gate's crossbeam runs along +x, so it straddles a road
@@ -738,20 +779,44 @@ func _spot(cell: Vector2i, radius: float, off_road: bool = true) -> Variant:
 func _scatter(cell: Vector2i, props: Array, count: int, radius: float,
 		off_road: bool = true, canopy: float = 0.0) -> void:
 	for _i in count:
+		var prop: String = ""
+		var bounds := Vector2(canopy, TREE_HEIGHT)
+		if canopy > 0.0 and biome.id != ExteriorBiome.Id.SAKURA:
+			prop = props[_rng.randi_range(0, props.size() - 1)]
+			bounds = _bounds_for_tree(prop)
 		var p: Variant = _spot(cell, radius, off_road)
-		if p != null and canopy > 0.0 and _clips_building(p, canopy):
+		if p != null and canopy > 0.0 and _clips_building(p, bounds.x, bounds.y):
 			p = _spot(cell, radius, off_road)
-			if p != null and _clips_building(p, canopy):
+			if p != null and _clips_building(p, bounds.x, bounds.y):
 				p = null
 		if p != null:
-			_put(props[_rng.randi_range(0, props.size() - 1)], p, radius)
+			if prop.is_empty():
+				prop = props[_rng.randi_range(0, props.size() - 1)]
+			_put(prop, p, radius)
+
+
+func _bounds_for_tree(prop: String) -> Vector2:
+	if _tree_bounds.has(prop):
+		return _tree_bounds[prop]
+	if biome.id == ExteriorBiome.Id.SAKURA:
+		return Vector2(TREE_CANOPY, TREE_HEIGHT)
+	var instance := _scene(prop).instantiate() as Node2D
+	var sprite := instance.get_node_or_null("Sprite2D") as Sprite2D
+	var bounds := Vector2(TREE_CANOPY, TREE_HEIGHT)
+	if sprite != null:
+		var rect: Rect2 = sprite.transform * sprite.get_rect()
+		bounds = Vector2(maxf(absf(rect.position.x), absf(rect.end.x)),
+				maxf(60.0, -rect.position.y))
+	instance.free()
+	_tree_bounds[prop] = bounds
+	return bounds
 
 
 ## Whether a tall prop's canopy at `world` would overlap any wall's art.
 ## Each wall tile is one long slab y-sorted at a single point, so a canopy
 ## that crosses one is either cut by it or drawn over it out of order.
-func _clips_building(world: Vector2, canopy: float) -> bool:
-	var crown := Rect2(world.x - canopy, world.y - TREE_HEIGHT, canopy * 2.0, TREE_HEIGHT - 60.0)
+func _clips_building(world: Vector2, canopy: float, height: float = TREE_HEIGHT) -> bool:
+	var crown := Rect2(world.x - canopy, world.y - height, canopy * 2.0, height - 60.0)
 	var home: Vector2i = cell_at(world)
 	for dx in range(-2, 3):
 		for dy in range(-2, 3):
@@ -805,11 +870,16 @@ func guard_entrances() -> void:
 ## Dresses one outdoor cell. Called from MazeDemo._populate before the
 ## monsters go in, so they are then kept off the trees and out of the ponds.
 func populate(cell: Vector2i) -> void:
+	if not biome.lush:
+		_scatter(cell, biome.trees, _rng.randi_range(1, 3), 110.0, true, TREE_CANOPY)
+		_scatter(cell, ["garden_rocks"], _rng.randi_range(1, 2), 40.0)
+		_lanterns(cell, _rng.randi_range(1, 2))
+		return
 	var small: Array[String] = ["azalea_bush", "garden_rocks"]
 	var grass: Array[String] = ["grass_tuft"]
 	match kind[cell]:
 		Kind.GARDEN:
-			_scatter(cell, TREES, _rng.randi_range(2, 4), 110.0, true, TREE_CANOPY)
+			_scatter(cell, biome.trees, _rng.randi_range(2, 4), 110.0, true, TREE_CANOPY)
 			_scatter(cell, small, _rng.randi_range(2, 3), 40.0)
 			_lanterns(cell, _rng.randi_range(1, 2))
 			_scatter(cell, grass, _rng.randi_range(8, 14), 0.0)
@@ -818,11 +888,11 @@ func populate(cell: Vector2i) -> void:
 				_scatter(cell, ["dragon_statue"], 1, 70.0)
 			_lanterns(cell, 2)
 			_scatter(cell, small, _rng.randi_range(1, 2), 40.0)
-			_scatter(cell, TREES, _rng.randi_range(0, 1), 110.0, true, TREE_CANOPY)
+			_scatter(cell, biome.trees, _rng.randi_range(0, 1), 110.0, true, TREE_CANOPY)
 			_scatter(cell, grass, _rng.randi_range(3, 6), 0.0)
 		Kind.ROAD:
 			_lanterns(cell, _rng.randi_range(1, 2))
-			_scatter(cell, TREES, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
+			_scatter(cell, biome.trees, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
 			_scatter(cell, ["garden_rocks"], _rng.randi_range(0, 1), 40.0)
 			## Weeds straight through the paving: nobody has walked it in years.
 			_scatter(cell, grass, _rng.randi_range(6, 10), 0.0, false)
@@ -836,7 +906,7 @@ func populate(cell: Vector2i) -> void:
 					var p: Vector2 = pond[0] + Vector2(cos(angle), sin(angle)) * pond[1] \
 							* _rng.randf_range(1.0, 1.1)
 					_put("pond_reeds", p, 0.0)
-			_scatter(cell, TREES, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
+			_scatter(cell, biome.trees, _rng.randi_range(1, 2), 110.0, true, TREE_CANOPY)
 			_scatter(cell, small, _rng.randi_range(1, 2), 40.0)
 			_lanterns(cell, 1)
 
@@ -897,7 +967,7 @@ func light() -> void:
 		var moon := PointLight2D.new()
 		moon.name = "Moon_%d_%d" % [cell.x, cell.y]
 		moon.texture = glow
-		moon.color = MOONLIGHT
+		moon.color = biome.moonlight
 		moon.energy = 0.55
 		moon.texture_scale = _half.x * 2.6 / 256.0
 		_maze.add_child(moon)

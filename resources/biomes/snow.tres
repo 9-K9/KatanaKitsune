@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ExteriorBiome" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorBiome.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = 2
+approved_weather = Array[int]([3])
+compatible_weather = Array[int]([0, 3])
+trees = Array[String](["dead_tree_a", "dead_tree_b"])
+edge_trees = Array[String](["dead_tree_a", "dead_tree_b"])
+ground_paths = Array[String](["res://assets/pixellab/japanese_environment/biome_tiles/snow_a.png", "res://assets/pixellab/japanese_environment/biome_tiles/snow_b.png"])
+lush = false
+moonlight = Color(0.66, 0.77, 1, 1)
