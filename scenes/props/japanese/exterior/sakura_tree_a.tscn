@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(28.0, 0.0, 24.25, 7.0, 14.0, 12.12, 0.0, 14.0, -14.0, 12.12, -24.25, 7.0, -28.0, 0.0, -24.25, -7.0, -14.0, -12.12, -0.0, -14.0, 14.0, -12.12, 24.25, -7.0)
 
 [node name="SakuraTreeA" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 fade_rect = Rect2(-158, -415, 316, 355)
 

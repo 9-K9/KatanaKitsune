@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(40, 0, 34.64, 10, 20, 17.32, 0, 20, -20, 17.32, -34.64, 10, -40, 0, -34.64, -10, -20, -17.32, -0, -20, 20, -17.32, 34.64, -10)
 
 [node name="GardenRocks" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

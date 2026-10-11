@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/samurai_armour_stand_northEast.png" id="5_hd3sx"]
 
 [node name="SamuraiArmourStandNorthEast" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_zz1cu")
 loot_scenes = Array[PackedScene]([ExtResource("2_tyo1o"), ExtResource("3_bmfeq")])

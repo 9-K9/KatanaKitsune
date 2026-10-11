@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tea_set_southWest.png" id="5_q5abx"]
 
 [node name="TeaSetSouthWest" type="StaticBody2D" unique_id=949691429 groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_4p2sb")
 loot_scenes = Array[PackedScene]([ExtResource("2_8vpt6"), ExtResource("3_rdccv")])

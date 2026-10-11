@@ -140,7 +140,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="shape"]
 
 [node name="Rabbit" type="CharacterBody2D" unique_id=1715327473 groups=["animal"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 0
 collision_mask = 129
 script = ExtResource("script")

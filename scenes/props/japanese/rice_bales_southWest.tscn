@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/rice_bales_southWest.png" id="5_vg6qs"]
 
 [node name="RiceBalesSouthWest" type="StaticBody2D" groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_hsrna")
 loot_scenes = Array[PackedScene]([ExtResource("2_q9suk"), ExtResource("3_1mojy")])

@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/grass_tuft.png" id="1_tex"]
 
 [node name="GrassTuft" type="Node2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(2, -10)

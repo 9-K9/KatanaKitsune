@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/ceramic_jar_northEast.png" id="3_47n7d"]
 
 [node name="CeramicJarNorthEast" type="StaticBody2D" unique_id=2020319449 groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_ng7qk")
 max_health = 18.0

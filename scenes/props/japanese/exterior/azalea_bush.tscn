@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(22, 0, 19.05, 5.5, 11, 9.53, 0, 11, -11, 9.53, -19.05, 5.5, -22, 0, -19.05, -5.5, -11, -9.53, -0, -11, 11, -9.53, 19.05, -5.5)
 
 [node name="AzaleaBush" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/offering_box_northWest.png" id="4_xkq48"]
 
 [node name="OfferingBoxNorthWest" type="StaticBody2D" unique_id=703414279 groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_qjw8k")
 loot_scenes = Array[PackedScene]([ExtResource("2_6wn0g")])

@@ -288,3 +288,20 @@ courtyards, gardens, ponds (`shaders/water.gdshader`) and an abandoned road,
 fenced by tree lines with a torii at each road end. Roofs lift when the player
 is inside and are painted in the floor's wall material by
 `shaders/roofWall.gdshader`. The `MazeDemo` "Exteriors" export group controls it.
+
+### World depth sorting
+
+The maze root, room containers and wall TileMapLayers enable Y-sorting so
+independent objects and wall tiles share one world-depth order. Individual
+animals, trees, furniture and torches keep `y_sort_enabled = false` on their
+roots: their raised sprite children must draw together at the root's ground
+contact point, not enter the world sort using the canopy or torso's local Y.
+Player and enemy scenes use the same atomic-root convention.
+
+Leave ordinary entities at Z index 0. Ground and ponds stay at -1; roofs and
+explicit overlay effects retain their separate layers. Sprite lift, animation,
+canopy fade and bird takeoff must not change an entity's sort anchor. Displayed
+loot stays grouped with its furniture until released onto the world layer.
+Do not enable Y-sorting on a new tree/animal root to "fix" overlap: that splits
+its raised art out of its ground-root sort group and causes tall trees to
+render behind characters even when their trunks are in front.

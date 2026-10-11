@@ -9,7 +9,7 @@
 radius = 3.0
 
 [node name="StakeTorch" type="StaticBody2D" unique_id=1603842745 groups=["breakable"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_s")
 max_health = 20.0

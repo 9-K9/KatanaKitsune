@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(20.0, 0.0, 17.32, 5.0, 10.0, 8.66, 0.0, 10.0, -10.0, 8.66, -17.32, 5.0, -20.0, 0.0, -17.32, -5.0, -10.0, -8.66, -0.0, -10.0, 10.0, -8.66, 17.32, -5.0)
 
 [node name="BlackPine" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 fade_rect = Rect2(-101, -389, 202, 329)
 

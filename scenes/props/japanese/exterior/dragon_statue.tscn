@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(0, -27.5, 55, 0, 0, 27.5, -55, 0)
 
 [node name="DragonStatue" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 fade_rect = Rect2(-60, -165, 120, 140)
 

@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_southEast.png" id="5_xgrc8"]
 
 [node name="LowTableSouthEast" type="StaticBody2D" unique_id=771823188 groups=["breakable", "japanese_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 3
 script = ExtResource("1_3a3pr")
 loot_scenes = Array[PackedScene]([ExtResource("2_pfcod"), ExtResource("3_yafrm")])

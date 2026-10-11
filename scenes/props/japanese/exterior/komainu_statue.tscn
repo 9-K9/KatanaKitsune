@@ -7,7 +7,7 @@
 polygon = PackedVector2Array(0, -19, 38, 0, 0, 19, -38, 0)
 
 [node name="KomainuStatue" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 fade_rect = Rect2(-50, -110, 100, 90)
 

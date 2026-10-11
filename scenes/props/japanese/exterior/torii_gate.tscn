@@ -10,7 +10,7 @@ polygon = PackedVector2Array(-42, -28, -28, -21, -42, -14, -56, -21)
 polygon = PackedVector2Array(41, 15, 55, 22, 41, 29, 27, 22)
 
 [node name="ToriiGate" type="StaticBody2D" groups=["exterior_prop"]]
-y_sort_enabled = true
+y_sort_enabled = false
 script = ExtResource("2_scr")
 fade_rect = Rect2(-80, -175, 160, 150)
 

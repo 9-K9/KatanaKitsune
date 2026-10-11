@@ -37,7 +37,7 @@ animations = [{"frames": [{"duration": 1.0, "texture": ExtResource("1")}, {"dura
 radius = 11.2
 
 [node name="Tanuki" type="CharacterBody2D" groups=["animal"]]
-y_sort_enabled = true
+y_sort_enabled = false
 collision_layer = 0
 collision_mask = 129
 script = ExtResource("script")
