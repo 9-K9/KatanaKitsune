@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/torii_gate.png" id="1_tex"]
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+
+[sub_resource type="OccluderPolygon2D" id="Occ_0"]
+polygon = PackedVector2Array(-42, -28, -28, -21, -42, -14, -56, -21)
+
+[sub_resource type="OccluderPolygon2D" id="Occ_1"]
+polygon = PackedVector2Array(41, 15, 55, 22, 41, 29, 27, 22)
+
+[node name="ToriiGate" type="StaticBody2D" groups=["exterior_prop"]]
+y_sort_enabled = true
+script = ExtResource("2_scr")
+fade_rect = Rect2(-80, -175, 160, 150)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(4, -58)
+texture = ExtResource("1_tex")
+
+[node name="Collision0" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-42, -28, -28, -21, -42, -14, -56, -21)
+
+[node name="Occluder0" type="LightOccluder2D" parent="."]
+occluder = SubResource("Occ_0")
+
+[node name="Collision1" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(41, 15, 55, 22, 41, 29, 27, 22)
+
+[node name="Occluder1" type="LightOccluder2D" parent="."]
+occluder = SubResource("Occ_1")

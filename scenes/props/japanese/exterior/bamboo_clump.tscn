@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/bamboo_clump.png" id="1_tex"]
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+
+[sub_resource type="OccluderPolygon2D" id="Occ_0"]
+polygon = PackedVector2Array(16, 0, 13.86, 4, 8, 6.93, 0, 8, -8, 6.93, -13.86, 4, -16, 0, -13.86, -4, -8, -6.93, -0, -8, 8, -6.93, 13.86, -4)
+
+[node name="BambooClump" type="StaticBody2D" groups=["exterior_prop"]]
+y_sort_enabled = true
+script = ExtResource("2_scr")
+fade_rect = Rect2(-50, -195, 100, 170)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, -90)
+texture = ExtResource("1_tex")
+
+[node name="Collision0" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(16, 0, 13.86, 4, 8, 6.93, 0, 8, -8, 6.93, -13.86, 4, -16, 0, -13.86, -4, -8, -6.93, -0, -8, 8, -6.93, 13.86, -4)
+
+[node name="Occluder0" type="LightOccluder2D" parent="."]
+occluder = SubResource("Occ_0")
