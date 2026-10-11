@@ -31,6 +31,12 @@ extends StaticBody2D
 @export var max_health: float = 25.0
 ## Chests are meant to feel worth hitting, so they always drop.
 @export var always_drops: bool = false
+## Chance a power-up scroll falls out as well, on top of whatever the prop was
+## holding. Kept apart from the weighted loot roll so every breakable in the
+## game can carry one without each scene's table being rebalanced.
+@export_range(0.0, 1.0, 0.01) var scroll_chance: float = 0.12
+const SCROLL_SCENE: PackedScene = preload("res://scenes/props/pickupScroll.tscn")
+var _scroll_rolled: bool = false
 @export var break_texture: Texture2D
 @export_range(1, 8, 1) var break_frames: int = 4
 @export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
@@ -209,6 +215,7 @@ func _lay_out_loot() -> void:
 
 
 func _drop_once() -> void:
+	_drop_scroll()
 	if _drop_spawned:
 		## A displayed drop is already in the world; it just needs releasing.
 		_release_displayed()
@@ -240,6 +247,19 @@ func _drop() -> void:
 	## the prop a quarter of a second later.
 	get_parent().add_child(thing)
 	thing.global_position = global_position
+
+
+## Rolls once for a scroll and, if it comes up, sets one down beside the prop.
+## Offset to the side so it does not land under whatever the main drop was.
+func _drop_scroll() -> void:
+	if _scroll_rolled:
+		return
+	_scroll_rolled = true
+	if randf() >= scroll_chance or get_parent() == null:
+		return
+	var scroll := SCROLL_SCENE.instantiate()
+	get_parent().add_child(scroll)
+	scroll.global_position = global_position + Vector2(22.0, 8.0)
 
 
 func _roll() -> PackedScene:

@@ -40,6 +40,23 @@ Keyboard or gamepad, up to four players locally.
 | `Stealth` | Crouch into stealth, halving the range monsters notice you at |
 | `Action` | Interact — rest at a chair, take a pickup, descend a stairway |
 | `Pause` | Pause menu |
+| `Scroll1`–`Scroll6` | Keys `1`–`6`: read the scroll in that inventory slot |
+| `ScrollUse` | Pad `R3`: tap to read the highlighted scroll, hold to cycle, release to read |
+
+## Scrolls
+
+Breakables sometimes drop a power-up scroll (`scroll_chance`, 12%). Each player
+has a 6-slot bar along the bottom of the screen. Scrolls of the same kind stack
+in one slot.
+
+| Kanji | Scroll | Effect |
+|-------|--------|--------|
+| 無 | Invincibility | Health cannot drop, 8s |
+| 気 | Exertion | Stamina does not drain, 15s |
+| 隠 | Invisibility | Faded; monsters lose track of you; stealth does not drain, 10s |
+| 速 | Speed | Run ×1.4, 12s |
+| 剛 | Attack | Damage ×1.6, 12s |
+| 石 | Stone | The next strike turns one monster to stone for 6s instead of damaging it. Striking it while stone shatters it for 3× damage |
 
 ## How it works
 

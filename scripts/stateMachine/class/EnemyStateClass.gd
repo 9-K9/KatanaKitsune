@@ -345,6 +345,9 @@ func player() -> CharacterBody2D:
 			continue
 		if node.get("is_dead") == true:
 			continue
+		## Under the Invisibility scroll she is simply not there to be found.
+		if node.has_method("is_invisible") and node.is_invisible():
+			continue
 		var distance: float = global_position.distance_squared_to(
 				(node as Node2D).global_position)
 		if distance < best_distance:
@@ -414,7 +417,7 @@ func sees_player() -> bool:
 
 func _look_for_player() -> bool:
 	var target := player()
-	if target == null or is_dead:
+	if target == null or is_dead or is_petrified():
 		return false
 	## effective_detection already scales with how hidden she is — crouched is
 	## 0.3 of the range, katana drawn is 1.5.
@@ -886,6 +889,13 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 			_last_hit_by = striker.slot
 	if is_dead:
 		return
+	## Stone has no guard, no shell and no footing: the blow shatters it, for
+	## far more than a cut to flesh would do, and it comes back to life
+	## reeling from it.
+	var stone: bool = is_petrified()
+	if stone:
+		_unpetrify(false)
+		amount *= shatter_multiplier
 	## Where the blade came through, so the spray throws the right way and the
 	## arc points along the blow rather than at a fixed angle.
 	var origin: Vector2 = from
@@ -897,7 +907,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	## A warden meets blows it is facing. A flat frontal soak rather than the
 	## player's arc — a monster parrying that precisely would be unreadable in a
 	## crowd.
-	if traits.get("guards", false) and from != Vector2.INF:
+	if traits.get("guards", false) and from != Vector2.INF and not stone:
 		var facing: Vector2 = stateDirection(facing_dir)
 		if facing != Vector2.ZERO:
 			var toward: Vector2 = from - global_position
@@ -911,7 +921,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	## behind glances off the carapace, so he has to be met head on rather than
 	## circled. Set as a damage multiplier — 0.1 leaves a tenth of the hit.
 	var shell: float = traits.get("shell", 1.0)
-	if shell < 1.0 and from != Vector2.INF:
+	if shell < 1.0 and from != Vector2.INF and not stone:
 		var carapace: Vector2 = stateDirection(facing_dir)
 		if carapace != Vector2.ZERO:
 			var incoming: Vector2 = from - global_position
@@ -942,6 +952,80 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		_change_state("death")
 		return
 	_change_state("hurt")
+
+
+## Stone scroll. A petrified monster is frozen mid-pose — its state machine,
+## animation and collision tween all stopped — and goes grey. It reverts on its
+## own after the scroll's time, or at once when struck (see take_damage).
+@export var shatter_multiplier: float = 3.0
+const STONE_SHADER: Shader = preload("res://shaders/stone.gdshader")
+var _petrified: bool = false
+var _material_before_stone: Material = null
+var _stone_timer: Timer = null
+
+
+func is_petrified() -> bool:
+	return _petrified
+
+
+func can_petrify() -> bool:
+	return not is_dead and not _petrified
+
+
+func petrify(seconds: float) -> void:
+	if not can_petrify():
+		return
+	_petrified = true
+	velocity = Vector2.ZERO
+	knockback_velocity = Vector2.ZERO
+	guarding = false
+	_sight_cached = false
+	if is_instance_valid(state_machine):
+		state_machine.process_mode = Node.PROCESS_MODE_DISABLED
+	if is_instance_valid(collision_tween):
+		collision_tween.pause()
+	if is_instance_valid(_flash_tween):
+		_flash_tween.kill()
+	if is_instance_valid(animated_sprite):
+		animated_sprite.pause()
+		animated_sprite.modulate = Color.WHITE
+		_material_before_stone = animated_sprite.material
+		var stone := ShaderMaterial.new()
+		stone.shader = STONE_SHADER
+		animated_sprite.material = stone
+	if _stone_timer == null:
+		_stone_timer = Timer.new()
+		_stone_timer.one_shot = true
+		_stone_timer.timeout.connect(_unpetrify)
+		add_child(_stone_timer)
+	_stone_timer.start(seconds)
+
+
+## Back to flesh. `settle` sends it to idle to get its bearings; a shattering
+## blow passes false because the hit itself decides what state comes next.
+func _unpetrify(settle: bool = true) -> void:
+	if not _petrified:
+		return
+	_petrified = false
+	if _stone_timer != null:
+		_stone_timer.stop()
+	if is_instance_valid(animated_sprite):
+		animated_sprite.material = _material_before_stone
+		animated_sprite.play()
+	_material_before_stone = null
+	if is_instance_valid(state_machine):
+		state_machine.process_mode = Node.PROCESS_MODE_INHERIT
+	if settle and is_instance_valid(state_machine) and state_machine.has_node("idle"):
+		_change_state("idle")
+
+
+## Called on every monster when a player reads the Invisibility scroll: whatever
+## it was hunting, it has lost, and drops back to wandering.
+func forget_player(_who: Node = null) -> void:
+	_last_seen_ms = -100000
+	_sight_checked_ms = -100000
+	_sight_cached = false
+	last_known = Vector2.ZERO
 
 
 ## Drops the corpse out of collision immediately so it stops blocking movement

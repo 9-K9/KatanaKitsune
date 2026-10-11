@@ -90,6 +90,9 @@ func can_sneak() -> bool:
 ## Spends sneak. Called by the stealth states; anything not calling it lets the
 ## meter refill, so there is nothing to keep in sync.
 func drain_sneak(per_second: float, delta: float) -> void:
+	## Unseen by the scroll, hiding costs nothing.
+	if is_invisible():
+		return
 	sneak = maxf(sneak - per_second * delta, 0.0)
 	_sneak_used_this_frame = true
 
@@ -127,6 +130,11 @@ var _stamina_rested_for: float = 0.0
 
 ## Spends at a rate, for states holding a cost open across frames.
 func drain_stamina(per_second: float, delta: float) -> void:
+	## Exertion holds the meter full rather than merely pausing it, so the scroll
+	## also rescues her from an already winded state.
+	if scroll_active(Scroll.Kind.EXERTION):
+		stamina = max_stamina
+		return
 	stamina = maxf(stamina - per_second * delta, 0.0)
 	_stamina_rested_for = 0.0
 
@@ -246,13 +254,124 @@ func _capture_base_stats() -> void:
 func _apply_buffs() -> void:
 	if _base_damage <= 0.0:
 		return
-	damage = _base_damage * _buff_multiplier(Pickup.Kind.DAMAGE)
+	damage = _base_damage * _buff_multiplier(Pickup.Kind.DAMAGE) \
+			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.ATTACK)
 	walkSpeed = _base_walk * _buff_multiplier(Pickup.Kind.SPEED)
-	runSpeed = _base_run * _buff_multiplier(Pickup.Kind.SPEED)
+	## Swiftness is a running scroll: it lengthens her stride at speed and
+	## leaves the careful walk alone.
+	runSpeed = _base_run * _buff_multiplier(Pickup.Kind.SPEED) \
+			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.SPEED)
 
 
 func _buff_multiplier(kind: int) -> float:
 	return buffs[kind]["multiplier"] if buffs.has(kind) else 1.0
+
+
+## Scroll effects share the buff table and its expiry, keyed above every
+## Pickup.Kind so a scroll and a walk-over orb of the same sort are two separate
+## timers rather than one refreshing the other.
+const SCROLL_BUFF: int = 100
+
+@export_group("Scrolls")
+@export var scroll_invincible_time: float = 8.0
+@export var scroll_exertion_time: float = 15.0
+@export var scroll_invisible_time: float = 10.0
+@export var scroll_speed_time: float = 12.0
+@export var scroll_speed_multiplier: float = 1.4
+@export var scroll_attack_time: float = 12.0
+@export var scroll_attack_multiplier: float = 1.6
+## How long a monster struck by the charged blade stays stone.
+@export var scroll_stone_time: float = 6.0
+## How see-through she is while invisible. Not zero: the player still has to
+## be able to find her own character.
+@export var invisible_alpha: float = 0.3
+@export_group("")
+
+## Set by the Stone scroll, spent by the next blow that lands on a monster.
+var stone_charged: bool = false
+
+
+func scroll_active(kind: int) -> bool:
+	return buffs.has(SCROLL_BUFF + kind)
+
+
+## Seconds left on a scroll's effect, or 0.
+func scroll_time_left(kind: int) -> float:
+	if not buffs.has(SCROLL_BUFF + kind):
+		return 0.0
+	return maxf(buffs[SCROLL_BUFF + kind]["until"] - Time.get_ticks_msec() / 1000.0, 0.0)
+
+
+## The full length of a scroll's effect, for drawing how much is left.
+func scroll_duration(kind: int) -> float:
+	match kind:
+		Scroll.Kind.INVINCIBLE: return scroll_invincible_time
+		Scroll.Kind.EXERTION: return scroll_exertion_time
+		Scroll.Kind.INVISIBLE: return scroll_invisible_time
+		Scroll.Kind.SPEED: return scroll_speed_time
+		Scroll.Kind.ATTACK: return scroll_attack_time
+		Scroll.Kind.STONE: return scroll_stone_time
+	return 0.0
+
+
+func is_invisible() -> bool:
+	return scroll_active(Scroll.Kind.INVISIBLE)
+
+
+## Reads a scroll. False when it would do nothing — the blade is already
+## charged with stone — so the caller can keep it rather than waste it.
+## Reading one that is already burning starts its timer again.
+func use_scroll(kind: int) -> bool:
+	if is_dead:
+		return false
+	match kind:
+		Scroll.Kind.STONE:
+			if stone_charged:
+				return false
+			stone_charged = true
+		Scroll.Kind.SPEED:
+			grant_buff(SCROLL_BUFF + kind, scroll_speed_multiplier, scroll_speed_time)
+		Scroll.Kind.ATTACK:
+			grant_buff(SCROLL_BUFF + kind, scroll_attack_multiplier, scroll_attack_time)
+		Scroll.Kind.EXERTION:
+			grant_buff(SCROLL_BUFF + kind, 1.0, scroll_exertion_time)
+			stamina = max_stamina
+		Scroll.Kind.INVISIBLE:
+			grant_buff(SCROLL_BUFF + kind, 1.0, scroll_invisible_time)
+			## Anything already on her trail loses it outright, not just the
+			## ones that would have looked again.
+			for node in get_tree().get_nodes_in_group("enemy"):
+				if node.has_method("forget_player"):
+					node.forget_player(self)
+		Scroll.Kind.INVINCIBLE:
+			grant_buff(SCROLL_BUFF + kind, 1.0, scroll_invincible_time)
+		_:
+			return false
+	return true
+
+
+## Spends the stone charge, if there is one. Called by the swing that lands.
+func spend_stone_charge() -> bool:
+	if not stone_charged:
+		return false
+	stone_charged = false
+	return true
+
+
+## What the active scrolls look like on her. self_modulate rather than
+## modulate, so the hit-flash tween on modulate:a still plays over the top.
+func update_scroll_look() -> void:
+	if not is_instance_valid(myAnimatedSprite2D):
+		return
+	var look := Color.WHITE
+	var pulse: float = 0.5 + 0.5 * sin(Time.get_ticks_msec() / 1000.0 * TAU * 1.5)
+	if scroll_active(Scroll.Kind.INVINCIBLE):
+		look = Color(1.0, 0.92, 0.6).lerp(Color(1.45, 1.25, 0.7), pulse)
+	elif stone_charged:
+		look = Color(1.0, 1.0, 1.0).lerp(Color(0.75, 0.78, 0.85), pulse)
+	if is_invisible():
+		look.a = invisible_alpha
+	myAnimatedSprite2D.self_modulate = look
 
 
 ## `from` is where the blow came from, which decides what the guard is worth.
@@ -265,6 +384,10 @@ func _buff_multiplier(kind: int) -> float:
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		guardable: bool = true) -> void:
 	if CheatManager.immortality_enabled:
+		return
+	## The Invincibility scroll: nothing gets through while it burns, and it is
+	## not spent by being hit the way a ward is.
+	if scroll_active(Scroll.Kind.INVINCIBLE):
 		return
 	## A ward soaks the hit entirely rather than reducing it, so the player can
 	## see it working.
@@ -399,6 +522,8 @@ func stealth_ratio() -> float:
 	## Drawn steel catches what light there is, so she is seen from furthest away
 	## with the katana out and from closest flat against the floor. That makes
 	## sheathing a real decision rather than a formality.
+	if is_invisible():
+		return 0.0
 	if crouched:
 		return 0.3
 	if stealthed:

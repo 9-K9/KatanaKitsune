@@ -10,9 +10,12 @@ extends Area2D
 ## STAMINA is food and drink rather than a charm: it restores the meter she
 ## spends on running and fighting, which nothing else refilled on demand. Kept
 ## in the same enum so a breakable can drop one without knowing the difference.
-enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA }
+enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA, SCROLL }
 
 @export var kind: Kind = Kind.HEALTH
+## Which scroll, for a SCROLL pickup. -1 picks one at random when it spawns, so
+## one scene covers all six.
+@export var scroll_kind: int = -1
 ## Health restored, or the multiplier applied for a power-up.
 @export var amount: float = 30.0
 ## Power-up lifetime in seconds. Ignored by HEALTH.
@@ -48,6 +51,8 @@ var _rest_y: float = 0.0
 
 
 func _ready() -> void:
+	if kind == Kind.SCROLL:
+		_dress_scroll()
 	if display_lift != 0.0:
 		_raise(display_lift)
 	_rest_y = sprite.position.y
@@ -63,6 +68,30 @@ func _process(delta: float) -> void:
 	if not armed:
 		return
 	_hover(delta)
+	## body_entered fires once, on the way in. A scroll she was standing on when
+	## her slots were full is looked at again, so freeing a slot is enough to
+	## take it without stepping off and back on.
+	if kind == Kind.SCROLL and not _taken and monitoring:
+		_retry_in -= delta
+		if _retry_in <= 0.0:
+			_retry_in = 0.3
+			for body in get_overlapping_bodies():
+				_on_body_entered(body)
+				if _taken:
+					break
+
+
+var _retry_in: float = 0.3
+
+
+## Picks the scroll, if the spawner left it to chance, and paints the pickup to
+## match: its icon, a floor-sized scale, and a glow in the kanji's ink.
+func _dress_scroll() -> void:
+	if scroll_kind < 0 or scroll_kind >= Scroll.COUNT:
+		scroll_kind = Scroll.random_kind()
+	sprite.texture = Scroll.icon(scroll_kind)
+	if _light != null:
+		_light.color = Scroll.INK[scroll_kind].lightened(0.35)
 
 
 ## Made takeable, and tipped onto the floor. Called when the prop holding it
@@ -120,6 +149,15 @@ func _on_body_entered(body: Node2D) -> void:
 	## The player's hitbox Area2D is in the "player" group too; only the body
 	## carries the health and the buff state.
 	if not (body is CharacterBody2D):
+		return
+	## A scroll goes into her slots rather than straight into effect, and with
+	## all six taken by other kinds it stays on the floor for later.
+	if kind == Kind.SCROLL:
+		var slots = body.get("scrolls")
+		if slots == null or not slots.add(scroll_kind):
+			return
+		_taken = true
+		_consume()
 		return
 	_taken = true
 	_apply(body)

@@ -30,6 +30,18 @@ var slot: int = 0
 @onready var timerTimeOut : bool = false
 @onready var actionBlockInput : bool = false
 
+## Her six scroll slots. Read by the HUD, filled by scroll pickups.
+var scrolls: ScrollInventory = ScrollInventory.new()
+## Pad scroll button: held this long, the highlight starts stepping through the
+## slots instead, and letting go reads whichever one it stopped on.
+const SCROLL_HOLD_TO_CYCLE: float = 0.35
+const SCROLL_CYCLE_STEP: float = 0.45
+var _scroll_held_for: float = -1.0
+var _scroll_next_step: float = 0.0
+## True while the pad button is down past the hold threshold; the HUD uses it
+## to show the highlight as live.
+var scroll_cycling: bool = false
+
 ## What the blade is currently over. Resolved once — the attack code used to
 ## re-look this up by string path on every swing.
 @onready var action_area: Area2D = $CollisionChecker/RayCast2D/ActionArea
@@ -132,6 +144,8 @@ func InputHandler():
 
 func _physics_process(_delta):
 	update_buffs()
+	update_scroll_look()
+	_read_scroll_input(_delta)
 	## Unconditional: the running states call drain_stamina, which resets the rest
 	## timer, so spending and recovering cannot both apply in the same frame.
 	recover_stamina(_delta)
@@ -153,6 +167,43 @@ func _physics_process(_delta):
 		velocity = Vector2.ZERO
 	move_and_slide()
 
+
+## Number keys read a slot outright. The pad has one button: a tap reads the
+## highlighted scroll, holding it steps the highlight along, and letting go
+## reads wherever it stopped.
+func _read_scroll_input(delta: float) -> void:
+	if input == null or is_dead:
+		_scroll_held_for = -1.0
+		scroll_cycling = false
+		return
+	for i in ScrollInventory.SLOTS:
+		if input.just_pressed("Scroll%d" % (i + 1)):
+			scrolls.selected = i if scrolls.kind_at(i) != -1 else scrolls.selected
+			read_scroll(i)
+	if input.pressed("ScrollUse"):
+		if _scroll_held_for < 0.0:
+			_scroll_held_for = 0.0
+			_scroll_next_step = SCROLL_HOLD_TO_CYCLE
+		_scroll_held_for += delta
+		if _scroll_held_for >= _scroll_next_step:
+			scroll_cycling = true
+			scrolls.cycle()
+			_scroll_next_step += SCROLL_CYCLE_STEP
+	elif _scroll_held_for >= 0.0:
+		_scroll_held_for = -1.0
+		scroll_cycling = false
+		read_scroll(scrolls.selected)
+
+
+## Uses one scroll from a slot. Kept, not spent, when it would do nothing.
+func read_scroll(index: int) -> bool:
+	var kind: int = scrolls.kind_at(index)
+	if kind == -1:
+		return false
+	if not use_scroll(kind):
+		return false
+	scrolls.take(index)
+	return true
 ## Brings her lights towards where the current stance wants them.
 func _hood_lantern(delta: float) -> void:
 	_gather_lights()

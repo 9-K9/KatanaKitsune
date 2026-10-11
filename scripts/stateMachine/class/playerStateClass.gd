@@ -167,5 +167,13 @@ func playerAttack(hit_frame: int = 3):
 	if not pc.has_method("blade_targets"):
 		return
 	for body in pc.blade_targets():
+		## A blade charged with stone turns the first monster it meets instead of
+		## cutting it. One charge, one monster; the rest of the swing cuts as
+		## normal.
+		if body.has_method("petrify") and body.is_in_group("enemy") \
+				and body.can_petrify() and pc.has_method("spend_stone_charge") \
+				and pc.spend_stone_charge():
+			body.petrify(pc.scroll_stone_time)
+			continue
 		body.take_damage(pc.damage, pc.global_position)
 

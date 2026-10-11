@@ -94,6 +94,12 @@ func _ready() -> void:
 		_cells.append(_build_cell(slot))
 		_shown.append(-1.0)
 
+	var scroll_bar := ScrollHotbar.new()
+	scroll_bar.name = "ScrollHotbar"
+	scroll_bar.player_count = maxi(Roster.count(), 1)
+	scroll_bar.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(scroll_bar)
+
 	if depth_label != null:
 		depth_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 78.0)
 
