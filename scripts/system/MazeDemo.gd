@@ -164,6 +164,17 @@ const THEMES: Array[Dictionary] = [
 ## Chance an interior wall is knocked through. Higher is more open.
 @export_range(0.0, 1.0) var openness: float = 0.35
 
+@export_group("Exteriors")
+## Builds each floor as a shrine compound — separate buildings standing in
+## gardens, courtyards and ponds with a road running through — instead of one
+## enclosed maze. See MazeExterior.
+@export var exteriors: bool = true
+@export var buildings_per_floor: Vector2i = Vector2i(2, 4)
+## Rooms per building.
+@export var building_size: Vector2i = Vector2i(2, 5)
+@export var max_ponds: int = 2
+@export_range(0.0, 1.0, 0.05) var outdoor_enemy_chance: float = 0.6
+
 @export_group("Population")
 @export var enemies_per_room: Vector2i = Vector2i(0, 2)
 @export var props_per_room: Vector2i = Vector2i(1, 3)
@@ -194,6 +205,11 @@ const THEMES: Array[Dictionary] = [
 ## decoration, so it does not get left to chance.
 @export var torch_scenes: Array[PackedScene] = []
 @export var torches_per_room: Vector2i = Vector2i(1, 3)
+
+## Harmless wildlife that wanders the rooms and scatters from anyone who comes
+## close. Purely set dressing: no hitbox, never counted towards the wave.
+@export var animal_scenes: Array[PackedScene] = []
+@export var animals_per_room: Vector2i = Vector2i(0, 2)
 
 ## Shoji doors and windows set into the walls, as tiles in the wall layers so
 ## fading, sorting and light occlusion treat them exactly like the stone.
@@ -293,6 +309,10 @@ var _building: bool = false
 ## "<room name>/<side>" for the open half of every doored gap, so no column is
 ## stood in the doorway.
 var _door_skip: Dictionary = {}
+## This floor's compound plan when `exteriors` is on, otherwise null.
+var _ext: MazeExterior = null
+## Where the party arrives and the one room left free of monsters.
+var _start_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -430,6 +450,10 @@ func _theme_floor() -> void:
 		for at in ground.get_used_cells():
 			layer.set_cell(at, palette[_rng.randi() % palette.size()], Vector2i.ZERO)
 		layer.visible = true
+	## Open ground gets earth, grass, gravel and paving instead, whatever the
+	## theme laid indoors.
+	if _ext != null:
+		_ext.paint_ground()
 
 
 ## Candidate material names for a wall set, most specific first.
@@ -576,10 +600,15 @@ func _build() -> void:
 	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
 	_roll_theme()
-	var monster_start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
-	await _load_floor_monsters(monster_start)
-
 	var step := _lattice_step()
+	_start_cell = Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	_ext = null
+	if exteriors:
+		_ext = MazeExterior.new(self, _rng, grid, step)
+		_ext.plan()
+		_start_cell = _ext.start_cell
+	await _load_floor_monsters(_start_cell)
+
 	var rooms_total: float = float(maxi(grid.x * grid.y, 1))
 	var built: float = 0.0
 	for iy in grid.y:
@@ -593,11 +622,15 @@ func _build() -> void:
 			var light: Node = room.get_node_or_null("Lighting")
 			if light:
 				light.free()
-			if not show_roofs:
+			## Roofs only on buildings: open ground has no ceiling to lift.
+			var roofed: bool = _ext.is_building(cell) if _ext != null else show_roofs
+			if not roofed:
 				var roofs: Node = room.get_node_or_null("TileMap/Roofs")
 				if roofs:
 					roofs.queue_free()
 			_rooms[cell] = room
+			if _ext != null and _rooms.size() == 1:
+				_ext.measure(room)
 			built += 1.0
 			SceneLoader.step(0.25 + 0.35 * (built / rooms_total),
 					"BUILDING ROOMS  %d/%d" % [int(built), int(rooms_total)])
@@ -607,6 +640,11 @@ func _build() -> void:
 	_carve()
 	_place_architecture()
 	_build_wall_occluders()
+	if _ext != null:
+		_ext.setup_roofs()
+		_ext.build_ponds()
+		_ext.build_perimeter()
+		_ext.guard_entrances()
 	await get_tree().process_frame
 	SceneLoader.step(0.68, "RAISING COLUMNS")
 	_place_pillars()
@@ -714,12 +752,19 @@ func _populate(step: Vector2) -> void:
 	enemies_total = 0
 	_boss_placed = false
 	_scale_party()
-	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	var start := _start_cell
 	var rooms_total: float = float(maxi(_rooms.size(), 1))
 	var filled: float = 0.0
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
+		## Open ground is dressed first, so the monsters below are then kept
+		## off its trees and out of its ponds by _place.
+		var outdoors: bool = _ext != null and not _ext.is_building(cell)
+		if outdoors:
+			_ext.populate(cell)
 		var monster_scene: PackedScene = _room_monster.get(cell)
+		if outdoors and _rng.randf() >= outdoor_enemy_chance:
+			monster_scene = null
 		if monster_scene != null and cell != start:
 			## Scaled by the party. A floor built for one is a walkover for four,
 			## and the extra bodies also have to be worth the extra katanas.
@@ -740,20 +785,26 @@ func _populate(step: Vector2) -> void:
 						rung = 6
 						_boss_placed = true
 					monster.apply_tier(rung, depth)
-		if not prop_scenes.is_empty():
+		if not prop_scenes.is_empty() and not outdoors:
 			var m: int = _rng.randi_range(props_per_room.x, props_per_room.y)
 			for i in m:
 				_place(here, prop_scenes[_rng.randi_range(0, prop_scenes.size() - 1)])
 		## Guaranteed, not rolled. Every room lights itself rather than relying
 		## on the lantern the player carries — a dark room is unreadable, and a
 		## uniform draw from the prop pool would leave some rooms with none.
-		if not torch_scenes.is_empty():
+		if not torch_scenes.is_empty() and not outdoors:
 			var lights: int = _rng.randi_range(torches_per_room.x, torches_per_room.y)
 			for i in lights:
 				_place(here, torch_scenes[_rng.randi_range(0, torch_scenes.size() - 1)])
-		if not table_scenes.is_empty() and _rng.randf() < table_chance:
+		## Not in the start room, so nothing bolts from under the player's feet
+		## the moment the floor appears.
+		if not animal_scenes.is_empty() and cell != start:
+			var critters: int = _rng.randi_range(animals_per_room.x, animals_per_room.y)
+			for i in critters:
+				_place(here, animal_scenes[_rng.randi_range(0, animal_scenes.size() - 1)])
+		if not table_scenes.is_empty() and not outdoors and _rng.randf() < table_chance:
 			_place_dining_set(here)
-		if trap_scene != null and cell != start and _rng.randf() < trap_chance:
+		if trap_scene != null and cell != start and not outdoors and _rng.randf() < trap_chance:
 			_place_trap_run(here)
 
 
@@ -801,8 +852,17 @@ func _place(room: Node2D, scene: PackedScene) -> Node:
 	if thing.has_method("face_randomly"):
 		thing.face_randomly(_rng)
 	add_child(thing)
-	thing.global_position = ground.to_global(
+	var spot: Vector2 = ground.to_global(
 		ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+	## Out of the ponds and off the trees on open ground. A crowded cell may have
+	## no clear spot at all, so the last resort only insists on dry land.
+	if _ext != null:
+		var tries: int = 0
+		while tries < 80 and (_ext.blocked(spot) if tries < 40 else _ext.wet(spot)):
+			spot = ground.to_global(
+				ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+			tries += 1
+	thing.global_position = spot
 	return thing
 
 
@@ -814,6 +874,8 @@ func _light() -> void:
 		tint.name = "Gloom"
 		tint.color = gloom
 		add_child(tint)
+	if _ext != null:
+		_ext.light()
 
 	for carrier in _players:
 		if not is_instance_valid(carrier):
@@ -915,6 +977,15 @@ func _carve() -> void:
 		for side in SIDES:
 			walls[cell][side] = true
 
+	if _ext != null:
+		_ext.carve(walls)
+		for cell in _rooms:
+			var room = _rooms[cell]
+			if room.has_method("set_side"):
+				for side in SIDES:
+					room.set_side(side, walls[cell][side])
+		return
+
 	## Spanning tree.
 	var visited: Dictionary = {Vector2i.ZERO: true}
 	var stack: Array[Vector2i] = [Vector2i.ZERO]
@@ -983,12 +1054,22 @@ func _place_architecture() -> void:
 		return
 	_add_architecture_sources(tiles)
 
+	## Entrances first, always on the building's half of the wall, so the door
+	## frame belongs to the shrine and the open ground side stays clear.
+	if _ext != null:
+		_ext.door_points.clear()
+		for entrance in _ext.entrances:
+			_ext.door_points.append(_put_door(entrance[0], entrance[1]))
+
 	## Doors. Each shared gap is visited once, from the room on its NW/NE side,
 	## and either room's half of the pair may carry the door.
 	for cell in _rooms:
 		for side in ["SE", "SW"]:
 			var other: Vector2i = cell + NEIGHBOUR[side]
 			if not _rooms.has(other):
+				continue
+			## Only between rooms of one building; open ground has no doors.
+			if _ext != null and not _ext.same_building(cell, other):
 				continue
 			var host: Node = _rooms[cell]
 			var guest: Node = _rooms[other]
@@ -1001,24 +1082,9 @@ func _place_architecture() -> void:
 			if _rng.randf() >= door_chance:
 				continue
 			if _rng.randf() < 0.5:
-				var swap_room: Node = host
-				host = guest
-				guest = swap_room
-				var swap_side: String = host_side
-				host_side = guest_side
-				guest_side = swap_side
-			var layer := host.get_node_or_null("TileMap/Walls_" + host_side) as TileMapLayer
-			if layer == null:
-				continue
-			var cells := _architecture_cells(layer)
-			if cells.is_empty():
-				continue
-			host.set_side(host_side, true)
-			var door_cell: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
-			var dir: int = layer.get_cell_source_id(door_cell)
-			layer.set_cell(door_cell, DOOR_SOURCE + dir, Vector2i.ZERO)
-			_add_door(layer, door_cell, dir)
-			_door_skip["%s/%s" % [guest.name, guest_side]] = true
+				_put_door(other, guest_side)
+			else:
+				_put_door(cell, host_side)
 
 	## Windows, only in the wall of a pair that draws in front. The one behind
 	## is lower on screen in its own room but hidden here, so it loses the
@@ -1051,6 +1117,27 @@ func _place_architecture() -> void:
 			if partner != null:
 				_erase_nearest(partner, layer.to_global(layer.map_to_local(window_cell)))
 			_add_window(layer, window_cell, dir)
+
+
+## Hangs a door in `cell`'s wall on `side`, leaving the neighbour's half of the
+## wall open behind it. Returns where the door stands, or the middle of the
+## wall if it has no plain stone to take one.
+func _put_door(cell: Vector2i, side: String) -> Vector2:
+	var host: Node = _rooms[cell]
+	var guest: Node = _rooms.get(cell + NEIGHBOUR[side])
+	var layer := host.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+	if layer == null or guest == null:
+		return _room_centre(cell)
+	var cells := _architecture_cells(layer)
+	if cells.is_empty():
+		return layer.to_global(layer.map_to_local(layer.get_used_rect().get_center()))
+	host.set_side(side, true)
+	var door_cell: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
+	var dir: int = layer.get_cell_source_id(door_cell)
+	layer.set_cell(door_cell, DOOR_SOURCE + dir, Vector2i.ZERO)
+	_add_door(layer, door_cell, dir)
+	_door_skip["%s/%s" % [guest.name, FACING_BACK[side]]] = true
+	return layer.to_global(layer.map_to_local(door_cell))
 
 
 ## Middle cells of a wall that still show plain stone, so a door or window
@@ -1238,10 +1325,11 @@ func _place_starting_chair() -> void:
 	_add_chair(_player.global_position + Vector2(150.0, 75.0), "StartingChair")
 
 	## And in a scattering of other rooms, skipping the one she starts in.
-	var start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	var start := _start_cell
 	var elsewhere: Array[Vector2i] = []
 	for cell in _rooms:
-		if cell != start:
+		## Not in a pond, whose middle is water.
+		if cell != start and not (_ext != null and _ext.is_pond(cell)):
 			elsewhere.append(cell)
 	elsewhere.shuffle()
 	for i in mini(extra_chairs, elsewhere.size()):
@@ -1463,7 +1551,7 @@ func _spawn_player(step: Vector2) -> void:
 	if player_scene == null:
 		return
 	var wanted: int = maxi(Roster.count(), 1)
-	var centre: Vector2 = _room_centre(Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2))
+	var centre: Vector2 = _room_centre(_start_cell)
 
 	## Spawned once and carried down; later floors only move them.
 	while _players.size() < wanted:
@@ -1506,6 +1594,8 @@ func _spawn_player(step: Vector2) -> void:
 func _physics_process(delta: float) -> void:
 	_track_party(delta)
 	_check_wave_cleared()
+	if _ext != null and not _building:
+		_ext.update_roofs(delta, Roster.bodies(get_tree()))
 
 
 ## Brings the party up with the monsters, on the same curve and the same cap.
@@ -1719,6 +1809,9 @@ func _place_pillars() -> void:
 	for cell in _rooms:
 		var room: Node2D = _rooms[cell]
 		if not room.has_method("open_sides"):
+			continue
+		## Open ground has no ceiling for a column to hold up.
+		if _ext != null and not _ext.is_building(cell):
 			continue
 		for side in room.open_sides():
 			if _door_skip.has("%s/%s" % [room.name, side]):

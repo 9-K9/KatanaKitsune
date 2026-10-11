@@ -105,3 +105,30 @@ characters walk into but sight lines, light and slash projectiles ignore.
 The original chair scene now exposes a `SitAnchor` and sitting direction.
 Katana Kitsune snaps to that anchor before playing the existing directional
 `sittingChair` animation, so nearby idle resting is visually aligned.
+
+## Animals
+
+Harmless ambient wildlife lives in `animals/<animal>/`, one PNG per frame named
+`<idle|move|fly>_<southEast|northEast>_<i>.png`. Only the two isometric
+facings toward the camera's right were generated. `scripts/system/Animal.gd`
+mirrors them with `flip_h` for south-west and north-west, so every animal
+moves strictly along the four isometric diagonals.
+
+| Animal | Scene | PixelLab character id | Height (px) |
+| --- | --- | --- | --- |
+| Rat | `scenes/animals/rat.tscn` | `f94471f0-3c0d-41f6-9de4-fe3253611148` | 22 |
+| Japanese rat snake | `scenes/animals/snake.tscn` | `da6f423c-3c0d-40f2-8130-2f1f96d2d5df` | 22 |
+| Jungle crow | `scenes/animals/crow.tscn` | `c4207dd1-5b34-4e29-8fea-60acd345550e` | 34 |
+| Fox | `scenes/animals/fox.tscn` | `c7773318-8f01-40d4-b696-4d060327729f` | 52 |
+| Cat | `scenes/animals/cat.tscn` | `8d9d118e-9b90-4016-aa3f-54115787dc2b` | 40 |
+| Tanuki | `scenes/animals/tanuki.tscn` | `84ee0d48-d2f5-4446-be39-b283b60a26e6` | 46 |
+| Sika deer | `scenes/animals/deer.tscn` | `c4adb99f-26d7-4e61-82ad-fb46475e5649` | 130 |
+| Tree frog | `scenes/animals/frog.tscn` | `27767817-d034-4419-add8-e25cbd5b4ddd` | 18 |
+
+Heights are relative to the roughly 180 px player. Animals idle, wander near
+where they spawned, and flee from anything in the `player` or `enemy` groups.
+The crow (`can_fly`) instead takes off with its `fly` animation, rises, fades
+and is removed. Animals are on collision layer 0 and are not in the `enemy`
+or `breakable` groups, so combat, wave counting and the radar ignore them.
+`MazeDemo.animal_scenes` and `animals_per_room` control spawning; the start
+room never gets animals.
