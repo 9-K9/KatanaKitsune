@@ -210,6 +210,13 @@ facings toward the camera's right were generated. `scripts/system/Animal.gd`
 mirrors them with `flip_h` for south-west and north-west, so every animal
 moves strictly along the four isometric diagonals.
 
+Ground movement tests each straight 2:1 diagonal step against collisions instead
+of sliding along walls. Headings are committed for `Animal.detour_time` (0.5-1
+seconds by default), including when fleeing, so small threat-position changes
+cannot flip the pose every frame. Blocked animals idle for `blocked_pause`
+(0.75 seconds), then check the four directions again. If none is clear, they
+remain still and occasionally turn until a route opens.
+
 | Animal | Scene | PixelLab character id | Height (px) |
 | --- | --- | --- | --- |
 | Rat | `scenes/animals/rat.tscn` | `f94471f0-3c0d-41f6-9de4-fe3253611148` | 22 |
@@ -218,10 +225,15 @@ moves strictly along the four isometric diagonals.
 | Fox | `scenes/animals/fox.tscn` | `c7773318-8f01-40d4-b696-4d060327729f` | 52 |
 | Cat | `scenes/animals/cat.tscn` | `8d9d118e-9b90-4016-aa3f-54115787dc2b` | 40 |
 | Tanuki | `scenes/animals/tanuki.tscn` | `84ee0d48-d2f5-4446-be39-b283b60a26e6` | 46 |
-| Sika deer | `scenes/animals/deer.tscn` | `c4adb99f-26d7-4e61-82ad-fb46475e5649` | 130 |
 | Tree frog | `scenes/animals/frog.tscn` | `27767817-d034-4419-add8-e25cbd5b4ddd` | 18 |
 | Snow hare (rabbit) | `scenes/animals/rabbit.tscn` | `061522e2-cb6c-4355-abf4-3e32397688a4` | 35-49 |
 | Freshwater turtle | `scenes/animals/turtle.tscn` | Creator gallery (see below) | 27-30 |
+
+The Sika deer is archived at `scenes/animals/archive/deer.tscn` and excluded
+from the spawn roster. Its original art remains in `animals/deer/` (PixelLab
+character `c4adb99f-26d7-4e61-82ad-fb46475e5649`). At 130px tall it was too
+large for ambient wildlife; keep future additions small rather than adding
+large animals.
 
 The rabbit has eight idle frames and six hopping frames per right-facing
 diagonal, mirrored for the left-facing diagonals like the other animals.

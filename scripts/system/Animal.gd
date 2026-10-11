@@ -25,9 +25,8 @@ const DIAGONALS: Array[Vector2] = [
 @export var fly_speed: float = 220.0
 @export var fly_rise: float = 160.0
 @export var fly_time: float = 1.6
-## When something blocks the way the animal stops this long, then commits to
-## another free diagonal for detour_time before heading its own way again.
-@export var blocked_pause: float = 0.25
+## A blocked animal rests before checking again, rather than turning each frame.
+@export var blocked_pause: float = 0.75
 @export var detour_time: Vector2 = Vector2(0.5, 1.0)
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -41,7 +40,6 @@ var _fly_t: float = 0.0
 var _sprite_base: Vector2
 var _pause: float = 0.0
 var _detour: float = 0.0
-var _next_dir: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -69,35 +67,31 @@ func _physics_process(delta: float) -> void:
 			_take_off(threat)
 			return
 		state = State.FLEE
+		_detour = 0.0
 	if state == State.FLEE:
 		if threat == null or dist > calm_radius:
 			_idle()
-		elif not _blocked_wait(delta):
-			if _detour > 0.0:
-				_detour -= delta
-			else:
-				_dir = _away_from(threat.global_position)
-			velocity = _dir * flee_speed
-			_play("move")
-			_slide(threat.global_position)
+		else:
+			_move_diagonally(delta, flee_speed, global_position - threat.global_position)
 		return
-	_timer -= delta
 	if state == State.WANDER:
-		if not _blocked_wait(delta):
-			if _detour > 0.0:
-				_detour -= delta
-			elif global_position.distance_to(_home) > wander_radius:
-				## Drift back home rather than wander off across the whole maze.
-				_dir = _toward(_home)
-			velocity = _dir * walk_speed
-			_play("move")
-			_slide()
+		var preferred := _dir
+		if global_position.distance_to(_home) > wander_radius:
+			preferred = _home - global_position
+		_move_diagonally(delta, walk_speed, preferred)
+		# Do not reset a trapped animal's retry timer by ending its wander.
+		if _pause > 0.0:
+			return
+		_timer -= delta
 		if _timer <= 0.0:
 			_idle()
-	elif _timer <= 0.0:
-		state = State.WANDER
-		_timer = _rng.randf_range(wander_time.x, wander_time.y)
-		_dir = _diagonal(_rng.randi_range(0, 3))
+	else:
+		_timer -= delta
+		if _timer <= 0.0:
+			state = State.WANDER
+			_timer = _rng.randf_range(wander_time.x, wander_time.y)
+			_dir = _diagonal(_rng.randi_range(0, 3))
+			_detour = 0.0
 
 
 func _idle() -> void:
@@ -109,48 +103,50 @@ func _idle() -> void:
 	_play("idle")
 
 
-## Stands still after bumping into something. Returns true while waiting.
-func _blocked_wait(delta: float) -> bool:
-	if _pause <= 0.0:
-		return false
-	_pause -= delta
-	velocity = Vector2.ZERO
-	_play("idle")
-	if _pause <= 0.0:
-		_dir = _next_dir
-		_detour = _rng.randf_range(detour_time.x, detour_time.y)
-	return _pause > 0.0
-
-
-func _slide(threat_pos: Vector2 = Vector2.INF) -> void:
-	var start := global_position
-	var expected: float = velocity.length() * get_physics_process_delta_time()
-	move_and_slide()
-	if get_slide_collision_count() == 0:
-		return
-	var normal := get_slide_collision(0).get_normal()
-	## Only a head-on stop counts as blocked; grazing a wall just slides by.
-	if _dir.dot(normal) >= -0.2 or start.distance_to(global_position) > expected * 0.6:
-		return
-	_next_dir = _pick_detour(normal, threat_pos)
-	_pause = blocked_pause
+func _rest_blocked() -> void:
+	_pause = maxf(blocked_pause, 0.1)
+	_detour = 0.0
 	velocity = Vector2.ZERO
 	_play("idle")
 
 
-## Best free diagonal other than the blocked one: never back into the wall,
-## preferably still away from the threat, otherwise along the wall.
-func _pick_detour(normal: Vector2, threat_pos: Vector2) -> Vector2:
-	var away := Vector2.ZERO if threat_pos == Vector2.INF else (global_position - threat_pos).normalized()
-	var best := -_dir
+func _move_diagonally(delta: float, speed: float, preferred: Vector2) -> void:
+	if _pause > 0.0:
+		_pause = maxf(0.0, _pause - delta)
+		velocity = Vector2.ZERO
+		if _pause > 0.0:
+			return
+	_detour = maxf(0.0, _detour - delta)
+	var distance: float = maxf(12.0, speed * delta)
+	if _detour <= 0.0:
+		var chosen := _open_direction(preferred, distance)
+		if chosen == Vector2.ZERO:
+			# One occasional turn to inspect a way out, never rapid pose flipping.
+			_dir = _diagonal(_rng.randi_range(0, 3))
+			_rest_blocked()
+			return
+		_dir = chosen
+		_detour = maxf(0.1, _rng.randf_range(detour_time.x, detour_time.y))
+	var motion := _dir * speed * delta
+	if test_move(global_transform, motion, null, safe_margin, true):
+		_rest_blocked()
+		return
+	velocity = _dir * speed
+	_play("move")
+	# A tested straight step cannot acquire a non-isometric wall-slide vector.
+	global_position += motion
+
+
+func _open_direction(preferred: Vector2, distance: float) -> Vector2:
+	var heading := preferred.normalized()
+	var best := Vector2.ZERO
 	var best_score: float = -INF
 	for i in 4:
 		var d := _diagonal(i)
-		if d.is_equal_approx(_dir):
+		if test_move(global_transform, d * distance, null, safe_margin, true):
 			continue
-		var score: float = d.dot(away) * 2.0 + d.dot(normal) + _rng.randf() * 0.2
-		if test_move(global_transform, d * 12.0):
-			score -= 10.0
+		# Prefer the current heading in a tie instead of oscillating at bisectors.
+		var score: float = d.dot(heading) + (0.1 if d.is_equal_approx(_dir) else 0.0)
 		if score > best_score:
 			best_score = score
 			best = d
