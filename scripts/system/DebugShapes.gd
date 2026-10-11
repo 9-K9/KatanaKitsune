@@ -18,13 +18,12 @@ const OVERLAY_Z: int = 4096
 const LABEL_LIFT: float = 170.0
 ## Text size. 13 was unreadable at play distance once a few monsters bunched up.
 const LABEL_SIZE: int = 20
-const COLOUR_LABEL := Color(1.0, 1.0, 1.0, 0.95)
-const COLOUR_LABEL_BACK := Color(0.0, 0.0, 0.0, 0.55)
+const COLOUR_LABEL := Color(1.0, 1.0, 1.0, 1.0)
+const COLOUR_LABEL_BACK := Color(0.0, 0.0, 0.0, 1.0)
 
 const COLOUR_PLAYER := Color(0.30, 1.00, 0.45, 0.85)
 const COLOUR_ZONE := Color(0.35, 0.80, 1.00, 0.75)
 const COLOUR_SOLID := Color(1.00, 0.60, 0.20, 0.70)
-const COLOUR_ENEMY := Color(1.00, 0.35, 0.35, 0.75)
 ## Her own hurtbox: what an enemy's attack actually has to land inside.
 const COLOUR_HURTBOX := Color(0.55, 0.85, 1.00, 0.70)
 ## The blade's own hit area: what has to reach an enemy for a swing to land.
@@ -33,7 +32,10 @@ const COLOUR_WEAPON := Color(1.00, 0.20, 0.85, 0.70)
 const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
 ## What a monster can actually see: a facing-locked cone out to its detection
 ## range, plus the close-range ring it notices through regardless of facing.
-const COLOUR_VISION := Color(1.00, 0.85, 0.20, 0.55)
+## Red while it has eyes on her right now, blue once it has lost her again —
+## sees_player() is already cached per-monster, so this is free to call here.
+const COLOUR_VISION_SEEN := Color(1.00, 0.15, 0.15, 1.00)
+const COLOUR_VISION_BLIND := Color(0.20, 0.45, 1.00, 1.00)
 ## The chair she would sit on if she stood still long enough.
 const COLOUR_PICKED := Color(1.00, 0.95, 0.40, 0.95)
 ## Matches EnemyStateClass.ISO_Y_SCALE — the cone has to be squashed the same
@@ -50,12 +52,19 @@ var _player: CharacterBody2D = null
 ## Label positions already used this frame, so two monsters standing together do
 ## not print over each other.
 var _taken: Array[Vector2] = []
+## The project ships one weight of its UI font and no separate bold face, so
+## this leans on FontVariation's embolden rather than switching fonts — the
+## readout was getting lost against busy floor art at the old regular weight.
+var _label_font: FontVariation = null
 
 
 func _ready() -> void:
 	z_index = OVERLAY_Z
 	z_as_relative = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_label_font = FontVariation.new()
+	_label_font.base_font = ThemeDB.fallback_font
+	_label_font.variation_embolden = 1.2
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -79,18 +88,15 @@ func _draw() -> void:
 	_taken.clear()
 	var player := Roster.nearest_to(get_tree(), Vector2.ZERO)
 
-	## Chairs: the zone she has to be inside, the origin, and the seat she is
-	## actually sent to — which are three different points and were being
-	## confused for each other.
+	## Chairs: the seat she is actually sent to, and the one she would pick
+	## right now — no zone circle; the overlay is for collision shapes, not
+	## furniture logic.
 	for chair in get_tree().get_nodes_in_group("chair"):
 		if not (chair is Node2D):
 			continue
 		var node := chair as Node2D
 		var picked: bool = player != null and _would_sit_on(node, player)
 		var tint: Color = COLOUR_PICKED if picked else COLOUR_ZONE
-		var zone := node.get_node_or_null("SitZone") as Area2D
-		if zone != null:
-			_draw_area(zone, tint)
 		_cross(node.global_position, tint, "chair")
 		var anchor := node.get_node_or_null("SitAnchor") as Node2D
 		var target: Vector2 = anchor.global_position if anchor != null else node.global_position
@@ -124,12 +130,13 @@ func _draw() -> void:
 		if action_area != null:
 			_draw_area(action_area, COLOUR_WEAPON)
 	for node in get_tree().get_nodes_in_group("enemy"):
-		if node is CollisionObject2D:
-			_draw_body(node as CollisionObject2D, COLOUR_ENEMY)
 		if node is Node2D:
 			_label_enemy(node as Node2D)
 		## Each monster's own hit box — the tight capsule a blade actually has
-		## to land in, separate from the wider walking body drawn above.
+		## to land in. The round general-collision body used to be drawn here
+		## too; it read as a flat, useless circle rather than anything worth
+		## looking at, so it is gone and the hit box capsule is the only shape
+		## left for an enemy.
 		var monster_hit_box := (node as Node).get_node_or_null("HitBox") as Area2D
 		if monster_hit_box != null:
 			_draw_area(monster_hit_box, COLOUR_HURTBOX)
@@ -208,6 +215,8 @@ func _draw_vision(enemy: Node) -> void:
 	var facing: Vector2 = enemy.stateDirection(enemy.facing_dir)
 	if facing == Vector2.ZERO:
 		return
+	var seen: bool = enemy.has_method("sees_player") and enemy.sees_player()
+	var colour: Color = COLOUR_VISION_SEEN if seen else COLOUR_VISION_BLIND
 	var radius: float = float(enemy.effective_detection())
 	var half: float = deg_to_rad(float(enemy.vision_arc_degrees)) * 0.5
 	## _within_arc divides y by ISO_Y_SCALE (stretching it) before taking the
@@ -224,7 +233,7 @@ func _draw_vision(enemy: Node) -> void:
 		## to real iso coordinates for drawing.
 		var dir := Vector2(cos(a), sin(a) * ISO_Y_SCALE)
 		points.append(to_local(origin + dir.normalized() * radius))
-	_fill(points, COLOUR_VISION)
+	_fill(points, colour)
 	var aware: Variant = enemy.get("aware_radius")
 	if aware != null:
 		var ring := PackedVector2Array()
@@ -232,7 +241,7 @@ func _draw_vision(enemy: Node) -> void:
 			var a: float = TAU * float(i) / 24.0
 			var dir := Vector2(cos(a), sin(a) * ISO_Y_SCALE)
 			ring.append(to_local(origin + dir * float(aware)))
-		_fill(ring, COLOUR_VISION)
+		_fill(ring, colour)
 
 
 func _draw_body(body: CollisionObject2D, colour: Color) -> void:
@@ -357,7 +366,7 @@ func _label_enemy(node: Node2D) -> void:
 	var line2 := "facing %s%s" % [facing,
 			("   moving %s   <-- MISMATCH" % moving) if (moving != "" and moving != facing) else ""]
 
-	var font := ThemeDB.fallback_font
+	var font: Font = _label_font if _label_font != null else ThemeDB.fallback_font
 	var at: Vector2 = node.global_position - global_position + Vector2(0.0, -LABEL_LIFT)
 	## Monsters bunch up and their readouts land on top of each other, which is
 	## worse than no readout — two overlapping lines are unreadable and look like

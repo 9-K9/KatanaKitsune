@@ -10,16 +10,15 @@ extends Node2D
 
 @export var room_scene: PackedScene = null
 @export var player_scene: PackedScene = null
-## Paths rather than PackedScenes, and a floor draws from one of them.
+## Paths rather than PackedScenes, loaded on demand and cached — see
+## _monster_cache.
 ##
-## As exported PackedScenes these were ext_resources on the scene, so all three
-## monster types were resident from the moment the dungeon opened whether or not
-## a wave used them. Their sheets are 1024x1024 a frame — about 2.7 GB of RGBA
-## each — so three co-resident types was 8 GB of texture to support a room that
-## only ever contains one kind of monster at a time.
-##
-## Loading by path defers that to _load_wave_monster, which brings in the one
-## type this floor rolled and drops it again on the way down.
+## As exported PackedScenes these were ext_resources on the scene, so all nine
+## monster types were resident from the moment the dungeon opened whether or
+## not a room used them. Their sheets only run 8-25 MB each on disk, so that
+## was never the multi-gigabyte cost the original comment here assumed — but
+## loading by path and caching still means a run that never sees, say, the
+## yokai lord never pays to load her sheet.
 @export var enemy_scene_paths: Array[String] = []
 @export var prop_scenes: Array[PackedScene] = []
 ## Stood at the ends of every opening and spaced across it, so a knocked-out
@@ -227,10 +226,19 @@ var _rooms: Dictionary = {}
 ## How deep the run has gone. HUD reads this; each floor adds monsters.
 var depth: int = 1
 var _player: Node2D = null
-## This floor's monster type, and where it came from. One at a time — see
-## enemy_scene_paths for why.
-var _wave_monster: PackedScene = null
-var _wave_monster_path: String = ""
+## Every monster scene seen so far this run, kept resident rather than swapped
+## one at a time. The sheets are a few MB each on disk — nothing like the
+## multi-gigabyte estimate the single-type design below was written against —
+## so holding all nine once they have each been used costs a few hundred MB,
+## not the eight-plus it would have taken to keep them as ext_resources from
+## the start.
+var _monster_cache: Dictionary = {}
+## This floor's room-to-monster assignment, one draw per room rather than one
+## for the whole floor — see _build, where it is filled.
+var _room_monster: Dictionary = {}
+## Guards the shuffle bag's reshuffle against repeating whatever the last draw
+## handed out, whether that was the last room of this floor or the first one.
+var _last_drawn_path: String = ""
 ## Shuffle bag for monster-type rotation: a shuffled copy of enemy_scene_paths
 ## that gets drawn from one at a time, so every type is seen once before any
 ## of them repeats, instead of a plain random roll that can land on the same
@@ -519,7 +527,8 @@ func _build() -> void:
 	depth = maxi(depth, start_depth)
 	_rng.seed = maze_seed
 	_roll_theme()
-	await _load_wave_monster()
+	var monster_start := Vector2i((grid.x - 1) / 2, (grid.y - 1) / 2)
+	await _load_floor_monsters(monster_start)
 
 	var step := _lattice_step()
 	var rooms_total: float = float(maxi(grid.x * grid.y, 1))
@@ -566,10 +575,10 @@ func _build() -> void:
 
 
 ## Draws one monster type from the shuffle bag, refilling and reshuffling once
-## it runs dry. Keeps the previous floor's pick out of the reshuffle's first
-## slot where possible, so a refill cannot hand back the same type twice in a
-## row right as the bag turns over. Shuffled with _rng rather than the global
-## RNG, so a seeded run reshuffles the same way every time.
+## it runs dry. Keeps the previous draw out of the reshuffle's last slot where
+## possible, so a refill cannot hand back the same type twice in a row right as
+## the bag turns over. Shuffled with _rng rather than the global RNG, so a
+## seeded run reshuffles the same way every time.
 func _next_wave_path() -> String:
 	if _wave_bag.is_empty():
 		_wave_bag = enemy_scene_paths.duplicate()
@@ -582,54 +591,64 @@ func _next_wave_path() -> String:
 		## to check and swap index 0, which guarded the slot that would be
 		## drawn LAST out of a fresh bag rather than the one about to be
 		## handed out next, so a reshuffle could still repeat the previous
-		## floor's type immediately.
+		## draw immediately.
 		var last: int = _wave_bag.size() - 1
-		if _wave_bag.size() > 1 and _wave_bag[last] == _wave_monster_path:
+		if _wave_bag.size() > 1 and _wave_bag[last] == _last_drawn_path:
 			var swap_with: int = _rng.randi() % last
 			var tmp: String = _wave_bag[last]
 			_wave_bag[last] = _wave_bag[swap_with]
 			_wave_bag[swap_with] = tmp
-	return _wave_bag.pop_back()
+	var drawn: String = _wave_bag.pop_back()
+	_last_drawn_path = drawn
+	return drawn
 
 
-## Brings in this floor's monster type and drops the last one.
-##
-## Threaded, so the loading screen keeps drawing while 80 sprite sheets come off
-## disk. The old type is released first and only then replaced — holding both at
-## once is the thing this is here to avoid.
-func _load_wave_monster() -> void:
-	if enemy_scene_paths.is_empty():
-		_wave_monster = null
-		return
-	var wanted: String = _next_wave_path()
-	## A floor that rolled the same type as the last keeps what it already has,
-	## so a run that comes up jorogumo twice does not pay to load it twice.
-	if wanted == _wave_monster_path and _wave_monster != null:
-		SceneLoader.step(0.25, "WAVE %d" % depth)
-		return
-
-	_wave_monster = null
-	_wave_monster_path = ""
-	if not ResourceLoader.exists(wanted):
-		push_error("MazeDemo: no monster scene at %s" % wanted)
-		return
-
-	ResourceLoader.load_threaded_request(wanted, "", true)
+## Loads `path` if it is not already cached, threaded so the loading screen
+## keeps drawing while the sheet comes off disk. Every type that has ever been
+## drawn stays cached for the rest of the run — see _monster_cache for why
+## that is cheap enough to afford.
+func _ensure_monster_loaded(path: String) -> PackedScene:
+	if _monster_cache.has(path):
+		return _monster_cache[path]
+	if not ResourceLoader.exists(path):
+		push_error("MazeDemo: no monster scene at %s" % path)
+		return null
+	ResourceLoader.load_threaded_request(path, "", true)
 	while true:
 		var progress: Array = []
-		var status := ResourceLoader.load_threaded_get_status(wanted, progress)
+		var status := ResourceLoader.load_threaded_get_status(path, progress)
 		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			var done: float = float(progress[0]) if not progress.is_empty() else 0.0
-			SceneLoader.step(done * 0.25,
-					"SUMMONING %s" % wanted.get_file().get_basename().to_upper())
+			SceneLoader.step(0.25 + done * 0.1,
+					"SUMMONING %s" % path.get_file().get_basename().to_upper())
 			await get_tree().process_frame
 			continue
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
-			_wave_monster = ResourceLoader.load_threaded_get(wanted) as PackedScene
-			_wave_monster_path = wanted
-		else:
-			push_error("MazeDemo: failed to load %s" % wanted)
-		break
+			var packed := ResourceLoader.load_threaded_get(path) as PackedScene
+			_monster_cache[path] = packed
+			return packed
+		push_error("MazeDemo: failed to load %s" % path)
+		return null
+	return null
+
+
+## Draws and loads this floor's room-to-monster assignment: one type per
+## room-that-is-not-the-start, rather than one type for the whole floor, so a
+## single descent shows a mix of monsters instead of nine copies of whichever
+## type the floor rolled.
+func _load_floor_monsters(start: Vector2i) -> void:
+	_room_monster.clear()
+	if enemy_scene_paths.is_empty():
+		return
+	for iy in grid.y:
+		for ix in grid.x:
+			var cell := Vector2i(ix, iy)
+			if cell == start:
+				continue
+			var wanted: String = _next_wave_path()
+			var packed: PackedScene = await _ensure_monster_loaded(wanted)
+			if packed != null:
+				_room_monster[cell] = packed
 	SceneLoader.step(0.25, "WAVE %d" % depth)
 
 
@@ -644,14 +663,15 @@ func _populate(step: Vector2) -> void:
 	var filled: float = 0.0
 	for cell in _rooms:
 		var here: Node2D = _rooms[cell]
-		if _wave_monster != null and cell != start:
+		var monster_scene: PackedScene = _room_monster.get(cell)
+		if monster_scene != null and cell != start:
 			## Scaled by the party. A floor built for one is a walkover for four,
 			## and the extra bodies also have to be worth the extra katanas.
 			var party: int = maxi(Roster.count(), 1)
 			var n: int = _rng.randi_range(enemies_per_room.x, enemies_per_room.y) \
 					+ depth - 1 + int(round(float(party - 1) * party_enemy_bonus))
 			for i in n:
-				var monster = _place(here, _wave_monster)
+				var monster = _place(here, monster_scene)
 				if monster != null and monster.has_method("apply_tier"):
 					## Boss waves put one lord in the middle room's neighbour and
 					## fill the rest from the pool, so a boss wave reads as a
