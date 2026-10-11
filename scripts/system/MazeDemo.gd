@@ -414,6 +414,7 @@ func _theme_floor() -> void:
 	var theme: Dictionary = THEMES[_theme_index]
 	_theme_walls(theme["wall"])
 	_theme_pillars(theme["wall"])
+	_theme_roofs(theme["wall"])
 
 	var layer_name: String = theme["floor"]
 	for cell in _rooms:
@@ -533,6 +534,32 @@ func _theme_walls(prefix: String) -> void:
 				continue
 			done[id] = true
 			_repoint(layer.tile_set, prefix)
+
+
+const ROOF_SHADER: Shader = preload("res://shaders/roofWall.gdshader")
+const WALL_ART: String = "res://assets/crocotile/isometrictiles/walls/%s_dir%d.png"
+var _roof_material: ShaderMaterial
+
+
+## Builds every roof from the same material as the walls under it.
+##
+## The roof art only comes in two materials, so rather than repointing it the
+## roof layers share one shader that paints the wall set's face onto each side
+## of the roof blocks.
+func _theme_roofs(prefix: String) -> void:
+	var right: String = WALL_ART % [prefix, 3]
+	var left: String = WALL_ART % [prefix, 5]
+	if prefix == "" or not ResourceLoader.exists(right) or not ResourceLoader.exists(left):
+		return
+	if _roof_material == null:
+		_roof_material = ShaderMaterial.new()
+		_roof_material.shader = ROOF_SHADER
+	_roof_material.set_shader_parameter("wall_right", load(right))
+	_roof_material.set_shader_parameter("wall_left", load(left))
+	for cell in _rooms:
+		var roofs := _rooms[cell].get_node_or_null("TileMap/Roofs") as TileMapLayer
+		if roofs != null and not roofs.is_queued_for_deletion():
+			roofs.material = _roof_material
 
 
 func _repoint(tiles: TileSet, prefix: String) -> void:
