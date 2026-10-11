@@ -654,7 +654,11 @@ func _start_game() -> void:
 		PowerState.select(Roster.scheme_of(0))
 		PowerState.select_hair(Roster.hair_of(0))
 		PowerState.select_skin(Roster.skin_of(0))
-	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
+	## Through SceneLoader rather than a direct change_scene_to_file: it is the
+	## thing that makes the bar visible before the dungeon's own hold()/step()
+	## calls in its _ready() have anything to draw onto. A direct swap leaves
+	## those calls as no-ops against a screen that never came up.
+	SceneLoader.go_to("res://scenes/world/mazeDemo.tscn", "DESCENDING")
 
 
 func _count_bar() -> String:

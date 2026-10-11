@@ -31,8 +31,15 @@ const COLOUR_HURTBOX := Color(0.55, 0.85, 1.00, 0.70)
 const COLOUR_WEAPON := Color(1.00, 0.20, 0.85, 0.70)
 ## Wall tiles, which collide as their drawn silhouette rather than a footprint.
 const COLOUR_WALL := Color(0.75, 0.55, 1.00, 0.60)
+## What a monster can actually see: a facing-locked cone out to its detection
+## range, plus the close-range ring it notices through regardless of facing.
+const COLOUR_VISION := Color(1.00, 0.85, 0.20, 0.55)
 ## The chair she would sit on if she stood still long enough.
 const COLOUR_PICKED := Color(1.00, 0.95, 0.40, 0.95)
+## Matches EnemyStateClass.ISO_Y_SCALE — the cone has to be squashed the same
+## way _within_arc squashes it when deciding who she can see, or the wedge
+## drawn here would be a different shape to the one actually being tested.
+const ISO_Y_SCALE: float = 0.5
 const ORIGIN_ARM: float = 9.0
 ## Chair art is 96 tall with its stone ending at y 92, drawn from the sprite
 ## centre — so its base sits this far below the sprite node.
@@ -126,6 +133,10 @@ func _draw() -> void:
 		var monster_hit_box := (node as Node).get_node_or_null("HitBox") as Area2D
 		if monster_hit_box != null:
 			_draw_area(monster_hit_box, COLOUR_HURTBOX)
+		## What she can actually see — a cone, not the circle it used to read
+		## as when the radar's own wedge was the only vision drawn anywhere.
+		if node.has_method("stateDirection") and "vision_arc_degrees" in node:
+			_draw_vision(node)
 	for node in get_tree().get_nodes_in_group("breakable"):
 		if node is CollisionObject2D:
 			_draw_body(node as CollisionObject2D, COLOUR_SOLID)
@@ -184,6 +195,44 @@ func _would_sit_on(chair: Node2D, player: CharacterBody2D) -> bool:
 	var offset: Vector2 = chair.global_position - player.global_position
 	offset.y /= 0.5
 	return offset.length() <= 140.0
+
+
+## Draws the same wedge _within_arc actually tests against, rather than an
+## approximation — same facing, same iso squash, same radius (stealth-scaled,
+## so a crouched player tightens the cone exactly as much here as it does for
+## real). The close-range ring it notices through regardless of facing goes
+## alongside it, since that is also part of what makes it look up.
+func _draw_vision(enemy: Node) -> void:
+	if enemy.get("is_dead") == true:
+		return
+	var facing: Vector2 = enemy.stateDirection(enemy.facing_dir)
+	if facing == Vector2.ZERO:
+		return
+	var radius: float = float(enemy.effective_detection())
+	var half: float = deg_to_rad(float(enemy.vision_arc_degrees)) * 0.5
+	## _within_arc divides y by ISO_Y_SCALE (stretching it) before taking the
+	## angle, so the facing angle here has to be taken the same way.
+	var facing_angle: float = atan2(facing.y / ISO_Y_SCALE, facing.x)
+	var origin: Vector2 = (enemy as Node2D).global_position
+	var points := PackedVector2Array()
+	points.append(to_local(origin))
+	var segments := 20
+	for i in range(segments + 1):
+		var a: float = facing_angle - half + (2.0 * half) * float(i) / float(segments)
+		## The angle above lives in the stretched space _within_arc tests in —
+		## squashing the direction back down by ISO_Y_SCALE is what returns it
+		## to real iso coordinates for drawing.
+		var dir := Vector2(cos(a), sin(a) * ISO_Y_SCALE)
+		points.append(to_local(origin + dir.normalized() * radius))
+	_fill(points, COLOUR_VISION)
+	var aware: Variant = enemy.get("aware_radius")
+	if aware != null:
+		var ring := PackedVector2Array()
+		for i in 24:
+			var a: float = TAU * float(i) / 24.0
+			var dir := Vector2(cos(a), sin(a) * ISO_Y_SCALE)
+			ring.append(to_local(origin + dir * float(aware)))
+		_fill(ring, COLOUR_VISION)
 
 
 func _draw_body(body: CollisionObject2D, colour: Color) -> void:

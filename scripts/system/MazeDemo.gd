@@ -578,11 +578,17 @@ func _next_wave_path() -> String:
 			var tmp: String = _wave_bag[i]
 			_wave_bag[i] = _wave_bag[j]
 			_wave_bag[j] = tmp
-		if _wave_bag.size() > 1 and _wave_bag[0] == _wave_monster_path:
-			var swap_with: int = 1 + _rng.randi() % (_wave_bag.size() - 1)
-			var first: String = _wave_bag[0]
-			_wave_bag[0] = _wave_bag[swap_with]
-			_wave_bag[swap_with] = first
+		## pop_back() draws from the END of the bag, not the front — this used
+		## to check and swap index 0, which guarded the slot that would be
+		## drawn LAST out of a fresh bag rather than the one about to be
+		## handed out next, so a reshuffle could still repeat the previous
+		## floor's type immediately.
+		var last: int = _wave_bag.size() - 1
+		if _wave_bag.size() > 1 and _wave_bag[last] == _wave_monster_path:
+			var swap_with: int = _rng.randi() % last
+			var tmp: String = _wave_bag[last]
+			_wave_bag[last] = _wave_bag[swap_with]
+			_wave_bag[swap_with] = tmp
 	return _wave_bag.pop_back()
 
 
