@@ -26,6 +26,7 @@ polygon = PackedVector2Array(-17, 4, -1, -17, 9, -18, 17, -13, 19, -4, 0, 18, -1
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=801843532]
 position = Vector2(0, -44)
 color = Color(0.62, 1, 0.66, 1)
-energy = 1.05
+energy = 0.85
+shadow_enabled = true
 texture = ExtResource("4_glow")
-texture_scale = 3.05
+texture_scale = 2.75

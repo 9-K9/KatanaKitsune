@@ -178,7 +178,7 @@ const THEMES: Array[Dictionary] = [
 @export_group("Atmosphere")
 ## Near-black, so the player's lantern and the braziers do the lighting.
 @export var gloom: Color = Color(0.18, 0.17, 0.26)
-@export var lantern_radius: float = 2.6
+@export var lantern_radius: float = 2.35
 @export var lantern_colour: Color = Color(1.0, 0.82, 0.55)
 
 ## The standing lights that make a room readable without the player's lantern.
@@ -188,7 +188,7 @@ const THEMES: Array[Dictionary] = [
 ## which is the whole reason the floor was too dark to read. Light is not
 ## decoration, so it does not get left to chance.
 @export var torch_scenes: Array[PackedScene] = []
-@export var torches_per_room: Vector2i = Vector2i(2, 4)
+@export var torches_per_room: Vector2i = Vector2i(1, 3)
 
 const SIDES: Array[String] = ["NE", "NW", "SE", "SW"]
 ## Which lattice step each side faces. This follows from the isometric transform
@@ -558,6 +558,7 @@ func _build() -> void:
 
 	SceneLoader.step(0.62, "CARVING THE MAZE")
 	_carve()
+	_build_wall_occluders()
 	await get_tree().process_frame
 	SceneLoader.step(0.68, "RAISING COLUMNS")
 	_place_pillars()
@@ -737,12 +738,59 @@ func _light() -> void:
 		lamp.name = "Lantern"
 		lamp.texture = _glow()
 		lamp.color = lantern_colour
-		lamp.energy = 1.5
+		lamp.energy = 1.1
 		lamp.texture_scale = lantern_radius
+		lamp.shadow_enabled = true
 		## Sits at her torso. Her origin is now her feet, so this is measured up
 		## from the ground rather than out from the middle of her.
 		lamp.position = Vector2(0, -40)
 		carrier.add_child(lamp)
+
+
+## Mirrors the authored collision geometry onto light occluders without
+## changing the collision shapes. Wall tile collision polygons are the source
+## of truth, so hand-edited wall shapes keep controlling both blocking and
+## shadows.
+func _build_wall_occluders() -> void:
+	for room in _rooms.values():
+		for side in ["NE", "NW", "SE", "SW"]:
+			var layer := room.get_node_or_null("TileMap/Walls_" + side) as TileMapLayer
+			if layer == null or not layer.enabled:
+				continue
+			for cell in layer.get_used_cells():
+				var tile_data := layer.get_cell_tile_data(cell)
+				if tile_data == null:
+					continue
+				var alternative: int = layer.get_cell_alternative_tile(cell)
+				var points: PackedVector2Array
+				for polygon_index in tile_data.get_collision_polygons_count(0):
+					points = tile_data.get_collision_polygon_points(0, polygon_index)
+					if points.size() < 3:
+						continue
+					points = _transform_tile_polygon(points, alternative)
+					var polygon := OccluderPolygon2D.new()
+					polygon.polygon = points
+					var occluder := LightOccluder2D.new()
+					occluder.occluder = polygon
+					layer.add_child(occluder)
+					occluder.position = layer.map_to_local(cell)
+
+
+## Applies the same flip/transpose flags used by TileMapLayer to its collision
+## polygon before that polygon is copied to a LightOccluder2D.
+func _transform_tile_polygon(points: PackedVector2Array,
+		alternative: int) -> PackedVector2Array:
+	var transformed := points.duplicate()
+	for i in transformed.size():
+		var point := transformed[i]
+		if (alternative & TileSetAtlasSource.TRANSFORM_TRANSPOSE) != 0:
+			point = Vector2(point.y, point.x)
+		if (alternative & TileSetAtlasSource.TRANSFORM_FLIP_H) != 0:
+			point.x = -point.x
+		if (alternative & TileSetAtlasSource.TRANSFORM_FLIP_V) != 0:
+			point.y = -point.y
+		transformed[i] = point
+	return transformed
 
 
 ## A soft round falloff, built rather than shipped as an asset.

@@ -30,6 +30,7 @@ shape = SubResource("CapsuleShape2D_es2sn")
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1075873164]
 position = Vector2(0, -44)
 color = Color(1, 0.64, 0.3, 1)
-energy = 1.45
+energy = 1.1
+shadow_enabled = true
 texture = ExtResource("4_glow")
-texture_scale = 3.45
+texture_scale = 3.1
