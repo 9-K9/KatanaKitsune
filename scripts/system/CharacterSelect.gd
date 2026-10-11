@@ -648,6 +648,7 @@ func _go_back() -> void:
 
 
 func _start_game() -> void:
+	Score.begin_run()
 	## Player one's scheme stays the global one, so the title art and anything
 	## else still reading PowerState.chosen keeps working.
 	if Roster.count() > 0:

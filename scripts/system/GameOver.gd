@@ -20,6 +20,7 @@ const FADE_IN: float = 0.6
 
 var _player: CharacterBody2D = null
 var _counting: bool = false
+var _begin_started: bool = false
 var _left: float = 0.0
 var _expired: bool = false
 var _expired_for: float = 0.0
@@ -75,7 +76,10 @@ func _is_dead() -> bool:
 
 
 func _begin() -> void:
-	## A score worth recording gets its initials taken before the menu appears.
+	if _begin_started:
+		return
+	_begin_started = true
+	## A score worth recording gets its name entered before the menu appears.
 	## The run ends either way; this is only whether the board remembers it.
 	var best: Dictionary = Score.best_of_run()
 	if Score.would_place(best["points"]) >= 0 and best["points"] > 0:
