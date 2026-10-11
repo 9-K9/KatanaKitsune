@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_1hwd1"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupFood.tscn" id="2_s3rpp"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupDrink.tscn" id="3_cvupj"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_broken_northWest.png" id="4_ju00n"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/low_table_northWest.png" id="5_53aw3"]
+
+[node name="LowTableNorthWest" type="StaticBody2D" unique_id=771823188 groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_1hwd1")
+loot_scenes = Array[PackedScene]([ExtResource("2_s3rpp"), ExtResource("3_cvupj")])
+display_loot = true
+loot_display_lift = 110.0
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 24.0
+always_drops = true
+break_texture = ExtResource("4_ju00n")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1482877669]
+position = Vector2(0, -13.999994)
+scale = Vector2(2.1, 2.1)
+texture = ExtResource("5_53aw3")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1057999629]
+scale = Vector2(2.1, 2.1)
+polygon = PackedVector2Array(1.5, -16.17, 32.5, 0.33, -3.5, 19.83, -34.5, 3.33)

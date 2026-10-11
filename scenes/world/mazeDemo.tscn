@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cmaze7kq2wvn3"]
+[gd_scene load_steps=35 format=3 uid="uid://cmaze7kq2wvn3"]
 
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
@@ -25,7 +25,10 @@
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack.tscn" id="20_katana_rack"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen.tscn" id="20_folding_screen"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern.tscn" id="20_stone_lantern"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table.tscn" id="21_table"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_southEast.tscn" id="21_table_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_southWest.tscn" id="21_table_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_northWest.tscn" id="21_table_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_northEast.tscn" id="21_table_northEast"]
 [ext_resource type="Script" path="res://scripts/system/Radar.gd" id="10_radar"]
 [ext_resource type="PackedScene" uid="uid://daxauh6e5nu7i" path="res://scenes/menuscreens/hud.tscn" id="11_hud"]
 [ext_resource type="PackedScene" uid="uid://b2554ofdujy5r" path="res://scenes/menuscreens/pauseMenu.tscn" id="13_pausemenu"]
@@ -44,7 +47,7 @@ prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), Ex
 pillar_scene = ExtResource("11_pillar")
 trap_scene = ExtResource("22_trap")
 chair_scene = ExtResource("10_chair")
-table_scene = ExtResource("21_table")
+table_scenes = Array[PackedScene]([ExtResource("21_table_southEast"), ExtResource("21_table_southWest"), ExtResource("21_table_northWest"), ExtResource("21_table_northEast")])
 
 [node name="HUD" parent="." instance=ExtResource("11_hud")]
 

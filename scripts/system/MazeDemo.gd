@@ -29,7 +29,9 @@ extends Node2D
 @export var chair_scene: PackedScene = null
 ## A low table with chairs drawn up to it. Scattering furniture at random makes
 ## a storeroom; a table with seats around it makes a room somebody used.
-@export var table_scene: PackedScene = null
+## One scene per facing, each with a collision polygon fitted to its own art,
+## so a table turned another way does not keep the first one's footprint.
+@export var table_scenes: Array[PackedScene] = []
 ## How often a room gets one.
 @export_range(0.0, 1.0, 0.05) var table_chance: float = 0.45
 ## How far the chairs sit from the table, along the floor axes. Wider than it
@@ -692,7 +694,7 @@ func _populate(step: Vector2) -> void:
 			var lights: int = _rng.randi_range(torches_per_room.x, torches_per_room.y)
 			for i in lights:
 				_place(here, torch_scenes[_rng.randi_range(0, torch_scenes.size() - 1)])
-		if table_scene != null and _rng.randf() < table_chance:
+		if not table_scenes.is_empty() and _rng.randf() < table_chance:
 			_place_dining_set(here)
 		if trap_scene != null and cell != start and _rng.randf() < trap_chance:
 			_place_trap_run(here)
@@ -937,13 +939,10 @@ func _place_dining_set(room: Node2D) -> void:
 			break
 	var centre: Vector2 = ground.to_global(ground.map_to_local(pick))
 
-	var table := table_scene.instantiate()
+	## The facing is picked by scene rather than by swapping the sprite, since
+	## each facing has its own footprint.
+	var table := table_scenes[_rng.randi_range(0, table_scenes.size() - 1)].instantiate()
 	table.name = "DiningTable"
-	## Turned like every other prop. The dining set builds its table by hand
-	## rather than going through _place, so it missed the facing pass and every
-	## table on every floor faced the same way.
-	if table.has_method("face_randomly"):
-		table.face_randomly(_rng)
 	add_child(table)
 	(table as Node2D).global_position = centre
 
