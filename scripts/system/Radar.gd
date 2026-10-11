@@ -59,7 +59,6 @@ func _draw() -> void:
 			draw_polyline(points, COLOUR_WALL, 1.0, true)
 
 	_ring(centre)
-	draw_circle(centre, blip_size * 0.8, COLOUR_PLAYER)
 
 	for node in get_tree().get_nodes_in_group("enemy"):
 		if not (node is Node2D) or ("is_dead" in node and node.is_dead):
@@ -70,6 +69,38 @@ func _draw() -> void:
 		var colour := _colour_for(node)
 		_draw_cone(node, blip, colour)
 		draw_circle(blip, blip_size, colour)
+
+	## Players last, so a monster standing on one never hides them.
+	for body in crew:
+		var at := _to_radar(body.global_position, focus, centre)
+		if at != Vector2.INF:
+			_draw_player(body, at)
+
+
+## A triangle pointing where this player faces, in their slot colour, so each
+## player in a party can find themselves on the radar.
+func _draw_player(body: Node, at: Vector2) -> void:
+	var facing: Vector2 = Vector2.ZERO
+	if body.has_method("stateDirection") and "facing_dir" in body:
+		facing = body.stateDirection(body.facing_dir)
+	if facing == Vector2.ZERO:
+		facing = Vector2.DOWN
+	## Unsquashed like everything else on the radar.
+	facing.y *= 2.0
+	facing = facing.normalized()
+	var side := facing.orthogonal()
+	var size: float = blip_size * 1.6
+	var tri := PackedVector2Array([
+		at + facing * size * 1.3,
+		at - facing * size * 0.8 + side * size * 0.8,
+		at - facing * size * 0.8 - side * size * 0.8,
+	])
+	var colour: Color = COLOUR_PLAYER
+	if "slot" in body:
+		colour = Roster.colour_of(body.slot)
+	draw_colored_polygon(tri, colour)
+	tri.append(tri[0])
+	draw_polyline(tri, Color(0.0, 0.0, 0.0, 0.8), 1.0, true)
 
 
 func _ring(centre: Vector2) -> void:

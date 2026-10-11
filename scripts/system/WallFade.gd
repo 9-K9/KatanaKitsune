@@ -80,14 +80,22 @@ func _process(_delta: float) -> void:
 	_shader.set_shader_parameter("subject_count", covered.size())
 
 
-## Everyone worth cutting a hole for: the player, plus any monster near enough
-## to be on screen. The player goes first so she keeps her hole if a crowd ever
-## overruns MAX_SUBJECTS.
-func _subjects(target: CharacterBody2D) -> Array[Node2D]:
-	var out: Array[Node2D] = [target]
+## Everyone worth cutting a hole for: every living player, plus any monster near
+## enough to one of them to be on screen. Players go first so they keep their
+## holes if a crowd ever overruns MAX_SUBJECTS. Only the nearest player used to
+## be listed, so a second player behind the same wall stayed hidden.
+func _subjects(_target: CharacterBody2D) -> Array[Node2D]:
+	var crew := Roster.bodies(get_tree())
+	var out: Array[Node2D] = []
+	for body in crew:
+		out.append(body)
 	for node in get_tree().get_nodes_in_group("enemy"):
-		if node is Node2D and node.global_position.distance_to(target.global_position) <= subject_range:
-			out.append(node)
+		if not (node is Node2D):
+			continue
+		for body in crew:
+			if node.global_position.distance_to(body.global_position) <= subject_range:
+				out.append(node)
+				break
 	return out
 
 
