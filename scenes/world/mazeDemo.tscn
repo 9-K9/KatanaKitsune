@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://cmaze7kq2wvn3"]
+[gd_scene load_steps=62 format=3 uid="uid://cmaze7kq2wvn3"]
 
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
@@ -16,15 +16,42 @@
 [ext_resource type="PackedScene" uid="uid://cha1rp2ropkk8" path="res://scenes/props/chair.tscn" id="10_chair"]
 [ext_resource type="PackedScene" uid="uid://cp1l1ard0ngeo" path="res://scenes/props/pillar.tscn" id="11_pillar"]
 [ext_resource type="PackedScene" uid="uid://cspk3trp9wq2n" path="res://scenes/props/spikeTrap.tscn" id="22_trap"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar.tscn" id="20_ceramic_jar"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set.tscn" id="20_tea_set"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel.tscn" id="20_sake_barrel"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/storage_chest.tscn" id="20_storage_chest"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/offering_box.tscn" id="20_offering_box"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/zabuton_stack.tscn" id="20_zabuton_stack"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack.tscn" id="20_katana_rack"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen.tscn" id="20_folding_screen"]
-[ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern.tscn" id="20_stone_lantern"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar_southEast.tscn" id="20_ceramic_jar_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar_southWest.tscn" id="20_ceramic_jar_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar_northWest.tscn" id="20_ceramic_jar_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/ceramic_jar_northEast.tscn" id="20_ceramic_jar_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set_southEast.tscn" id="20_tea_set_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set_southWest.tscn" id="20_tea_set_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set_northWest.tscn" id="20_tea_set_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/tea_set_northEast.tscn" id="20_tea_set_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel_southEast.tscn" id="20_sake_barrel_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel_southWest.tscn" id="20_sake_barrel_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel_northWest.tscn" id="20_sake_barrel_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/sake_barrel_northEast.tscn" id="20_sake_barrel_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/storage_chest_southEast.tscn" id="20_storage_chest_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/storage_chest_southWest.tscn" id="20_storage_chest_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/storage_chest_northWest.tscn" id="20_storage_chest_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/storage_chest_northEast.tscn" id="20_storage_chest_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/offering_box_southEast.tscn" id="20_offering_box_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/offering_box_southWest.tscn" id="20_offering_box_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/offering_box_northWest.tscn" id="20_offering_box_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/offering_box_northEast.tscn" id="20_offering_box_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/zabuton_stack_southEast.tscn" id="20_zabuton_stack_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/zabuton_stack_southWest.tscn" id="20_zabuton_stack_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/zabuton_stack_northWest.tscn" id="20_zabuton_stack_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/zabuton_stack_northEast.tscn" id="20_zabuton_stack_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack_southEast.tscn" id="20_katana_rack_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack_southWest.tscn" id="20_katana_rack_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack_northWest.tscn" id="20_katana_rack_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/katana_rack_northEast.tscn" id="20_katana_rack_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen_southEast.tscn" id="20_folding_screen_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen_southWest.tscn" id="20_folding_screen_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen_northWest.tscn" id="20_folding_screen_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/folding_screen_northEast.tscn" id="20_folding_screen_northEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern_southEast.tscn" id="20_stone_lantern_southEast"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern_southWest.tscn" id="20_stone_lantern_southWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern_northWest.tscn" id="20_stone_lantern_northWest"]
+[ext_resource type="PackedScene" path="res://scenes/props/japanese/stone_lantern_northEast.tscn" id="20_stone_lantern_northEast"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_southEast.tscn" id="21_table_southEast"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_southWest.tscn" id="21_table_southWest"]
 [ext_resource type="PackedScene" path="res://scenes/props/japanese/low_table_northWest.tscn" id="21_table_northWest"]
@@ -43,7 +70,8 @@ player_scene = ExtResource("3_player")
 grid = Vector2i(4, 4)
 enemy_scene_paths = Array[String](["res://scenes/monsters/jorogumo.tscn", "res://scenes/monsters/kappa.tscn", "res://scenes/monsters/karasuShinobi.tscn", "res://scenes/monsters/oni.tscn", "res://scenes/monsters/tengu.tscn", "res://scenes/monsters/yukiOnna.tscn", "res://scenes/monsters/kasha.tscn", "res://scenes/monsters/ninaNinja.tscn", "res://scenes/monsters/yokailord.tscn"])
 torch_scenes = Array[PackedScene]([ExtResource("70_ironBrazier"), ExtResource("70_stoneLantern"), ExtResource("70_stakeTorch"), ExtResource("70_paperLantern"), ExtResource("70_spiritCenser"), ExtResource("70_bambooTorch")])
-prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair"), ExtResource("20_ceramic_jar"), ExtResource("20_tea_set"), ExtResource("20_sake_barrel"), ExtResource("20_storage_chest"), ExtResource("20_offering_box"), ExtResource("20_zabuton_stack"), ExtResource("20_katana_rack"), ExtResource("20_folding_screen"), ExtResource("20_stone_lantern")])
+prop_scenes = Array[PackedScene]([ExtResource("6_urn"), ExtResource("6_urn"), ExtResource("7_chest"), ExtResource("8_statue"), ExtResource("9_brazier"), ExtResource("9_brazier"), ExtResource("10_chair")])
+facing_prop_scenes = Array[PackedScene]([ExtResource("20_ceramic_jar_southEast"), ExtResource("20_ceramic_jar_southWest"), ExtResource("20_ceramic_jar_northWest"), ExtResource("20_ceramic_jar_northEast"), ExtResource("20_tea_set_southEast"), ExtResource("20_tea_set_southWest"), ExtResource("20_tea_set_northWest"), ExtResource("20_tea_set_northEast"), ExtResource("20_sake_barrel_southEast"), ExtResource("20_sake_barrel_southWest"), ExtResource("20_sake_barrel_northWest"), ExtResource("20_sake_barrel_northEast"), ExtResource("20_storage_chest_southEast"), ExtResource("20_storage_chest_southWest"), ExtResource("20_storage_chest_northWest"), ExtResource("20_storage_chest_northEast"), ExtResource("20_offering_box_southEast"), ExtResource("20_offering_box_southWest"), ExtResource("20_offering_box_northWest"), ExtResource("20_offering_box_northEast"), ExtResource("20_zabuton_stack_southEast"), ExtResource("20_zabuton_stack_southWest"), ExtResource("20_zabuton_stack_northWest"), ExtResource("20_zabuton_stack_northEast"), ExtResource("20_katana_rack_southEast"), ExtResource("20_katana_rack_southWest"), ExtResource("20_katana_rack_northWest"), ExtResource("20_katana_rack_northEast"), ExtResource("20_folding_screen_southEast"), ExtResource("20_folding_screen_southWest"), ExtResource("20_folding_screen_northWest"), ExtResource("20_folding_screen_northEast"), ExtResource("20_stone_lantern_southEast"), ExtResource("20_stone_lantern_southWest"), ExtResource("20_stone_lantern_northWest"), ExtResource("20_stone_lantern_northEast")])
 pillar_scene = ExtResource("11_pillar")
 trap_scene = ExtResource("22_trap")
 chair_scene = ExtResource("10_chair")

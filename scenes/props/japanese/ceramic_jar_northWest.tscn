@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_34scu"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/ceramic_jar_broken_northWest.png" id="2_1uwmu"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/ceramic_jar_northWest.png" id="3_76on8"]
+
+[node name="CeramicJarNorthWest" type="StaticBody2D" unique_id=2020319449 groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_34scu")
+max_health = 18.0
+break_texture = ExtResource("2_1uwmu")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1208308909]
+position = Vector2(0, -24)
+texture = ExtResource("3_76on8")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=985846669]
+polygon = PackedVector2Array(31, 2, 26.71, 10, 15, 15.86, -1, 18, -17, 15.86, -28.71, 10, -33, 2, -28.71, -6, -17, -11.86, -1, -14, 15, -11.86, 26.71, -6)

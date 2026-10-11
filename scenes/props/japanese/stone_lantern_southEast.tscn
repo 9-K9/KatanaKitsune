@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_8tv4a"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern_broken_southEast.png" id="2_1or80"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/stone_lantern_southEast.png" id="3_vmqbj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="4_mqimh"]
+
+[node name="StoneLanternSouthEast" type="StaticBody2D" unique_id=1983033980 groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_8tv4a")
+max_health = 45.0
+break_texture = ExtResource("2_1or80")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=445767823]
+position = Vector2(0, -16)
+texture = ExtResource("3_vmqbj")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1750855231]
+polygon = PackedVector2Array(15, 20.25, 12.66, 24.62, 6.25, 27.83, -2.5, 29, -11.25, 27.83, -17.66, 24.62, -20, 20.25, -17.66, 15.88, -11.25, 12.67, -2.5, 11.5, 6.25, 12.67, 12.66, 15.88)
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1132890250]
+position = Vector2(0, -40)
+color = Color(1, 0.68, 0.34, 1)
+energy = 0.95
+shadow_enabled = true
+texture = ExtResource("4_mqimh")
+texture_scale = 2.4

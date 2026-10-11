@@ -30,8 +30,10 @@ selects grass and an unset bit selects earth.
 
 ## Props
 
-Every prop is an individual 96×96 PNG. `_broken` files preserve the intact
-asset's canvas, center, and approximate footprint for direct state swapping.
+Every prop is drawn in the four isometric facings as
+`<prop>_<facing>.png` and `<prop>_broken_<facing>.png` (`southEast`,
+`southWest`, `northWest`, `northEast`). The original front-view art broke the
+isometric perspective and was removed; the IDs below are those originals.
 
 | Prop | Base PixelLab ID | Broken PixelLab ID |
 | --- | --- | --- |
@@ -65,8 +67,9 @@ navigation, and placement metadata remain implementation work.
 
 ## Reusable prop scenes
 
-The ten game-ready scenes are under `res://scenes/props/japanese/`. Each is a
-Y-sorted `StaticBody2D` with an isometric collision footprint, intact texture,
+The forty game-ready scenes are under `res://scenes/props/japanese/`, one per
+prop and facing (`<prop>_<facing>.tscn`). Each is a Y-sorted `StaticBody2D`
+with a collision polygon fitted to that facing's art, intact texture,
 single-frame broken texture, and persistent debris after destruction.
 
 The original chair scene now exposes a `SitAnchor` and sitting direction.

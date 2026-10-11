@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_0jx4t"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_broken_northWest.png" id="2_fh0ce"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/katana_rack_northWest.png" id="3_8ttri"]
+
+[node name="KatanaRackNorthWest" type="StaticBody2D" unique_id=978592792 groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_0jx4t")
+max_health = 28.0
+break_texture = ExtResource("2_fh0ce")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1825179505]
+position = Vector2(0, -16)
+texture = ExtResource("3_8ttri")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1143471477]
+polygon = PackedVector2Array(-28, 3, 28, -8, 28, 2, -28, 13)

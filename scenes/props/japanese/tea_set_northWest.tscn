@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_xo2h3"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupFood.tscn" id="2_y122b"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickupDrink.tscn" id="3_kfku5"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tea_set_broken_northWest.png" id="4_1wsgt"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/props/tea_set_northWest.png" id="5_jugbo"]
+
+[node name="TeaSetNorthWest" type="StaticBody2D" unique_id=949691429 groups=["breakable", "japanese_prop"]]
+y_sort_enabled = true
+collision_layer = 3
+script = ExtResource("1_xo2h3")
+loot_scenes = Array[PackedScene]([ExtResource("2_y122b"), ExtResource("3_kfku5")])
+loot_weight = 7.0
+max_health = 10.0
+break_texture = ExtResource("4_1wsgt")
+break_frames = 1
+persist_broken = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1989607362]
+texture = ExtResource("5_jugbo")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1771997502]
+polygon = PackedVector2Array(6, -20, 43, 6, -8, 37, -45, 11)
