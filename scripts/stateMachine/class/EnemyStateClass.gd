@@ -588,6 +588,7 @@ func play_once(state_name: String) -> void:
 func _sync_collision_tween(clip: String) -> void:
 	if collision_tween == null:
 		return
+	_commit_collision_tween_motion()
 	if collision_tween.has_animation(clip):
 		_rebase_collision_tween(clip)
 		collision_tween.play(clip)
@@ -635,13 +636,62 @@ func _rebase_collision_tween(clip: String) -> void:
 		return
 	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D")
 	if shape_node != null:
+		_tween_origin_body = shape_node.position
 		anim.track_set_key_value(0, 0, shape_node.position)
 		anim.track_set_key_value(0, 1, shape_node.position + deltas["body"])
-	if is_instance_valid(hit_box):
-		var hitbox_shape: CollisionShape2D = hit_box.get_node_or_null("CollisionShape2D")
-		if hitbox_shape != null:
-			anim.track_set_key_value(1, 0, hitbox_shape.position)
-			anim.track_set_key_value(1, 1, hitbox_shape.position + deltas["hitbox"])
+	var hitbox_shape: CollisionShape2D = _hit_box_shape()
+	if hitbox_shape != null:
+		_tween_origin_hitbox = hitbox_shape.position
+		anim.track_set_key_value(1, 0, hitbox_shape.position)
+		anim.track_set_key_value(1, 1, hitbox_shape.position + deltas["hitbox"])
+	_tween_motion_pending = true
+
+
+## Where the shapes sat when the current tween clip started, so the distance
+## they have drifted since can be handed over to the body afterwards.
+var _tween_origin_body: Vector2 = Vector2.ZERO
+var _tween_origin_hitbox: Vector2 = Vector2.ZERO
+var _tween_motion_pending: bool = false
+
+
+func _hit_box_shape() -> CollisionShape2D:
+	if not is_instance_valid(hit_box):
+		return null
+	return hit_box.get_node_or_null("CollisionShape2D")
+
+
+## Root motion: the clip's art has drawn the monster somewhere else inside its
+## own frame, and the tween carried the shapes along with it. Once that clip
+## is over (or cut short), the body itself moves to where the shapes ended up
+## and the shapes return to their resting offsets, so the next clip — drawn
+## back at the frame's centre — starts exactly where the last one left off
+## instead of snapping back to where the dodge began.
+##
+## Done on the next clip change rather than on the tween's own
+## animation_finished: the sprite holds its last displaced frame until the
+## state machine moves on, and moving the body before then would show that
+## frame offset twice for a tick.
+##
+## move_and_collide rather than a raw position write, so a dodge drawn into a
+## wall stops at the wall instead of committing the body inside it.
+func _commit_collision_tween_motion() -> void:
+	if not _tween_motion_pending:
+		return
+	_tween_motion_pending = false
+	## Read before stop(): stopping rewinds the tween and puts the shapes
+	## back on key 0, which would lose the distance travelled.
+	var offset: Vector2 = Vector2.ZERO
+	var shape_node: CollisionShape2D = get_node_or_null("CollisionShape2D")
+	if shape_node != null:
+		offset = shape_node.position - _tween_origin_body
+	collision_tween.stop()
+	if shape_node != null:
+		shape_node.position = _tween_origin_body
+	var hitbox_shape: CollisionShape2D = _hit_box_shape()
+	if hitbox_shape != null:
+		hitbox_shape.position = _tween_origin_hitbox
+	if offset != Vector2.ZERO:
+		move_and_collide(offset)
 
 
 
