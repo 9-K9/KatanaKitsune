@@ -221,6 +221,7 @@ moves strictly along the four isometric diagonals.
 | Sika deer | `scenes/animals/deer.tscn` | `c4adb99f-26d7-4e61-82ad-fb46475e5649` | 130 |
 | Tree frog | `scenes/animals/frog.tscn` | `27767817-d034-4419-add8-e25cbd5b4ddd` | 18 |
 | Snow hare (rabbit) | `scenes/animals/rabbit.tscn` | `061522e2-cb6c-4355-abf4-3e32397688a4` | 35-49 |
+| Freshwater turtle | `scenes/animals/turtle.tscn` | Creator gallery (see below) | 27-30 |
 
 The rabbit has eight idle frames and six hopping frames per right-facing
 diagonal, mirrored for the left-facing diagonals like the other animals.
@@ -229,12 +230,12 @@ initial ground-contact pivot is aligned at (52, 90), with a constant offset
 throughout that clip to preserve the hopping motion. The scene uses 0.75 scale
 and a 10 px collision radius; hopping is also used while fleeing.
 
-The freshwater turtle's animations are complete in PixelLab's **Creator**
-gallery, not the character library. They need manual spritesheet or GIF export
-from the Creator UI before a game scene can be built; there is no supported
-gallery-download endpoint in the current MCP tools. No empty turtle is in the
-spawn pool. These are the existing 64x64 transparent clips (including their
-reference frame):
+The freshwater turtle comes from PixelLab's **Creator** gallery, not the
+character library. Its clips were exported unchanged by running a zero-pixel
+`pixelart_workbench edit` on each gallery ID and downloading the resulting
+`frames.png` sheet. Frames are the original 64x64 transparent canvases with no
+realignment. The scene uses 0.75 scale, an 11 px collision radius, and slow
+walk/flee speeds (16/45).
 
 | Turtle clip | Creator gallery ID | Frames |
 | --- | --- | --- |

@@ -1,0 +1,148 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Animal.gd" id="1_k6e77"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_northEast_0.png" id="2_mqsi7"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_northEast_1.png" id="3_y8ti5"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_northEast_2.png" id="4_ufyk1"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_northEast_3.png" id="5_02e2g"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_northEast_4.png" id="6_pteg0"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_southEast_0.png" id="7_xbtcm"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_southEast_1.png" id="8_diixr"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_southEast_2.png" id="9_7whe4"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_southEast_3.png" id="10_rja0y"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/idle_southEast_4.png" id="11_v5vce"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_0.png" id="12_bketq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_1.png" id="13_embgf"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_2.png" id="14_rd21r"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_3.png" id="15_tmu0d"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_4.png" id="16_r0lyb"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_5.png" id="17_tk66w"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_northEast_6.png" id="18_mr4ac"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_0.png" id="19_wu3s6"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_1.png" id="20_lkf7q"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_2.png" id="21_bofbp"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_3.png" id="22_te41f"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_4.png" id="23_02q67"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_5.png" id="24_ifl06"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/turtle/move_southEast_6.png" id="25_cb5q6"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2a54v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_mqsi7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_y8ti5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ufyk1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_02e2g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_pteg0")
+}],
+"loop": 1,
+"name": &"idle_northEast",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_xbtcm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_diixr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_7whe4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_rja0y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_v5vce")
+}],
+"loop": 1,
+"name": &"idle_southEast",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_bketq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_embgf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_rd21r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_tmu0d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_r0lyb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_tk66w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_mr4ac")
+}],
+"loop": 1,
+"name": &"move_northEast",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_wu3s6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_lkf7q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_bofbp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_te41f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_02q67")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_ifl06")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_cb5q6")
+}],
+"loop": 1,
+"name": &"move_southEast",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0vdsk"]
+radius = 11.0
+
+[node name="Turtle" type="CharacterBody2D" unique_id=1715327473 groups=["animal"]]
+y_sort_enabled = false
+collision_layer = 0
+collision_mask = 129
+script = ExtResource("1_k6e77")
+walk_speed = 16.0
+flee_speed = 45.0
+flee_radius = 120.0
+calm_radius = 220.0
+idle_time = Vector2(3, 7)
+wander_radius = 90.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1193988014]
+texture_filter = 1
+position = Vector2(0, -15)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_2a54v")
+animation = &"idle_southEast"
+autoplay = "idle_southEast"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2055288539]
+shape = SubResource("CircleShape2D_0vdsk")
