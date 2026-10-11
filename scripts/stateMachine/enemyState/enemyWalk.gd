@@ -86,7 +86,7 @@ func on_physics_process(_delta: float) -> void:
 	var to_player: Vector2 = enemy.direction_to_player()
 	enemy.face(to_player)
 
-	if distance <= enemy.attack_range:
+	if enemy.in_attack_range():
 		if enemy.attack_off_cooldown():
 			change_state(_pick_attack())
 		else:
@@ -102,10 +102,9 @@ func on_physics_process(_delta: float) -> void:
 		return
 
 	var step: Vector2 = enemy.chase_direction()
-	## Scaled by the rung: a runner closes, a revenant creeps and never stops.
-	var pace: float = enemy.move_speed * enemy.traits.get("chase", 1.0)
-	enemy.move_towards(step if step != Vector2.ZERO else to_player, pace)
-	enemy.play_loop("walk")
+	## Runs her down; walking is for idling and wandering.
+	enemy.move_towards(step if step != Vector2.ZERO else to_player, enemy.chase_speed())
+	enemy.play_chase()
 
 
 ## Which attack to open with, given what this monster can actually do.

@@ -64,10 +64,12 @@ gap you can walk through. Blips carry monster state, so a cone turning from
 amber to red is the moment you were seen.
 
 **Monsters scale by tier, not by subclass.** `EnemyTier.gd` is one table of six
-rungs — SHAMBLER, RUNNER, WARDEN, REVENANT, SPIRIT, YOKAI LORD — that switches
+rungs — SHAMBLER, RUNNER, WARDEN, BRUTE, SPIRIT, YOKAI LORD — that switches
 behaviours on and sets the numbers. Every tier reuses the same state machine, so
-chase logic exists once. Higher rungs guard, phase through walls, or bring the
-full katana kit.
+chase logic exists once. Higher rungs guard or bring the full katana kit. What a
+monster *is* rides on top as `species_traits`: Yuki Onna alone phases through
+walls. Each species also sets its own `run_speed` for the chase, so the nimble
+ones close fast and the heavy ones lumber.
 
 **Twelve elemental aspects.** `PowerState.gd` holds the colour schemes — Jade
 Dragon, Vermilion Phoenix, White Tiger, Black Tortoise and the rest — chosen at

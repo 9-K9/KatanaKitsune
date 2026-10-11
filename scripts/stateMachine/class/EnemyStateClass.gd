@@ -18,6 +18,7 @@ signal died
 ##
 ##   shell — damage multiplier for blows landing behind it (0.1 = a tenth
 ##           through). Kappa's carapace; the inverse of the boss's blind spot.
+##   phases — sees and walks through walls. Yuki Onna's, and only hers.
 @export var species_traits: Dictionary = {}
 ## What this tier can do, read once on ready. Looked up rather than duplicated
 ## onto every monster scene, so retuning a rung is one table edit.
@@ -32,6 +33,11 @@ var blade_drawn: bool = false
 @export_group("Stats")
 @export var max_health: float = 100.0
 @export var move_speed: float = 55.0
+## Ground speed while running her down, in the same units as the player's
+## runSpeed (183) and walkSpeed (83). Per species rather than per tier, so the
+## nimble ones close fast and the heavy ones lumber whatever rung they roll.
+## 0 falls back to move_speed scaled by the tier's chase pace.
+@export var run_speed: float = 0.0
 @export var attack_damage: float = 12.0
 
 @export_group("Ranges")
@@ -516,7 +522,52 @@ func _navigation_available() -> bool:
 ## Close enough to swing. Used by the duellist states to decide whether to
 ## answer a guard with a strike or close the distance first.
 func in_attack_range() -> bool:
-	return distance_to_player() <= attack_range
+	var target := player()
+	if target == null:
+		return false
+	return within_reach(target)
+
+
+## Screen pixels of clear air between the two bodies that still count as
+## pressed up against her.
+const CONTACT_SLACK: float = 10.0
+
+## True when `target` is inside attack_range * `multiplier` on the ground, or
+## when the two collision bodies are (all but) touching.
+##
+## Range is measured between node origins on the ground, where a vertical gap
+## counts double, but bodies collide as screen-space circles — and a monster's
+## circle sits down at its feet, well below its origin. Straight north or south
+## of her, a monster pressed against her body was still ~135-190 ground units
+## "away", past every attack_range on the roster, so it kept walking into her
+## without ever swinging. Being blocked by her body now always counts as reach.
+func within_reach(target: Node2D, multiplier: float = 1.0) -> bool:
+	if ground_distance_to(target.global_position) <= attack_range * multiplier:
+		return true
+	return body_gap_to(target) <= CONTACT_SLACK * maxf(multiplier, 1.0)
+
+
+## Screen-space clearance between this monster's body circle and `target`'s.
+## INF when either has no circular body to measure.
+func body_gap_to(target: Node2D) -> float:
+	var mine := _body_shape(self)
+	var theirs := _body_shape(target)
+	if mine == null or theirs == null:
+		return INF
+	var touch: float = (mine.shape as CircleShape2D).radius * absf(mine.global_scale.x) \
+			+ (theirs.shape as CircleShape2D).radius * absf(theirs.global_scale.x)
+	return mine.global_position.distance_to(theirs.global_position) - touch
+
+
+## A body's own circular collision shape (direct children only, so hit boxes
+## and sensors are ignored).
+static func _body_shape(body: Node) -> CollisionShape2D:
+	if not body is CollisionObject2D:
+		return null
+	for child in body.get_children():
+		if child is CollisionShape2D and not child.disabled and child.shape is CircleShape2D:
+			return child
+	return null
 
 
 func face(dir: Vector2) -> void:
@@ -564,14 +615,41 @@ func consume_knockback(delta: float) -> void:
 ## animation to frame 0 forever.
 func play_loop(state_name: String) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
+	animated_sprite.speed_scale = 1.0
 	if animated_sprite.animation != clip or not animated_sprite.is_playing():
 		animated_sprite.play(clip)
 		_sync_collision_tween(clip)
 
 
+## Slowest a chase may be, as a multiple of move_speed, once it is a run.
+## A run clip played much under this reads as running on the spot. Every
+## hunter runs; walking is for idling and wandering.
+const RUN_PACE: float = 1.8
+
+## Ground speed while hunting her or heading to where she was last seen.
+func chase_speed() -> float:
+	if run_speed > 0.0:
+		return run_speed
+	return move_speed * maxf(traits.get("chase", 1.0), RUN_PACE)
+
+
+## The chase loop: the run clip where this monster has one. Without one the
+## walk clip is played faster to match the run, so the feet keep up with the
+## ground instead of skating across it.
+func play_chase() -> void:
+	var run_clip: String = "run_%s" % facing_dir
+	if animated_sprite.sprite_frames.has_animation(run_clip):
+		play_loop("run")
+		return
+	play_loop("walk")
+	if move_speed > 0.0:
+		animated_sprite.speed_scale = clampf(chase_speed() / move_speed, 1.0, 3.0)
+
+
 ## Plays a one-shot clip from the top. Only call this from a state's on_enter.
 func play_once(state_name: String) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
+	animated_sprite.speed_scale = 1.0
 	animated_sprite.play(clip)
 	_sync_collision_tween(clip)
 
@@ -721,7 +799,7 @@ func strike(reach: float = 1.35, damage_multiplier: float = 1.0, arc_cos: float 
 	var target := player()
 	if target == null:
 		return
-	if ground_distance_to(target.global_position) > attack_range * reach:
+	if not within_reach(target, reach):
 		return
 	if not _in_strike_arc(target.global_position, arc_cos):
 		return

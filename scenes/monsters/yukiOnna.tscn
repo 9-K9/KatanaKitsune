@@ -12370,6 +12370,10 @@ script = ExtResource("enemy_script")
 tier = 5
 max_health = 210.0
 move_speed = 54.0
+run_speed = 115.0
+species_traits = {
+"phases": true
+}
 attack_damage = 22.0
 attack_cooldown = 1.4
 

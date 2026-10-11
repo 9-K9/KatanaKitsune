@@ -11624,6 +11624,7 @@ script = ExtResource("enemy_script")
 tier = 3
 max_health = 220.0
 move_speed = 44.0
+run_speed = 85.0
 attack_damage = 22.0
 attack_cooldown = 1.4
 

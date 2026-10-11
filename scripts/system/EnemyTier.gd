@@ -11,9 +11,11 @@ extends RefCounted
 ## Tier is set on the monster scene; the generator reads it to decide what to
 ## place at a given wave.
 
-## chase: the multiple of move_speed used while hunting. 1.0 walks, >1 runs.
+## chase: the multiple of move_speed used while hunting when the scene sets no
+##        run_speed. Never below RUN_PACE: every hunter runs.
 ## guards: will raise a block and take reduced damage from the front.
-## phases: sees and walks through walls, and never loses the scent.
+## phases: sees and walks through walls, and never loses the scent. No tier
+##         grants it; Yuki Onna sets it in her species_traits.
 ## duellist: the full katana kit — draws, blocks, charges.
 ## stealth_weak: takes extra from a strike it never saw coming.
 const TABLE: Array[Dictionary] = [
@@ -26,9 +28,11 @@ const TABLE: Array[Dictionary] = [
 	## 3 — runs and guards, so it has to be opened up rather than swung at.
 	{"chase": 1.80, "guards": true, "phases": false, "duellist": false,
 	 "stealth_weak": 1.0, "health": 1.30, "damage": 1.20, "name": "WARDEN"},
-	## 4 — creeps, but nothing stops it. Walls are not cover and never were.
-	{"chase": 0.55, "guards": false, "phases": true, "duellist": false,
-	 "stealth_weak": 1.0, "health": 1.60, "damage": 1.45, "name": "REVENANT"},
+	## 4 — tough and hits hard, but no new tricks. Walking through walls used
+	## to live here and could land on any monster; it is Yuki Onna's alone now
+	## (her species_traits), since only a ghost should ignore stone.
+	{"chase": 1.80, "guards": false, "phases": false, "duellist": false,
+	 "stealth_weak": 1.0, "health": 1.60, "damage": 1.45, "name": "BRUTE"},
 	## 5 — her equal. Draws, blocks, charges.
 	{"chase": 1.70, "guards": true, "phases": false, "duellist": true,
 	 "stealth_weak": 1.0, "health": 2.20, "damage": 1.70, "name": "SPIRIT"},

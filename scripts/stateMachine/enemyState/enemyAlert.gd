@@ -37,8 +37,8 @@ func on_physics_process(delta: float) -> void:
 			and enemy.ground_distance_to(enemy.last_known) > arrive_within:
 		var step: Vector2 = (enemy.last_known - enemy.global_position).normalized()
 		enemy.face(step)
-		enemy.move_towards(step, enemy.move_speed * 0.8)
-		enemy.play_loop("walk")
+		enemy.move_towards(step, enemy.chase_speed())
+		enemy.play_chase()
 		return
 
 	## Arrived and she is not here. Stand and look about for the rest of the
