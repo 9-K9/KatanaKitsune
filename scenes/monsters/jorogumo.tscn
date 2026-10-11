@@ -12557,7 +12557,7 @@ shape = SubResource("CapsuleShape2D_hitbox")
 material = SubResource("ShaderMaterial_soften")
 position = Vector2(0, -81)
 sprite_frames = SubResource("SpriteFrames_mummy")
-animation = &"alert_east"
+animation = &"idle_south"
 offset = Vector2(0, 27)
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1342817458]
