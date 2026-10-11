@@ -330,6 +330,8 @@ func _ready() -> void:
 	## of their own. Everything that collides with walls gets that bit as it
 	## arrives, so players, monsters and summons need no per-scene setup.
 	get_tree().node_added.connect(_on_node_added)
+	for node in find_children("*", "", true, false):
+		_on_node_added(node)
 	## Zero means roll one. The scene used to carry maze_seed = 12345, so every
 	## run of the game built the identical dungeon — same maze, same rooms, same
 	## props, every launch. Set it to a fixed number again only to reproduce a
@@ -1114,10 +1116,32 @@ func _open_pair(walls: Dictionary, cell: Vector2i, side: String) -> void:
 			walls[other][back] = false
 
 
+const CHARACTER_LIGHT_MASK: int = 2
+
+
 func _on_node_added(node: Node) -> void:
+	if not is_ancestor_of(node):
+		return
 	var body := node as CharacterBody2D
 	if body != null and (body.collision_mask & 1) != 0:
 		body.collision_mask |= SMASHED_LAYER
+	if node is Light2D:
+		# Runtime lamps finish their setup after add_child().
+		_configure_character_light.call_deferred(node)
+	if node is Sprite2D or node is AnimatedSprite2D:
+		var parent := node.get_parent()
+		while parent != null and parent != self:
+			if parent is AnimatedCharacterClass or parent is EnemyBase or parent is Animal:
+				(node as CanvasItem).light_mask = CHARACTER_LIGHT_MASK
+				break
+			parent = parent.get_parent()
+
+
+func _configure_character_light(light: Light2D) -> void:
+	if not is_instance_valid(light) or light.is_queued_for_deletion():
+		return
+	light.range_item_cull_mask |= CHARACTER_LIGHT_MASK
+	light.shadow_item_cull_mask &= ~CHARACTER_LIGHT_MASK
 
 
 ## Doors into some of the carved openings, windows into some of the closed

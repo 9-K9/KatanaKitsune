@@ -67,6 +67,17 @@ on 136×136 canvases and scaled in their scenes to stand against the player:
 - Raised grass-to-earth transition: `32dbf698-d046-4612-aa87-00465c68f27d`
 - Modular building kit: `92d8ef5c-aa2b-445a-9b7e-60e2530da65d`
 
+## Character lighting
+
+Maze character sprites (players, enemies, summons and animals) use light mask
+bit 2. Maze lights illuminate that bit but exclude it from their shadow
+receiver mask, so characters retain the lights' brightness and tint without
+being darkened by wall/tree light shadows. Environment sprites remain on their
+existing masks and still receive shadows. This does not change occluders,
+collision, visibility, Z-order or Y-sorting: walls and tree canopies can still
+draw in front of characters. Newly spawned sprites and lights receive the
+same setup; no duplicate lights or unshaded character materials are needed.
+
 ## Japanese kawara roofs
 
 `roofs/` contains four transparent Japanese roof-slope sprites and a charcoal
