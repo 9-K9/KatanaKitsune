@@ -144,7 +144,11 @@ sakura trees (`sakura_tree_a`, `sakura_tree_c`, `sakura_weeping`), `black_pine`,
 to fade when the player walks behind them.
 
 The five trees were regenerated at 400px tall (roughly twice the old height;
-backgrounds removed locally) and drawn at 1.2–1.3x scale:
+backgrounds removed locally) and drawn at 1.2–1.3x scale. Enclosed background
+patches between branches are transparent too; pale pink blossom highlights
+are preserved. The baked-in ground slabs and ellipse/diamond shadows are
+removed so trunks and bamboo sit directly over the map's grass tiles.
+Canvas dimensions and trunk anchors remain unchanged:
 
 | Tree | Gallery id |
 |---|---|
