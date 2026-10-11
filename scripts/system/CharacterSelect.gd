@@ -675,6 +675,19 @@ func _show_count_prompt() -> void:
 			% PlayerInput.new(PlayerInput.KEYBOARD).confirm_button_label()
 
 
+## A fixed legend rather than one line per device actually plugged in — a pad
+## that is not connected yet still deserves to be on the card, so whoever is
+## about to go find an Xbox pad from another room knows what it will say
+## before they are holding it. Shortened from the raw joypad name
+## ("Nintendo Switch Pro Controller"), which ran long enough to crowd the row.
+const DEVICE_LEGEND: Array[Array] = [
+	["KEYBOARD", "SPACE"],
+	["XBOX", "A"],
+	["PLAYSTATION", "X"],
+	["NINTENDO PRO", "B"],
+]
+
+
 ## One overlay per unclaimed device so a PS pad, an Xbox pad and the keyboard
 ## sitting at the same table are each told their own button, rather than a
 ## single "press a button" nobody owns the wording of.
@@ -683,8 +696,8 @@ func _show_claim_prompt() -> void:
 	prompt_title.text = "PLAYER %d — PRESS A BUTTON TO JOIN" % (_active + 1)
 	prompt_count_row.text = ""
 	var lines: Array[String] = []
-	for probe in _probes:
-		lines.append("%s: %s" % [probe.device_name(), probe.confirm_button_label()])
+	for entry in DEVICE_LEGEND:
+		lines.append("%s: %s" % [entry[0], entry[1]])
 	prompt_devices.text = "   •   ".join(lines)
 
 
