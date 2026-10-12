@@ -51,6 +51,10 @@ shader_type canvas_item;
 //    used; accepted here the same way the clothing recolour already accepts
 //    its own small face-pixel inaccuracy, documented below.
 //
+// 4. Monster clothing hue rotation (recolor_clothing_hue). Monsters do not
+//    use the pure-red clothing key, so each species supplies its own clothing
+//    hue bands; enemies use this alone and leave hair and skin as painted.
+//
 // Known difference from the baked clothing PNGs: the Python version
 // additionally excluded a detected face bounding box. A fragment shader
 // cannot do that connected-component pass, so roughly 0.13% of character
@@ -78,6 +82,18 @@ uniform bool recolor_skin = false;
 uniform vec3 skin_shadow_color = vec3(0.423529, 0.250980, 0.188235);
 uniform vec3 skin_highlight_color = vec3(0.933333, 0.666667, 0.556863);
 
+// Monster clothing recolour. Monster sheets are not colour-keyed like the
+// player's pure-red clothing, so each species names up to two hue bands its
+// clothing is painted in (PowerState.ENEMY_CLOTHING). Pixels inside a band
+// are hue-rotated by clothing_hue_shift with their saturation and value kept,
+// so the shading survives. Each band is (centre°, half-width°, min saturation,
+// min value); the floors keep dark hair and pale skin that carry a faint
+// tint of the same hue out of it. Half-width 0 disables a band.
+uniform bool recolor_clothing_hue = false;
+uniform float clothing_hue_shift = 0.0;
+uniform vec4 clothing_band_a = vec4(0.0);
+uniform vec4 clothing_band_b = vec4(0.0);
+
 uniform bool soften_highlights = true;
 // How much of the neighbourhood average to mix in for the spikiest pixels.
 uniform float soften_amount : hint_range(0.0, 1.0) = 0.85;
@@ -90,6 +106,29 @@ uniform float spike_range : hint_range(0.01, 1.0) = 0.35;
 
 float luma(vec3 c) {
 	return dot(c, vec3(0.299, 0.587, 0.114));
+}
+
+vec3 rgb_to_hsv(vec3 c) {
+	vec4 k = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	vec4 p = mix(vec4(c.bg, k.wz), vec4(c.gb, k.xy), step(c.b, c.g));
+	vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+	float d = q.x - min(q.w, q.y);
+	return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + 1e-10)), d / (q.x + 1e-10), q.x);
+}
+
+vec3 hsv_to_rgb(vec3 c) {
+	vec3 p = abs(fract(c.xxx + vec3(1.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
+	return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);
+}
+
+// 0..1 membership of `hsv` in a clothing band, softened over the outer third
+// of the hue width so a band edge never leaves a hard seam across the cloth.
+float band_weight(vec3 hsv, vec4 band) {
+	if (band.y <= 0.0 || hsv.y < band.z || hsv.z < band.w) {
+		return 0.0;
+	}
+	float delta = abs(mod(hsv.x * 360.0 - band.x + 540.0, 360.0) - 180.0);
+	return 1.0 - smoothstep(band.y * 0.66, band.y, delta);
 }
 
 // Clothing/hair/skin recolour for one already-sampled texel, so it can be
@@ -110,6 +149,15 @@ vec3 recolour(vec4 c, bool hair_context) {
 	float mx = max(c.r, max(c.g, c.b));
 	float mn = min(c.r, min(c.g, c.b));
 	float sat = (mx - mn) / max(mx, 0.00392157); // guard matches max(mx,1) at 8-bit
+
+	if (recolor_clothing_hue) {
+		vec3 hsv = rgb_to_hsv(c.rgb);
+		float weight = max(band_weight(hsv, clothing_band_a), band_weight(hsv, clothing_band_b));
+		if (weight > 0.0) {
+			vec3 shifted = hsv_to_rgb(vec3(fract(hsv.x + clothing_hue_shift / 360.0), hsv.y, hsv.z));
+			return mix(c.rgb, shifted, weight);
+		}
+	}
 
 	if (enabled) {
 		bool is_clothing =

@@ -151,21 +151,16 @@ func _ready() -> void:
 	_cache_collision_tween_deltas()
 
 
-## A fresh hair/skin tone per spawn, so a wave of four Kappa does not read as
-## one sprite copy-pasted four times. Plain randi(), not the maze's seeded
-## RNG — this is pure cosmetics with no bearing on anything deterministic, the
-## same reasoning that already applies to the hit-flash tween.
-##
-## Clothing is deliberately left alone: PowerState's twelve elemental ramps are
-## player-only lore (the aspects of Katana Kitsune), not a monster palette, so
-## a monster calls apply_to with its own scheme at -1-equivalent index 0 — the
-## shader's own untouched default — and lets hair/skin carry the variety.
+## A fresh clothing colour per spawn, so a wave of four Kasha does not read as
+## one sprite copy-pasted four times. Hair and skin keep their painted colours.
+## Plain randi(), not the maze's seeded RNG — this is pure cosmetics with no
+## bearing on anything deterministic, the same reasoning that already applies
+## to the hit-flash tween.
 func _apply_random_cosmetics() -> void:
 	if not is_instance_valid(animated_sprite):
 		return
-	var hair: int = randi() % PowerState.hair_count()
-	var skin: int = randi() % PowerState.skin_count()
-	PowerState.apply_to_enemy(animated_sprite, hair, skin)
+	var monster := scene_file_path.get_file().get_basename()
+	PowerState.apply_to_enemy(animated_sprite, monster, float(randi() % 360))
 
 
 ## Stretches the ground ranges to match how big the monster actually reads on

@@ -79,6 +79,22 @@ const SKIN_TONES: Array[Dictionary] = [
 	{"name": "DEEP EBONY","ramp": [Color8(30, 16, 12),   Color8(96, 56, 42)]},
 ]
 
+## Clothing hue bands per monster scene, read by apply_to_enemy. Each band is
+## (centre°, half-width°, min saturation, min value), measured from the Idle
+## sheets so the band covers the cloth and stops short of hair and skin that
+## carry a faint tint of the same hue: ninaNinja's navy hair, jorogumo's
+## violet-shaded face, oni's red skin (only its loincloth is listed).
+const ENEMY_CLOTHING := {
+	"jorogumo":      [Vector4(258, 25, 0.40, 0.22)],
+	"karasuShinobi": [Vector4(205, 25, 0.40, 0.20)],
+	"kasha":         [Vector4(350, 25, 0.45, 0.08)],
+	"ninaNinja":     [Vector4(215, 22, 0.60, 0.35)],
+	"oni":           [Vector4(45, 25, 0.35, 0.08)],
+	"tengu":         [Vector4(0, 25, 0.45, 0.08)],
+	"yokailord":     [Vector4(220, 25, 0.50, 0.18), Vector4(38, 18, 0.35, 0.30)],
+	"yukiOnna":      [Vector4(205, 25, 0.25, 0.50)],
+}
+
 ## Vermilion Phoenix, the red one. Index 1, not 0 — the order here follows the
 ## elemental cycle the art was generated in, which starts on Wood.
 var chosen: int = 1
@@ -189,18 +205,28 @@ func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: i
 	_apply_hair_skin(mat, hair, skin)
 
 
-## Monster cosmetic variety: hair/skin tone only, with the clothing band left
-## at the shader's own default (off). PowerState's twelve elemental ramps are
-## Katana Kitsune's own aspects, not a general monster palette, so a monster
-## never touches `enabled`/scheme — only recolor_hair/recolor_skin, which is
-## all a duplicated Kappa needs to stop looking identical to the three others
-## in its wave.
-func apply_to_enemy(sprite: AnimatedSprite2D, hair: int = -1, skin: int = -1) -> void:
+## Monster cosmetic variety: clothing only. Hair and skin are left exactly as
+## painted, so a monster's face and fur stay recognisable; the clothing bands
+## listed in ENEMY_CLOTHING are hue-rotated by `hue_shift` degrees instead.
+## Monsters are not colour-keyed like Katana Kitsune's pure-red clothing, so
+## the player's elemental ramps (`enabled`) are never used here.
+##
+## A species missing from ENEMY_CLOTHING (kappa: its only colour is its skin)
+## keeps its painted look.
+func apply_to_enemy(sprite: AnimatedSprite2D, monster: String, hue_shift: float) -> void:
+	var bands: Array = ENEMY_CLOTHING.get(monster, [])
+	if bands.is_empty():
+		return
 	var mat: ShaderMaterial = _material_for(sprite)
 	if mat == null:
 		push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
 		return
-	_apply_hair_skin(mat, hair, skin)
+	mat.set_shader_parameter("recolor_hair", false)
+	mat.set_shader_parameter("recolor_skin", false)
+	mat.set_shader_parameter("clothing_band_a", bands[0])
+	mat.set_shader_parameter("clothing_band_b", bands[1] if bands.size() > 1 else Vector4.ZERO)
+	mat.set_shader_parameter("clothing_hue_shift", hue_shift)
+	mat.set_shader_parameter("recolor_clothing_hue", true)
 
 
 func _apply_hair_skin(mat: ShaderMaterial, hair: int, skin: int) -> void:
