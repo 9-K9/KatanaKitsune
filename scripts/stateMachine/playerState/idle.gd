@@ -4,7 +4,7 @@ extends PlayerClass
 ## resting is a real option between fights rather than something only potions can
 ## do. Only a chair: the sit-on-the-floor clip does not hold up, and requiring
 ## furniture gives chairs a reason to exist beyond decoration.
-const REST_AFTER: float = 8.0
+const REST_AFTER: float = 3.0
 
 var _still_for: float = 0.0
 

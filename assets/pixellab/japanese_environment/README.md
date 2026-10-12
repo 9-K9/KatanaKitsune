@@ -305,6 +305,34 @@ prop and facing (`<prop>_<facing>.tscn`). Each is a Y-sorted `StaticBody2D`
 with a collision polygon fitted to that facing's art, intact texture,
 single-frame broken texture, and persistent debris after destruction.
 
+### Destructible scenery
+
+All decorative props are breakable, including the entrance komainu lions,
+other statues, torii, trees, palms, cactus, shrubs, grass, reeds and rocks.
+`ExteriorProp` inherits the existing `Breakable` hit-flash and fade behavior
+while preserving canopy fading and each scene's authored collision footprint.
+Trees, statues and torii have 80 health; bamboo and cactus have 60; smaller
+scenery uses the ordinary 25-health prop default. Newly breakable scenery
+and the legacy brazier do not introduce loot or scroll drops. Existing
+furniture and torch loot tables remain unchanged.
+
+Breaking a prop disables its collision, hurt shapes and light occluders;
+lights gutter out. Props with existing broken art keep their authored
+destruction behavior; exterior props without it fade away. Grass and reeds
+use attack-only 2:1 diamond hurt shapes and remain freely walkable.
+Spike traps are also destructible, and stop cycling and damaging occupants
+as soon as they break.
+
+Chairs are **not** breakable. Automatic chair rest starts after **3 seconds**
+of standing idle within chair reach, with existing healing and interruption
+behavior unchanged. Walls, roofs, ground, water, exits/stairs, pickups and
+characters are not converted into destructible props. Doors and windows
+retain their existing broken-panel and broken-window behavior.
+
+Run `res://tools/validate_breakable_environment.tscn` to check prop coverage,
+real attack hits, protected chairs, the sitting threshold, lights/collision,
+pause and floor teardown. See `tools/README.md` for rendered captures.
+
 ## Doors and windows
 
 `architecture/` holds wall-tile art for the three wall directions the maze

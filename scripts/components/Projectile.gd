@@ -41,6 +41,10 @@ var _start_offset: float = 0.0
 func _ready() -> void:
 	## Areas only, so a shot does not stop on the caster's own body collider.
 	body_entered.connect(_on_body_entered)
+	area_entered.connect(func(area: Area2D) -> void:
+		var target := Breakable.hit_target(area)
+		if target != null:
+			_on_body_entered(target))
 	_start_offset = _sprite.position.y
 	## So F3's debug overlay can find and draw every shot in flight — a ranged
 	## attack is as much an "attack hitbox" as the blade's, and was invisible.
@@ -64,6 +68,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
+	if is_queued_for_deletion():
+		return
 	if body == shooter:
 		return
 	## Monsters share a collision layer with her, so without this a caster at the

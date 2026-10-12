@@ -113,7 +113,7 @@ func blade_targets() -> Array[Node2D]:
 	for area in action_area.get_overlapping_areas():
 		if not is_instance_valid(area):
 			continue
-		var owner_body: Node2D = area.get_parent() as Node2D
+		var owner_body: Node2D = Breakable.hit_target(area)
 		if not is_instance_valid(owner_body) or not owner_body.has_method("take_damage"):
 			continue
 		if found.has(owner_body):

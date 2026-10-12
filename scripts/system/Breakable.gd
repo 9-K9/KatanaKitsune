@@ -73,6 +73,16 @@ var _drop_spawned: bool = false
 var _displayed: Node2D = null
 
 
+static func hit_target(collider: Node2D) -> Node2D:
+	if collider is Area2D:
+		if collider.is_in_group("breakable"):
+			return collider
+		if collider.is_in_group("breakable_hitbox") or collider.is_in_group("enemy_hitbox"):
+			return collider.get_parent() as Node2D
+		return null
+	return collider
+
+
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
@@ -136,10 +146,18 @@ func _set_flash_amount(amount: float) -> void:
 
 func _break() -> void:
 	_broken = true
+	remove_from_group("breakable")
+	set_process(false)
 	## Drop out of collision immediately so the player is not left shoving an
 	## invisible crate around while the shards fade.
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)
+	for child in get_children():
+		if child is LightOccluder2D:
+			child.visible = false
+		elif child is Area2D and child.is_in_group("breakable_hitbox"):
+			child.set_deferred("collision_layer", 0)
+			child.set_deferred("monitorable", false)
 	_douse()
 
 	if is_instance_valid(_flash_tween):
@@ -167,8 +185,7 @@ func _break() -> void:
 	fade.set_parallel(true)
 	fade.tween_property(sprite, "modulate:a", 0.0, 0.32)
 	fade.tween_property(sprite, "position:y", sprite.position.y - 3.0, 0.32)
-	await fade.finished
-	queue_free()
+	fade.chain().tween_callback(queue_free)
 
 
 ## Puts out any flame this prop was carrying.

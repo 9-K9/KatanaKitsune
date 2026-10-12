@@ -9,6 +9,7 @@ polygon = PackedVector2Array(0, -19, 38, 0, 0, 19, -38, 0)
 [node name="KomainuStatue" type="StaticBody2D" groups=["exterior_prop"]]
 y_sort_enabled = false
 script = ExtResource("2_scr")
+max_health = 80.0
 fade_rect = Rect2(-50, -110, 100, 90)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

@@ -9,6 +9,7 @@ polygon = PackedVector2Array(28.0, 0.0, 24.25, 7.0, 14.0, 12.12, 0.0, 14.0, -14.
 [node name="BambooClump" type="StaticBody2D" groups=["exterior_prop"]]
 y_sort_enabled = false
 script = ExtResource("2_scr")
+max_health = 60.0
 fade_rect = Rect2(-72, -425, 144, 365)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

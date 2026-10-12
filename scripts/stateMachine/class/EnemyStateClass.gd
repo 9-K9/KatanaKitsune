@@ -857,13 +857,17 @@ func _strike_breakables(reach: float, damage_multiplier: float = 1.0, arc_cos: f
 	query.collision_mask = 2
 	query.exclude = [get_rid()]
 	query.collide_with_bodies = true
-	query.collide_with_areas = false
+	query.collide_with_areas = true
+	var struck: Dictionary = {}
 	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
-		var body = hit.get("collider")
+		var body := Breakable.hit_target(hit.get("collider") as Node2D)
 		if not is_instance_valid(body) or not body.is_in_group("breakable") or not body.has_method("take_damage"):
+			continue
+		if struck.has(body.get_instance_id()):
 			continue
 		if not _in_strike_arc(body.global_position, arc_cos):
 			continue
+		struck[body.get_instance_id()] = true
 		body.take_damage(effective_attack_damage() * damage_multiplier, global_position)
 
 

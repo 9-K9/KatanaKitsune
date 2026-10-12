@@ -36,6 +36,10 @@ func _ready() -> void:
 	_left = lifetime
 	monitoring = true
 	body_entered.connect(_on_body_entered)
+	area_entered.connect(func(area: Area2D) -> void:
+		var target := Breakable.hit_target(area)
+		if target != null:
+			_on_body_entered(target))
 
 
 func _physics_process(delta: float) -> void:

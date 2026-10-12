@@ -1,4 +1,5 @@
-extends StaticBody2D
+class_name ExteriorProp
+extends Breakable
 
 ## Outdoor scenery — trees, statues, the torii. The origin is the spot where it
 ## meets the ground, so y-sorting puts a player behind it once they walk past
@@ -9,16 +10,28 @@ extends StaticBody2D
 @export var fade_rect: Rect2 = Rect2()
 @export var faded_alpha: float = 0.4
 @export var fade_speed: float = 6.0
+@export var blocks_movement: bool = true
 
 @onready var _sprite: CanvasItem = get_node_or_null("Sprite2D")
 
 
+func _init() -> void:
+	scroll_chance = 0.0
+
+
 func _ready() -> void:
+	super._ready()
+	collision_layer = 3 if blocks_movement else 0
+	collision_mask = 0
 	if fade_rect.size == Vector2.ZERO or _sprite == null:
 		set_process(false)
+	else:
+		set_process(true)
 
 
 func _process(delta: float) -> void:
+	if _broken:
+		return
 	var target: float = 1.0
 	for body in Roster.bodies(get_tree()):
 		var local: Vector2 = to_local(body.global_position)

@@ -9,6 +9,7 @@ polygon = PackedVector2Array(22.0, 0.0, 19.05, 5.5, 11.0, 9.53, 0.0, 11.0, -11.0
 [node name="CactusB" type="StaticBody2D" groups=["exterior_prop"]]
 y_sort_enabled = false
 script = ExtResource("2_scr")
+max_health = 60.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -47.0)

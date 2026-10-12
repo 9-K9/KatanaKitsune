@@ -57,6 +57,30 @@ The gold ouroboros frame was generated with PixelLab Pixen
 transparent opening cleaned locally. Sun and crescent-moon icons are drawn by `Radar.gd`.
 These are static checks, not a substitute for runtime rendering/type checks.
 
+## validate_breakable_environment.gd
+
+Checks every prop scene against the protected-object list, real blade/slash/
+hostile-projectile/enemy-melee hits, no added scenery loot, movement collision,
+light/shadow cleanup, canopy fading, trap shutdown, the three-second chair
+sitting threshold, pause and floor rebuilds. Includes Sakura Gardens, Desert
+Ruins and Frozen Pass generated scenery. Existing stairs scenes stay protected;
+current maze floors advance by clearing their enemy wave.
+
+```bash
+godot --headless --path . --scene res://tools/validate_breakable_environment.tscn
+```
+
+For intact/broken screenshots of the three biome floors, pass an existing
+output directory and use the Compatibility renderer:
+
+```bash
+godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 \
+  --scene res://tools/validate_breakable_environment.tscn \
+  -- --capture-dir=/absolute/output/directory
+```
+
+Exits nonzero on a failed check. Does not save captures into the repository.
+
 ## check_scene_connections.gd
 
 Finds signal connections that have gone stale.

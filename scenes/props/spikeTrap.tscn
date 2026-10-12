@@ -5,7 +5,7 @@
 
 [node name="SpikeTrap" type="Area2D" unique_id=1649296786]
 collision_mask = 3
-monitorable = false
+collision_layer = 2
 script = ExtResource("1_s")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=147914443]

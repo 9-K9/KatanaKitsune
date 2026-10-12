@@ -732,7 +732,9 @@ func _put(prop: String, world: Vector2, radius: float, mirrored: bool = false) -
 	var thing := scene.instantiate() as Node2D
 	if mirrored:
 		_mirror(thing)
-	if thing is CollisionObject2D:
+	if thing is ExteriorProp:
+		thing.collision_layer = 3 if thing.blocks_movement else 0
+	elif thing is CollisionObject2D:
 		## The props' layer, not the walls': chairs and spawns test against it.
 		(thing as CollisionObject2D).collision_layer = 3
 	_maze.add_child(thing)

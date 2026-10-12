@@ -9,6 +9,7 @@ polygon = PackedVector2Array(14.0, 0.0, 12.12, 3.5, 7.0, 6.06, 0.0, 7.0, -7.0, 6
 [node name="DeadTreeA" type="StaticBody2D" groups=["exterior_prop"]]
 y_sort_enabled = false
 script = ExtResource("2_scr")
+max_health = 80.0
 fade_rect = Rect2(-112, -300, 223, 225)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
