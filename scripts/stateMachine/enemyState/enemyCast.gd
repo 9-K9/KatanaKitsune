@@ -69,7 +69,7 @@ func _fire() -> void:
 			"height": lift.y,
 			"texture": projectile_texture,
 			"speed": projectile_speed,
-			"damage": enemy.attack_damage * damage_multiplier,
+			"damage": enemy.effective_attack_damage() * damage_multiplier,
 			"spin": projectile_spin,
 			"bob_rate": projectile_bob_rate,
 			"bob_height": projectile_bob_height,

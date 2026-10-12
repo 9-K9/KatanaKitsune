@@ -7,10 +7,11 @@ extends PlayerClass
 func on_enter():
 	## The single fastest movement in the game. Staying hidden costs a meter and
 	## gives up the katana, so it has to buy something you can feel.
-	pc.speed = pc.runSpeed * 1.55
+	pc.speed = pc.phase_run_speed(true) * 1.55
 	pc.stealthed = true
 
 func on_process(delta):
+	pc.speed = pc.phase_run_speed(true) * 1.55
 	## Sprinting while hidden is the best movement in the game, so it carries the
 	## running rate rather than a multiple of the creeping one.
 	pc.drain_sneak(pc.sneak_run_drain, delta)

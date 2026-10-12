@@ -73,6 +73,24 @@ Player tags, scores, floor and kill counts also have translucent backings.
 
 ## How it works
 
+**Day and night.** Each run begins in day and alternates five minutes of day
+with five minutes of night. The party shares one gameplay clock across floors;
+pause, loading and floor rebuilding freeze it. The HUD shows the current phase,
+time remaining and matching advantage. Lighting fades for 20 seconds after each
+boundary; gameplay bonuses switch immediately, indoors and outdoors alike.
+
+| Phase | Player advantage | Enemies |
+|-------|------------------|---------|
+| Day | Katana strikes +25% damage, katana run +20% speed, stamina costs -25% while the blade is drawn | Sight range +25%; normal attack damage |
+| Night | Stealth strikes +25% damage, ninja run +20% speed, all sneak costs -25% (including strikes and revival) | Sight range -25%; attack damage x2 |
+
+Kicks and ordinary unarmed attacks receive neither damage bonus. Existing
+charged/counter/assassination and scroll multipliers compose with the phase
+bonus without changing base stats; regeneration is unchanged. Ranged enemy
+shots retain the damage of their launch phase. Vision still respects cones,
+stealth and wall/door occlusion. The cycle does not change weather's visual-only
+behavior.
+
 **The floor.** `MazeDemo.gd` tiles one room scene across a diamond lattice, each
 neighbour half a room across and half a room down so the diamonds interlock,
 then knocks walls out from both sides. The result reads as one continuous space

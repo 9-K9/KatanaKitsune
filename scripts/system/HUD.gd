@@ -53,6 +53,7 @@ const UI_THEME := preload("res://assets/sprites/ui/katanaKitsune.theme.tres")
 
 @onready var depth_label: Label = $Depth
 var _kill_count_label: Label = null
+var _phase_label: Label = null
 
 ## One entry per player: the nodes that make up their cell.
 var _cells: Array[Dictionary] = []
@@ -89,6 +90,15 @@ func _ready() -> void:
 	_kill_count_label.add_theme_constant_override("outline_size", 3)
 	_back_text(_kill_count_label)
 	add_child(_kill_count_label)
+	_phase_label = Label.new()
+	_phase_label.name = "DayNight"
+	_phase_label.theme = UI_THEME
+	_phase_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 128.0)
+	_phase_label.add_theme_font_size_override("font_size", 16)
+	_phase_label.add_theme_color_override("font_outline_color", Color(0.04, 0.03, 0.05))
+	_phase_label.add_theme_constant_override("outline_size", 3)
+	_back_text(_phase_label)
+	add_child(_phase_label)
 
 	## Deferred a frame: the players are spawned by the maze during its own
 	## _ready, so asking for them now finds nobody and the row comes out empty.
@@ -213,12 +223,30 @@ func _body_for(slot: int) -> CharacterBody2D:
 
 
 func _process(delta: float) -> void:
+	_show_phase()
 	for i in _cells.size():
 		_update_cell(i, delta)
 	if _rings != null:
 		_rings.queue_redraw()
 	_show_depth()
 	_show_kill_count()
+
+
+func _show_phase() -> void:
+	if _phase_label == null:
+		return
+	var cycle := DayNightCycle.for_node(self)
+	_phase_label.visible = cycle != null
+	if cycle == null:
+		return
+	var seconds: int = ceili(cycle.seconds_remaining())
+	var phase := "NIGHT" if cycle.is_night() else "DAY"
+	var advantage := "STEALTH +" if cycle.is_night() else "KATANA +"
+	_phase_label.text = "%s %d:%02d  %s" % [phase, seconds / 60, seconds % 60, advantage]
+	_phase_label.add_theme_color_override("font_color",
+			Color(0.72, 0.80, 1.0) if cycle.is_night() else Color(1.0, 0.85, 0.50))
+	_phase_label.tooltip_text = "Night: stealth damage +25%, ninja run +20%, sneak costs -25%; enemy sight -25%, attack x2." \
+			if cycle.is_night() else "Day: katana damage +25%, katana run +20%, drawn-blade stamina costs -25%; enemy sight +25%, normal attack."
 
 
 func _update_cell(index: int, delta: float) -> void:

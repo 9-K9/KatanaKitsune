@@ -394,6 +394,7 @@ const WALL_MASK: int = 1
 var _last_seen_ms: int = -100000
 var _sight_checked_ms: int = -100000
 var _sight_cached: bool = false
+var _sight_phase: int = -1
 ## Where she was standing when last seen, so a monster can press on to it.
 var last_known: Vector2 = Vector2.ZERO
 
@@ -402,6 +403,11 @@ var last_known: Vector2 = Vector2.ZERO
 ## ray, and the answer is held briefly so a crowd of monsters does not each cast
 ## every frame.
 func sees_player() -> bool:
+	var cycle := DayNightCycle.for_node(self)
+	var phase: int = int(cycle.is_night()) if cycle != null else -1
+	if phase != _sight_phase:
+		_sight_phase = phase
+		_sight_checked_ms = -100000
 	var now: int = Time.get_ticks_msec()
 	if now - _sight_checked_ms < 120:
 		return _sight_cached
@@ -467,10 +473,17 @@ func seconds_since_seen() -> float:
 ## detection_range scaled by how well hidden she is, so crouching, sneaking and
 ## drawing the katana each change the range a monster wakes up at.
 func effective_detection() -> float:
+	var cycle := DayNightCycle.for_node(self)
+	var reach: float = detection_range * (cycle.sight_factor() if cycle != null else 1.0)
 	var target := player()
 	if target != null and target.has_method("stealth_ratio"):
-		return detection_range * target.stealth_ratio()
-	return detection_range
+		return reach * target.stealth_ratio()
+	return reach
+
+
+func effective_attack_damage() -> float:
+	var cycle := DayNightCycle.for_node(self)
+	return attack_damage * (cycle.hostile_damage_factor() if cycle != null and is_in_group("enemy") else 1.0)
 
 
 ## Unit vector pointing at the player on screen, or ZERO when there is none.
@@ -808,7 +821,7 @@ func strike(reach: float = 1.35, damage_multiplier: float = 1.0, arc_cos: float 
 		return
 	if target.has_method("take_damage"):
 		## Tells her guard where the blow came from.
-		target.take_damage(attack_damage * damage_multiplier, global_position)
+		target.take_damage(effective_attack_damage() * damage_multiplier, global_position)
 	_strike_breakables(reach, damage_multiplier, arc_cos)
 
 
@@ -856,7 +869,7 @@ func _strike_breakables(reach: float, damage_multiplier: float = 1.0, arc_cos: f
 			continue
 		if not _in_strike_arc(body.global_position, arc_cos):
 			continue
-		body.take_damage(attack_damage * damage_multiplier, global_position)
+		body.take_damage(effective_attack_damage() * damage_multiplier, global_position)
 
 
 ## Called when the player interacts with this monster — an Action press or the

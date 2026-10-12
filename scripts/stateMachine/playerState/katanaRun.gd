@@ -5,10 +5,11 @@ extends PlayerClass
 ## cross a floor.
 
 func on_enter():
-	pc.speed = pc.runSpeed
+	pc.speed = pc.phase_run_speed(false)
 
 # Called every frame when this state is active.
 func on_process(delta):
+	pc.speed = pc.phase_run_speed(false)
 	stateAnimation("katanaRun")
 	if pc.InputHandler() != Vector2.ZERO and pc.input.just_released("Run"):
 		change_state("katanaWalk")

@@ -316,6 +316,9 @@ var _building: bool = false
 var _door_skip: Dictionary = {}
 ## This floor's compound plan when `exteriors` is on, otherwise null.
 var _ext: MazeExterior = null
+var day_night := DayNightCycle.new()
+@export_range(0.0, 600.0, 1.0) var day_night_start_seconds: float = 0.0
+var _last_daylight_weight: float = -1.0
 var _level_theme: LevelTheme = null
 var _weather: OutdoorWeather = null
 ## Where the party arrives and the one room left free of monsters.
@@ -323,6 +326,7 @@ var _start_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
+	day_night.elapsed = day_night_start_seconds
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
 		return
@@ -350,6 +354,7 @@ func _ready() -> void:
 ## she keeps her health, her buffs and her state machine across the descent —
 ## a reload would construct a fresh one and throw all of that away.
 func descend() -> void:
+	_building = true
 	if is_instance_valid(_weather):
 		_weather.stop()
 	_weather = null
@@ -966,7 +971,7 @@ func _light() -> void:
 	if not has_node("Gloom"):
 		var tint := CanvasModulate.new()
 		tint.name = "Gloom"
-		tint.color = gloom
+		tint.color = Color(0.48, 0.46, 0.42).lerp(gloom, day_night.night_weight())
 		add_child(tint)
 	if _ext != null:
 		_ext.light()
@@ -993,6 +998,19 @@ func _light() -> void:
 		## from the ground rather than out from the middle of her.
 		lamp.position = Vector2(0, -40)
 		carrier.add_child(lamp)
+	_update_daylight(true)
+
+
+func _update_daylight(force: bool = false) -> void:
+	var weight := day_night.night_weight()
+	if not force and is_equal_approx(weight, _last_daylight_weight):
+		return
+	_last_daylight_weight = weight
+	var tint := get_node_or_null("Gloom") as CanvasModulate
+	if tint != null:
+		tint.color = Color(0.48, 0.46, 0.42).lerp(gloom, weight)
+	if _ext != null:
+		_ext.update_daylight(weight)
 
 
 ## Mirrors the authored collision geometry onto light occluders without
@@ -1708,6 +1726,10 @@ func _spawn_player(step: Vector2) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not get_tree().paused and not SceneLoader.is_active() \
+			and not _building and not _clearing and is_instance_valid(_player):
+		day_night.advance(delta)
+		_update_daylight()
 	_track_party(delta)
 	_check_wave_cleared()
 	if _ext != null and not _building:

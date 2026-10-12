@@ -6,14 +6,11 @@ extends PlayerClass
 const RATE: float = 2.0
 const COUNTER_BONUS: float = 2.0
 
-var _base_damage: float = 0.0
-
 func on_enter():
 	pc.speed = 0.0
 	pc.actionBlockInput = true
 	pc.parry_ready = false
-	_base_damage = pc.damage
-	pc.damage = _base_damage * COUNTER_BONUS
+	attack_damage_multiplier = COUNTER_BONUS
 	beginAttack()
 	action_timer.wait_time = play_oneshot("katanaCounterSlash", RATE)
 	action_timer.start()
@@ -26,7 +23,7 @@ func on_physics_process(_delta):
 		change_state("katanaIdle")
 
 func on_exit():
-	pc.damage = _base_damage
+	attack_damage_multiplier = 1.0
 	pc.actionBlockInput = false
 	animated_sprite.speed_scale = 1.0
 	action_timer.stop()

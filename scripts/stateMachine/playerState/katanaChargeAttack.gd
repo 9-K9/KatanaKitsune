@@ -11,7 +11,6 @@ const SWING_RATE: float = 1.25
 const HIT_FRAME: int = 2
 
 var _charge: float = 0.0
-var _base_damage: float = 0.0
 var _released: bool = false
 
 func on_enter():
@@ -19,7 +18,7 @@ func on_enter():
 	pc.actionBlockInput = true
 	_charge = 0.0
 	_released = false
-	_base_damage = pc.damage
+	attack_damage_multiplier = 1.0
 
 func on_process(delta):
 	if not _released:
@@ -44,7 +43,7 @@ func on_physics_process(_delta):
 func _release() -> void:
 	_released = true
 	animated_sprite.modulate = Color.WHITE
-	pc.damage = _base_damage * (1.0 + (MAX_BONUS - 1.0) * (_charge / MAX_CHARGE))
+	attack_damage_multiplier = 1.0 + (MAX_BONUS - 1.0) * (_charge / MAX_CHARGE)
 	beginAttack()
 	## The swing itself is a one-shot, and must outlast the clip it plays.
 	action_timer.wait_time = play_oneshot("katanaSlashMid", SWING_RATE)
@@ -54,7 +53,7 @@ func _release() -> void:
 func on_exit():
 	animated_sprite.modulate = Color.WHITE
 	animated_sprite.speed_scale = 1.0
-	pc.damage = _base_damage
+	attack_damage_multiplier = 1.0
 	pc.actionBlockInput = false
 	action_timer.stop()
 	_reset_weapon_tween()

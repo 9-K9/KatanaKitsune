@@ -20,6 +20,7 @@ extends StateMachineState
 
 ## True once the current swing has already dealt its damage.
 var _swing_connected: bool = false
+var attack_damage_multiplier: float = 1.0
 
 ## Plays a looping clip in the direction she is facing.
 ##
@@ -175,5 +176,7 @@ func playerAttack(hit_frame: int = 3):
 				and pc.spend_stone_charge():
 			body.petrify(pc.scroll_stone_time)
 			continue
-		body.take_damage(pc.damage, pc.global_position)
-
+		var stealth_strike: bool = name == "flair"
+		var katana_strike: bool = name in ["katanaSlashStand", "katanaSlashCrouched", "katanaChargeAttack", "katanaCounterSlash"]
+		body.take_damage(pc.phase_attack_damage(stealth_strike, katana_strike)
+				* attack_damage_multiplier, pc.global_position)

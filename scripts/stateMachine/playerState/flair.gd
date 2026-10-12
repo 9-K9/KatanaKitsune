@@ -5,16 +5,13 @@ extends PlayerClass
 const RATE: float = 1.5
 const ASSASSINATE_BONUS: float = 4.0
 
-var _base_damage: float = 0.0
-
 func on_enter():
 	## Most of a bar for a guaranteed kill. Creeping is cheap; using what the
 	## creeping bought is not.
-	pc.sneak = maxf(pc.sneak - pc.flair_sneak_cost, 0.0)
+	pc.spend_sneak(pc.flair_sneak_cost)
 	pc.speed = 0.0
 	pc.actionBlockInput = true
-	_base_damage = pc.damage
-	pc.damage = _base_damage * ASSASSINATE_BONUS
+	attack_damage_multiplier = ASSASSINATE_BONUS
 	beginAttack()
 	action_timer.wait_time = play_oneshot("flair", RATE)
 	action_timer.start()
@@ -29,7 +26,7 @@ func on_physics_process(_delta):
 		change_state("stealthIdle" if pc.can_sneak() else "idle")
 
 func on_exit():
-	pc.damage = _base_damage
+	attack_damage_multiplier = 1.0
 	pc.actionBlockInput = false
 	animated_sprite.speed_scale = 1.0
 	action_timer.stop()

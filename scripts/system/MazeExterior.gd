@@ -76,6 +76,7 @@ var _tiles: Dictionary = {}        ## tile family number -> source id
 var _noise := FastNoiseLite.new()
 var _roofs: Array = []             ## per building: Array[CanvasItem]
 var _roof_alpha: Array[float] = []
+var _sky_lights: Array[PointLight2D] = []
 var _scenes: Dictionary = {}
 var biome: ExteriorBiome = null
 var theme: LevelTheme = null
@@ -1004,18 +1005,41 @@ func update_roofs(delta: float, bodies: Array) -> void:
 				roof.visible = alpha > 0.01
 
 
-## Cold moonlight over open ground, so the outside reads as night air rather
-## than as more of the same dark interior. No shadows: it stands for the sky.
+## Sky light is confined to each outdoor diamond, not a global directional
+## light that would also illuminate roofed interiors.
 func light() -> void:
-	var glow: Texture2D = _maze._glow()
+	_sky_lights.clear()
+	var image := Image.create(512, 256, false, Image.FORMAT_RGBA8)
+	for y in image.get_height():
+		for x in image.get_width():
+			var radius: float = absf((x + 0.5 - 256.0) / 256.0) \
+					+ absf((y + 0.5 - 128.0) / 128.0)
+			var strength: float = 1.0 - smoothstep(0.85, 1.0, radius)
+			image.set_pixel(x, y, Color(strength, strength, strength, 1.0))
+	var sky := ImageTexture.create_from_image(image)
 	for cell in kind:
 		if is_building(cell):
 			continue
 		var moon := PointLight2D.new()
 		moon.name = "Moon_%d_%d" % [cell.x, cell.y]
-		moon.texture = glow
+		moon.texture = sky
 		moon.color = biome.moonlight
 		moon.energy = 0.55
-		moon.texture_scale = _half.x * 2.6 / 256.0
+		moon.texture_scale = _half.x / 256.0
 		_maze.add_child(moon)
 		moon.global_position = cell_centre(cell)
+		_sky_lights.append(moon)
+	update_daylight(_maze.day_night.night_weight())
+
+
+func update_daylight(night: float) -> void:
+	for sky in _sky_lights:
+		if is_instance_valid(sky):
+			sky.color = Color(1.0, 0.96, 0.85).lerp(biome.moonlight, night)
+			sky.energy = lerpf(0.38, 0.40, night)
+	var tint := Color.WHITE.lerp(Color(0.48, 0.50, 0.62), night)
+	for layers: Array in _roofs:
+		for roof: CanvasItem in layers:
+			if is_instance_valid(roof) and roof is JapaneseRoof:
+				var alpha := roof.modulate.a
+				roof.modulate = Color(tint, alpha)

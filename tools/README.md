@@ -2,6 +2,26 @@
 
 Dev-only scripts. Nothing here ships in the game.
 
+## validate_day_night.gd
+
+Run exact-factor, attack-state, scroll, sight, projectile, pause and
+four-player/floor-lifecycle checks against the real maze:
+
+```bash
+godot --headless --path . res://tools/validate_day_night.tscn
+```
+
+For rendered day/night indoor/outdoor captures, use the Compatibility renderer
+instead of `--headless`, and pass an existing output directory:
+
+```bash
+godot --path . --rendering-method gl_compatibility \
+  res://tools/validate_day_night.tscn -- --capture-dir=/absolute/output/directory
+```
+
+Exits nonzero on a failed check. Captures are optional and not saved into the
+repository automatically.
+
 ## check_scene_connections.gd
 
 Finds signal connections that have gone stale.

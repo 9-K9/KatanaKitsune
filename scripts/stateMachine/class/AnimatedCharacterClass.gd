@@ -93,8 +93,24 @@ func drain_sneak(per_second: float, delta: float) -> void:
 	## Unseen by the scroll, hiding costs nothing.
 	if is_invisible():
 		return
-	sneak = maxf(sneak - per_second * delta, 0.0)
+	spend_sneak(per_second * delta)
+
+
+func spend_sneak(amount: float) -> void:
+	var cycle := DayNightCycle.for_node(self)
+	var factor: float = cycle.sneak_cost_factor() if cycle != null else 1.0
+	sneak = maxf(sneak - amount * factor, 0.0)
 	_sneak_used_this_frame = true
+
+
+func phase_run_speed(ninja: bool) -> float:
+	var cycle := DayNightCycle.for_node(self)
+	return runSpeed * (cycle.run_factor(ninja) if cycle != null else 1.0)
+
+
+func phase_attack_damage(stealth_strike: bool, katana_strike: bool) -> float:
+	var cycle := DayNightCycle.for_node(self)
+	return damage * (cycle.player_damage_factor(stealth_strike, katana_strike) if cycle != null else 1.0)
 
 
 func recover_sneak(delta: float) -> void:
@@ -135,7 +151,9 @@ func drain_stamina(per_second: float, delta: float) -> void:
 	if scroll_active(Scroll.Kind.EXERTION):
 		stamina = max_stamina
 		return
-	stamina = maxf(stamina - per_second * delta, 0.0)
+	var cycle := DayNightCycle.for_node(self)
+	var factor: float = cycle.stamina_cost_factor(katana_drawn) if cycle != null else 1.0
+	stamina = maxf(stamina - per_second * delta * factor, 0.0)
 	_stamina_rested_for = 0.0
 
 

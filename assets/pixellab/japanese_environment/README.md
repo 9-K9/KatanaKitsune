@@ -80,6 +80,23 @@ same setup; no duplicate lights or unshaded character materials are needed.
 
 ## Japanese kawara roofs
 
+### Day/night lighting
+
+The maze's run-wide day/night clock starts in day, switches every 300 gameplay
+seconds and survives descent. Pause and loading/rebuilding freeze time.
+Gameplay bonuses switch at the boundary; ambient, outdoor sky light and roof
+RGB tint blend over the following 20 seconds. Interiors retain a lower ambient
+level than outdoor cells; sky lights use a fitted 2:1 diamond texture rather
+than a global sun or broad glow spilling through building footprints.
+Lantern shadows and character shadow-exemption masks are retained.
+
+Generated unshaded roofs receive explicit night tint without changing their
+fade alpha or indoor weather mask. HUD CanvasLayers are not dimmed.
+`MazeDemo.day_night_start_seconds` is an editor-only testing override (default
+`0`); `300` begins dusk, `320` shows settled night and `600` begins dawn.
+Cycle/transition durations are fixed in `DayNightCycle.gd`.
+See the main README for the exact day/night combat and movement modifiers.
+
 `roofs/` contains four transparent Japanese roof-slope sprites and a charcoal
 blue-gray kawara material. The slopes were generated from the existing
 Crocotile slope silhouettes, cropped at `(288,264)` to a 384x384 reference,
