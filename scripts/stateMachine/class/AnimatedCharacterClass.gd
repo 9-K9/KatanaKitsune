@@ -72,6 +72,10 @@ var sneak: float = 100.0
 @export var sneak_regen: float = 11.0
 
 var _sneak_used_this_frame: bool = false
+## Lowered by Stealth upgrades. Applies to held sneaking, not the strike's cost.
+var sneak_drain_factor: float = 1.0
+## Unupgraded values, captured once so applying upgrades again cannot compound.
+var _progress_base: Dictionary = {}
 
 ## Where katanaSeath hands off to. Set by whoever asked for the blade to go
 ## away, so guarding into a sneak sheathes first instead of cutting straight
@@ -93,7 +97,7 @@ func drain_sneak(per_second: float, delta: float) -> void:
 	## Unseen by the scroll, hiding costs nothing.
 	if is_invisible():
 		return
-	spend_sneak(per_second * delta)
+	spend_sneak(per_second * delta * sneak_drain_factor)
 
 
 func spend_sneak(amount: float) -> void:
@@ -274,11 +278,46 @@ func _apply_buffs() -> void:
 		return
 	damage = _base_damage * _buff_multiplier(Pickup.Kind.DAMAGE) \
 			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.ATTACK)
-	walkSpeed = _base_walk * _buff_multiplier(Pickup.Kind.SPEED)
+	_apply_speed()
+
+
+func _apply_speed() -> void:
+	var trained: float = Progression.speed_factor(_progress_slot())
+	walkSpeed = _base_walk * _buff_multiplier(Pickup.Kind.SPEED) * trained
 	## Swiftness is a running scroll: it lengthens her stride at speed and
 	## leaves the careful walk alone.
 	runSpeed = _base_run * _buff_multiplier(Pickup.Kind.SPEED) \
-			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.SPEED)
+			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.SPEED) * trained
+
+
+func _progress_slot() -> int:
+	return int(get("slot")) if "slot" in self else -1
+
+
+## Applies this player's run upgrades. Health is applied with depth scaling in
+## MazeDemo._scale_party, since both multiply the same maximum.
+func apply_progression() -> void:
+	var slot := _progress_slot()
+	if slot < 0:
+		return
+	if _progress_base.is_empty():
+		_progress_base = {
+			"max_stamina": max_stamina,
+			"stamina_regen": stamina_regen,
+			"max_sneak": max_sneak,
+			"sneak_regen": sneak_regen,
+		}
+	var was_stamina: float = max_stamina
+	max_stamina = _progress_base["max_stamina"] * Progression.stamina_factor(slot)
+	stamina = clampf(stamina + max_stamina - was_stamina, 0.0, max_stamina)
+	stamina_regen = _progress_base["stamina_regen"] * Progression.stamina_regen_factor(slot)
+	var was_sneak: float = max_sneak
+	max_sneak = _progress_base["max_sneak"] * Progression.sneak_factor(slot)
+	sneak = clampf(sneak + max_sneak - was_sneak, 0.0, max_sneak)
+	sneak_regen = _progress_base["sneak_regen"] * Progression.sneak_regen_factor(slot)
+	sneak_drain_factor = Progression.sneak_drain_factor(slot)
+	_capture_base_stats()
+	_apply_speed()
 
 
 func _buff_multiplier(kind: int) -> float:

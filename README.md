@@ -86,6 +86,20 @@ credited kills in memory through game over. Existing point scoring is unchanged.
 Below the radar, a centred translucent black panel shows shared floor progress
 as `killed/total`, then the number of enemies remaining on the next line.
 
+**Levels and upgrades.** The player who lands a kill earns experience for that
+species: kappa 10, karasu shinobi 12, nina ninja 15, jorogumo 25, oni 30,
+tengu 35, kasha 40, yuki-onna 60 and yokai lord 200. Each tier the spawner rolls
+above the species' own scene tier adds 15%. Level 2 needs 80 XP, and each later
+level needs 40 XP more than the last. Every level grants one point.
+
+After a floor is cleared, the upgrade screen appears if any active player levelled
+up. Players spend independently in their own column with Up/Down, Confirm and Back
+(undo), then choose Ready; the next floor starts once everyone is ready. Each stat
+has five ranks: Health +10% maximum health; Stamina +10% maximum and +8% regen;
+Speed +4% walk and run speed; Stealth +10% sneak capacity, -8% sneak drain and +8%
+sneak regen. Progress is per player slot for the current run and resets on a new
+game or game over. Point scoring is unchanged.
+
 | Phase | Player advantage | Enemies |
 |-------|------------------|---------|
 | Day | Katana strikes +25% damage, katana run +20% speed, stamina costs -25% while the blade is drawn | Sight range +25%; normal attack damage |

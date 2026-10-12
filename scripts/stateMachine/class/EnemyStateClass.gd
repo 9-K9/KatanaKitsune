@@ -11,6 +11,8 @@ signal died
 ## Which rung of the bestiary this monster is, 1 to 6. Drives what it is worth
 ## and, later, which behaviours it is allowed.
 @export var tier: int = 1
+## The scene's tier before the spawner rolls one; -1 until apply_tier runs.
+var base_tier: int = -1
 
 ## What makes this monster itself, as opposed to how far up the ladder it is.
 ## Merged over the tier's traits in apply_tier, so it survives any rung the
@@ -92,6 +94,9 @@ var knockback_velocity: Vector2 = Vector2.ZERO
 
 
 func apply_tier(to: int, wave: int = 1) -> void:
+	## The scene's own rung, kept for experience before the roll replaces it.
+	if base_tier < 0:
+		base_tier = tier
 	tier = to
 	## Duplicated, not referenced. EnemyTier.of returns the shared row out of
 	## its table, so trimming it in place would strip the skill from every
@@ -1055,6 +1060,8 @@ func begin_death() -> void:
 		var unseen: bool = killer != null and (killer.get("stealthed") == true
 				or killer.get("crouched") == true)
 		Score.killed(_last_hit_by, tier, unseen)
+		Progression.killed(_last_hit_by, scene_file_path.get_file().get_basename(),
+				base_tier if base_tier >= 0 else tier, tier)
 	velocity = Vector2.ZERO
 	set_deferred("collision_layer", 0)
 	set_deferred("collision_mask", 0)

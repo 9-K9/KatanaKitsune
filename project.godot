@@ -27,6 +27,7 @@ CheatManager="*res://scripts/system/CheatManager.gd"
 PowerState="*res://scripts/system/PowerState.gd"
 Roster="*res://scripts/system/Roster.gd"
 Score="*res://scripts/system/Score.gd"
+Progression="*res://scripts/system/Progression.gd"
 SceneLoader="*res://scripts/system/SceneLoader.gd"
 RetroFX="*res://scripts/system/RetroFX.gd"
 

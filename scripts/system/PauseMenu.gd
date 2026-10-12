@@ -58,6 +58,10 @@ func _process_standalone() -> void:
 	if Roster.any_lost():
 		_set_shown(false)
 		return
+	## Floor upgrades pause the tree too, and own it until every player is ready.
+	if get_tree().get_first_node_in_group("level_up_screen") != null:
+		_set_shown(false)
+		return
 	if Input.is_action_just_pressed("Pause"):
 		get_tree().paused = not get_tree().paused
 	_set_shown(get_tree().paused)

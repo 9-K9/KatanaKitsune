@@ -81,6 +81,15 @@ godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 \
 
 Exits nonzero on a failed check. Does not save captures into the repository.
 
+## validate_progression.py
+
+Checks species experience values, rolled-tier bonuses, the level curve, stat caps,
+floor-clear wiring and non-compounding upgrades without launching Godot:
+
+```bash
+python3 tools/validate_progression.py
+```
+
 ## check_scene_connections.gd
 
 Finds signal connections that have gone stale.

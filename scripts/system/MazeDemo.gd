@@ -269,6 +269,8 @@ var _theme_index: int = -1
 ## the next wave would start instantly and forever.
 var _wave_live: bool = false
 var _clearing: bool = false
+## The level-up screen is open between floors.
+var _upgrading: bool = false
 ## Per-floor kill progress shown on the HUD. Total counts only enemies that
 ## were successfully instantiated; killed increments from each enemy's death
 ## signal before its corpse starts the fade/free sequence.
@@ -848,6 +850,7 @@ func _populate(step: Vector2) -> void:
 	enemies_killed = 0
 	enemies_total = 0
 	Score.begin_floor()
+	Progression.begin_floor()
 	_boss_placed = false
 	_scale_party()
 	var start := _start_cell
@@ -1757,11 +1760,15 @@ func _scale_party() -> void:
 			_party_base[id] = {"health": body.max_health, "damage": body.damage}
 		var base: Dictionary = _party_base[id]
 		var was: float = body.max_health
-		body.max_health = base["health"] * deep
+		var trained: float = Progression.health_factor(int(body.get("slot"))) \
+				if "slot" in body else 1.0
+		body.max_health = base["health"] * deep * trained
 		## Healed by the increase rather than to full: surviving a wave should
 		## still cost something going into the next.
 		body.health = minf(body.health + (body.max_health - was), body.max_health)
 		body.damage = base["damage"] * deep
+		if body.has_method("apply_progression"):
+			body.apply_progression()
 
 
 ## The way on is an empty room. No stairs: hunting the last monster is a better
@@ -1781,8 +1788,27 @@ func _finish_wave() -> void:
 	Score.wave_cleared(depth, Time.get_ticks_msec() * 0.001 - _wave_started)
 	_announce_floor("AREA CLEAR")
 	await get_tree().create_timer(2.1, false).timeout
+	if not is_inside_tree():
+		return
+	var party: int = maxi(Roster.count(), 1)
+	if Progression.levelled_this_floor(party):
+		await _offer_upgrades(party)
 	if is_inside_tree():
 		descend()
+
+
+## Between floors, while the clock is already frozen by _clearing.
+func _offer_upgrades(party: int) -> void:
+	_upgrading = true
+	get_tree().paused = true
+	var screen := LevelUpScreen.new()
+	screen.party = party
+	add_child(screen)
+	await screen.finished
+	screen.queue_free()
+	_upgrading = false
+	if not Roster.any_lost():
+		get_tree().paused = false
 
 
 ## Halts the floor while anyone's pad is unplugged, and says whose.
@@ -1798,7 +1824,8 @@ func _on_device_lost(slot: int) -> void:
 func _on_device_regained(_slot: int) -> void:
 	if Roster.any_lost():
 		return
-	get_tree().paused = false
+	## The upgrade screen owns its pause; it unpauses once every player is ready.
+	get_tree().paused = _upgrading
 	_show_reconnect("")
 
 
