@@ -51,8 +51,6 @@ const FRAME_PORTRAIT := preload("res://assets/sprites/ui/frame_portrait.png")
 const FRAME_BAR := preload("res://assets/sprites/ui/bar_frame.png")
 const UI_THEME := preload("res://assets/sprites/ui/katanaKitsune.theme.tres")
 
-@onready var depth_label: Label = $Depth
-
 ## One entry per player: the nodes that make up their cell.
 var _cells: Array[Dictionary] = []
 ## Health eases towards the real value so chip damage reads as a drain rather
@@ -89,10 +87,6 @@ func _ready() -> void:
 	scroll_bar.player_count = maxi(Roster.count(), 1)
 	scroll_bar.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(scroll_bar)
-
-	if depth_label != null:
-		depth_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 78.0)
-		_back_text(depth_label)
 
 
 func _back_text(label: Label) -> void:
@@ -216,7 +210,6 @@ func _process(delta: float) -> void:
 		_update_cell(i, delta)
 	if _rings != null:
 		_rings.queue_redraw()
-	_show_depth()
 
 
 func _update_cell(index: int, delta: float) -> void:
@@ -327,13 +320,3 @@ func _draw_rings() -> void:
 		## Unwinds from twelve o'clock, the way a clock does.
 		_rings.draw_arc(centre, EYE_RING, -PI * 0.5, -PI * 0.5 + TAU * left, 40,
 				ink, EYE_RING_WIDTH, true)
-
-
-## Only the generated levels have a depth; the hand-built maps leave this blank.
-func _show_depth() -> void:
-	var level = get_tree().current_scene
-	if level == null or not ("depth" in level):
-		return
-	var text: String = "FLOOR %d" % level.depth
-	if depth_label.text != text:
-		depth_label.text = text
