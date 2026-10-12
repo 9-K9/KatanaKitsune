@@ -2,6 +2,26 @@
 
 Dev-only scripts. Nothing here ships in the game.
 
+## generate_title_power_variants.py
+
+Rebuild the eleven alternate title covers from the original
+`/mnt/K-DRIVE/Pictures/PixAI/KatanaKitsune/CoverTitle.png`, using Pillow and NumPy:
+
+```bash
+python3 tools/generate_title_power_variants.py
+python3 tools/generate_title_power_variants_test.py
+```
+
+Writes the existing `titleCover_1677x938.png`, `titleCover_768x432.png`
+and `_preview_titleVariants.png` assets under `assets/sprites/ui/title_power_states/`.
+The mask follows garment boundaries, including the burgundy jacket tails,
+but excludes the gate, stone floor and foreground wrist/hand. Pixels outside
+the mask remain identical at master resolution. Smaller covers use Lanczos
+downsampling, so edge pixels blend naturally.
+
+Pass `--diagnostics-dir /absolute/scratch/directory` to save a mask overlay
+outside shipping assets. These commands do not launch Godot.
+
 ## validate_day_night.gd
 
 Run exact-factor, attack-state, scroll, sight, projectile, pause and

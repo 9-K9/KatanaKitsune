@@ -2,7 +2,7 @@
 """Create exact title-cover variants by recoloring only Katana Kitsune's red clothing."""
 
 from pathlib import Path
-from collections import deque
+import argparse
 
 import numpy as np
 from PIL import Image, ImageDraw
@@ -27,30 +27,49 @@ PALETTES = {
 }
 
 
-def polygon_mask(size: tuple[int, int]) -> np.ndarray:
+TAIL_REGIONS = (
+    ((375, 366), (398, 361), (411, 351), (429, 355), (449, 365),
+     (470, 375), (482, 382), (475, 384), (375, 383)),
+    ((665, 357), (684, 351), (699, 370), (716, 376), (740, 373),
+     (769, 374), (799, 379), (823, 387), (823, 388), (704, 388), (664, 376)),
+)
+
+
+def polygon_mask(size: tuple[int, int], tails_only: bool = False) -> np.ndarray:
     width, height = size
-    sx, sy = width / 1632.0, height / 912.0
+    sx, sy = width / 838.0, height / 469.0
 
     regions = (
-        # Left sleeve and shoulder.
-        ((760, 340), (905, 305), (1055, 360), (1080, 500), (945, 535), (790, 465)),
-        # Collar, torso panels and diagonal sash.
-        ((970, 255), (1255, 235), (1385, 345), (1395, 575), (1240, 650), (1050, 580), (940, 390)),
-        # Right sleeve.
-        ((1240, 280), (1405, 305), (1505, 485), (1485, 670), (1395, 760), (1300, 705), (1250, 515)),
-        # Lower jacket tails visible beneath the seated body.
-        ((720, 650), (965, 620), (1040, 755), (910, 805), (730, 775)),
-        # Red waist/sash area around the sword mount.
-        ((930, 425), (1195, 375), (1295, 630), (1190, 710), (1010, 610)),
+        # Raised sleeve: its upper edge stays below the red gate behind it.
+        ((480, 216), (499, 216), (521, 202), (538, 188), (550, 186),
+         (554, 208), (545, 229), (540, 257), (539, 280), (535, 291),
+         (518, 280), (505, 262), (488, 252), (481, 240)),
+        # Collar, jacket panels and sash, bounded by the character silhouette.
+        ((539, 198), (565, 181), (589, 161), (590, 150), (614, 153),
+         (640, 165), (665, 166), (683, 181), (696, 209), (690, 248),
+         (654, 257), (639, 280), (627, 292), (607, 285), (558, 263),
+         (534, 269), (528, 233)),
+        # Hanging sleeve ends at the black cuff, not the wrist or stone.
+        ((650, 218), (686, 216), (695, 248), (707, 281), (716, 322),
+         (699, 328), (679, 340), (661, 332), (650, 286)),
+        # Sash and sword mount retain their original palette treatment.
+        ((546, 237), (582, 255), (612, 280), (639, 302), (673, 376),
+         (656, 386), (628, 349), (597, 319), (565, 284), (533, 262)),
     )
 
     mask_image = Image.new("L", size, 0)
     draw = ImageDraw.Draw(mask_image)
-    for polygon in regions:
+    for polygon in TAIL_REGIONS if tails_only else regions + TAIL_REGIONS:
         draw.polygon([(round(x * sx), round(y * sy)) for x, y in polygon], fill=255)
 
-    # Preserve the face and lips even if the broad torso polygon overlaps them.
-    draw.ellipse((round(1010 * sx), round(100 * sy), round(1280 * sx), round(345 * sy)), fill=0)
+    # Wrist and glove cross in front of the right jacket tail.
+    draw.polygon(
+        [(round(x * sx), round(y * sy)) for x, y in
+         ((688, 337), (704, 332), (713, 361), (720, 372),
+          (752, 374), (777, 385), (763, 389), (701, 388),
+          (696, 372))],
+        fill=0,
+    )
     return np.asarray(mask_image) > 0
 
 
@@ -69,71 +88,17 @@ def clothing_mask(image: Image.Image) -> np.ndarray:
         & (rgb[:, :, 1] < rgb[:, :, 0] * 0.52)
         & (rgb[:, :, 2] < rgb[:, :, 0] * 0.48)
     )
-    candidates = red & polygon_mask(image.size)
-
-    sx, sy = image.width / 1632.0, image.height / 912.0
-    garment_seeds = (
-        (845, 395), (900, 430), (980, 410),
-        (1080, 350), (1160, 330), (1240, 340), (1310, 390),
-        (1360, 385), (1420, 470), (1430, 570), (1390, 650),
-        (1080, 430), (1180, 470), (1230, 540),
-        (810, 720), (900, 720),
+    # Tail folds include low-saturation burgundy that the bright-red test misses.
+    dark_burgundy = (
+        (alpha > 0)
+        & (saturation > 0.25)
+        & (rgb[:, :, 0] > rgb[:, :, 1] * 1.3)
+        & (rgb[:, :, 0] > rgb[:, :, 2] * 0.85)
+        & (rgb[:, :, 2] > rgb[:, :, 1] * 1.2)
     )
-
-    selected = np.zeros_like(candidates)
-    queue: deque[tuple[int, int]] = deque()
-    for seed_x, seed_y in garment_seeds:
-        cx, cy = round(seed_x * sx), round(seed_y * sy)
-        nearest: tuple[int, int] | None = None
-        nearest_distance = 10**9
-        radius = max(8, round(28 * max(sx, sy)))
-        for y in range(max(0, cy - radius), min(image.height, cy + radius + 1)):
-            for x in range(max(0, cx - radius), min(image.width, cx + radius + 1)):
-                if candidates[y, x]:
-                    distance = (x - cx) ** 2 + (y - cy) ** 2
-                    if distance < nearest_distance:
-                        nearest = (x, y)
-                        nearest_distance = distance
-        if nearest is not None:
-            queue.append(nearest)
-
-    while queue:
-        x, y = queue.popleft()
-        if selected[y, x] or not candidates[y, x]:
-            continue
-        selected[y, x] = True
-        for ny in range(max(0, y - 1), min(image.height, y + 2)):
-            for nx in range(max(0, x - 1), min(image.width, x + 2)):
-                if candidates[ny, nx] and not selected[ny, nx]:
-                    queue.append((nx, ny))
-
-    # Tight garment-only regions recover disconnected cel-shading islands such
-    # as the diagonal sash and sleeve folds without reaching the shrine.
-    tight_image = Image.new("L", image.size, 0)
-    tight_draw = ImageDraw.Draw(tight_image)
-    tight_regions = (
-        ((790, 355), (895, 320), (1055, 385), (1045, 505), (925, 525), (805, 465)),
-        ((1015, 285), (1295, 270), (1375, 365), (1335, 535), (1215, 610), (1035, 535), (970, 375)),
-        ((1270, 290), (1395, 315), (1470, 490), (1450, 645), (1390, 720), (1320, 685), (1285, 515)),
-        ((1080, 285), (1160, 300), (1285, 590), (1210, 660), (1140, 475)),
-        ((735, 665), (955, 635), (1020, 750), (915, 790), (750, 765)),
+    return (red & polygon_mask(image.size)) | (
+        dark_burgundy & polygon_mask(image.size, tails_only=True)
     )
-    for polygon in tight_regions:
-        tight_draw.polygon([(round(x * sx), round(y * sy)) for x, y in polygon], fill=255)
-    tight = np.asarray(tight_image) > 0
-    result = selected | (candidates & tight)
-
-    # Remove two red background islands close to the raised sleeve: the torii
-    # pillar behind her shoulder and a maple cluster beside her hand.
-    exclude_image = Image.new("L", image.size, 0)
-    exclude_draw = ImageDraw.Draw(exclude_image)
-    exclude_regions = (
-        ((930, 0), (1025, 0), (1025, 360), (930, 360)),
-        ((810, 285), (930, 285), (1015, 350), (970, 405), (865, 395)),
-    )
-    for polygon in exclude_regions:
-        exclude_draw.polygon([(round(x * sx), round(y * sy)) for x, y in polygon], fill=255)
-    return result & ~(np.asarray(exclude_image) > 0)
 
 
 def apply_palette(image: Image.Image, mask: np.ndarray, ramp: tuple[tuple[int, int, int], tuple[int, int, int]]) -> Image.Image:
@@ -148,19 +113,20 @@ def apply_palette(image: Image.Image, mask: np.ndarray, ramp: tuple[tuple[int, i
     return Image.fromarray(pixels, "RGBA")
 
 
-def make_mask_preview(image: Image.Image, mask: np.ndarray) -> None:
+def make_mask_preview(image: Image.Image, mask: np.ndarray, directory: Path) -> None:
     overlay = np.asarray(image).copy()
     overlay[:, :, :3][mask] = (
         overlay[:, :, :3][mask].astype(np.float32) * 0.35
         + np.array((0, 255, 255), dtype=np.float32) * 0.65
     ).astype(np.uint8)
-    Image.fromarray(overlay, "RGBA").save(OUTPUT / "clothing_mask_preview.png", optimize=True)
+    directory.mkdir(parents=True, exist_ok=True)
+    Image.fromarray(overlay, "RGBA").save(directory / "clothing_mask_preview.png", optimize=True)
 
 
 def make_preview() -> None:
     cells: list[Image.Image] = []
     for state in PALETTES:
-        image = Image.open(OUTPUT / state / "title_cover_768x432.png").convert("RGBA")
+        image = Image.open(OUTPUT / state / "titleCover_768x432.png").convert("RGBA")
         image = image.resize((384, 216), Image.Resampling.LANCZOS)
         cell = Image.new("RGBA", (400, 244), (30, 31, 37, 255))
         cell.alpha_composite(image, (8, 24))
@@ -171,22 +137,28 @@ def make_preview() -> None:
     preview = Image.new("RGBA", (1600, 732), (30, 31, 37, 255))
     for index, cell in enumerate(cells):
         preview.alpha_composite(cell, ((index % 4) * 400, (index // 4) * 244))
-    preview.save(OUTPUT / "preview_11_title_variants.png", optimize=True)
+    preview.save(OUTPUT / "_preview_titleVariants.png", optimize=True)
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--diagnostics-dir", type=Path)
+    args = parser.parse_args()
     image = Image.open(SOURCE).convert("RGBA")
+    if image.size != (1677, 938):
+        raise ValueError(f"Expected the original 1677x938 cover, got {image.size}")
     OUTPUT.mkdir(parents=True, exist_ok=True)
     mask = clothing_mask(image)
-    make_mask_preview(image, mask)
+    if args.diagnostics_dir is not None:
+        make_mask_preview(image, mask, args.diagnostics_dir)
 
     for state, ramp in PALETTES.items():
         state_dir = OUTPUT / state
         state_dir.mkdir(parents=True, exist_ok=True)
         master = apply_palette(image, mask, ramp)
-        master.save(state_dir / "title_cover_master.png", optimize=True)
+        master.save(state_dir / "titleCover_1677x938.png", optimize=True)
         master.resize((768, 432), Image.Resampling.LANCZOS).save(
-            state_dir / "title_cover_768x432.png", optimize=True
+            state_dir / "titleCover_768x432.png", optimize=True
         )
     make_preview()
 
