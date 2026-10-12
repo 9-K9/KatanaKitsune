@@ -1,0 +1,158 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Animal.gd" id="1_tytu1"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_0.png" id="2_wk43v"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_1.png" id="3_wisun"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_2.png" id="4_kc28p"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_3.png" id="5_drv14"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_4.png" id="6_f4wpk"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_5.png" id="7_e162q"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_6.png" id="8_mphay"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_northEast_7.png" id="9_81snm"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_0.png" id="10_lvc0n"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_1.png" id="11_20ikc"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_2.png" id="12_2nqn2"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_3.png" id="13_mgpyq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_4.png" id="14_rys8g"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_5.png" id="15_wxq7y"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_6.png" id="16_qgb2l"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/idle_southEast_7.png" id="17_m4q2w"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_0.png" id="18_5b73f"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_1.png" id="19_6smf2"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_2.png" id="20_1xsgq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_3.png" id="21_42vyu"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_4.png" id="22_emhdk"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_northEast_5.png" id="23_yy10a"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_0.png" id="24_npu13"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_1.png" id="25_qcos6"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_2.png" id="26_shdig"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_3.png" id="27_ouevd"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_4.png" id="28_do283"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/scorpion/move_southEast_5.png" id="29_x5vrn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fwrjh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_wk43v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wisun")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_kc28p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_drv14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f4wpk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_e162q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_mphay")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_81snm")
+}],
+"loop": 1,
+"name": &"idle_northEast",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_lvc0n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_20ikc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_2nqn2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_mgpyq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_rys8g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_wxq7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_qgb2l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_m4q2w")
+}],
+"loop": 1,
+"name": &"idle_southEast",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_5b73f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_6smf2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_1xsgq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_42vyu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_emhdk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_yy10a")
+}],
+"loop": 1,
+"name": &"move_northEast",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("24_npu13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_qcos6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_shdig")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_ouevd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_do283")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_x5vrn")
+}],
+"loop": 1,
+"name": &"move_southEast",
+"speed": 14.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dlxm6"]
+radius = 9.0
+
+[node name="Scorpion" type="CharacterBody2D" unique_id=1715327473 groups=["animal"]]
+collision_layer = 0
+collision_mask = 129
+script = ExtResource("1_tytu1")
+flee_speed = 190.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1193988014]
+texture_filter = 1
+position = Vector2(0, -28.5)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_fwrjh")
+animation = &"idle_southEast"
+autoplay = "idle_southEast"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2055288539]
+shape = SubResource("CircleShape2D_dlxm6")

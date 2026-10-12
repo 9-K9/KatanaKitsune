@@ -1,0 +1,158 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Animal.gd" id="1_ylxbq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_0.png" id="2_lpe35"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_1.png" id="3_os7nq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_2.png" id="4_qfc06"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_3.png" id="5_bb4vx"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_4.png" id="6_iu5nq"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_5.png" id="7_h435r"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_6.png" id="8_v37ey"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_northEast_7.png" id="9_tmp4n"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_0.png" id="10_jqkw5"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_1.png" id="11_lvgyv"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_2.png" id="12_7i5i6"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_3.png" id="13_pprn1"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_4.png" id="14_xpf6u"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_5.png" id="15_ag1st"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_6.png" id="16_kdmlp"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/idle_southEast_7.png" id="17_4btmd"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_0.png" id="18_5dxrg"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_1.png" id="19_6kda8"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_2.png" id="20_p2hn1"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_3.png" id="21_a6lg2"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_4.png" id="22_a0iw7"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_northEast_5.png" id="23_2nn6h"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_0.png" id="24_k5erl"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_1.png" id="25_mdx6c"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_2.png" id="26_ri0vx"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_3.png" id="27_g0ki6"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_4.png" id="28_5hk80"]
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/animals/fennec_fox/move_southEast_5.png" id="29_bf4ms"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wxc54"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_lpe35")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_os7nq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_qfc06")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_bb4vx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_iu5nq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_h435r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_v37ey")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_tmp4n")
+}],
+"loop": 1,
+"name": &"idle_northEast",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_jqkw5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_lvgyv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_7i5i6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_pprn1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_xpf6u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_ag1st")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_kdmlp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_4btmd")
+}],
+"loop": 1,
+"name": &"idle_southEast",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_5dxrg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_6kda8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_p2hn1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_a6lg2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_a0iw7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_2nn6h")
+}],
+"loop": 1,
+"name": &"move_northEast",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("24_k5erl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_mdx6c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_ri0vx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_g0ki6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_5hk80")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_bf4ms")
+}],
+"loop": 1,
+"name": &"move_southEast",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sqd74"]
+radius = 11.0
+
+[node name="FennecFox" type="CharacterBody2D" unique_id=1715327473 groups=["animal"]]
+collision_layer = 0
+collision_mask = 129
+script = ExtResource("1_ylxbq")
+flee_speed = 230.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1193988014]
+texture_filter = 1
+position = Vector2(0, -26.6)
+scale = Vector2(0.7, 0.7)
+sprite_frames = SubResource("SpriteFrames_wxc54")
+animation = &"idle_southEast"
+autoplay = "idle_southEast"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2055288539]
+shape = SubResource("CircleShape2D_sqd74")

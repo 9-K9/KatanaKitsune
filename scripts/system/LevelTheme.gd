@@ -1,9 +1,15 @@
 class_name LevelTheme
 extends Resource
 
-enum Id { SAKURA_GARDENS, BAMBOO_WOODLAND, ABANDONED_SHRINES }
+enum Id { SAKURA_GARDENS, BAMBOO_WOODLAND, ABANDONED_SHRINES, DESERT_RUINS, FROZEN_PASS }
+
+const NAMES: Array[String] = [
+	"sakura_gardens", "bamboo_woodland", "abandoned_shrines", "desert_ruins", "frozen_pass",
+]
 
 @export var id: Id = Id.SAKURA_GARDENS
+## Outdoor environment this theme dresses: ground, roofs and native weather.
+@export var biome: ExteriorBiome.Id = ExteriorBiome.Id.SAKURA
 @export var display_name: String = ""
 @export_multiline var description: String = ""
 @export_file("*.png") var icon_path: String = ""
@@ -26,15 +32,16 @@ enum Id { SAKURA_GARDENS, BAMBOO_WOODLAND, ABANDONED_SHRINES }
 
 
 static func definition(which: int) -> LevelTheme:
-	var names := ["sakura_gardens", "bamboo_woodland", "abandoned_shrines"]
 	return load("res://resources/level_themes/%s.tres" %
-			names[clampi(which, 0, names.size() - 1)]) as LevelTheme
+			NAMES[clampi(which, 0, NAMES.size() - 1)]) as LevelTheme
 
 
 func exterior_biome() -> ExteriorBiome:
-	var result := ExteriorBiome.definition(ExteriorBiome.Id.SAKURA).duplicate() as ExteriorBiome
-	result.trees = trees.duplicate()
-	result.edge_trees = edge_trees.duplicate()
+	var result := ExteriorBiome.definition(biome).duplicate() as ExteriorBiome
+	if not trees.is_empty():
+		result.trees = trees.duplicate()
+	if not edge_trees.is_empty():
+		result.edge_trees = edge_trees.duplicate()
 	result.compatible_weather = weather.duplicate()
 	result.moonlight = moonlight
 	return result

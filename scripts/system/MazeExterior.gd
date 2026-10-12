@@ -81,6 +81,8 @@ var biome: ExteriorBiome = null
 var theme: LevelTheme = null
 var _biome_tileset: TileSet = null
 var _biome_tiles: Array[int] = []
+var _biome_road: Array[int] = []
+var _biome_court: Array[int] = []
 var _tree_bounds: Dictionary = {}
 
 
@@ -418,12 +420,9 @@ func paint_ground() -> void:
 		if not biome.ground_paths.is_empty():
 			if _biome_tileset == null:
 				_biome_tileset = outdoor.tile_set.duplicate() as TileSet
-				for path in biome.ground_paths:
-					var source := TileSetAtlasSource.new()
-					source.texture = load(path) as Texture2D
-					source.texture_region_size = Vector2i(48, 48)
-					source.create_tile(Vector2i.ZERO)
-					_biome_tiles.append(_biome_tileset.add_source(source))
+				_biome_tiles = _add_biome_sources(biome.ground_paths)
+				_biome_road = _add_biome_sources(biome.road_paths)
+				_biome_court = _add_biome_sources(biome.courtyard_paths)
 			outdoor.tile_set = _biome_tileset
 		if _tiles.is_empty():
 			_index_tiles(outdoor.tile_set)
@@ -438,6 +437,17 @@ func paint_ground() -> void:
 			var world: Vector2 = ground.to_global(ground.map_to_local(at))
 			outdoor.set_cell(at, _tile_for(what, cell, world), Vector2i.ZERO)
 		outdoor.visible = true
+
+
+func _add_biome_sources(paths: Array[String]) -> Array[int]:
+	var ids: Array[int] = []
+	for path in paths:
+		var source := TileSetAtlasSource.new()
+		source.texture = load(path) as Texture2D
+		source.texture_region_size = Vector2i(48, 48)
+		source.create_tile(Vector2i.ZERO)
+		ids.append(_biome_tileset.add_source(source))
+	return ids
 
 
 func _index_tiles(tiles: TileSet) -> void:
@@ -460,8 +470,12 @@ func _pick(family: Array[int]) -> int:
 func _tile_for(what: Kind, cell: Vector2i, world: Vector2) -> int:
 	if not _biome_tiles.is_empty():
 		if what == Kind.ROAD and _on_road(cell, world, ROAD_HALF_WIDTH):
+			if not _biome_road.is_empty():
+				return _biome_road[_rng.randi_range(0, _biome_road.size() - 1)]
 			return _pick(PAVING)
 		if what == Kind.COURTYARD:
+			if not _biome_court.is_empty():
+				return _biome_court[_rng.randi_range(0, _biome_court.size() - 1)]
 			return _pick(GRAVEL)
 		return _biome_tiles[_rng.randi_range(0, _biome_tiles.size() - 1)]
 	if theme != null:
@@ -888,7 +902,10 @@ func guard_entrances() -> void:
 func populate(cell: Vector2i) -> void:
 	if not biome.lush:
 		_scatter(cell, biome.trees, _rng.randi_range(1, 3), 110.0, true, TREE_CANOPY)
-		_scatter(cell, ["garden_rocks"], _rng.randi_range(1, 2), 40.0)
+		var dressing: Array[String] = biome.small_props
+		if theme != null and not theme.small_props.is_empty():
+			dressing = theme.small_props
+		_scatter(cell, dressing, _rng.randi_range(1, 3), 40.0)
 		_lanterns(cell, _rng.randi_range(1, 2))
 		return
 	var small: Array[String] = theme.small_props if theme != null else ["azalea_bush", "garden_rocks"]
@@ -953,6 +970,7 @@ func setup_roofs() -> void:
 			var japanese := JapaneseRoof.new()
 			japanese.name = "JapaneseRoof_%d" % _roofs.size()
 			_maze.add_child(japanese)
+			japanese.style(biome)
 			japanese.build(cells, _half, _centre)
 			layers.append(japanese)
 		_roofs.append(layers)

@@ -1,13 +1,34 @@
 class_name JapaneseRoof
 extends Node2D
 
-const TILES := preload("res://assets/pixellab/japanese_environment/roofs/kawara_tiles.png")
+const KAWARA := preload("res://assets/pixellab/japanese_environment/roofs/kawara_tiles.png")
 const EAVE_HEIGHT: float = 240.0
 const OVERHANG: float = 0.08
-const FACE_LIGHT: Array[Color] = [
+const KAWARA_LIGHT: Array[Color] = [
 	Color(0.40, 0.43, 0.47), Color(0.56, 0.59, 0.64),
 	Color(0.65, 0.67, 0.70), Color(0.48, 0.52, 0.57),
 ]
+
+
+var _tiles: Texture2D = KAWARA
+var _light: Array[Color] = KAWARA_LIGHT
+var _trim := Color("#40362d")
+var _hip := Color("#76818c")
+var _ridge := Color("#697783")
+
+
+## Takes the roof material from the exterior biome: tiles, face tints and trim.
+func style(biome: ExteriorBiome) -> void:
+	if biome == null:
+		return
+	var tiles := load(biome.roof_tiles) as Texture2D if ResourceLoader.exists(biome.roof_tiles) else null
+	if tiles != null:
+		_tiles = tiles
+	if biome.roof_light.size() == 4:
+		_light = biome.roof_light
+	_trim = biome.roof_trim
+	_hip = biome.roof_hip
+	_ridge = biome.roof_ridge
 
 
 ## Rectangular roof wings cover exactly the occupied cells, never an L-shaped
@@ -107,18 +128,18 @@ func _wing(rect: Rect2i, half: Vector2, centre: Vector2) -> void:
 		var face := Polygon2D.new()
 		face.polygon = points
 		face.uv = uv
-		face.texture = TILES
-		face.color = FACE_LIGHT[side]
+		face.texture = _tiles
+		face.color = _light[side]
 		add_child(face)
 		var trim := Line2D.new()
 		trim.points = PackedVector2Array([points[0], points[1], points[2]])
 		trim.width = 8.0
-		trim.default_color = Color("#40362d")
+		trim.default_color = _trim
 		add_child(trim)
 		var hip := Line2D.new()
 		hip.points = PackedVector2Array([points[0], _project(tip_a, EAVE_HEIGHT + rise, half, centre)])
 		hip.width = 6.0
-		hip.default_color = Color("#76818c")
+		hip.default_color = _hip
 		add_child(hip)
 	var ridge := Line2D.new()
 	ridge.points = PackedVector2Array([
@@ -126,5 +147,5 @@ func _wing(rect: Rect2i, half: Vector2, centre: Vector2) -> void:
 		_project(ridge_b, EAVE_HEIGHT + rise + 4.0, half, centre),
 	])
 	ridge.width = 10.0
-	ridge.default_color = Color("#697783")
+	ridge.default_color = _ridge
 	add_child(ridge)

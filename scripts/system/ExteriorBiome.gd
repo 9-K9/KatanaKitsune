@@ -17,6 +17,20 @@ const PROP_DIR := "res://scenes/props/japanese/exterior/"
 @export var edge_trees: Array[String] = ["black_pine", "black_pine", "bamboo_clump",
 		"bamboo_clump", "sakura_tree_a", "sakura_tree_c"]
 @export var ground_paths: Array[String] = []
+## Optional biome replacements for the Japanese paving and gravel families.
+@export var road_paths: Array[String] = []
+@export var courtyard_paths: Array[String] = []
+## Ground dressing for non-lush biomes, scattered alongside the trees.
+@export var small_props: Array[String] = ["garden_rocks"]
+@export_file("*.png") var roof_tiles: String = "res://assets/pixellab/japanese_environment/roofs/kawara_tiles.png"
+## Per-face tint of the roof tiles (south-west, south-east, north-east, north-west order as built).
+@export var roof_light: Array[Color] = [
+	Color(0.40, 0.43, 0.47), Color(0.56, 0.59, 0.64),
+	Color(0.65, 0.67, 0.70), Color(0.48, 0.52, 0.57),
+]
+@export var roof_trim := Color("#40362d")
+@export var roof_hip := Color("#76818c")
+@export var roof_ridge := Color("#697783")
 @export var lush: bool = true
 @export var ponds: bool = true
 @export var moonlight := Color(0.55, 0.66, 0.95)
@@ -30,7 +44,7 @@ static func definition(which: Id) -> ExteriorBiome:
 func unavailable_reason() -> String:
 	if not art_approved:
 		return "projection, pivots and tile seams have not been approved"
-	for prop in trees + edge_trees:
+	for prop in trees + edge_trees + small_props:
 		if not ResourceLoader.exists(PROP_DIR + prop + ".tscn"):
 			return "missing prop scene: " + prop
 		var scene := load(PROP_DIR + prop + ".tscn") as PackedScene
@@ -40,7 +54,11 @@ func unavailable_reason() -> String:
 		return "tree palettes must not be empty"
 	if id != Id.SAKURA and ground_paths.is_empty():
 		return "no biome ground textures configured"
-	for path in ground_paths:
+	if not ResourceLoader.exists(roof_tiles) or not load(roof_tiles) is Texture2D:
+		return "missing roof texture: " + roof_tiles
+	if roof_light.size() != 4:
+		return "roof_light needs one tint per roof face"
+	for path in ground_paths + road_paths + courtyard_paths:
 		if not ResourceLoader.exists(path):
 			return "missing ground texture: " + path
 		var texture := load(path) as Texture2D

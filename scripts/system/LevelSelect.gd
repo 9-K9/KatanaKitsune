@@ -16,11 +16,11 @@ var _themes: Array[LevelTheme] = []
 
 
 func _ready() -> void:
-	for i in 3:
+	for i in LevelTheme.NAMES.size():
 		var theme := LevelTheme.definition(i)
 		_themes.append(theme)
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(300, 330)
+		button.custom_minimum_size = Vector2(260, 300)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		# Device-specific navigation owns selection, not global GUI joypad focus.
 		button.focus_mode = Control.FOCUS_NONE
@@ -36,7 +36,7 @@ func _ready() -> void:
 		if icon.texture == null:
 			push_error("LevelSelect: missing theme icon: " + theme.icon_path)
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		icon.custom_minimum_size = Vector2(256, 256)
+		icon.custom_minimum_size = Vector2(220, 220)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -44,7 +44,7 @@ func _ready() -> void:
 		var label := Label.new()
 		label.text = theme.display_name
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.add_theme_font_size_override("font_size", 26)
+		label.add_theme_font_size_override("font_size", 24)
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		content.add_child(label)
 		button.add_child(content)

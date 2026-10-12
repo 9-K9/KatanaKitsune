@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/palm_a.png" id="1_tex"]
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+
+[sub_resource type="OccluderPolygon2D" id="Occ_0"]
+polygon = PackedVector2Array(12.0, 0.0, 10.39, 3.0, 6.0, 5.2, 0.0, 6.0, -6.0, 5.2, -10.39, 3.0, -12.0, 0.0, -10.39, -3.0, -6.0, -5.2, -0.0, -6.0, 6.0, -5.2, 10.39, -3.0)
+
+[node name="PalmA" type="StaticBody2D" groups=["exterior_prop"]]
+y_sort_enabled = false
+script = ExtResource("2_scr")
+fade_rect = Rect2(-79, -370, 157, 277)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-8.7, -182.8)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("1_tex")
+
+[node name="Collision0" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(12.0, 0.0, 10.39, 3.0, 6.0, 5.2, 0.0, 6.0, -6.0, 5.2, -10.39, 3.0, -12.0, 0.0, -10.39, -3.0, -6.0, -5.2, -0.0, -6.0, 6.0, -5.2, 10.39, -3.0)
+
+[node name="Occluder0" type="LightOccluder2D" parent="."]
+occluder = SubResource("Occ_0")

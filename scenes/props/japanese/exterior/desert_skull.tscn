@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/desert_skull.png" id="1_tex"]
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+
+[node name="DesertSkull" type="StaticBody2D" groups=["exterior_prop"]]
+y_sort_enabled = false
+script = ExtResource("2_scr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -27.5)
+texture = ExtResource("1_tex")

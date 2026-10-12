@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pixellab/japanese_environment/exterior_props/cactus_b.png" id="1_tex"]
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+
+[sub_resource type="OccluderPolygon2D" id="Occ_0"]
+polygon = PackedVector2Array(22.0, 0.0, 19.05, 5.5, 11.0, 9.53, 0.0, 11.0, -11.0, 9.53, -19.05, 5.5, -22.0, 0.0, -19.05, -5.5, -11.0, -9.53, -0.0, -11.0, 11.0, -9.53, 19.05, -5.5)
+
+[node name="CactusB" type="StaticBody2D" groups=["exterior_prop"]]
+y_sort_enabled = false
+script = ExtResource("2_scr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -47.0)
+texture = ExtResource("1_tex")
+
+[node name="Collision0" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(22.0, 0.0, 19.05, 5.5, 11.0, 9.53, 0.0, 11.0, -11.0, 9.53, -19.05, 5.5, -22.0, 0.0, -19.05, -5.5, -11.0, -9.53, -0.0, -11.0, 11.0, -9.53, 19.05, -5.5)
+
+[node name="Occluder0" type="LightOccluder2D" parent="."]
+occluder = SubResource("Occ_0")

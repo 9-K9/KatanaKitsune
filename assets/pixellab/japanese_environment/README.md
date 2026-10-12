@@ -1,7 +1,7 @@
 # Japanese Environment — PixelLab Source Assets
 
 PixelLab source and runtime art for Katana Kitsune. The resources and scenes
-described below wire reviewed assets into the game; pending biome art stays gated.
+described below wire reviewed assets into the game; unreviewed biome art stays gated.
 
 ## Scale and projection
 
@@ -119,7 +119,8 @@ roof behavior.
 ### Selectable level themes
 
 After the last player confirms their character, Player 1 chooses **Sakura
-Gardens**, **Bamboo Woodland**, or **Abandoned Shrines**. Left/right or up/down
+Gardens**, **Bamboo Woodland**, **Abandoned Shrines**, **Desert Ruins** or
+**Frozen Pass**. Left/right or up/down
 changes the selected card; a fresh confirm begins the run. Mouse users select
 a card and press Begin. Back returns to the last player's character choice
 without discarding the party. The selection lasts through every floor in that
@@ -137,6 +138,8 @@ progression, combat and weather's visual-only behavior remain unchanged.
 | Sakura Gardens | Cherry trees, azalea, mostly paved paths, Japanese halls, petals/rain |
 | Bamboo Woodland | Bamboo and pine, earth trails, rocks, Japanese/wooden halls, rain |
 | Abandoned Shrines | Sparse pine/bamboo with occasional cherry trees, weeds/earth through paving, weathered wood/brick, rain |
+| Desert Ruins | Desert biome: sand, cactus/palm/dead trees, skulls, dry shrubs, sandstone rocks, brick halls with terracotta roofs, sandstorm |
+| Frozen Pass | Snow biome: snowy pines and bare trees, jizo statues, frozen shrubs, snowy rocks, wooden/Japanese halls with snow-laden roofs, snowfall |
 
 Wildlife uses separate indoor/outdoor palettes. Frogs and turtles are only
 eligible in outdoor pond cells; the archived deer is never selected. Existing
@@ -146,8 +149,10 @@ are reused rather than changing the maze's traversal rules.
 `MazeDemo.level_theme` overrides the run choice for editor testing; its default
 uses `Roster.level_theme`, or Sakura Gardens when launched without character
 selection. The theme is selected once per maze instance and retained on descent.
-An explicitly forced desert/snow biome still uses its own gated environment
-palette, not Japanese woodland vegetation.
+Desert Ruins and Frozen Pass take their exterior from `LevelTheme.biome`
+(`exterior_biome()`), with the theme's weather list replacing the biome's.
+A forced `MazeDemo.outdoor_biome` that differs from the theme's biome runs
+without a theme, so it gets no generated roofs (debug path only).
 
 Menu icons are transparent 128x128 PixelLab miniatures in
 `assets/pixellab/level_icons/`, displayed with nearest filtering:
@@ -157,6 +162,8 @@ Menu icons are transparent 128x128 PixelLab miniatures in
 | Sakura Gardens | `48e984fe-6edb-417c-a084-78fd9c3da74b` | `44a9c970-3383-5b75-a553-20fca28c6ef8` |
 | Bamboo Woodland | `51be914c-a97d-45b3-b457-8a6aa9b69d2c` | `33eeea2b-de01-592e-adb7-d87a2c82158c` |
 | Abandoned Shrines | `c7c5ce99-d2de-4a1f-8b2e-baef4be5a32c` | `fdd7ba41-5e13-5a54-9911-7349332f9828` |
+| Desert Ruins | `e6944ad5-b4ce-4696-93d2-bcb844b47fc5` | — |
+| Frozen Pass | `8fd86dff-a472-4a86-a00c-dd35d02e4eb0` | — |
 
 The gameplay side uses explicit resource slots rather than implicit asset names:
 
@@ -175,19 +182,28 @@ final assets before they have been checked.
 
 ### Supplying reviewed art
 
-Desert and snow environment art is still pending (`art_approved = false`).
-The four particle textures below have been generated with PixelLab, inspected,
-and approved. Sakura now cycles petals and rain; snow/sand particles are wired
-but their floors remain gated until environment art is supplied. File existence
-alone does not enable a biome or approve its perspective.
+Desert and snow environment art has been supplied, reviewed and approved
+(`art_approved = true` in `resources/biomes/desert.tres` and `snow.tres`).
+File existence alone does not enable a biome or approve its perspective;
+`ExteriorBiome.unavailable_reason()` validates every slot below.
 
-| Slot | Required files |
-|---|---|
-| Desert ground | `biome_tiles/sand_a.png`, `biome_tiles/sand_b.png` |
-| Snow ground | `biome_tiles/snow_a.png`, `biome_tiles/snow_b.png` |
-| Desert trees | `scenes/props/japanese/exterior/cactus_a.tscn`, `cactus_b.tscn`, `palm_a.tscn` |
-| Snow trees | `scenes/props/japanese/exterior/dead_tree_a.tscn`, `dead_tree_b.tscn` |
-| Weather particles | `weather/sakura_petal.png`, `rain_drop.png`, `snowflake.png`, `sand_grain.png` |
+| Slot | Desert | Snow |
+|---|---|---|
+| Ground | `biome_tiles/sand_a`–`sand_d` | `biome_tiles/snow_a`–`snow_f` |
+| Road / courtyard | `sand_road_a/b`, `sand_court_a/b` | `snow_road_a/b`, `snow_court_a/b` |
+| Trees | `cactus_a`, `cactus_b`, `palm_a`, `dead_tree_a` | `snowy_pine`, `dead_tree_a`, `dead_tree_b` |
+| Small props | `desert_skull`, `dry_shrub`, `sandstone_rocks` | `jizo_statue`, `frozen_shrub`, `snowy_rocks` |
+| Roof | `roofs/desert_tiles.png` + terracotta trim/hip/ridge colours | `roofs/snow_tiles.png` + slate/snow colours |
+| Weather | `weather/sand_grain.png` (sandstorm `4`) | `weather/snowflake.png` (snowfall `3`) |
+
+Prop scenes live in `scenes/props/japanese/exterior/`; artwork in
+`exterior_props/`. Ground and path tiles were generated as PixelLab top-down
+tilesets (desert `db3b3560-8af2-4952-9ebb-bc700a1f86e3`, snow
+`52c92773-08b7-4693-9dd8-6356b52cbf80`) and squashed to 48x24 diamonds; the
+snow path tiles were then lightened toward the snow palette. Props are PixelLab
+pixflux images with backgrounds and baked ground slabs removed. Both roof
+textures are procedural 32x28 seamless tiles in the kawara layout
+(`JapaneseRoof.style(biome)` swaps texture and colours per biome).
 
 Ground textures must be flat, seamless 48x24 **2:1 isometric** diamonds on
 transparent 48x48 canvases, aligned exactly like `exterior_tiles/`. No raised
@@ -322,12 +338,25 @@ remain still and occasionally turn until a route opens.
 | Tree frog | `scenes/animals/frog.tscn` | `27767817-d034-4419-add8-e25cbd5b4ddd` | 18 |
 | Snow hare (rabbit) | `scenes/animals/rabbit.tscn` | `061522e2-cb6c-4355-abf4-3e32397688a4` | 35-49 |
 | Freshwater turtle | `scenes/animals/turtle.tscn` | Creator gallery (see below) | 27-30 |
+| Fennec fox (desert) | `scenes/animals/fennec_fox.tscn` | `d16592bf-36ef-4c3f-93b2-e06fe9006683` | ~40 |
+| Scorpion (desert) | `scenes/animals/scorpion.tscn` | `2ef0dcaa-12f5-4a18-b0b8-ca22cfb0ac0c` | ~20 |
+| Snow fox (snow) | `scenes/animals/snow_fox.tscn` | `2a8c5a38-d3d3-4b3c-97bb-bbc1254603e7` | ~45 |
+| Squirrel (snow) | `scenes/animals/squirrel.tscn` | `1f29237e-b4a4-48f1-ad0a-4323ba6b6f6c` | ~30 |
 
 The Sika deer is archived at `scenes/animals/archive/deer.tscn` and excluded
 from the spawn roster. Its original art remains in `animals/deer/` (PixelLab
 character `c4adb99f-26d7-4e61-82ad-fb46475e5649`). At 130px tall it was too
 large for ambient wildlife; keep future additions small rather than adding
 large animals.
+
+The four biome animals use the same 104x104 aligned layout. The scorpion's
+custom idle/move clips were generated facing south-east; its north-east clips
+are vertical flips, because the template's north-east rotation faced
+south-west. The snow fox came without an outline, so a dark 1 px outline was
+added to every frame so it stays readable on snow, and a stray brown smudge
+was removed from three idle frames. Desert Ruins spawns scorpions, fennec foxes,
+snakes, crows and rats; Frozen Pass spawns snow hares, snow foxes, squirrels,
+crows and rats.
 
 The rabbit has eight idle frames and six hopping frames per right-facing
 diagonal, mirrored for the left-facing diagonals like the other animals.

@@ -174,9 +174,9 @@ const THEMES: Array[Dictionary] = [
 @export var building_size: Vector2i = Vector2i(2, 5)
 @export var max_ponds: int = 2
 ## Run selection unless overridden for a direct editor launch.
-@export_enum("Run selection:-1", "Sakura Gardens:0", "Bamboo Woodland:1", "Abandoned Shrines:2") var level_theme: int = -1
+@export_enum("Run selection:-1", "Sakura Gardens:0", "Bamboo Woodland:1", "Abandoned Shrines:2", "Desert Ruins:3", "Frozen Pass:4") var level_theme: int = -1
 @export_range(0.0, 1.0, 0.05) var outdoor_enemy_chance: float = 0.6
-@export_enum("Automatic:-1", "Sakura:0", "Desert:1", "Snow:2") var outdoor_biome: int = -1
+@export_enum("Level theme:-1", "Sakura:0", "Desert:1", "Snow:2") var outdoor_biome: int = -1
 @export_enum("Automatic:-1", "Calm:0", "Petals:1", "Rain:2", "Snowfall:3", "Sandstorm:4") var outdoor_weather: int = -1
 @export_range(0.0, 1.0, 0.05) var weather_intensity: float = 1.0
 
@@ -662,10 +662,21 @@ func _build() -> void:
 	_ext = null
 	if exteriors:
 		_ext = MazeExterior.new(self, _rng, grid, step)
-		_ext.biome = ExteriorBiome.select(outdoor_biome, maze_seed)
-		if _ext.biome.id == ExteriorBiome.Id.SAKURA:
-			_ext.theme = _level_theme
-			_ext.biome = _level_theme.exterior_biome()
+		_ext.theme = _level_theme
+		_ext.biome = _level_theme.exterior_biome()
+		var reason := _ext.biome.unavailable_reason()
+		if outdoor_biome >= 0 and outdoor_biome != _ext.biome.id:
+			_ext.biome = ExteriorBiome.select(outdoor_biome, maze_seed)
+			if _ext.biome.id == ExteriorBiome.Id.SAKURA:
+				_ext.biome = _level_theme.exterior_biome() \
+						if _level_theme.biome == ExteriorBiome.Id.SAKURA \
+						else LevelTheme.definition(LevelTheme.Id.SAKURA_GARDENS).exterior_biome()
+			else:
+				_ext.theme = null
+		elif not reason.is_empty():
+			push_warning("MazeDemo: %s biome unavailable (%s); using sakura." % [
+					_level_theme.display_name, reason])
+			_ext.biome = LevelTheme.definition(LevelTheme.Id.SAKURA_GARDENS).exterior_biome()
 		_ext.plan()
 		_start_cell = _ext.start_cell
 	await _load_floor_monsters(_start_cell)
