@@ -42,6 +42,21 @@ godot --path . --rendering-method gl_compatibility \
 Exits nonzero on a failed check. Captures are optional and not saved into the
 repository automatically.
 
+## validate_radar_hud.py
+
+Checks the day/night orbit expression, kill-counter/reset wiring, four-player
+HUD spacing and the dragon frame's transparent map opening without launching
+Godot:
+
+```bash
+python3 tools/validate_radar_hud.py
+```
+
+The gold ouroboros frame was generated with PixelLab Pixen
+(`29cd1bf7-a97a-4cfb-a3a9-cd3eff46ca39`), with the tail/mouth join and circular
+transparent opening cleaned locally. Sun and crescent-moon icons are drawn by `Radar.gd`.
+These are static checks, not a substitute for runtime rendering/type checks.
+
 ## check_scene_connections.gd
 
 Finds signal connections that have gone stale.

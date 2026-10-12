@@ -123,10 +123,10 @@ table_scenes = Array[PackedScene]([ExtResource("21_table_southEast"), ExtResourc
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -160.0
-offset_top = 16.0
-offset_right = -28.0
-offset_bottom = 148.0
+offset_left = -292.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 356.0
 grow_horizontal = 0
 script = ExtResource("10_radar")
 

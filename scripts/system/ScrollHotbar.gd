@@ -98,12 +98,6 @@ func _draw_bar(body: Node, at: Vector2, tint: Color) -> void:
 					Color(0.95, 0.88, 0.7, 0.8 * fade))
 
 	_draw_effects(body, at + Vector2(PAD, -EFFECT_ICON - 10.0), font)
-	var hint := "LEFT/RIGHT ARROWS: SELECT" if keyboard else "RIGHT STICK: SELECT"
-	var use_hint := "UP/DOWN ARROWS: USE" if keyboard else "L3: USE"
-	_text(font, at + Vector2(PAD, -EFFECT_ICON - 39.0), hint, 16,
-			Color(0.95, 0.88, 0.7, fade))
-	_text(font, at + Vector2(PAD, -EFFECT_ICON - 20.0), use_hint, 16,
-			Color(0.95, 0.88, 0.7, fade))
 
 
 ## The scrolls currently in effect, as a row of small icons each with a bar

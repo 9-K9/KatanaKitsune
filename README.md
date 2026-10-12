@@ -57,8 +57,8 @@ Breakables sometimes drop a power-up scroll (`scroll_chance`, 12%). Each player
 has a 6-slot bar along the bottom of the screen. Scrolls of the same kind stack
 in one slot.
 
-The hotbar uses the shared selection-screen/kill-counter font. Control hints,
-slot numbers, stack counts and effect timers have translucent dark backings;
+The hotbar uses the shared selection-screen/kill-counter font. Slot numbers,
+stack counts and effect timers have translucent dark backings;
 active-effect icons are enlarged and backed for readability over scenery.
 Player tags, scores, floor and kill counts also have translucent backings.
 
@@ -75,9 +75,16 @@ Player tags, scores, floor and kill counts also have translucent backings.
 
 **Day and night.** Each run begins in day and alternates five minutes of day
 with five minutes of night. The party shares one gameplay clock across floors;
-pause, loading and floor rebuilding freeze it. The HUD shows the current phase,
-time remaining and matching advantage. Lighting fades for 20 seconds after each
+pause, loading and floor rebuilding freeze it. A sun travels from left to right
+over the dragon-framed radar's upper semicircle; at sunset it becomes a moon
+travelling along the lower semicircle back to sunrise. Lighting fades for 20 seconds after each
 boundary; gameplay bonuses switch immediately, indoors and outdoors alike.
+
+Each portrait has its player's kill count for the current floor underneath.
+These counters reset on descent, while `Score.run_kills` retains each player's
+credited kills in memory through game over. Existing point scoring is unchanged.
+Below the radar, a centred translucent black panel shows shared floor progress
+as `killed/total`, then the number of enemies remaining on the next line.
 
 | Phase | Player advantage | Enemies |
 |-------|------------------|---------|

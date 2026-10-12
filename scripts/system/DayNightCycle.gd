@@ -31,6 +31,10 @@ func seconds_remaining() -> float:
 	return PHASE_SECONDS - fposmod(elapsed, PHASE_SECONDS)
 
 
+func orbit_angle() -> float:
+	return PI + TAU * fposmod(elapsed, PHASE_SECONDS * 2.0) / (PHASE_SECONDS * 2.0)
+
+
 func night_weight() -> float:
 	if elapsed < PHASE_SECONDS:
 		return 0.0

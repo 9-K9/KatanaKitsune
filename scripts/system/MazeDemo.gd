@@ -847,6 +847,7 @@ func _populate(step: Vector2) -> void:
 	_wave_started = Time.get_ticks_msec() * 0.001
 	enemies_killed = 0
 	enemies_total = 0
+	Score.begin_floor()
 	_boss_placed = false
 	_scale_party()
 	var start := _start_cell

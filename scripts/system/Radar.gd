@@ -23,19 +23,54 @@ const COLOUR_IDLE := Color(0.90, 0.65, 0.20, 0.85)
 const COLOUR_SEARCH := Color(0.95, 0.45, 0.12, 0.90)
 const COLOUR_ALERT := Color(0.85, 0.20, 0.18, 0.95)
 const CONE_ALPHA: float = 0.16
+const CENTRE := Vector2(140.0, 140.0)
+const FRAME_RECT := Rect2(24.0, 24.0, 232.0, 232.0)
+const ORBIT_RADIUS: float = 128.0
+const ICON_SIZE: float = 20.0
+const FRAME_PATH := "res://assets/sprites/ui/radar/dragon_frame.png"
+const UI_THEME := preload("res://assets/sprites/ui/katanaKitsune.theme.tres")
 
-var _player: CharacterBody2D = null
+var _frame: Texture2D
+var _progress: Label
 var _walls: Array[PackedVector2Array] = []
 var _walls_age: float = 999.0
 
 
+func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_frame = load(FRAME_PATH) as Texture2D
+	if _frame == null:
+		push_error("Radar: missing dragon frame: " + FRAME_PATH)
+	_progress = Label.new()
+	_progress.name = "FloorKills"
+	_progress.theme = UI_THEME
+	_progress.position = Vector2(68.0, 286.0)
+	_progress.size = Vector2(144.0, 54.0)
+	_progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_progress.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_progress.add_theme_font_size_override("font_size", 20)
+	_progress.add_theme_color_override("font_color", Color(0.95, 0.88, 0.7))
+	var backing := StyleBoxFlat.new()
+	backing.bg_color = Color(0.0, 0.0, 0.0, 0.65)
+	_progress.add_theme_stylebox_override("normal", backing)
+	add_child(_progress)
+
+
 func _process(delta: float) -> void:
 	_walls_age += delta
+	var level = get_parent().get_parent()
+	_progress.visible = "enemies_killed" in level and "enemies_total" in level
+	if _progress.visible:
+		var killed: int = level.enemies_killed
+		var total: int = level.enemies_total
+		_progress.text = "%d/%d\n%d" % [killed, total, maxi(total - killed, 0)]
 	queue_redraw()
 
 
 func _draw() -> void:
-	var centre := Vector2(radius, radius)
+	var centre := CENTRE
 	draw_circle(centre, radius, Color(0.05, 0.05, 0.06, 0.55))
 
 	## Centred on the party rather than on player one, so it agrees with the
@@ -43,6 +78,7 @@ func _draw() -> void:
 	var crew := Roster.bodies(get_tree())
 	if crew.is_empty():
 		_ring(centre)
+		_draw_frame()
 		return
 	var focus: Vector2 = Roster.centre_of_party(get_tree())
 
@@ -75,6 +111,38 @@ func _draw() -> void:
 		var at := _to_radar(body.global_position, focus, centre)
 		if at != Vector2.INF:
 			_draw_player(body, at)
+	_draw_frame()
+
+
+func _draw_frame() -> void:
+	if _frame != null:
+		draw_texture_rect(_frame, FRAME_RECT, false)
+	draw_arc(CENTRE, ORBIT_RADIUS, PI, TAU, 64, Color(0.91, 0.69, 0.29, 0.75), 2.0, true)
+	draw_arc(CENTRE, ORBIT_RADIUS, 0.0, PI, 64, Color(0.48, 0.61, 0.88, 0.75), 2.0, true)
+	var cycle := DayNightCycle.for_node(self)
+	if cycle == null:
+		return
+	var angle: float = cycle.orbit_angle()
+	var at := CENTRE + Vector2(cos(angle), sin(angle)) * ORBIT_RADIUS
+	draw_circle(at, ICON_SIZE * 0.6, Color(0.02, 0.02, 0.04, 0.9))
+	if cycle.is_night():
+		_draw_moon(at)
+	else:
+		_draw_sun(at)
+
+
+func _draw_sun(at: Vector2) -> void:
+	for i in 8:
+		var ray := Vector2.from_angle(TAU * float(i) / 8.0)
+		draw_line(at + ray * 7.0, at + ray * 10.0, Color(1.0, 0.82, 0.3), 2.0)
+	draw_circle(at, 6.0, Color(0.95, 0.56, 0.13))
+	draw_circle(at + Vector2(-1.0, -1.0), 4.0, Color(1.0, 0.91, 0.52))
+
+
+func _draw_moon(at: Vector2) -> void:
+	draw_circle(at, 9.0, Color(0.77, 0.85, 1.0))
+	draw_circle(at + Vector2(4.0, -3.0), 7.5, Color(0.02, 0.02, 0.04))
+	draw_circle(at + Vector2(-4.0, 3.0), 1.5, Color(0.53, 0.65, 0.86))
 
 
 ## A triangle pointing where this player faces, in their slot colour, so each
@@ -147,7 +215,11 @@ func _draw_cone(node: Node, blip: Vector2, colour: Color) -> void:
 		wedge.append(blip + Vector2(cos(a), sin(a)) * on_radar)
 	var fill := colour
 	fill.a = CONE_ALPHA
-	draw_colored_polygon(wedge, fill)
+	var boundary := PackedVector2Array()
+	for i in 64:
+		boundary.append(CENTRE + Vector2.from_angle(TAU * float(i) / 64.0) * radius)
+	for clipped in Geometry2D.intersect_polygons(wedge, boundary):
+		draw_colored_polygon(clipped, fill)
 
 
 ## Read off the state machine rather than recomputed, so the radar cannot
@@ -191,5 +263,3 @@ func _find_wall_layers(node: Node) -> Array[TileMapLayer]:
 	for c in node.get_children():
 		found.append_array(_find_wall_layers(c))
 	return found
-
-

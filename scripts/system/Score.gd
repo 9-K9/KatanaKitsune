@@ -50,6 +50,8 @@ const TABLE_SIZE: int = 10
 
 ## Per slot, for the run in progress.
 var points: Array[int] = [0, 0, 0, 0]
+var floor_kills: Array[int] = [0, 0, 0, 0]
+var run_kills: Array[int] = [0, 0, 0, 0]
 var streak: Array[int] = [0, 0, 0, 0]
 var _streak_left: Array[float] = [0.0, 0.0, 0.0, 0.0]
 var _grade: Array[String] = ["-", "-", "-", "-"]
@@ -76,6 +78,8 @@ func _process(delta: float) -> void:
 ## Starts a fresh run. Called when a game begins, not when a wave does.
 func begin_run() -> void:
 	points = [0, 0, 0, 0]
+	run_kills = [0, 0, 0, 0]
+	begin_floor()
 	streak = [0, 0, 0, 0]
 	_streak_left = [0.0, 0.0, 0.0, 0.0]
 	_grade = ["-", "-", "-", "-"]
@@ -84,10 +88,16 @@ func begin_run() -> void:
 		grade_changed.emit(slot, "-")
 
 
+func begin_floor() -> void:
+	floor_kills = [0, 0, 0, 0]
+
+
 ## A monster died. `tier` is 1-6; `stealth` means it never saw it coming.
 func killed(slot: int, tier: int, stealth: bool = false) -> void:
 	if slot < 0 or slot > 3:
 		return
+	floor_kills[slot] += 1
+	run_kills[slot] += 1
 	streak[slot] += 1
 	_streak_left[slot] = streak_window
 
