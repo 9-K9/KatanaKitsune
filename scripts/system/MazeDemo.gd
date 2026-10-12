@@ -573,7 +573,7 @@ var _roof_material: ShaderMaterial
 ## roof layers share one shader that paints the wall set's face onto each side
 ## of the roof blocks.
 func _theme_roofs(prefix: String) -> void:
-	if _ext != null and _ext.theme != null:
+	if _ext != null and _ext.japanese_roofs():
 		return
 	var right: String = WALL_ART % [prefix, 3]
 	var left: String = WALL_ART % [prefix, 5]

@@ -946,8 +946,12 @@ func populate(cell: Vector2i) -> void:
 
 # --- Roofs and light -----------------------------------------------------------
 
-## Roofs belong to buildings, and each building's roof lifts as a whole: hiding
-## one cell's at a time left the rest of the hall hanging over her head.
+## Themed runs get generated kawara roofs unless the biome keeps square ones.
+func japanese_roofs() -> bool:
+	return theme != null and not (biome != null and biome.castle_roofs)
+
+
+## Roofs fade per whole building, whether authored square blocks or kawara.
 func setup_roofs() -> void:
 	_roofs.clear()
 	_roof_alpha.clear()
@@ -961,12 +965,12 @@ func setup_roofs() -> void:
 				continue
 			## WallFade's own HIDE mode works per cell; this drives it instead.
 			roof.set_process(false)
-			roof.visible = theme == null
-			if theme == null:
-				layers.append(roof)
-			else:
+			roof.visible = not japanese_roofs()
+			if japanese_roofs():
 				roof.clear()
-		if theme != null:
+			else:
+				layers.append(roof)
+		if japanese_roofs():
 			var japanese := JapaneseRoof.new()
 			japanese.name = "JapaneseRoof_%d" % _roofs.size()
 			_maze.add_child(japanese)

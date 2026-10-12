@@ -138,7 +138,7 @@ progression, combat and weather's visual-only behavior remain unchanged.
 | Sakura Gardens | Cherry trees, azalea, mostly paved paths, Japanese halls, petals/rain |
 | Bamboo Woodland | Bamboo and pine, earth trails, rocks, Japanese/wooden halls, rain |
 | Abandoned Shrines | Sparse pine/bamboo with occasional cherry trees, weeds/earth through paving, weathered wood/brick, rain |
-| Desert Ruins | Desert biome: sand, cactus/palm/dead trees, skulls, dry shrubs, sandstone rocks, brick halls with terracotta roofs, sandstorm |
+| Desert Ruins | Desert biome: sand, cactus/palm/dead trees, skulls, dry shrubs, sandstone rocks, brick halls with square castle roofs matching the walls, sandstorm |
 | Frozen Pass | Snow biome: snowy pines and bare trees, jizo statues, frozen shrubs, snowy rocks, wooden/Japanese halls with snow-laden roofs, snowfall |
 
 Wildlife uses separate indoor/outdoor palettes. Frogs and turtles are only
@@ -193,7 +193,7 @@ File existence alone does not enable a biome or approve its perspective;
 | Road / courtyard | `sand_road_a/b`, `sand_court_a/b` | `snow_road_a/b`, `snow_court_a/b` |
 | Trees | `cactus_a`, `cactus_b`, `palm_a`, `dead_tree_a` | `snowy_pine`, `dead_tree_a`, `dead_tree_b` |
 | Small props | `desert_skull`, `dry_shrub`, `sandstone_rocks` | `jizo_statue`, `frozen_shrub`, `snowy_rocks` |
-| Roof | `roofs/desert_tiles.png` + terracotta trim/hip/ridge colours | `roofs/snow_tiles.png` + slate/snow colours |
+| Roof | Existing PixelOver square castle roof blocks, wall-matched via `roofWall.gdshader` (`castle_roofs = true`) | `roofs/snow_tiles.png` + slate/snow colours |
 | Weather | `weather/sand_grain.png` (sandstorm `4`) | `weather/snowflake.png` (snowfall `3`) |
 
 Prop scenes live in `scenes/props/japanese/exterior/`; artwork in
@@ -203,7 +203,10 @@ tilesets (desert `db3b3560-8af2-4952-9ebb-bc700a1f86e3`, snow
 snow path tiles were then lightened toward the snow palette. Props are PixelLab
 pixflux images with backgrounds and baked ground slabs removed. Both roof
 textures are procedural 32x28 seamless tiles in the kawara layout
-(`JapaneseRoof.style(biome)` swaps texture and colours per biome).
+(`JapaneseRoof.style(biome)` swaps texture and colours per biome). Desert now
+uses the existing square castle roof blocks instead of the terracotta texture;
+their shader follows each floor's wall material. Both roof styles retain
+whole-building fading. Snow and the woodland themes keep generated kawara roofs.
 
 Ground textures must be flat, seamless 48x24 **2:1 isometric** diamonds on
 transparent 48x48 canvases, aligned exactly like `exterior_tiles/`. No raised

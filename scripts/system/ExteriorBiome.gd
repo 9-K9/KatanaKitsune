@@ -31,6 +31,9 @@ const PROP_DIR := "res://scenes/props/japanese/exterior/"
 @export var roof_trim := Color("#40362d")
 @export var roof_hip := Color("#76818c")
 @export var roof_ridge := Color("#697783")
+## Keeps the rooms' own square roof blocks, painted in the wall material, instead
+## of generating Japanese kawara roofs. The roof_* tile settings are then unused.
+@export var castle_roofs: bool = false
 @export var lush: bool = true
 @export var ponds: bool = true
 @export var moonlight := Color(0.55, 0.66, 0.95)
@@ -54,10 +57,11 @@ func unavailable_reason() -> String:
 		return "tree palettes must not be empty"
 	if id != Id.SAKURA and ground_paths.is_empty():
 		return "no biome ground textures configured"
-	if not ResourceLoader.exists(roof_tiles) or not load(roof_tiles) is Texture2D:
-		return "missing roof texture: " + roof_tiles
-	if roof_light.size() != 4:
-		return "roof_light needs one tint per roof face"
+	if not castle_roofs:
+		if not ResourceLoader.exists(roof_tiles) or not load(roof_tiles) is Texture2D:
+			return "missing roof texture: " + roof_tiles
+		if roof_light.size() != 4:
+			return "roof_light needs one tint per roof face"
 	for path in ground_paths + road_paths + courtyard_paths:
 		if not ResourceLoader.exists(path):
 			return "missing ground texture: " + path
