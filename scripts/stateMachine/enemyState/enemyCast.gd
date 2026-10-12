@@ -58,11 +58,15 @@ func _fire() -> void:
 	## Added to the level rather than the monster, so the shot keeps flying if
 	## the caster dies or is freed mid-flight.
 	enemy.get_parent().add_child(shot)
+	## Launched from the feet along the floor, lifted only visually, so the shot
+	## travels the same ground line as the bodies it is meant to hit.
+	var lift: Vector2 = muzzle_offset * enemy.global_scale
 	shot.launch(
-		enemy.global_position + muzzle_offset,
+		enemy.global_position + Vector2(lift.x, 0.0),
 		enemy.direction_to_player(),
 		enemy,
 		{
+			"height": lift.y,
 			"texture": projectile_texture,
 			"speed": projectile_speed,
 			"damage": enemy.attack_damage * damage_multiplier,

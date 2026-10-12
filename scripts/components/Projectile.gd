@@ -95,3 +95,9 @@ func launch(from: Vector2, dir: Vector2, by: Node2D, cfg: Dictionary) -> void:
 	var tex = cfg.get("texture", null)
 	if tex != null:
 		($Sprite2D as Sprite2D).texture = tex
+	## The shot travels and collides on the floor, where bodies are; only the
+	## sprite is lifted to hand height. Flying the collider at hand height ran it
+	## a parallel line above her feet circle and missed her side-on.
+	if cfg.has("height"):
+		_sprite.position.y = float(cfg["height"])
+		_start_offset = _sprite.position.y

@@ -12300,6 +12300,7 @@ _data = {
 }
 
 [node name="Kappa" type="CharacterBody2D" unique_id=1250693334 groups=["enemy"]]
+scale = Vector2(1.125, 1.125)
 collision_layer = 3
 script = ExtResource("enemy_script")
 tier = 2
