@@ -59,12 +59,13 @@ var _base_frames: SpriteFrames = null
 ## device-blind — it answers to every pad at once — so once players are picking
 ## in turn the highlight is driven by hand from the active player's own device
 ## and focus is left out of it entirely.
-enum Phase { COUNT, CLAIM, COLOUR, HAIR, SKIN, LEVEL }
+enum Phase { COUNT, BOTS, CLAIM, COLOUR, HAIR, SKIN, LEVEL }
 
 var _level_select: Control = null
 
 var _phase: int = Phase.COUNT
 var _wanted: int = 1
+var _bot_count: int = 0
 var _active: int = 0
 ## One probe per unclaimed device, watched during CLAIM so whichever pad presses
 ## first takes the slot. Rebuilt whenever the roster changes.
@@ -376,6 +377,8 @@ func _drive(delta: float) -> void:
 	match _phase:
 		Phase.COUNT:
 			_drive_count()
+		Phase.BOTS:
+			_drive_bots()
 		Phase.CLAIM:
 			_drive_claim()
 		Phase.COLOUR:
@@ -396,7 +399,15 @@ func _drive_count() -> void:
 			step = -1
 		if probe.confirm_pressed():
 			_active = 0
-			_enter_claim()
+			if _wanted == Roster.MAX_PLAYERS:
+				_bot_count = 0
+				_enter_claim()
+			else:
+				_phase = Phase.BOTS
+				_bot_count = mini(_bot_count, Roster.MAX_PLAYERS - _wanted)
+				for menu in _all_devices():
+					menu.prime()
+				_show_bot_prompt()
 			return
 		if probe.cancel_pressed():
 			_go_back()
@@ -404,6 +415,24 @@ func _drive_count() -> void:
 	if step != 0:
 		_wanted = clampi(_wanted + step, 1, Roster.MAX_PLAYERS)
 		_show_count_prompt()
+
+
+func _drive_bots() -> void:
+	var step: int = 0
+	for probe in _all_devices():
+		if probe.just_pressed("MenuRight") or probe.just_pressed("MenuDown"):
+			step = 1
+		elif probe.just_pressed("MenuLeft") or probe.just_pressed("MenuUp"):
+			step = -1
+		if probe.confirm_pressed():
+			_enter_claim()
+			return
+		if probe.cancel_pressed():
+			_enter_count()
+			return
+	if step != 0:
+		_bot_count = clampi(_bot_count + step, 0, Roster.MAX_PLAYERS - _wanted)
+		_show_bot_prompt()
 
 
 ## Whichever free device presses first takes this slot.
@@ -642,6 +671,8 @@ func _go_back() -> void:
 			_show(_highlighted)
 		Phase.COUNT:
 			get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+		Phase.BOTS:
+			_enter_count()
 		Phase.CLAIM:
 			## Nobody has claimed this slot yet, so step back over the player
 			## before and let them choose again.
@@ -684,6 +715,10 @@ func _take_level(index: int) -> void:
 
 
 func _start_game() -> void:
+	for _i in mini(_bot_count, Roster.MAX_PLAYERS - Roster.count()):
+		if Roster.add_bot() < 0:
+			push_error("CharacterSelect: could not add the selected AI teammate.")
+			return
 	Score.begin_run()
 	Progression.begin_run()
 	## Player one's scheme stays the global one, so the title art and anything
@@ -711,10 +746,21 @@ func _count_bar() -> String:
 ## a screen that looks like it is already asking you to pick a colour.
 func _show_count_prompt() -> void:
 	prompt_overlay.visible = true
-	prompt_title.text = "HOW MANY PLAYERS?"
+	prompt_title.text = "HOW MANY HUMAN PLAYERS?"
 	prompt_count_row.text = _count_bar()
 	prompt_devices.text = "LEFT / RIGHT TO CHANGE   •   %s TO CONFIRM" \
 			% PlayerInput.new(PlayerInput.KEYBOARD).confirm_button_label()
+
+
+func _show_bot_prompt() -> void:
+	prompt_overlay.visible = true
+	prompt_title.text = "HOW MANY AI TEAMMATES?"
+	var bar := ""
+	for i in Roster.MAX_PLAYERS - _wanted + 1:
+		bar += ("[%d]" % i) if i == _bot_count else (" %d " % i)
+	prompt_count_row.text = bar
+	prompt_devices.text = "LEFT / RIGHT TO CHANGE   •   CONFIRM TO CONTINUE\n" \
+			+ "FOLLOW, FIGHT AND AVOID TRAPS   •   FOUR PARTY MEMBERS MAX"
 
 
 ## A fixed legend rather than one line per device actually plugged in — a pad

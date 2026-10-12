@@ -1723,6 +1723,7 @@ func _spawn_player(step: Vector2) -> void:
 		var angle: float = TAU * float(i) / float(maxi(_players.size(), 1))
 		var ring := Vector2(cos(angle), sin(angle) * 0.5) * (0.0 if _players.size() == 1 else 90.0)
 		(_players[i] as Node2D).global_position = centre + ring
+		_players[i].input.reset()
 
 	_theme_floor()
 	_pass_through_each_other()
@@ -1730,6 +1731,11 @@ func _spawn_player(step: Vector2) -> void:
 	if not Roster.device_lost.is_connected(_on_device_lost):
 		Roster.device_lost.connect(_on_device_lost)
 		Roster.device_regained.connect(_on_device_regained)
+
+
+func bot_controls_active() -> bool:
+	return not _building and not _clearing and not SceneLoader.is_active() \
+			and not get_tree().paused
 
 
 func _physics_process(delta: float) -> void:

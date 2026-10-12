@@ -2,6 +2,25 @@
 
 Dev-only scripts. Nothing here ships in the game.
 
+## validate_ai_companions.gd
+
+Headless-only, memory-conscious AI checks in small synthetic physics worlds.
+It does not build the maze or render the game. It covers mixed/four-human
+rosters, device replacement, bot upgrades and scoring, follow distance,
+wall-corner pathfinding, retracted trap avoidance, bounded searches,
+pause/loading/reset/death, the actual party setup and upgrade menus, and
+real player-state-machine slash damage from all eight approach directions.
+The combat fixture also checks safe retreat from a heavy-attack telegraph.
+
+```bash
+godot --headless --path . res://tools/validate_ai_companions.tscn --max-fps 120
+```
+
+Exits nonzero on a failed check. The combat check loads one player scene;
+the movement fixtures use lightweight bodies without sprite sheets.
+Pass `-- --combat-only` to skip the follow/pathfinding fixtures while working
+on combat or menus.
+
 ## generate_title_power_variants.py
 
 Rebuild the eleven alternate title covers from the original

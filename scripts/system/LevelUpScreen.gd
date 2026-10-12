@@ -52,6 +52,8 @@ func _ready() -> void:
 	var total: float = party * COLUMN_WIDTH + (party - 1) * COLUMN_GAP
 	var left: float = (VIEW.x - total) * 0.5
 	for slot in party:
+		if Roster.is_bot(slot):
+			_spend_bot_points(slot)
 		_columns.append(_build_column(root, slot, left + slot * (COLUMN_WIDTH + COLUMN_GAP)))
 	var hint := _label("UP / DOWN CHOOSE    CONFIRM SPEND OR READY    BACK UNDO", 16,
 			Color(0.82, 0.82, 0.82))
@@ -68,6 +70,8 @@ func _process(delta: float) -> void:
 		return
 	_grace = maxf(_grace - delta, 0.0)
 	for column in _columns:
+		if Roster.is_bot(column["slot"]):
+			continue
 		var input: PlayerInput = column["input"]
 		## Read every frame, including the grace period, so edges stay accurate.
 		var up: bool = input.just_pressed("MenuUp")
@@ -92,6 +96,18 @@ func _move(column: Dictionary, step: int) -> void:
 		return
 	column["cursor"] = wrapi(column["cursor"] + step, 0, READY_ROW + 1)
 	_refresh(column)
+
+
+func _spend_bot_points(slot: int) -> void:
+	while Progression.points[slot] > 0:
+		var best: int = -1
+		for stat in Progression.STAT_NAMES.size():
+			if Progression.can_spend(slot, stat) and (best < 0 \
+					or Progression.rank(slot, stat) < Progression.rank(slot, best)):
+				best = stat
+		if best < 0:
+			break
+		Progression.spend(slot, best)
 
 
 func _confirm(column: Dictionary) -> void:
@@ -139,7 +155,7 @@ func _build_column(root: Control, slot: int, x: float) -> Dictionary:
 	panel.add_theme_stylebox_override("panel", _box(Color(0.04, 0.03, 0.04, 0.88), colour, 3))
 	root.add_child(panel)
 
-	var heading := _label("P%d" % (slot + 1), 26, colour)
+	var heading := _label(Roster.label_of(slot), 26, colour)
 	heading.position = Vector2(16.0, 12.0)
 	heading.size = Vector2(COLUMN_WIDTH - 32.0, 34.0)
 	panel.add_child(heading)
@@ -191,7 +207,7 @@ func _build_column(root: Control, slot: int, x: float) -> Dictionary:
 	var input: PlayerInput = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
 	input.prime()
 	return {"slot": slot, "colour": colour, "input": input, "cursor": 0,
-			"ready": Progression.points[slot] == 0, "spent": [], "level": level,
+			"ready": Roster.is_bot(slot) or Progression.points[slot] == 0, "spent": [], "level": level,
 			"bar": bar, "xp": xp, "points": points, "rows": rows}
 
 

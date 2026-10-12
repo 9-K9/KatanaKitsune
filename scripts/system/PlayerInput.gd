@@ -16,6 +16,7 @@ extends RefCounted
 ## `device` is a joypad index, or KEYBOARD for the player on the keys.
 
 const KEYBOARD: int = -1
+const BOT: int = -2
 
 ## Below this an axis is treated as centred. Sticks rest a little off zero, and
 ## without it a resting pad walks the character into a wall forever.
@@ -44,6 +45,22 @@ var _frame: int = -1
 func _init(for_device: int = KEYBOARD) -> void:
 	device = for_device
 	_learn_bindings()
+
+
+func bind_body(_body: CharacterBody2D) -> void:
+	pass
+
+
+func update(_delta: float) -> void:
+	pass
+
+
+func reset() -> void:
+	prime()
+
+
+func aim_vector() -> Vector2:
+	return Vector2.ZERO
 
 
 ## Reads every action's events out of the InputMap and files them by the kind of
@@ -112,6 +129,8 @@ func pressed(action: String) -> bool:
 
 ## The live hardware read, before any frame bookkeeping.
 func _read(action: String) -> bool:
+	if device == BOT:
+		return false
 	if device == KEYBOARD:
 		for code in _keys.get(action, []):
 			if Input.is_key_pressed(code):
@@ -207,6 +226,8 @@ func cancel_pressed() -> bool:
 ## Raw menu-button state, kept in the same per-frame snapshot as the actions so
 ## these are edges too and a held button does not scroll the whole list.
 func _read_menu(which: String) -> bool:
+	if device == BOT:
+		return false
 	if device == KEYBOARD:
 		if which == "__confirm":
 			return Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_SPACE) \

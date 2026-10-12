@@ -28,6 +28,27 @@ there. Viewport is 1536×864, stretched on `canvas_items`.
 
 Keyboard or gamepad, up to four players locally.
 
+After choosing the human-player count, choose **0-3 AI teammates** in the
+remaining party slots. The default is zero; four human players skip this
+step. Humans claim devices and pick costumes as before. Bots get distinct
+costumes and `AI2`/`AI3`/`AI4` markers and HUD tags, and never claim a controller.
+There is no online networking in this version.
+
+AI teammates follow the nearest living human, draw their katana and fight
+visible nearby enemies without wandering far from the party. They guard
+ordinary melee telegraphs and back away from heavy attacks when the retreat
+is safe. They use the
+same movement, stamina, slash hit frames, damage and death rules as humans.
+Bounded collision-aware pathfinding routes around walls, scenery, ponds and
+spike traps, including retracted spikes; if no safe route is found they stop
+or take a safe partial route rather than crossing the hazard or teleporting.
+Pause and floor loading freeze their controls, and descent resets their path.
+Humans can revive fallen bots normally, but bots do not revive, seek pickups,
+use scrolls or coordinate tactics. The run ends when all humans are down,
+even if a bot survives. Bot upgrade points are spent automatically across
+the least-upgraded stats; bot slots start ready between floors. High-score
+name entry uses the best human score, not a bot's score.
+
 | Action | What it does |
 |--------|--------------|
 | `Left` `Right` `Up` `Down` | Move on the isometric lattice: WASD, left stick or D-pad |

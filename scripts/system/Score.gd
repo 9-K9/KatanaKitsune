@@ -177,6 +177,8 @@ func submit(name: String, value: int, wave: int) -> void:
 func best_of_run() -> Dictionary:
 	var slot: int = 0
 	for i in maxi(Roster.count(), 1):
+		if Roster.is_bot(i):
+			continue
 		if points[i] > points[slot]:
 			slot = i
 	return {"slot": slot, "points": points[slot]}

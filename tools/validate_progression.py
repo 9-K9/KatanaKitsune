@@ -103,7 +103,9 @@ class ProgressionChecks(unittest.TestCase):
     def test_screen_is_per_player_and_pause_safe(self):
         screen = source("scripts/system/LevelUpScreen.gd")
         self.assertIn("Roster.input_for(slot)", screen)
-        self.assertIn('"ready": Progression.points[slot] == 0', screen)
+        self.assertIn('"ready": Roster.is_bot(slot) or Progression.points[slot] == 0', screen)
+        self.assertIn('if Roster.is_bot(column["slot"]):', screen)
+        self.assertIn("_spend_bot_points(slot)", screen)
         self.assertIn("for slot in party:", screen)
         self.assertIn("process_mode = Node.PROCESS_MODE_ALWAYS", screen)
         self.assertIn('get_first_node_in_group("level_up_screen")', source("scripts/system/PauseMenu.gd"))

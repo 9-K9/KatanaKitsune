@@ -28,7 +28,7 @@ const SLOT_COLOURS: Array[Color] = [
 ]
 
 ## One entry per joined player:
-## {"device": int, "scheme": int, "hair": int, "skin": int, "lost": bool}
+## {"device": int, "scheme": int, "hair": int, "skin": int, "lost": bool, "bot": bool}
 var players: Array[Dictionary] = []
 var level_theme: int = -1
 
@@ -55,11 +55,42 @@ func count() -> int:
 ## are not locked unique per player, so leaving them unset is a sensible
 ## default rather than something every caller must think about.
 func join(device: int, scheme: int = -1, hair: int = -1, skin: int = -1) -> int:
-	if players.size() >= MAX_PLAYERS or has_device(device):
+	if device < PlayerInput.KEYBOARD or players.size() >= MAX_PLAYERS or has_device(device):
 		return -1
-	players.append({"device": device, "scheme": scheme, "hair": hair, "skin": skin, "lost": false})
+	players.append({"device": device, "scheme": scheme, "hair": hair, "skin": skin,
+			"lost": false, "bot": false})
 	roster_changed.emit()
 	return players.size() - 1
+
+
+func add_bot() -> int:
+	if players.size() >= MAX_PLAYERS or human_count() == 0:
+		return -1
+	var scheme: int = 0
+	for i in PowerState.count():
+		if not scheme_taken(i):
+			scheme = i
+			break
+	players.append({"device": PlayerInput.BOT, "scheme": scheme, "hair": -1,
+			"skin": -1, "lost": false, "bot": true})
+	roster_changed.emit()
+	return players.size() - 1
+
+
+func is_bot(slot: int) -> bool:
+	return slot >= 0 and slot < players.size() and players[slot].get("bot", false)
+
+
+func human_count() -> int:
+	var total: int = 0
+	for slot in players.size():
+		if not is_bot(slot):
+			total += 1
+	return total
+
+
+func label_of(slot: int) -> String:
+	return "%s%d" % ["AI" if is_bot(slot) else "P", slot + 1]
 
 
 ## Removes the last player. The select screen backs out this way, so going back
@@ -73,7 +104,7 @@ func drop_last() -> void:
 
 func has_device(device: int) -> bool:
 	for p in players:
-		if p["device"] == device:
+		if not p.get("bot", false) and p["device"] == device:
 			return true
 	return false
 
@@ -141,6 +172,8 @@ func colour_of(slot: int) -> Color:
 
 ## A fresh input object for a slot, bound to that slot's device.
 func input_for(slot: int) -> PlayerInput:
+	if is_bot(slot):
+		return BotInput.new()
 	return PlayerInput.new(device_of(slot))
 
 
@@ -210,6 +243,8 @@ func nearest_to(tree: SceneTree, point: Vector2) -> CharacterBody2D:
 ## maze pauses until the same slot has a device again.
 func _on_joy_changed(device: int, connected: bool) -> void:
 	for i in players.size():
+		if is_bot(i):
+			continue
 		if players[i]["device"] != device:
 			continue
 		players[i]["lost"] = not connected
@@ -223,7 +258,7 @@ func _on_joy_changed(device: int, connected: bool) -> void:
 	## replacement adopts that slot, so any spare pad can rescue a player.
 	if connected:
 		for i in players.size():
-			if players[i]["lost"]:
+			if not is_bot(i) and players[i]["lost"]:
 				players[i]["device"] = device
 				players[i]["lost"] = false
 				device_regained.emit(i)

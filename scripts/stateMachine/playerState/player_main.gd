@@ -65,6 +65,7 @@ func _ready() -> void:
 	## maze scene directly still gives a playable character.
 	if input == null:
 		input = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
+	input.bind_body(self)
 	## Rebuilt whenever this slot's device changes. A PlayerInput binds to one
 	## device index at construction, and a slot can be adopted by a different pad
 	## when the original is unplugged — so without this a reconnected player
@@ -125,6 +126,48 @@ func blade_targets() -> Array[Node2D]:
 	return found
 
 
+func can_slash_target(target: Node2D, facing: String, from: Vector2 = Vector2.INF) -> bool:
+	var shape := action_area.get_node("CollisionShape2D") as CollisionShape2D
+	var tween := get_node("CollisionChecker/WeaponTween") as AnimationPlayer
+	var sprite := get_node("AnimationManager/AnimatedSprite2D") as AnimatedSprite2D
+	var clip := "katanaSlashMid"
+	var animation_name := "%s_%s" % [clip, facing]
+	if not tween.has_animation(animation_name) or not sprite.sprite_frames.has_animation(animation_name):
+		push_error("Player: missing slash reach animation %s" % animation_name)
+		return false
+	var frames := sprite.sprite_frames
+	var hit_time: float = 0.0
+	for i in 3:
+		hit_time += frames.get_frame_duration(animation_name, i)
+	hit_time /= frames.get_animation_speed(animation_name)
+	var animation := tween.get_animation(animation_name)
+	var reach: Vector2 = shape.position
+	for track in animation.get_track_count():
+		if animation.track_get_type(track) == Animation.TYPE_VALUE \
+				and String(animation.track_get_path(track)).ends_with("ActionArea/CollisionShape2D:position"):
+			var value: Variant = animation.value_track_interpolate(track, hit_time)
+			if value is Vector2:
+				reach = value
+	var query := PhysicsShapeQueryParameters2D.new()
+	# Require overlap depth, not tangency: sprite and physics hit frames can
+	# differ by a tick. The real weapon shape is never modified.
+	var probe := shape.shape.duplicate() as Shape2D
+	if probe is CircleShape2D:
+		probe.radius = maxf(probe.radius - 4.0, 1.0)
+	query.shape = probe
+	query.transform = shape.global_transform
+	query.transform.origin = action_area.to_global(reach)
+	if from != Vector2.INF:
+		query.transform.origin += from - global_position
+	query.collision_mask = action_area.collision_mask
+	query.collide_with_areas = true
+	query.exclude = [get_rid()]
+	for hit in get_world_2d().direct_space_state.intersect_shape(query, 32):
+		if hit["collider"] == target or Breakable.hit_target(hit["collider"]) == target:
+			return true
+	return false
+
+
 
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
@@ -135,6 +178,7 @@ func InputHandler():
 	return round(direction)
 
 func _physics_process(_delta):
+	input.update(_delta)
 	update_buffs()
 	update_scroll_look()
 	_read_scroll_input()
@@ -147,9 +191,14 @@ func _physics_process(_delta):
 	## Sampled once per frame: InputHandler() was previously called three times
 	## per physics tick, and the state scripts call it twice more per frame.
 	var input_dir: Vector2 = InputHandler()
-	if input_dir != Vector2.ZERO and not actionBlockInput:
-		facing_dir = directionState(input_dir)
+	var aim: Vector2 = input.aim_vector()
+	if aim != Vector2.ZERO and not actionBlockInput:
+		facing_dir = directionState(round(aim.normalized()))
 		updateRayCast2D(facing_dir)
+	if input_dir != Vector2.ZERO and not actionBlockInput:
+		if aim == Vector2.ZERO:
+			facing_dir = directionState(input_dir)
+			updateRayCast2D(facing_dir)
 		## No delta here: move_and_slide() already integrates velocity over the
 		## physics step. Multiplying by delta as well made displacement scale
 		## with delta squared, so the character moved twice as fast at 30fps.
@@ -275,6 +324,7 @@ func _rebind(for_slot: int) -> void:
 	if for_slot != slot:
 		return
 	input = Roster.input_for(slot)
+	input.bind_body(self)
 	## Primed, or the button that reconnected the pad reads as a fresh press on
 	## the first frame back.
 	input.prime()

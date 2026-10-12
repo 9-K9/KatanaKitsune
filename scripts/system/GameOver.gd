@@ -59,7 +59,7 @@ func _take_focus() -> void:
 	TitleScreen.focus_first_button(panel)
 
 
-## The run is over only when the whole party is down.
+## The run is over when every human is down. Bots cannot revive them.
 ##
 ## This used to ask the first player body in the group, so in a party one death
 ## ended everyone's run — and it made reviving pointless, because the screen
@@ -68,6 +68,8 @@ func _is_dead() -> bool:
 	var any := false
 	for node in get_tree().get_nodes_in_group("player"):
 		if not (node is CharacterBody2D) or not ("is_dead" in node):
+			continue
+		if Roster.is_bot(int(node.get("slot"))):
 			continue
 		any = true
 		if not node.is_dead:

@@ -125,7 +125,7 @@ func _build_cell(slot: int) -> Dictionary:
 
 	var tag := Label.new()
 	tag.position = Vector2(x + BAR_LEFT, CELL_TOP - 2.0)
-	tag.text = "P%d" % (slot + 1)
+	tag.text = Roster.label_of(slot)
 	tag.add_theme_font_size_override("font_size", 14)
 	tag.add_theme_color_override("font_color", tint)
 	_back_text(tag)

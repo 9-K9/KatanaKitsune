@@ -37,6 +37,7 @@ var _occupants: Array[Node2D] = []
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
+	add_to_group("bot_hazard")
 	collision_layer = 2
 	monitorable = true
 	var shader := Shader.new()
@@ -107,6 +108,7 @@ func take_damage(amount: float, _from: Vector2 = Vector2.INF,
 		return
 	_broken = true
 	remove_from_group("breakable")
+	remove_from_group("bot_hazard")
 	set_physics_process(false)
 	set_deferred("collision_layer", 0)
 	set_deferred("monitoring", false)

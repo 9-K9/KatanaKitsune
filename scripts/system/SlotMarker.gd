@@ -45,7 +45,7 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	if font == null:
 		return
-	var text := "P%d" % (slot + 1)
+	var text := Roster.label_of(slot)
 	var size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
 	draw_string(font, Vector2(-size.x * 0.5, -RADIUS * SQUASH - 6.0), text,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, colour)
