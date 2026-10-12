@@ -92,9 +92,9 @@ func _process(delta: float) -> void:
 		return
 	if _repeat <= 0.0:
 		var step := 0
-		if _driver.pressed("Right") or _driver.pressed("Down"):
+		if _driver.pressed("MenuRight") or _driver.pressed("MenuDown"):
 			step = 1
-		elif _driver.pressed("Left") or _driver.pressed("Up"):
+		elif _driver.pressed("MenuLeft") or _driver.pressed("MenuUp"):
 			step = -1
 		if step != 0:
 			_show(wrapi(_highlighted + step, 0, _themes.size()))

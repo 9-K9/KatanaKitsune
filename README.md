@@ -30,7 +30,7 @@ Keyboard or gamepad, up to four players locally.
 
 | Action | What it does |
 |--------|--------------|
-| `Left` `Right` `Up` `Down` | Move on the isometric lattice |
+| `Left` `Right` `Up` `Down` | Move on the isometric lattice: WASD, left stick or D-pad |
 | `Run` | Sprint |
 | `Katana` | Draw or sheath the blade |
 | `Attack` | Slash — standing, crouched, or a charged strike held |
@@ -41,13 +41,26 @@ Keyboard or gamepad, up to four players locally.
 | `Action` | Interact — rest at a chair, take a pickup, descend a stairway |
 | `Pause` | Pause menu |
 | `Scroll1`–`Scroll6` | Keys `1`–`6`: read the scroll in that inventory slot |
-| `ScrollUse` | Pad `R3`: tap to read the highlighted scroll, hold to cycle, release to read |
+| `ScrollPrevious` / `ScrollNext` | Right stick left/right or left/right arrow keys: select the previous/next occupied slot |
+| `ScrollUse` | Press `L3` or up/down arrow: use the highlighted scroll |
+
+Power-up selection wraps, skips empty slots and never activates a scroll.
+Each stick deflection or arrow press selects once; recenter/release before
+selecting again. Activation happens once per fresh press, never on release.
+Arrow keys no longer move the character during gameplay, but still navigate
+menus. Keys `1`–`6` remain direct-use shortcuts. Input belongs to each player's
+own device; selecting while pressing use does not consume a scroll.
 
 ## Scrolls
 
 Breakables sometimes drop a power-up scroll (`scroll_chance`, 12%). Each player
 has a 6-slot bar along the bottom of the screen. Scrolls of the same kind stack
 in one slot.
+
+The hotbar uses the shared selection-screen/kill-counter font. Control hints,
+slot numbers, stack counts and effect timers have translucent dark backings;
+active-effect icons are enlarged and backed for readability over scenery.
+Player tags, scores, floor and kill counts also have translucent backings.
 
 | Kanji | Scroll | Effect |
 |-------|--------|--------|

@@ -143,9 +143,9 @@ func _process(delta: float) -> void:
 		return
 
 	var step: int = 0
-	if _input.pressed("Up") or _input.pressed("Right"):
+	if _input.pressed("MenuUp") or _input.pressed("MenuRight"):
 		step = 1
-	elif _input.pressed("Down") or _input.pressed("Left"):
+	elif _input.pressed("MenuDown") or _input.pressed("MenuLeft"):
 		step = -1
 	if step == 0:
 		return

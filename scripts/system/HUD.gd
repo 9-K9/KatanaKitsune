@@ -49,6 +49,7 @@ const GRADE_COLOURS := {
 
 const FRAME_PORTRAIT := preload("res://assets/sprites/ui/frame_portrait.png")
 const FRAME_BAR := preload("res://assets/sprites/ui/bar_frame.png")
+const UI_THEME := preload("res://assets/sprites/ui/katanaKitsune.theme.tres")
 
 @onready var depth_label: Label = $Depth
 var _kill_count_label: Label = null
@@ -79,12 +80,14 @@ func _ready() -> void:
 
 	_kill_count_label = Label.new()
 	_kill_count_label.name = "KillCount"
+	_kill_count_label.theme = UI_THEME
 	_kill_count_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 98.0)
-	_kill_count_label.size = Vector2(240.0, 22.0)
-	_kill_count_label.add_theme_font_size_override("font_size", 13)
+	_kill_count_label.size = Vector2(CELL_WIDTH - 8.0, 26.0)
+	_kill_count_label.add_theme_font_size_override("font_size", 18)
 	_kill_count_label.add_theme_color_override("font_color", Color(0.92, 0.78, 0.42))
 	_kill_count_label.add_theme_color_override("font_outline_color", Color(0.04, 0.03, 0.05, 0.95))
 	_kill_count_label.add_theme_constant_override("outline_size", 3)
+	_back_text(_kill_count_label)
 	add_child(_kill_count_label)
 
 	## Deferred a frame: the players are spawned by the maze during its own
@@ -102,6 +105,15 @@ func _ready() -> void:
 
 	if depth_label != null:
 		depth_label.position = Vector2(CELL_LEFT + 4.0, CELL_TOP + 78.0)
+		_back_text(depth_label)
+
+
+func _back_text(label: Label) -> void:
+	var backing := StyleBoxFlat.new()
+	backing.bg_color = Color(0.04, 0.03, 0.05, 0.78)
+	backing.content_margin_left = 3.0
+	backing.content_margin_right = 3.0
+	label.add_theme_stylebox_override("normal", backing)
 
 
 ## One player's readout: portrait, tag, health, stamina, eye.
@@ -135,6 +147,7 @@ func _build_cell(slot: int) -> Dictionary:
 	tag.text = "P%d" % (slot + 1)
 	tag.add_theme_font_size_override("font_size", 14)
 	tag.add_theme_color_override("font_color", tint)
+	_back_text(tag)
 	add_child(tag)
 
 	var health := _build_bar(x, CELL_TOP + 18.0, Color(0.78, 0.17, 0.16))
@@ -157,6 +170,7 @@ func _build_cell(slot: int) -> Dictionary:
 	score.text = "0"
 	score.add_theme_font_size_override("font_size", 14)
 	score.add_theme_color_override("font_color", Color(0.85, 0.78, 0.55))
+	_back_text(score)
 	add_child(score)
 
 	return {"slot": slot, "portrait": portrait, "frame": frame, "score": score,

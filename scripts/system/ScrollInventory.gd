@@ -16,8 +16,8 @@ const SLOTS: int = 6
 ## Each entry is -1 for empty, or a Scroll.Kind.
 var kinds: PackedInt32Array = PackedInt32Array([-1, -1, -1, -1, -1, -1])
 var counts: PackedInt32Array = PackedInt32Array([0, 0, 0, 0, 0, 0])
-## The slot a pad player has highlighted. Keyboard players pick by number and
-## never need it, but it is kept pointing somewhere sensible either way.
+## The highlighted slot for stick/arrow selection and activation. Number keys
+## can also use a slot directly.
 var selected: int = 0
 
 
@@ -61,10 +61,10 @@ func take(index: int) -> void:
 			cycle()
 
 
-## Moves the highlight to the next slot that holds anything.
-func cycle() -> void:
+## Moves in either direction, skipping empty slots and wrapping.
+func cycle(direction: int = 1) -> void:
 	for step in range(1, SLOTS + 1):
-		var next: int = (selected + step) % SLOTS
+		var next: int = posmod(selected + step * direction, SLOTS)
 		if kinds[next] != -1:
 			selected = next
 			return

@@ -32,15 +32,7 @@ var slot: int = 0
 
 ## Her six scroll slots. Read by the HUD, filled by scroll pickups.
 var scrolls: ScrollInventory = ScrollInventory.new()
-## Pad scroll button: held this long, the highlight starts stepping through the
-## slots instead, and letting go reads whichever one it stopped on.
-const SCROLL_HOLD_TO_CYCLE: float = 0.35
-const SCROLL_CYCLE_STEP: float = 0.45
-var _scroll_held_for: float = -1.0
-var _scroll_next_step: float = 0.0
-## True while the pad button is down past the hold threshold; the HUD uses it
-## to show the highlight as live.
-var scroll_cycling: bool = false
+var _scroll_input_frame: int = -1
 
 ## What the blade is currently over. Resolved once — the attack code used to
 ## re-look this up by string path on every swing.
@@ -145,7 +137,7 @@ func InputHandler():
 func _physics_process(_delta):
 	update_buffs()
 	update_scroll_look()
-	_read_scroll_input(_delta)
+	_read_scroll_input()
 	## Unconditional: the running states call drain_stamina, which resets the rest
 	## timer, so spending and recovering cannot both apply in the same frame.
 	recover_stamina(_delta)
@@ -168,30 +160,34 @@ func _physics_process(_delta):
 	move_and_slide()
 
 
-## Number keys read a slot outright. The pad has one button: a tap reads the
-## highlighted scroll, holding it steps the highlight along, and letting go
-## reads wherever it stopped.
-func _read_scroll_input(delta: float) -> void:
-	if input == null or is_dead:
-		_scroll_held_for = -1.0
-		scroll_cycling = false
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_UNPAUSED and input != null:
+		input.prime()
+
+
+## Selection never spends a scroll. Activation requires a separate fresh press.
+func _read_scroll_input() -> void:
+	var frame := Engine.get_process_frames()
+	if _scroll_input_frame == frame or input == null:
+		return
+	_scroll_input_frame = frame
+	if is_dead:
+		input.prime()
+		return
+	var previous: bool = input.pressed("ScrollPrevious")
+	var next: bool = input.pressed("ScrollNext")
+	if previous or next:
+		if previous != next:
+			var action := "ScrollPrevious" if previous else "ScrollNext"
+			if input.just_pressed(action):
+				scrolls.cycle(-1 if previous else 1)
 		return
 	for i in ScrollInventory.SLOTS:
 		if input.just_pressed("Scroll%d" % (i + 1)):
 			scrolls.selected = i if scrolls.kind_at(i) != -1 else scrolls.selected
 			read_scroll(i)
-	if input.pressed("ScrollUse"):
-		if _scroll_held_for < 0.0:
-			_scroll_held_for = 0.0
-			_scroll_next_step = SCROLL_HOLD_TO_CYCLE
-		_scroll_held_for += delta
-		if _scroll_held_for >= _scroll_next_step:
-			scroll_cycling = true
-			scrolls.cycle()
-			_scroll_next_step += SCROLL_CYCLE_STEP
-	elif _scroll_held_for >= 0.0:
-		_scroll_held_for = -1.0
-		scroll_cycling = false
+			return
+	if input.just_pressed("ScrollUse"):
 		read_scroll(scrolls.selected)
 
 

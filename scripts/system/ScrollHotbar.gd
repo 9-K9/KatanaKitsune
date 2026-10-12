@@ -17,7 +17,8 @@ const GAP: float = 4.0
 const PAD: float = 6.0
 const BETWEEN_BARS: float = 28.0
 const BOTTOM_MARGIN: float = 12.0
-const EFFECT_ICON: float = 26.0
+const EFFECT_ICON: float = 32.0
+const UI_THEME := preload("res://assets/sprites/ui/katanaKitsune.theme.tres")
 
 const BACK := Color(0.06, 0.04, 0.05, 0.78)
 const EDGE := Color(0.52, 0.40, 0.22, 0.95)
@@ -65,7 +66,7 @@ func _body_for(slot: int) -> Node:
 func _draw_bar(body: Node, at: Vector2, tint: Color) -> void:
 	var inventory: ScrollInventory = body.scrolls
 	var dead: bool = body.get("is_dead") == true
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = UI_THEME.default_font
 	var keyboard: bool = body.get("input") != null \
 			and body.input.device == PlayerInput.KEYBOARD
 	var fade: float = 0.45 if dead else 1.0
@@ -88,18 +89,21 @@ func _draw_bar(body: Node, at: Vector2, tint: Color) -> void:
 				_text(font, box.position + Vector2(box.size.x - 3.0, box.size.y - 3.0),
 						"x%d" % count, 13, Color(1.0, 0.95, 0.8, fade), HORIZONTAL_ALIGNMENT_RIGHT)
 		draw_rect(box, Color(EDGE if kind != -1 else EMPTY_EDGE, fade), false, 1.0)
-		## The pad highlight. Keyboard players pick by number, so for them the
-		## highlight only matters as "what was used last" and is drawn quieter.
 		if i == inventory.selected and kind != -1 and not dead:
-			var live: bool = body.get("scroll_cycling") == true
 			var glow := tint.lightened(0.3)
-			glow.a = (0.6 + 0.4 * pulse) if live else (0.55 if keyboard else 0.9)
-			draw_rect(box.grow(1.0), glow, false, 3.0 if live else 2.0)
+			glow.a = 0.75 + 0.25 * pulse
+			draw_rect(box.grow(1.0), glow, false, 2.0)
 		if keyboard:
-			_text(font, box.position + Vector2(3.0, 12.0), str(i + 1), 11,
+			_text(font, box.position + Vector2(3.0, 15.0), str(i + 1), 14,
 					Color(0.95, 0.88, 0.7, 0.8 * fade))
 
 	_draw_effects(body, at + Vector2(PAD, -EFFECT_ICON - 10.0), font)
+	var hint := "LEFT/RIGHT ARROWS: SELECT" if keyboard else "RIGHT STICK: SELECT"
+	var use_hint := "UP/DOWN ARROWS: USE" if keyboard else "L3: USE"
+	_text(font, at + Vector2(PAD, -EFFECT_ICON - 39.0), hint, 16,
+			Color(0.95, 0.88, 0.7, fade))
+	_text(font, at + Vector2(PAD, -EFFECT_ICON - 20.0), use_hint, 16,
+			Color(0.95, 0.88, 0.7, fade))
 
 
 ## The scrolls currently in effect, as a row of small icons each with a bar
@@ -122,6 +126,7 @@ func _draw_effects(body: Node, at: Vector2, font: Font) -> void:
 				continue
 			share = clampf(left / maxf(body.scroll_duration(kind), 0.01), 0.0, 1.0)
 		var rect := Rect2(Vector2(x, at.y), Vector2(EFFECT_ICON, EFFECT_ICON))
+		draw_rect(rect.grow(3.0), BACK)
 		## Blinks in its last two seconds so running out is not a surprise.
 		var alpha: float = 1.0
 		if kind != Scroll.Kind.STONE and left < 2.0:
@@ -134,8 +139,8 @@ func _draw_effects(body: Node, at: Vector2, font: Font) -> void:
 				Scroll.INK[kind].lightened(0.25))
 		if kind != Scroll.Kind.STONE:
 			_text(font, rect.position + Vector2(EFFECT_ICON + 3.0, EFFECT_ICON * 0.5 + 5.0),
-					"%d" % ceili(left), 12, Color(1.0, 0.95, 0.8, alpha))
-		x += EFFECT_ICON + 22.0
+					"%d" % ceili(left), 16, Color(1.0, 0.95, 0.8, alpha))
+		x += EFFECT_ICON + 20.0
 
 
 func _text(font: Font, pos: Vector2, text: String, size: int, colour: Color,
@@ -144,6 +149,10 @@ func _text(font: Font, pos: Vector2, text: String, size: int, colour: Color,
 	if align == HORIZONTAL_ALIGNMENT_RIGHT:
 		width = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 		pos.x -= width
+	var text_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size)
+	var backing := Rect2(pos - Vector2(2.0, font.get_ascent(size) + 2.0),
+			Vector2(text_size.x + 4.0, font.get_height(size) + 4.0))
+	draw_rect(backing, Color(BACK, BACK.a * colour.a))
 	draw_string_outline(font, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4,
 			Color(0.03, 0.02, 0.04, colour.a))
 	draw_string(font, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, colour)

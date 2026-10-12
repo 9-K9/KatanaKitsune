@@ -390,9 +390,9 @@ func _drive(delta: float) -> void:
 func _drive_count() -> void:
 	var step: int = 0
 	for probe in _all_devices():
-		if probe.just_pressed("Right") or probe.just_pressed("Down"):
+		if probe.just_pressed("MenuRight") or probe.just_pressed("MenuDown"):
 			step = 1
-		elif probe.just_pressed("Left") or probe.just_pressed("Up"):
+		elif probe.just_pressed("MenuLeft") or probe.just_pressed("MenuUp"):
 			step = -1
 		if probe.confirm_pressed():
 			_active = 0
@@ -435,13 +435,13 @@ func _drive_colour() -> void:
 		return
 	var across: int = icons.columns if icons.columns > 0 else 6
 	var step: int = 0
-	if _driver.pressed("Right"):
+	if _driver.pressed("MenuRight"):
 		step = 1
-	elif _driver.pressed("Left"):
+	elif _driver.pressed("MenuLeft"):
 		step = -1
-	elif _driver.pressed("Down"):
+	elif _driver.pressed("MenuDown"):
 		step = across
-	elif _driver.pressed("Up"):
+	elif _driver.pressed("MenuUp"):
 		step = -across
 	if step == 0:
 		return
@@ -501,13 +501,13 @@ func _drive_skin() -> void:
 ## Shared four-way reading of the driving device, factored out once a third
 ## screen needed the exact same Right/Left/Down/Up -> step mapping as COLOUR.
 func _nav_step(across: int) -> int:
-	if _driver.pressed("Right"):
+	if _driver.pressed("MenuRight"):
 		return 1
-	elif _driver.pressed("Left"):
+	elif _driver.pressed("MenuLeft"):
 		return -1
-	elif _driver.pressed("Down"):
+	elif _driver.pressed("MenuDown"):
 		return across
-	elif _driver.pressed("Up"):
+	elif _driver.pressed("MenuUp"):
 		return -across
 	return 0
 
