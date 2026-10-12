@@ -52,9 +52,15 @@ Godot:
 python3 tools/validate_radar_hud.py
 ```
 
-The gold ouroboros frame was generated with PixelLab Pixen
-(`29cd1bf7-a97a-4cfb-a3a9-cd3eff46ca39`), with the tail/mouth join and circular
-transparent opening cleaned locally. Sun and crescent-moon icons are drawn by `Radar.gd`.
+The slim gold ouroboros frame was generated with PixelLab Pixen
+(`5e27cde4-84f4-4799-960e-6a85fa3d85f1`, seed `73125`). Its ring was thinned
+with nearest-neighbour radial resampling, and the inward tail curl was removed
+to leave a transparent map opening. The 192x192 asset retains the existing
+232-pixel frame rectangle and overall HUD footprint. The map radius is now
+88 rather than 66 pixels, with a darker backing for contrast; its world range
+remains 1400. Sun and crescent-moon icons are drawn by `Radar.gd`.
+Transparency checks derive the map footprint from the actual texture dimensions
+and radar constants, including clearance from both map pixels and orbit icons.
 These are static checks, not a substitute for runtime rendering/type checks.
 
 ## validate_breakable_environment.gd

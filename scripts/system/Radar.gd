@@ -9,7 +9,7 @@ extends Control
 
 ## World distance the outer ring represents.
 @export var range_world: float = 1400.0
-@export var radius: float = 66.0
+@export var radius: float = 88.0
 @export var blip_size: float = 4.0
 ## Wall lines are cached; this is how often the cache is thrown away, so a new
 ## floor shows up without rebuilding it every frame.
@@ -71,7 +71,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var centre := CENTRE
-	draw_circle(centre, radius, Color(0.05, 0.05, 0.06, 0.55))
+	draw_circle(centre, radius, Color(0.05, 0.05, 0.06, 0.82))
 
 	## Centred on the party rather than on player one, so it agrees with the
 	## shared camera instead of drifting away from what is on screen.

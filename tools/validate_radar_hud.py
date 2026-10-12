@@ -119,14 +119,35 @@ class RadarHudChecks(unittest.TestCase):
 
     def test_dragon_opening_and_transparency(self):
         image = Image.open(ROOT / "assets/sprites/ui/radar/dragon_frame.png")
-        self.assertEqual(image.size, (192, 192))
         self.assertEqual(image.mode, "RGBA")
         self.assertEqual(image.getpixel((0, 0))[3], 0)
-        for y in range(192):
-            for x in range(192):
-                if (x + 0.5 - 96) ** 2 + (y + 0.5 - 96) ** 2 <= 55 ** 2:
+        radar = source("Radar")
+        radius = float(re.search(r"radius: float = ([\d.]+)", radar)[1])
+        frame = tuple(map(float, re.search(
+            r"FRAME_RECT := Rect2\(([^)]+)\)", radar)[1].split(",")))
+        centre = tuple(map(float, re.search(
+            r"CENTRE := Vector2\(([^)]+)\)", radar)[1].split(",")))
+        orbit = float(re.search(r"ORBIT_RADIUS: float = ([\d.]+)", radar)[1])
+        self.assertEqual(image.width, image.height)
+        self.assertEqual(frame[2], frame[3])
+        self.assertGreaterEqual(radius, 88)
+        self.assertLess(radius, orbit - 12)
+        self.assertEqual(centre, (frame[0] + frame[2] / 2, frame[1] + frame[3] / 2))
+        self.assertIn("range_world: float = 1400.0", radar)
+        scale = frame[2] / image.width
+        # Include one screen pixel of clearance around the map. Test texel
+        # corners, not just centres, so nearest-neighbour sampling stays clear.
+        for y in range(image.height):
+            for x in range(image.width):
+                dx = max(abs(x + 0.5 - image.width / 2) - 0.5, 0) * scale
+                dy = max(abs(y + 0.5 - image.height / 2) - 0.5, 0) * scale
+                if dx ** 2 + dy ** 2 <= (radius + 1) ** 2:
                     self.assertEqual(image.getpixel((x, y))[3], 0)
-        self.assertGreater(55 * 232 / 192, 66)
+                if image.getpixel((x, y))[3] > 0:
+                    far_x = (abs(x + 0.5 - image.width / 2) + 0.5) * scale
+                    far_y = (abs(y + 0.5 - image.height / 2) + 0.5) * scale
+                    self.assertLess(far_x ** 2 + far_y ** 2, (orbit - 12) ** 2)
+        self.assertGreater(image.getchannel("A").getbbox()[2], 0)
 
 
 if __name__ == "__main__":
