@@ -160,3 +160,24 @@ Headless runs report 1–2 leaked instances at exit. This is harmless, but it is
 - [ ] Install templates (B1), filter the export (B3), and remove the cheats (B2).
 - [ ] Test the built web page in Chrome and Firefox, at least: load time, memory, gamepad detection, and fullscreen.
 - [ ] If possible, also test a desktop export.
+
+---
+
+## 9. Fix status (follow-up pass)
+
+**Fixed (uncommitted):**
+- **B2:** the Cheats button is removed and immortality forced off when `OS.is_debug_build()` is false.
+- **B3:** the Web preset's `exclude_filter` now covers `tools/`, `archive/`, `art/`, `_GDD/`, `pictures/`, `script_templates/`, `_tests` sprites, `*.md`, `*.txt`, `*.py`, `*.zip` and `*.pdf`.
+- **H2:** the level-up screen treats disconnected slots as ready. Their unspent points stay banked.
+- **H3:** `MazeDemo` tracks `_paused_for_reconnect` and only lifts its own pause.
+- **H4:** `play_once` stops (reads as finished) and warns when a clip is missing.
+- **M1:** the invincibility end and the Breakable break frames now use node-bound tweens instead of tree-timer awaits.
+  - `finish_death` was already safe (a node-bound tween).
+  - `SceneLoader` is an autoload, so it can't be freed; no change needed.
+- **M4:** added `config/version="1.0"` and removed the "template" tag.
+- **L1:** the chair log is now `print_verbose`.
+- **L2:** deleted `.gitattributes` (LFS leftovers only).
+
+**Verified:** headless load-all (652 files, 0 failures), all validators, and `check-connections` pass.
+
+**Still yours:** B1 (install the export templates), H1 (choose platform and size), the real playtest, and testing in a browser.

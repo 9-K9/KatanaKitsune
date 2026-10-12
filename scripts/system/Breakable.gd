@@ -169,14 +169,25 @@ func _break() -> void:
 		sprite.texture = shattered
 		sprite.hframes = break_frames
 		sprite.frame = 0
+		## A tween bound to this prop, not an await on a tree timer, so a prop
+		## freed mid-break (floor change, quit to title) simply stops instead of
+		## resuming on a dead instance.
+		var frames := create_tween()
 		for frame_index in break_frames:
-			sprite.frame = frame_index
-			if frame_index == mini(2, break_frames - 1):
-				_drop_once()
-			await get_tree().create_timer(break_frame_time, false).timeout
+			frames.tween_callback(_show_break_frame.bind(frame_index))
+			frames.tween_interval(break_frame_time)
+		frames.tween_callback(_finish_break)
 	else:
+		_finish_break()
+
+
+func _show_break_frame(frame_index: int) -> void:
+	sprite.frame = frame_index
+	if frame_index == mini(2, break_frames - 1):
 		_drop_once()
 
+
+func _finish_break() -> void:
 	_drop_once()
 	if persist_broken:
 		sprite.frame = break_frames - 1

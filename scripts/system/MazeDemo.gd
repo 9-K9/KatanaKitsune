@@ -271,6 +271,9 @@ var _wave_live: bool = false
 var _clearing: bool = false
 ## The level-up screen is open between floors.
 var _upgrading: bool = false
+## Set when a lost pad is what paused the floor, so reconnecting only lifts
+## its own pause and never one owned by the pause menu or game over.
+var _paused_for_reconnect: bool = false
 ## Per-floor kill progress shown on the HUD. Total counts only enemies that
 ## were successfully instantiated; killed increments from each enemy's death
 ## signal before its corpse starts the fade/free sequence.
@@ -1670,7 +1673,7 @@ func _clear_buried_chairs() -> void:
 			chair.queue_free()
 			removed += 1
 	if removed > 0:
-		print("MazeDemo: removed %d chair(s) without clear floor around them" % removed)
+		print_verbose("MazeDemo: removed %d chair(s) without clear floor around them" % removed)
 
 
 ## The world position of the middle of a room's floor.
@@ -1807,7 +1810,9 @@ func _offer_upgrades(party: int) -> void:
 	await screen.finished
 	screen.queue_free()
 	_upgrading = false
-	if not Roster.any_lost():
+	if Roster.any_lost():
+		_paused_for_reconnect = true
+	else:
 		get_tree().paused = false
 
 
@@ -1817,6 +1822,8 @@ func _offer_upgrades(party: int) -> void:
 ## cost that player their run. Any spare pad plugged in adopts the waiting slot,
 ## so a replacement controller rescues them without a trip to a menu.
 func _on_device_lost(slot: int) -> void:
+	if not get_tree().paused:
+		_paused_for_reconnect = true
 	get_tree().paused = true
 	_show_reconnect("PLAYER %d — RECONNECT CONTROLLER" % (slot + 1))
 
@@ -1825,7 +1832,9 @@ func _on_device_regained(_slot: int) -> void:
 	if Roster.any_lost():
 		return
 	## The upgrade screen owns its pause; it unpauses once every player is ready.
-	get_tree().paused = _upgrading
+	if _paused_for_reconnect and not _upgrading:
+		get_tree().paused = false
+	_paused_for_reconnect = false
 	_show_reconnect("")
 
 

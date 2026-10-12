@@ -17,6 +17,12 @@ func _ready():
 	var art := get_node_or_null("Cover")
 	if art != null:
 		art.texture = load(PowerState.cover_path())
+	## Cheats are a development aid; a release export never shows them.
+	if not OS.is_debug_build():
+		var cheats := main_menu.get_node_or_null("Cheats") as Control
+		if cheats != null:
+			cheats.queue_free()
+		CheatManager.set_immortality(false)
 	_show_main_menu()
 	_sync_immortality_label()
 

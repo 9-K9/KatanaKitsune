@@ -566,7 +566,11 @@ func _start_invincibility() -> void:
 	tween.tween_property(myAnimatedSprite2D, "modulate:a", 0.5, 0.1)
 	tween.tween_property(myAnimatedSprite2D, "modulate:a", 1.0, 0.1)
 	tween.set_loops(4)  # Flash 4 times over ~0.8s
-	await get_tree().create_timer(invincibility_duration).timeout
+	## Bound to this body so a body freed mid-flash never resumes a dead await.
+	create_tween().tween_callback(_end_invincibility).set_delay(invincibility_duration)
+
+
+func _end_invincibility() -> void:
 	is_invincible = false
 
 func _on_death() -> void:

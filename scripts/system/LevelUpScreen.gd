@@ -118,11 +118,17 @@ func _cancel(column: Dictionary) -> void:
 	_refresh(column)
 
 
+## A slot whose pad is unplugged counts as ready, so the party is never held
+## hostage by a missing controller. Unspent points stay banked for next floor.
 func _all_ready() -> bool:
 	for column in _columns:
-		if not column["ready"]:
+		if not column["ready"] and not _is_lost(column["slot"]):
 			return false
 	return true
+
+
+func _is_lost(slot: int) -> bool:
+	return slot < Roster.count() and Roster.players[slot].get("lost", false)
 
 
 func _build_column(root: Control, slot: int, x: float) -> Dictionary:

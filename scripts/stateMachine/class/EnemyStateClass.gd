@@ -666,6 +666,12 @@ func play_chase() -> void:
 func play_once(state_name: String) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
 	animated_sprite.speed_scale = 1.0
+	## A monster without this clip would keep looping its last one and leave the
+	## state waiting forever. Stopping reads as finished, so the state moves on.
+	if not animated_sprite.sprite_frames.has_animation(clip):
+		push_warning("%s has no clip %s" % [name, clip])
+		animated_sprite.stop()
+		return
 	animated_sprite.play(clip)
 	_sync_collision_tween(clip)
 
