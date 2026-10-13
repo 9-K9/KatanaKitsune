@@ -63,6 +63,7 @@ const ISO_Y_SCALE: float = 0.5
 
 var health: float = 0.0
 var is_dead: bool = false
+var network_id: int = -1
 
 @onready var health_bar: ProgressBar = get_node_or_null("HealthBar")
 @onready var state_machine: FiniteStateMachine = get_node_or_null("FiniteStateMachine")
@@ -147,6 +148,8 @@ const WAVE_CAP: float = 2.5
 
 func _ready() -> void:
 	health = max_health
+	if NetworkManager.is_client and is_instance_valid(state_machine):
+		state_machine.process_mode = Node.PROCESS_MODE_DISABLED
 	_refresh_health_bar()
 	_scale_ranges_to_sprite()
 	_position_collision_shape()
@@ -918,6 +921,8 @@ func last_hit_slot(window_ms: int = 4000) -> int:
 
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		_guardable: bool = true) -> void:
+	if NetworkManager.is_client:
+		return
 	## Credited by proximity to the source of the blow, which is the player's
 	## own position for a swing and the arc's for a thrown one.
 	if from != Vector2.INF:

@@ -130,6 +130,16 @@ theme_override_styles/hover = SubResource("StyleBox_button_hover")
 theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆   NEW GAME   ◆"
 
+[node name="OnlineCoop" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
+custom_minimum_size = Vector2(310, 38)
+layout_mode = 2
+disabled = true
+theme_override_colors/font_color = Color(0.48, 0.46, 0.44, 1)
+theme_override_colors/font_disabled_color = Color(0.48, 0.46, 0.44, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBox_button_normal")
+text = "◆   ONLINE CO-OP (COMING SOON)   ◆"
+
 [node name="Settings" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
 custom_minimum_size = Vector2(310, 38)
 layout_mode = 2

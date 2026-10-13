@@ -82,7 +82,8 @@ func _snapshot_received() -> bool:
 
 
 func _run_client(port: int) -> void:
-	_check(NetworkManager.join("127.0.0.1", port) == OK, "client starts connecting")
+	_check(NetworkManager.join("127.0.0.1", port, false) == OK,
+			"client starts connecting")
 	await _wait_for(_client_connected, "client reaches CONNECTION_CONNECTED")
 	## Give the server a moment to finish its own bookkeeping before this
 	## process tears down the socket out from under it.

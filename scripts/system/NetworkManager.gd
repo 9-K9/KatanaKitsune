@@ -9,8 +9,11 @@ signal host_failed(reason: String)
 signal joined_server()
 signal join_failed(reason: String)
 signal server_lost()
+signal lobby_updated(player_count: int, is_leader: bool)
+signal session_started()
 
 const DEFAULT_PORT: int = 8910
+const ACTOR_SNAPSHOT_INTERVAL: float = 0.05
 const NETWORK_ACTIONS: PackedStringArray = [
 	"Left", "Right", "Up", "Down", "Run", "Katana", "Attack", "Defend",
 	"Dodge", "Action", "Jump", "Stealth", "Scroll1", "Scroll2", "Scroll3",
@@ -20,6 +23,11 @@ const NETWORK_ACTIONS: PackedStringArray = [
 var is_server: bool = false
 var is_client: bool = false
 var _client_input: PlayerInput
+var _room_leader_peer: int = 0
+var _session_started: bool = false
+var _pending_seed: int = 0
+var _pending_theme: int = 0
+var _snapshot_left: float = 0.0
 
 
 func _ready() -> void:
@@ -33,6 +41,11 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if is_server and _session_started:
+		_snapshot_left -= _delta
+		if _snapshot_left <= 0.0:
+			_snapshot_left = ACTOR_SNAPSHOT_INTERVAL
+			_broadcast_actor_snapshot()
 	if not is_client or multiplayer.multiplayer_peer == null \
 			or multiplayer.multiplayer_peer.get_connection_status() \
 			!= MultiplayerPeer.CONNECTION_CONNECTED:
@@ -54,7 +67,26 @@ func is_networked() -> bool:
 ## listener to run.
 func host(port: int = DEFAULT_PORT) -> Error:
 	var peer := WebSocketMultiplayerPeer.new()
-	var err: Error = peer.create_server(port)
+	var tls: TLSOptions = null
+	var certificate_path := OS.get_environment("KK_TLS_CERT_FILE")
+	var key_path := OS.get_environment("KK_TLS_KEY_FILE")
+	if certificate_path.is_empty() != key_path.is_empty():
+		push_error("NetworkManager: set both KK_TLS_CERT_FILE and KK_TLS_KEY_FILE")
+		host_failed.emit("tls_configuration_incomplete")
+		return ERR_INVALID_PARAMETER
+	if not certificate_path.is_empty():
+		var certificate := X509Certificate.new()
+		var key := CryptoKey.new()
+		var cert_error: Error = certificate.load(certificate_path)
+		var key_error: Error = key.load(key_path)
+		if cert_error != OK or key_error != OK:
+			var reason := "TLS certificate/key load failed (%s, %s)" % [
+				error_string(cert_error), error_string(key_error)]
+			push_error("NetworkManager: " + reason)
+			host_failed.emit(reason)
+			return ERR_FILE_CANT_READ
+		tls = TLSOptions.server(key, certificate)
+	var err: Error = peer.create_server(port, "*", tls)
 	if err != OK:
 		push_error("NetworkManager: failed to host on port %d (%s)" % [port, error_string(err)])
 		host_failed.emit(error_string(err))
@@ -68,10 +100,10 @@ func host(port: int = DEFAULT_PORT) -> Error:
 
 
 ## Connects to someone else's dedicated server as a client.
-func join(address: String, port: int = DEFAULT_PORT) -> Error:
+func join(address: String, port: int = DEFAULT_PORT, secure: bool = true) -> Error:
 	var peer := WebSocketMultiplayerPeer.new()
-	var url: String = "ws://%s:%d" % [address, port]
-	var err: Error = peer.create_client(url)
+	var url: String = "%s://%s:%d" % ["wss" if secure else "ws", address, port]
+	var err: Error = peer.create_client(url, TLSOptions.client() if secure else null)
 	if err != OK:
 		push_error("NetworkManager: failed to join %s (%s)" % [url, error_string(err)])
 		join_failed.emit(error_string(err))
@@ -86,9 +118,12 @@ func join(address: String, port: int = DEFAULT_PORT) -> Error:
 ## There is deliberately no account system or matchmaking site (per the
 ## chosen scope): a room code is just the host's own address, typed in by
 ## whoever is joining. "host" alone is shorthand for the default port.
-func join_room_code(code: String) -> Error:
+func join_room_code(code: String, secure: bool = true) -> Error:
 	var parsed: Dictionary = parse_room_code(code)
-	return join(parsed["address"], parsed["port"])
+	var address: String = parsed["address"]
+	var loopback: bool = address == "localhost" or address == "127.0.0.1" \
+			or address == "::1"
+	return join(address, parsed["port"], secure and not loopback)
 
 
 func parse_room_code(code: String) -> Dictionary:
@@ -136,11 +171,19 @@ func _start_dedicated_server(port: int) -> void:
 func _on_peer_connected(peer_id: int) -> void:
 	if not is_server:
 		return
+	if _session_started:
+		push_warning("NetworkManager: refusing late join from peer %d" % peer_id)
+		multiplayer.multiplayer_peer.disconnect_peer(peer_id)
+		return
 	var slot: int = Roster.join_network(peer_id)
 	if slot == -1:
 		push_warning("NetworkManager: peer %d refused, party is full" % peer_id)
+		multiplayer.multiplayer_peer.disconnect_peer(peer_id)
 		return
+	if _room_leader_peer == 0:
+		_room_leader_peer = peer_id
 	print("NetworkManager: peer %d joined as slot %d" % [peer_id, slot])
+	_send_lobby_state()
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
@@ -149,6 +192,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	var slot: int = Roster.slot_of_peer(peer_id)
 	_reset_network_input(slot)
 	Roster.drop_peer(peer_id)
+	_send_lobby_state()
 	print("NetworkManager: peer %d disconnected" % peer_id)
 
 
@@ -198,6 +242,7 @@ func _reset_network_input(slot: int) -> void:
 
 func _on_connected_to_server() -> void:
 	joined_server.emit()
+	rpc_id(1, "request_lobby_state")
 
 
 func _on_connection_failed() -> void:
@@ -208,4 +253,214 @@ func _on_connection_failed() -> void:
 func _on_server_disconnected() -> void:
 	is_server = false
 	is_client = false
+	_session_started = false
 	server_lost.emit()
+
+
+func _roster_snapshot() -> Array[Dictionary]:
+	var snapshot: Array[Dictionary] = []
+	for slot in Roster.players.size():
+		if not Roster.is_network(slot) or Roster.players[slot].get("lost", false):
+			continue
+		snapshot.append({
+			"peer_id": Roster.peer_id_of(slot),
+			"scheme": Roster.scheme_of(slot),
+			"hair": Roster.hair_of(slot),
+			"skin": Roster.skin_of(slot),
+		})
+	return snapshot
+
+
+func _send_lobby_state() -> void:
+	if not is_server:
+		return
+	var snapshot := _roster_snapshot()
+	for entry in snapshot:
+		rpc_id(int(entry["peer_id"]), "receive_lobby_state",
+				snapshot, _room_leader_peer)
+
+
+func _apply_remote_roster(snapshot: Array) -> bool:
+	if snapshot.is_empty() or snapshot.size() > Roster.MAX_PLAYERS:
+		return false
+	var own_peer: int = multiplayer.get_unique_id()
+	var seen: Dictionary = {}
+	var replacement: Array[Dictionary] = []
+	var owns_slot: bool = false
+	for entry in snapshot:
+		if not (entry is Dictionary) or not entry.has("peer_id"):
+			return false
+		var peer_id: int = int(entry["peer_id"])
+		if peer_id <= 1 or seen.has(peer_id):
+			return false
+		seen[peer_id] = true
+		var device: int = PlayerInput.KEYBOARD if peer_id == own_peer \
+				else PlayerInput.NETWORK
+		owns_slot = owns_slot or peer_id == own_peer
+		replacement.append({
+			"device": device,
+			"peer_id": peer_id,
+			"scheme": int(entry.get("scheme", -1)),
+			"hair": int(entry.get("hair", -1)),
+			"skin": int(entry.get("skin", -1)),
+			"lost": false,
+			"bot": false,
+		})
+	if not owns_slot:
+		return false
+	Roster.players = replacement
+	Roster.roster_changed.emit()
+	return true
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_lobby_state() -> void:
+	if not is_server or _session_started:
+		return
+	var peer_id: int = multiplayer.get_remote_sender_id()
+	if Roster.slot_of_peer(peer_id) == -1:
+		return
+	rpc_id(peer_id, "receive_lobby_state", _roster_snapshot(), _room_leader_peer)
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_lobby_state(snapshot: Array, leader_peer: int) -> void:
+	if not is_client or not _apply_remote_roster(snapshot):
+		return
+	_room_leader_peer = leader_peer
+	lobby_updated.emit(Roster.count(), is_room_leader())
+
+
+func is_room_leader() -> bool:
+	return is_client and _room_leader_peer == multiplayer.get_unique_id()
+
+
+func start_room() -> void:
+	if is_client and is_room_leader():
+		rpc_id(1, "request_start_session")
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_start_session() -> void:
+	if not is_server or _session_started \
+			or multiplayer.get_remote_sender_id() != _room_leader_peer \
+			or Roster.count() == 0:
+		return
+	_session_started = true
+	_pending_seed = randi()
+	_pending_theme = 0
+	rpc("receive_session_start", _pending_seed, _pending_theme, _roster_snapshot())
+	_start_session_scene()
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_session_start(seed: int, theme: int, snapshot: Array) -> void:
+	if not is_client or not _apply_remote_roster(snapshot):
+		return
+	_session_started = true
+	_pending_seed = seed
+	_pending_theme = theme
+	session_started.emit()
+
+
+func consume_pending_floor() -> Dictionary:
+	if not _session_started:
+		return {}
+	return {"seed": _pending_seed, "theme": _pending_theme}
+
+
+func _start_session_scene() -> void:
+	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
+
+
+func _broadcast_actor_snapshot() -> void:
+	var players: Array[Dictionary] = []
+	for body in get_tree().get_nodes_in_group("player"):
+		if not (body is CharacterBody2D) or not ("slot" in body):
+			continue
+		var machine := body.get_node_or_null("FiniteStateMachine") as FiniteStateMachine
+		var state: String = machine.current_state.name if machine != null \
+				and machine.current_state != null else ""
+		players.append({
+			"slot": int(body.get("slot")),
+			"position": body.global_position,
+			"velocity": body.velocity,
+			"facing": String(body.get("facing_dir")),
+			"state": state,
+			"health": float(body.get("health")),
+			"max_health": float(body.get("max_health")),
+			"is_dead": body.get("is_dead") == true,
+			"katana_drawn": body.get("katana_drawn") == true,
+			"stealthed": body.get("stealthed") == true,
+			"crouched": body.get("crouched") == true,
+		})
+	var enemies: Array[Dictionary] = []
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if not (enemy is CharacterBody2D) or not ("network_id" in enemy):
+			continue
+		var machine := enemy.get_node_or_null("FiniteStateMachine") as FiniteStateMachine
+		var state: String = machine.current_state.name if machine != null \
+				and machine.current_state != null else ""
+		enemies.append({
+			"id": int(enemy.get("network_id")),
+			"position": enemy.global_position,
+			"velocity": enemy.velocity,
+			"facing": String(enemy.get("facing_dir")),
+			"state": state,
+			"health": float(enemy.get("health")),
+			"is_dead": enemy.get("is_dead") == true,
+		})
+	rpc("receive_actor_snapshot", players, enemies)
+
+
+@rpc("authority", "call_remote", "unreliable_ordered")
+func receive_actor_snapshot(players: Array, enemies: Array) -> void:
+	if not is_client:
+		return
+	for state in players:
+		if not (state is Dictionary):
+			continue
+		var slot: int = int(state.get("slot", -1))
+		if slot < 0:
+			continue
+		for body in get_tree().get_nodes_in_group("player"):
+			if not (body is CharacterBody2D) or int(body.get("slot")) != slot:
+				continue
+			body.global_position = state.get("position", body.global_position)
+			body.velocity = state.get("velocity", Vector2.ZERO)
+			body.health = state.get("health", body.health)
+			body.max_health = state.get("max_health", body.max_health)
+			body.is_dead = state.get("is_dead", false)
+			body.katana_drawn = state.get("katana_drawn", false)
+			body.stealthed = state.get("stealthed", false)
+			body.crouched = state.get("crouched", false)
+			if "facing_dir" in body:
+				body.facing_dir = state.get("facing", body.facing_dir)
+			_apply_actor_state(body, String(state.get("state", "")))
+			break
+	for state in enemies:
+		if not (state is Dictionary):
+			continue
+		var network_id: int = int(state.get("id", -1))
+		for enemy in get_tree().get_nodes_in_group("enemy"):
+			if not ("network_id" in enemy) or int(enemy.get("network_id")) != network_id:
+				continue
+			enemy.global_position = state.get("position", enemy.global_position)
+			enemy.velocity = state.get("velocity", Vector2.ZERO)
+			enemy.health = state.get("health", enemy.health)
+			enemy.is_dead = state.get("is_dead", false)
+			if "facing_dir" in enemy:
+				enemy.facing_dir = state.get("facing", enemy.facing_dir)
+			_apply_actor_state(enemy, String(state.get("state", "")))
+			break
+
+
+func _apply_actor_state(body: Node, state_name: String) -> void:
+	if state_name.is_empty():
+		return
+	var machine := body.get_node_or_null("FiniteStateMachine") as FiniteStateMachine
+	if machine == null or (machine.current_state != null
+			and machine.current_state.name == state_name):
+		return
+	if machine.has_node(state_name):
+		machine.change_state(state_name)

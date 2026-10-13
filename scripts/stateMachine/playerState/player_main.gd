@@ -66,6 +66,10 @@ func _ready() -> void:
 	if input == null:
 		input = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
 	input.bind_body(self)
+	if NetworkManager.is_client:
+		var machine := get_node_or_null("FiniteStateMachine")
+		if machine != null:
+			machine.process_mode = Node.PROCESS_MODE_DISABLED
 	## Rebuilt whenever this slot's device changes. A PlayerInput binds to one
 	## device index at construction, and a slot can be adopted by a different pad
 	## when the original is unplugged — so without this a reconnected player
@@ -178,6 +182,8 @@ func InputHandler():
 	return round(direction)
 
 func _physics_process(_delta):
+	if NetworkManager.is_client:
+		return
 	input.update(_delta)
 	update_buffs()
 	update_scroll_look()

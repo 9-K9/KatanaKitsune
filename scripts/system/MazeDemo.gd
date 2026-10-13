@@ -331,6 +331,10 @@ var _start_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
+	var pending_floor := NetworkManager.consume_pending_floor()
+	if not pending_floor.is_empty():
+		maze_seed = int(pending_floor.get("seed", maze_seed))
+		level_theme = int(pending_floor.get("theme", level_theme))
 	day_night.elapsed = day_night_start_seconds
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
@@ -878,6 +882,7 @@ func _populate(step: Vector2) -> void:
 			for i in n:
 				var monster = _place(here, monster_scene)
 				if monster is EnemyBase:
+					monster.network_id = enemies_total
 					enemies_total += 1
 					monster.died.connect(_on_enemy_died)
 				if monster != null and monster.has_method("apply_tier"):

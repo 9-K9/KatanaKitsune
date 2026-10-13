@@ -476,6 +476,8 @@ func _note_attacker(from: Vector2) -> void:
 
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		guardable: bool = true) -> void:
+	if NetworkManager.is_client:
+		return
 	_note_attacker(from)
 	if CheatManager.immortality_enabled:
 		return

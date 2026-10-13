@@ -5,7 +5,6 @@ extends Node2D
 
 const SELECT := "res://scenes/menuscreens/characterSelect.tscn"
 
-
 ## The first button anywhere under `root`, focused so a controller has somewhere
 ## to start. Found by walking rather than by path, so moving a button in the
 ## scene does not quietly break pad navigation.
