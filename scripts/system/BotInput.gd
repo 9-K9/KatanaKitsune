@@ -14,6 +14,7 @@ const THREAT_STATES: Array[StringName] = [
 	&"attack", &"heavy", &"charge", &"stomp", &"crit",
 ]
 const EVADE_STATES: Array[StringName] = [&"heavy", &"charge", &"stomp", &"crit"]
+const REVIVE_DISTANCE: float = 120.0
 ## Sneaking states a stealth strike (`flair`) can be thrown from.
 const SNEAK_READY_STATES: Array[StringName] = [&"stealthIdle", &"stealthWalk"]
 const DRAWN_STATES: Array[StringName] = [&"katanaIdle", &"katanaWalk", &"katanaRun"]
@@ -22,6 +23,7 @@ var navigation := BotNavigation.new()
 var _body: WeakRef
 var _anchor: WeakRef
 var _target: WeakRef
+var _fallen: WeakRef
 ## Until when the bot sees its current fight through; see BotTactics.ENGAGE_MS.
 var _engaged_until_ms: int = 0
 var _move := Vector2.ZERO
@@ -64,6 +66,7 @@ func reset() -> void:
 	_aim = Vector2.ZERO
 	_anchor = null
 	_target = null
+	_fallen = null
 	_think_left = 0.0
 	_attack_left = 0.0
 	_tap_left = 0.0
@@ -98,11 +101,13 @@ func update(delta: float) -> void:
 		_think_left = THINK_INTERVAL
 		_choose_anchor(body)
 		_choose_target(body)
+		_choose_fallen(body)
+	var fallen := _dead(_fallen)
 	var anchor := _living(_anchor)
-	if anchor == null:
+	if anchor == null and fallen == null:
 		return
 	var target := _living(_target)
-	if target != null and _distance(target, anchor) > LEASH:
+	if target != null and anchor != null and _distance(target, anchor) > LEASH:
 		target = null
 		_target = null
 	if body.get("actionBlockInput") == true:
@@ -111,63 +116,81 @@ func update(delta: float) -> void:
 	var mode := BotTactics.mode_for(body)
 	var sneaking := BotTactics.sneaking_with(mode, body, anchor)
 	if target != null:
-		var offset := BotNavigation.ground(target.global_position - body.global_position)
-		var distance: float = offset.length()
-		var immediate_threat: bool = distance <= ATTACK_REACH and _state(target) in THREAT_STATES
-		## A sneaking bot stalks with the blade sheathed and strikes from
-		## cover; anything else fights with the katana out.
-		var stalking: bool = sneaking and not immediate_threat
-		if stalking and body.get("stealthed") != true:
+		var target_offset := BotNavigation.ground(target.global_position - body.global_position)
+		var target_dist: float = target_offset.length()
+		var immediate_threat: bool = target_dist <= ATTACK_REACH and _state(target) in THREAT_STATES
+		if immediate_threat or fallen == null:
+			## A sneaking bot stalks with the blade sheathed and strikes from
+			## cover; anything else fights with the katana out.
+			var stalking: bool = sneaking and not immediate_threat
+			if stalking and body.get("stealthed") != true:
+				if body.get("katana_drawn") == true:
+					if _draw_left <= 0.0 and state in DRAWN_STATES:
+						_now["Katana"] = true
+						_draw_left = 1.0
+					return
+				if _draw_left <= 0.0:
+					_now["Stealth"] = true
+					_draw_left = 0.5
+				return
+			if not stalking and body.get("katana_drawn") != true and _draw_left <= 0.0:
+				_now["Katana"] = true
+				_draw_left = 1.0
+				return
+			var offset := target_offset
+			var distance: float = target_dist
+			_aim = offset.normalized()
+			if distance <= ATTACK_REACH and _state(target) in EVADE_STATES:
+				var away := -_aim.round()
+				var retreat := body.global_position + Vector2(away.x, away.y * 0.5) * 48.0
+				if navigation.safe_segment(body.global_position, retreat):
+					_move = -_aim
+					_goal = Vector2.INF
+					navigation.reset()
+					return
+			var facing := IsoFacing.name_of(_aim.round())
+			var in_blade: bool = false
+			if distance <= ATTACK_REACH and body.has_method("can_slash_target"):
+				in_blade = body.can_slash_target(target, facing)
+			if distance <= ATTACK_REACH and in_blade and _visible(body, target):
+				navigation.reset()
+				_goal = Vector2.INF
+				if _state(target) in THREAT_STATES and state in [&"katanaIdle", &"katanaBlock"]:
+					_now["Defend"] = true
+					return
+				var ready: bool = state in SNEAK_READY_STATES if stalking \
+						else state in READY_STATES
+				if ready and _attack_left <= 0.0:
+					_tap_left = TAP_TIME
+					_attack_left = ATTACK_INTERVAL
+				_now["Attack"] = _tap_left > 0.0
+				return
+			# Stop at the actual collision surface, not an arbitrary centre distance.
+			var travel := target.global_position - body.global_position
+			var collision := KinematicCollision2D.new()
+			if body.test_move(body.global_transform, travel, collision, 0.5):
+				travel = collision.get_travel()
+				travel = travel.limit_length(maxf(travel.length() - 2.0, 0.0))
+			var approach := body.global_position + travel
+			if body.has_method("can_slash_target") and not \
+					body.can_slash_target(target, facing, approach):
+				approach = _strike_position(body, target, approach)
+			_follow(body, approach, false, 2.0)
+			return
+	if fallen != null:
+		var reach: float = _distance(body, fallen)
+		if reach <= REVIVE_DISTANCE:
+			navigation.reset()
+			_goal = Vector2.INF
 			if body.get("katana_drawn") == true:
-				if _draw_left <= 0.0 and state in DRAWN_STATES:
+				if _draw_left <= 0.0 and (state == &"katanaIdle" or state == &""):
 					_now["Katana"] = true
 					_draw_left = 1.0
 				return
-			if _draw_left <= 0.0:
+			if not (body.get("stealthed") == true or body.get("crouched") == true):
 				_now["Stealth"] = true
-				_draw_left = 0.5
 			return
-		if not stalking and body.get("katana_drawn") != true and _draw_left <= 0.0:
-			_now["Katana"] = true
-			_draw_left = 1.0
-			return
-		_aim = offset.normalized()
-		if distance <= ATTACK_REACH and _state(target) in EVADE_STATES:
-			var away := -_aim.round()
-			var retreat := body.global_position + Vector2(away.x, away.y * 0.5) * 48.0
-			if navigation.safe_segment(body.global_position, retreat):
-				_move = -_aim
-				_goal = Vector2.INF
-				navigation.reset()
-				return
-		var facing := IsoFacing.name_of(_aim.round())
-		var in_blade: bool = false
-		if distance <= ATTACK_REACH and body.has_method("can_slash_target"):
-			in_blade = body.can_slash_target(target, facing)
-		if distance <= ATTACK_REACH and in_blade and _visible(body, target):
-			navigation.reset()
-			_goal = Vector2.INF
-			if _state(target) in THREAT_STATES and state in [&"katanaIdle", &"katanaBlock"]:
-				_now["Defend"] = true
-				return
-			var ready: bool = state in SNEAK_READY_STATES if stalking \
-					else state in READY_STATES
-			if ready and _attack_left <= 0.0:
-				_tap_left = TAP_TIME
-				_attack_left = ATTACK_INTERVAL
-			_now["Attack"] = _tap_left > 0.0
-			return
-		# Stop at the actual collision surface, not an arbitrary centre distance.
-		var travel := target.global_position - body.global_position
-		var collision := KinematicCollision2D.new()
-		if body.test_move(body.global_transform, travel, collision, 0.5):
-			travel = collision.get_travel()
-			travel = travel.limit_length(maxf(travel.length() - 2.0, 0.0))
-		var approach := body.global_position + travel
-		if body.has_method("can_slash_target") and not \
-				body.can_slash_target(target, facing, approach):
-			approach = _strike_position(body, target, approach)
-		_follow(body, approach, false, 2.0)
+		_follow(body, fallen.global_position, reach > 240.0)
 		return
 	## Nothing to fight: match the blade and the sneaking to the mode.
 	var drawn: bool = body.get("katana_drawn") == true
@@ -185,13 +208,14 @@ func update(delta: float) -> void:
 			_now["Stealth"] = true
 			_draw_left = 0.5
 			return
-	var anchor_distance: float = _distance(body, anchor)
-	if anchor_distance <= BotTactics.follow_reach(mode, FOLLOW_REACH):
-		navigation.reset()
-		_goal = Vector2.INF
-		return
-	## Running out of stealth would give the party away.
-	_follow(body, anchor.global_position, anchor_distance > 340.0 and not sneaking)
+	if anchor != null:
+		var distance: float = _distance(body, anchor)
+		if distance <= BotTactics.follow_reach(mode, FOLLOW_REACH):
+			navigation.reset()
+			_goal = Vector2.INF
+			return
+		## Running out of stealth would give the party away.
+		_follow(body, anchor.global_position, distance > 340.0 and not sneaking)
 
 
 func _follow(body: CharacterBody2D, goal: Vector2, running: bool,
@@ -315,6 +339,31 @@ func _living(reference: WeakRef) -> Node2D:
 	var node := reference.get_ref() as Node2D if reference != null else null
 	return node if is_instance_valid(node) and not node.is_queued_for_deletion() \
 			and node.get("is_dead") != true else null
+
+
+func _dead(reference: WeakRef) -> Node2D:
+	var node := reference.get_ref() as Node2D if reference != null else null
+	return node if is_instance_valid(node) and not node.is_queued_for_deletion() \
+			and node.get("is_dead") == true else null
+
+
+func _choose_fallen(body: CharacterBody2D) -> void:
+	var best: CharacterBody2D = null
+	var distance: float = INF
+	for candidate in body.get_tree().get_nodes_in_group("player"):
+		if candidate == body or not (candidate is CharacterBody2D):
+			continue
+		if candidate.get("is_dead") != true or candidate.is_queued_for_deletion():
+			continue
+		var reach: float = _distance(body, candidate)
+		if reach < distance:
+			best = candidate
+			distance = reach
+	var previous := _dead(_fallen)
+	if best != previous:
+		navigation.reset()
+		_goal = Vector2.INF
+	_fallen = weakref(best) if best != null else null
 
 
 func _state(body: Node2D) -> StringName:

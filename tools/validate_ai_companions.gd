@@ -4,16 +4,28 @@ class ProbePlayer extends CharacterBody2D:
 	var slot: int = 0
 	var is_dead: bool = false
 	var katana_drawn: bool = true
+	var stealthed: bool = false
+	var crouched: bool = false
 	var actionBlockInput: bool = false
 	var input: PlayerInput
 
 	func winded() -> bool:
 		return false
 
+	func can_sneak() -> bool:
+		return true
+
+	func revive(health_fraction: float = 0.5) -> void:
+		is_dead = false
+
 	func _physics_process(delta: float) -> void:
 		if input == null:
 			return
 		input.update(delta)
+		if input.just_pressed("Katana"):
+			katana_drawn = not katana_drawn
+		if input.just_pressed("Stealth") and not katana_drawn:
+			stealthed = not stealthed
 		var move := input.vector().round()
 		velocity = Vector2(move.x, move.y * 0.5) * 183.0
 		move_and_slide()
@@ -203,12 +215,19 @@ func _follow_checks() -> void:
 	await _frames(180)
 	_check(_bot.position.x < -300, "controller reset follows a rebuilt floor's new spawn")
 	_human.is_dead = true
-	await _frames(20)
-	_check(_bot.input.vector() == Vector2.ZERO, "bots stop when no living human remains")
 	var over = load("res://scenes/menuscreens/gameOver.tscn").instantiate()
 	_world.add_child(over)
 	over.set_process(false)
-	_check(over._is_dead(), "all humans down ends the run even with a living bot")
+	_check(not over._is_dead(), "living bot keeps the run active when human falls")
+	_bot.position = Vector2.ZERO
+	_bot.input.reset()
+	await _frames(240)
+	_check(BotNavigation.ground(_human.position - _bot.position).length() <= 125.0,
+			"bot navigates to fallen teammate")
+	_check(_bot.input.pressed("Stealth") or not _bot.katana_drawn,
+			"bot initiates revive stance at fallen teammate")
+	_bot.is_dead = true
+	_check(over._is_dead(), "all players down ends the run")
 	_human.is_dead = false
 	_check(not over._is_dead(), "a living human keeps the run active")
 	over.free()
