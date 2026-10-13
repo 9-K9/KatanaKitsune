@@ -93,6 +93,63 @@ func is_bot(slot: int) -> bool:
 	return slot >= 0 and slot < players.size() and players[slot].get("bot", false)
 
 
+## Seats a remote player connecting over the network. Reuses a slot already
+## held open for a network player who dropped — same trick _on_joy_changed
+## plays for a pad coming back — rather than always appending, since a
+## WebSocketMultiplayerPeer hands out a fresh peer id on every connection and
+## the old one can never literally reconnect.
+func join_network(peer_id: int) -> int:
+	for i in players.size():
+		if players[i]["device"] == PlayerInput.NETWORK and players[i]["lost"]:
+			players[i]["peer_id"] = peer_id
+			players[i]["lost"] = false
+			device_regained.emit(i)
+			roster_changed.emit()
+			return i
+	if players.size() >= MAX_PLAYERS:
+		return -1
+	var scheme: int = 0
+	for i in PowerState.count():
+		if not scheme_taken(i):
+			scheme = i
+			break
+	players.append({"device": PlayerInput.NETWORK, "peer_id": peer_id, "scheme": scheme,
+			"hair": -1, "skin": -1, "lost": false, "bot": false})
+	roster_changed.emit()
+	return players.size() - 1
+
+
+func is_network(slot: int) -> bool:
+	return slot >= 0 and slot < players.size() \
+			and players[slot]["device"] == PlayerInput.NETWORK
+
+
+func peer_id_of(slot: int) -> int:
+	if not is_network(slot):
+		return 0
+	return int(players[slot].get("peer_id", 0))
+
+
+func slot_of_peer(peer_id: int) -> int:
+	for i in players.size():
+		if is_network(i) and int(players[i].get("peer_id", 0)) == peer_id:
+			return i
+	return -1
+
+
+## A network peer dropped. Marked lost rather than removed, exactly like a
+## pulled controller — the party pauses on that slot (MazeDemo already
+## listens for device_lost) and join_network() above reseats whoever
+## reconnects into the same slot instead of growing the roster.
+func drop_peer(peer_id: int) -> void:
+	var slot := slot_of_peer(peer_id)
+	if slot == -1:
+		return
+	players[slot]["lost"] = true
+	device_lost.emit(slot)
+	roster_changed.emit()
+
+
 func mode_of(slot: int) -> int:
 	if not is_bot(slot):
 		return DEFAULT_BOT_MODE
@@ -204,6 +261,8 @@ func colour_of(slot: int) -> Color:
 func input_for(slot: int) -> PlayerInput:
 	if is_bot(slot):
 		return BotInput.new()
+	if is_network(slot):
+		return NetworkInput.new(peer_id_of(slot))
 	return PlayerInput.new(device_of(slot))
 
 

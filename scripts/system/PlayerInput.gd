@@ -17,6 +17,9 @@ extends RefCounted
 
 const KEYBOARD: int = -1
 const BOT: int = -2
+## A slot filled by a remote player over the network rather than local
+## hardware or AI. See NetworkInput and NETWORKING.md.
+const NETWORK: int = -3
 
 ## Below this an axis is treated as centred. Sticks rest a little off zero, and
 ## without it a resting pad walks the character into a wall forever.
@@ -129,7 +132,7 @@ func pressed(action: String) -> bool:
 
 ## The live hardware read, before any frame bookkeeping.
 func _read(action: String) -> bool:
-	if device == BOT:
+	if device == BOT or device == NETWORK:
 		return false
 	if device == KEYBOARD:
 		for code in _keys.get(action, []):
@@ -226,7 +229,7 @@ func cancel_pressed() -> bool:
 ## Raw menu-button state, kept in the same per-frame snapshot as the actions so
 ## these are edges too and a held button does not scroll the whole list.
 func _read_menu(which: String) -> bool:
-	if device == BOT:
+	if device == BOT or device == NETWORK:
 		return false
 	if device == KEYBOARD:
 		if which == "__confirm":
@@ -246,6 +249,8 @@ func _edge(which: String) -> bool:
 func device_name() -> String:
 	if device == KEYBOARD:
 		return "KEYBOARD"
+	if device == NETWORK:
+		return "NETWORK"
 	var raw := Input.get_joy_name(device)
 	return raw.to_upper() if raw != "" else "GAMEPAD %d" % (device + 1)
 

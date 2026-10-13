@@ -35,6 +35,21 @@ godot --headless --path . --scene res://tools/validate_ai_modes.tscn
 
 Exits nonzero on a failed check.
 
+## validate_networking.gd
+
+Headless check that the dedicated-server WebSocket transport and the
+Roster<->peer plumbing (`NetworkManager`) work over a real loopback
+connection — a server and a client can't share one process's MultiplayerAPI,
+so it runs as two headless processes rather than one. See `NETWORKING.md`
+for what this does and does not cover yet.
+
+```bash
+tools/validate_networking.sh
+```
+
+Exits nonzero on a failed check or a timed-out wait. Memory-heavy (two Godot
+processes at once); skip it on a machine already under memory pressure.
+
 ## generate_title_power_variants.py
 
 Rebuild the eleven alternate title covers from the original
