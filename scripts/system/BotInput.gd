@@ -188,7 +188,12 @@ func update(delta: float) -> void:
 					_draw_left = 1.0
 				return
 			if not (body.get("stealthed") == true or body.get("crouched") == true):
-				_now["Stealth"] = true
+				## Stealth is edge-triggered by the player state machine. A
+				## continuous hold can be ignored by a hurt/transition state and
+				## then never produce another just_pressed event.
+				if _draw_left <= 0.0:
+					_now["Stealth"] = true
+					_draw_left = 0.5
 			return
 		_follow(body, fallen.global_position, reach > 240.0)
 		return

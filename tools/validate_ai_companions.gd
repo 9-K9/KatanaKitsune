@@ -7,6 +7,8 @@ class ProbePlayer extends CharacterBody2D:
 	var stealthed: bool = false
 	var crouched: bool = false
 	var actionBlockInput: bool = false
+	var ignore_stealth_presses: bool = false
+	var stealth_press_count: int = 0
 	var input: PlayerInput
 
 	func winded() -> bool:
@@ -24,8 +26,10 @@ class ProbePlayer extends CharacterBody2D:
 		input.update(delta)
 		if input.just_pressed("Katana"):
 			katana_drawn = not katana_drawn
-		if input.just_pressed("Stealth") and not katana_drawn:
-			stealthed = not stealthed
+		if input.just_pressed("Stealth"):
+			stealth_press_count += 1
+			if not ignore_stealth_presses and not katana_drawn:
+				stealthed = not stealthed
 		var move := input.vector().round()
 		velocity = Vector2(move.x, move.y * 0.5) * 183.0
 		move_and_slide()
@@ -226,6 +230,20 @@ func _follow_checks() -> void:
 			"bot navigates to fallen teammate")
 	_check(_bot.input.pressed("Stealth") or not _bot.katana_drawn,
 			"bot initiates revive stance at fallen teammate")
+	_bot.position = Vector2.ZERO
+	_human.position = Vector2(60.0, 0.0)
+	_bot.katana_drawn = false
+	_bot.stealthed = false
+	_bot.ignore_stealth_presses = true
+	_bot.stealth_press_count = 0
+	_bot.input.reset()
+	await _frames(3)
+	var ignored_presses: int = _bot.stealth_press_count
+	_bot.ignore_stealth_presses = false
+	await _frames(45)
+	_check(ignored_presses > 0 and _bot.stealth_press_count > ignored_presses,
+			"bot retries edge-triggered revive stance after an ignored press")
+	_check(_bot.stealthed, "bot can enter revive stance after the retry")
 	_bot.is_dead = true
 	_check(over._is_dead(), "all players down ends the run")
 	_human.is_dead = false
