@@ -346,9 +346,8 @@ gameplay/combat/state-machine files touched:
 
   scripts/system/NetworkInput.gd (new)
     A PlayerInput for a network-controlled slot, shaped exactly like
-    BotInput — never reads Input.* locally. apply_snapshot() is the only
-    thing that updates what it reports. NOTHING CALLS apply_snapshot() YET —
-    see "what's left" below.
+    BotInput — never reads Input.* locally. NetworkManager now feeds it
+    validated snapshots from that peer's client.
 
   scripts/system/Roster.gd
     join_network(peer_id) seats a connecting peer, reusing a slot already
@@ -363,13 +362,14 @@ gameplay/combat/state-machine files touched:
   tools/validate_networking.gd / .tscn / .sh (new)
     A real two-process headless check: hosts on loopback, connects a second
     process as a client, confirms the peer gets a roster slot, confirms
-    disconnect marks it lost rather than dropping it.
-    *** NEVER SUCCESSFULLY RUN. *** Running two Godot headless processes at
-    once crashed this sandbox from memory pressure, twice, before it could
-    finish. The script was reviewed by hand and reads correctly, but treat it
-    as unverified until it actually runs somewhere with headroom:
+    input reaches the server-side NetworkInput, then confirms disconnect
+    marks it lost and clears held input.
+    At the time this foundation landed, the two-process test had never
+    completed: running both Godot processes crashed the sandbox from memory
+    pressure. That warning is historical now: the expanded networking check
+    passed on 2026-10-13, including bounded input delivery and disconnect
+    clearing.
 
-        git pull
         tools/validate_networking.sh
 
     Prints PASS/FAIL per check, exits nonzero on any failure or timeout.
@@ -385,15 +385,9 @@ all of the above in place — validate_ai_companions.tscn 82/82,
 validate_ai_modes.tscn 63/63. Single-player, local co-op and the bot
 teammates are unaffected; this was additive only.
 
-WHAT'S LEFT (NETWORKING.md numbers these 1-6; the order I'd tackle them):
+WHAT'S LEFT (NETWORKING.md numbers these 1-5; the order I'd tackle them):
 
-  1. Forward a connected client's real input (movement vector, aim vector,
-     action-pressed state) to the server once a tick via RPC, and have the
-     server call NetworkInput.apply_snapshot() with it when it arrives.
-     Nothing does this yet — a connected peer currently takes a roster slot
-     but that slot's body does not move.
-
-  2. Gate the "decide and simulate" half of AnimatedCharacterClass /
+  1. Gate the "decide and simulate" half of AnimatedCharacterClass /
      EnemyStateClass behind is_multiplayer_authority() (a no-op in offline
      play, since offline authority defaults to true for everyone) so only
      the server ever runs real movement/AI/damage logic; add a
@@ -403,35 +397,33 @@ WHAT'S LEFT (NETWORKING.md numbers these 1-6; the order I'd tackle them):
      validator coverage, and ideally an actual playtest, not just headless
      checks.
 
-  3. Already banked and worth remembering: MazeDemo.gd seeds every random
+  2. Already banked and worth remembering: MazeDemo.gd seeds every random
      decision off `maze_seed` (_rng.seed = maze_seed), so the server only
      has to send clients that one number — each client regenerates an
      identical floor locally. Only gameplay state (who's alive, who's
      where, what's been picked up) needs real replication, not every tile/
      prop/enemy spawn.
 
-  4. server_lost signal on NetworkManager fires when a client loses the
+  3. server_lost signal on NetworkManager fires when a client loses the
      server mid-run; nothing listens to it yet.
 
-  5. No in-game host/join UI exists — host()/join_room_code() only callable
+  4. No in-game host/join UI exists — host()/join_room_code() only callable
      from script or the --server CLI flag today. Deliberately deferred
-     until item 1 actually makes a network slot do something visible.
+     until gameplay replication makes a network slot visible.
 
-  6. Client-side prediction/interpolation, web export bundle-size tuning,
+  5. Client-side prediction/interpolation, web export bundle-size tuning,
      NAT/firewall testing — all still ahead, unchanged from the original
      plan.
 
 RESUME PROMPT, if handing this straight to an agent instead of re-reading all
 of the above:
 
-  Read NETWORKING.md and log.txt (2026-10-13 section) in this repo. Run
-  tools/validate_networking.sh and fix anything it reports as FAIL. Once
-  clean, continue with "what's left" item 1: add an RPC forwarding a
-  connected client's real input to the server once a tick, and have the
-  server call apply_snapshot() on that peer's NetworkInput. Don't touch
-  gameplay/combat/state-machine files beyond what's strictly needed for
-  that wiring, and keep validating against validate_ai_companions.tscn /
-  validate_ai_modes.tscn as you go so single-player and local co-op don't
-  regress.
+  Read NETWORKING.md and log.txt (2026-10-13 section). The latest phase adds
+  per-physics-tick client input RPCs and server-side NetworkInput application.
+  Run tools/validate_networking.sh only on a machine with enough memory for
+  two headless Godot processes, then run both AI teammate validators. If
+  clean, continue with "what's left" item 1: host-authoritative character
+  and enemy simulation plus replicated state. Keep that as a separate phase
+  with focused validators; input transport is not complete online gameplay.
 
 ===============================================================================

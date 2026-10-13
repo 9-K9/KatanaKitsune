@@ -9,9 +9,8 @@ extends PlayerInput
 ## that ever changes what `pressed()`/`vector()`/`aim_vector()` report —
 ## called by NetworkManager when a fresh snapshot arrives for this peer.
 ##
-## This is NETWORKING.md bucket 3's building block. Nothing yet calls
-## apply_snapshot() during real gameplay — see that doc for what remains
-## before a network slot actually moves a body around the maze.
+## NetworkManager applies each validated client input snapshot here. Character
+## authority and state replication remain separate unfinished phases.
 
 var peer_id: int = 0
 var _move := Vector2.ZERO

@@ -4,20 +4,34 @@
 set -u
 
 PORT="${1:-8955}"
+GODOT_BIN="${GODOT:-godot}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVER_LOG="$(mktemp)"
 CLIENT_LOG="$(mktemp)"
+TIMEOUT_SECONDS=30
+
+cleanup() {
+	rm -f "$SERVER_LOG" "$CLIENT_LOG"
+}
+trap cleanup EXIT
+
+if ! command -v "$GODOT_BIN" >/dev/null 2>&1; then
+	echo "validate_networking: Godot executable not found: $GODOT_BIN" >&2
+	exit 127
+fi
 
 cd "$PROJECT_DIR" || exit 1
 
-godot --headless --path . res://tools/validate_networking.tscn --max-fps 120 \
+timeout "${TIMEOUT_SECONDS}s" "$GODOT_BIN" --headless --path . \
+	res://tools/validate_networking.tscn --max-fps 120 \
 	-- --role=server --port="$PORT" > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
 # Give the server a moment to bind the port before the client dials in.
 sleep 1.5
 
-godot --headless --path . res://tools/validate_networking.tscn --max-fps 120 \
+timeout "${TIMEOUT_SECONDS}s" "$GODOT_BIN" --headless --path . \
+	res://tools/validate_networking.tscn --max-fps 120 \
 	-- --role=client --port="$PORT" > "$CLIENT_LOG" 2>&1
 CLIENT_STATUS=$?
 
@@ -28,7 +42,6 @@ echo "--- server ---"
 cat "$SERVER_LOG"
 echo "--- client ---"
 cat "$CLIENT_LOG"
-rm -f "$SERVER_LOG" "$CLIENT_LOG"
 
 if [ "$SERVER_STATUS" -ne 0 ] || [ "$CLIENT_STATUS" -ne 0 ]; then
 	echo "validate_networking: FAILED (server=$SERVER_STATUS client=$CLIENT_STATUS)"

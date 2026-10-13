@@ -20,8 +20,9 @@ has to re-derive it from the commit log.
   AI-teammate code paths.
 - **`scripts/system/NetworkInput.gd`** (new): a `PlayerInput` for a
   network-controlled slot, shaped exactly like `BotInput` — never reads
-  `Input.*` locally. `apply_snapshot()` is the only thing that updates what it
-  reports; nothing calls it yet (see "Not done" below).
+  `Input.*` locally. The client now sends a bounded input snapshot each
+  physics tick, and `NetworkManager` applies it only to the `NetworkInput`
+  belonging to that peer's roster slot. Disconnect clears held input.
 - **`scripts/system/Roster.gd`**: `join_network(peer_id)` seats a connecting
   peer, reusing a slot already held open for a dropped network player instead
   of always growing the roster (a `WebSocketMultiplayerPeer` hands out a new
@@ -34,8 +35,9 @@ has to re-derive it from the commit log.
 - **`tools/validate_networking.gd`/`.tscn`/`.sh`**: a real two-process
   headless check (a server and a client can't share one process's
   `MultiplayerAPI`) that hosts on loopback, connects, confirms the peer gets a
-  roster slot, then confirms a disconnect marks that slot lost rather than
-  dropping it. Run with `tools/validate_networking.sh` (see `tools/README.md`).
+  roster slot and its input reaches the server-side `NetworkInput`, then
+  confirms disconnect marks the slot lost and clears held input. Run with
+  `tools/validate_networking.sh` (see `tools/README.md`).
 
 ## Why this scope and not more
 
@@ -53,13 +55,9 @@ unchanged after these edits.
 
 ## Not done yet (next phases)
 
-1. **Actually driving gameplay from the network.** Nothing currently calls
-   `NetworkInput.apply_snapshot()` — a connected peer takes a roster slot but
-   that slot's body does not yet move. This needs: an RPC that forwards a
-   client's raw input (vector/aim/action-pressed state) to the server each
-   physics tick, and the server calling `apply_snapshot()` on that slot's
-   `NetworkInput` when it arrives.
-2. **Host-authoritative simulation.** The simplest correct model for a
+1. **Host-authoritative simulation.** Input snapshots now reach the server-side
+   `NetworkInput`, but characters and enemies are not yet assigned network
+   authority or replicated. The simplest correct model for a
    dedicated server (no client-side prediction yet) is: only the server ever
    runs real movement/AI/damage logic; clients only render replicated state.
    Concretely, gate the "decide and simulate" side of `AnimatedCharacterClass`
@@ -67,21 +65,21 @@ unchanged after these edits.
    offline play by default, so this is a no-op until a multiplayer peer is
    actually active), and add a `MultiplayerSynchronizer` to the player and
    enemy scenes replicating position/velocity/animation state/health.
-3. **Floor generation already has the right shape for this**: `MazeDemo.gd`
+2. **Floor generation already has the right shape for this**: `MazeDemo.gd`
    seeds every random decision from `maze_seed` (`_rng.seed = maze_seed`), so
    the server only needs to send clients the seed, not every tile/prop/enemy
    spawn — each client can regenerate an identical floor locally. Only
    *gameplay* state (who's alive, who's where, what's been picked up) needs
    real replication.
-4. **Disconnect/reconnect for the *human playing on this machine* losing the
+3. **Disconnect/reconnect for the *human playing on this machine* losing the
    server** (vs. the server losing a remote peer, which is done) — i.e. what
    a client should do if `server_lost` fires mid-run.
-5. **In-game host/join UI.** No title-screen button or room-code entry field
+4. **In-game host/join UI.** No title-screen button or room-code entry field
    exists yet — `NetworkManager.host()`/`join_room_code()` must be called from
-   script or the CLI flags today. Deliberately deferred until bucket 1 above
-   actually does something visible, so the UI doesn't promise more than the
-   game currently does.
-6. **Client-side prediction/interpolation**, **web export bundle-size
+   script or the CLI flags today. Deliberately deferred until replicated
+   gameplay makes a network session visible, so the UI doesn't promise more
+   than the game currently does.
+5. **Client-side prediction/interpolation**, **web export bundle-size
    tuning**, and **NAT/firewall testing** — unchanged from the original plan,
    all still ahead.
 

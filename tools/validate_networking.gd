@@ -1,9 +1,8 @@
 extends Node
 
 ## Headless check that the dedicated-server WebSocket transport and the
-## Roster<->peer plumbing (NetworkManager; NETWORKING.md buckets 1 and the
-## Roster half of 3) work over a real loopback connection, not just that the
-## code compiles.
+## Roster<->peer plumbing and input snapshot delivery (NetworkManager) work
+## over a real loopback connection, not just that the code compiles.
 ##
 ## A server and a client can't share one process's MultiplayerAPI, so this
 ## runs as two separate headless processes:
@@ -16,7 +15,12 @@ extends Node
 
 const TIMEOUT_SEC: float = 8.0
 
+class NetworkProbe extends CharacterBody2D:
+	var slot: int = -1
+	var input: PlayerInput
+
 var _failed: bool = false
+var _probe: NetworkProbe
 
 
 func _ready() -> void:
@@ -55,9 +59,26 @@ func _run_server(port: int) -> void:
 	_check(Roster.count() == 1, "roster has exactly one slot after one peer connects")
 	_check(Roster.is_network(0), "slot 0 is a network slot")
 	_check(Roster.peer_id_of(0) > 0, "slot 0 carries a real peer id")
+	_probe = NetworkProbe.new()
+	_probe.slot = 0
+	_probe.input = Roster.input_for(0)
+	_probe.add_to_group("player")
+	add_child(_probe)
+	await _wait_for(_snapshot_received,
+			"client input reaches its server-side NetworkInput and is bounded")
 	await _wait_for(func() -> bool: return Roster.any_lost(),
 			"the peer disconnecting marks its slot lost, not removed")
 	_check(Roster.count() == 1, "the slot is kept, not dropped, after disconnect")
+	_check(not _probe.input.pressed("Attack")
+			and _probe.input.vector() == Vector2.ZERO
+			and _probe.input.aim_vector() == Vector2.ZERO,
+			"disconnect clears held network input")
+
+
+func _snapshot_received() -> bool:
+	return _probe.input.pressed("Attack") \
+			and _probe.input.vector().is_equal_approx(Vector2(0.6, 0.8)) \
+			and _probe.input.aim_vector().is_equal_approx(Vector2.RIGHT)
 
 
 func _run_client(port: int) -> void:
@@ -65,6 +86,9 @@ func _run_client(port: int) -> void:
 	await _wait_for(_client_connected, "client reaches CONNECTION_CONNECTED")
 	## Give the server a moment to finish its own bookkeeping before this
 	## process tears down the socket out from under it.
+	NetworkManager.is_client = false
+	NetworkManager.rpc_id(1, "receive_input_snapshot",
+			{"Attack": true}, Vector2(0.6, 0.8), Vector2(2.0, 0.0))
 	await get_tree().create_timer(0.5).timeout
 	NetworkManager.stop()
 
