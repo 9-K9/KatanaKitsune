@@ -139,6 +139,17 @@ const THEMES: Array[Dictionary] = [
 ## multiplies by the sixteen of them — at 1.5 a four-player floor one came out
 ## at 92 monsters, which is a slog rather than a scaling.
 @export var party_enemy_bonus: float = 0.7
+## Puts everything away from the screen to sleep — rooms, props, torches,
+## animals, monsters — and wakes it before it comes into view. See WorldStreamer.
+@export var stream_world: bool = true
+## How far past the screen edge things are already awake. Wider than a torch's
+## glow, so a light just off screen is never missing from what is on it.
+@export var stream_buffer: float = 512.0
+## Extra distance before something awake goes back to sleep, so walking along
+## the edge does not flick it on and off.
+@export var stream_hysteresis: float = 256.0
+## Anything this close to a player stays awake whatever the camera shows.
+@export var wake_radius: float = 900.0
 
 ## Breathing room kept around the party when the camera pulls back to hold them.
 @export var party_margin: float = 320.0
@@ -282,6 +293,7 @@ var enemies_total: int = 0
 ## When this wave began, for the speed bonus.
 var _wave_started: float = 0.0
 var _boss_placed: bool = false
+var _streamer: WorldStreamer = null
 ## What the party was worth on wave one, so scaling is applied to the original
 ## numbers each wave rather than compounding on last wave's result.
 var _party_base: Dictionary = {}
@@ -396,6 +408,7 @@ func descend() -> void:
 	for body in keep:
 		_players.append(body)
 	_rooms.clear()
+	_streamer = null
 	_wave_live = false
 	_clearing = false
 	## One frame for the queue_free calls above to actually happen. They are
@@ -754,6 +767,14 @@ func _build() -> void:
 		_weather.name = "OutdoorWeather"
 		add_child(_weather)
 		_weather.setup(_ext, maze_seed, outdoor_weather, weather_intensity)
+	if stream_world:
+		_streamer = WorldStreamer.new()
+		_streamer.name = "WorldStreamer"
+		_streamer.buffer = stream_buffer
+		_streamer.hysteresis = stream_hysteresis
+		_streamer.player_reach = wake_radius
+		add_child(_streamer)
+		_streamer.setup(self, _rooms.values())
 	_building = false
 
 

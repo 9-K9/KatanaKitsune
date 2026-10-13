@@ -50,6 +50,21 @@ func _ready() -> void:
 		material = _shader
 
 
+## Set by WorldStreamer while this layer's room is far from the screen.
+var dormant: bool = false
+
+
+func set_dormant(on: bool) -> void:
+	if on == dormant:
+		return
+	dormant = on
+	if mode == Mode.FADE and _shader == null:
+		return
+	set_process(not on)
+	if on and mode == Mode.FADE:
+		_shader.set_shader_parameter("subject_count", 0)
+
+
 func _process(_delta: float) -> void:
 	## The nearest player to this wall, not the first one in the group. With a
 	## party, keying on player one meant a wall never lifted for anybody else —
@@ -84,13 +99,31 @@ func _process(_delta: float) -> void:
 ## enough to one of them to be on screen. Players go first so they keep their
 ## holes if a crowd ever overruns MAX_SUBJECTS. Only the nearest player used to
 ## be listed, so a second player behind the same wall stayed hidden.
+## Shared by every layer and rebuilt once a frame: each room has several wall
+## layers, and each used to walk the whole enemy group for itself.
+static var _subject_frame: int = -1
+static var _subject_cache: Array[Node2D] = []
+
+
 func _subjects(_target: CharacterBody2D) -> Array[Node2D]:
+	var frame: int = Engine.get_process_frames()
+	if frame != _subject_frame:
+		_subject_frame = frame
+		_subject_cache = _gather_subjects()
+	var out: Array[Node2D] = []
+	for node in _subject_cache:
+		if is_instance_valid(node):
+			out.append(node)
+	return out
+
+
+func _gather_subjects() -> Array[Node2D]:
 	var crew := Roster.bodies(get_tree())
 	var out: Array[Node2D] = []
 	for body in crew:
 		out.append(body)
 	for node in get_tree().get_nodes_in_group("enemy"):
-		if not (node is Node2D):
+		if not (node is Node2D) or not (node as Node2D).visible:
 			continue
 		for body in crew:
 			if node.global_position.distance_to(body.global_position) <= subject_range:
@@ -103,6 +136,9 @@ func _subjects(_target: CharacterBody2D) -> Array[Node2D]:
 func _is_covering(world_pos: Vector2) -> bool:
 	var local: Vector2 = to_local(world_pos)
 	var origin: Vector2i = local_to_map(local)
+	## Nothing of this layer within reach: the scan below could only miss.
+	if not get_used_rect().grow(search_radius).has_point(origin):
+		return false
 	for dy in range(-search_radius, search_radius + 1):
 		for dx in range(-search_radius, search_radius + 1):
 			var cell: Vector2i = origin + Vector2i(dx, dy)

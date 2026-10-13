@@ -923,6 +923,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		_guardable: bool = true) -> void:
 	if NetworkManager.is_client:
 		return
+	set_dormant(false)
 	## Credited by proximity to the source of the blow, which is the player's
 	## own position for a swing and the arc's for a thrown one.
 	if from != Vector2.INF:
@@ -1015,9 +1016,44 @@ func can_petrify() -> bool:
 	return not is_dead and not _petrified
 
 
+## Asleep while nobody is near the screen. MazeDemo switches this a few times a
+## second: a wandering monster across the floor costs a state machine, a
+## move_and_slide and an animation every frame for something nobody can see.
+## Only an idle monster sleeps, so a chase is never frozen mid-stride.
+var dormant: bool = false
+
+
+func set_dormant(on: bool) -> void:
+	if on == dormant:
+		return
+	if on:
+		if is_dead or _petrified or not is_instance_valid(state_machine):
+			return
+		var current: Node = state_machine.current_state
+		if current == null or current.name != &"idle":
+			return
+	dormant = on
+	velocity = Vector2.ZERO
+	visible = not on
+	if is_instance_valid(state_machine) and not _petrified:
+		state_machine.process_mode = Node.PROCESS_MODE_DISABLED if on \
+				else Node.PROCESS_MODE_INHERIT
+	if is_instance_valid(animated_sprite):
+		if on:
+			animated_sprite.pause()
+		else:
+			animated_sprite.play()
+	if is_instance_valid(collision_tween):
+		if on:
+			collision_tween.pause()
+		elif collision_tween.assigned_animation != &"":
+			collision_tween.play()
+
+
 func petrify(seconds: float) -> void:
 	if not can_petrify():
 		return
+	set_dormant(false)
 	_petrified = true
 	velocity = Vector2.ZERO
 	knockback_velocity = Vector2.ZERO
