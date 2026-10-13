@@ -319,3 +319,119 @@ REMOVED from AI_Class: gameManager, direction, self_state, animation_state and
     moot; those scenes no longer exist.
 
 ===============================================================================
+  2026-10-13  online-multiplayer foundation (commit d53c363a, pushed)
+===============================================================================
+
+ASKED: what would it take to put the game on web with online co-op for up to
+4 players, and could an AI no-code tool (Lovable) build the hosting side.
+ANSWERED: no — Lovable/Bolt/etc. can scaffold a peripheral lobby webpage at
+best; they cannot export Godot to WASM, write the GDScript netcode, or run
+the stateful authoritative game server. User chose: dedicated server (not
+peer-to-peer), simple room code to join (no accounts, no lobby website).
+
+WHAT LANDED — foundation only, zero gameplay wiring, zero existing
+gameplay/combat/state-machine files touched:
+
+  scripts/system/NetworkManager.gd (new autoload)
+    Wraps WebSocketMultiplayerPeer (works from a browser export too — raw
+    ENet/UDP does not). host(port) / join(address, port) /
+    join_room_code("host[:port]"). `--server` or `--server=PORT` on the
+    command line boots straight into a headless dedicated server instead of
+    the title screen — that's the process meant to run on a small always-on
+    VPS/PaaS box.
+
+  scripts/system/PlayerInput.gd
+    Added a third device sentinel, NETWORK, next to the existing
+    KEYBOARD/BOT.
+
+  scripts/system/NetworkInput.gd (new)
+    A PlayerInput for a network-controlled slot, shaped exactly like
+    BotInput — never reads Input.* locally. apply_snapshot() is the only
+    thing that updates what it reports. NOTHING CALLS apply_snapshot() YET —
+    see "what's left" below.
+
+  scripts/system/Roster.gd
+    join_network(peer_id) seats a connecting peer, reusing a slot already
+    held open for a dropped network player rather than always growing the
+    roster (a fresh WebSocket connection always gets a new peer id, so "the
+    same peer reconnecting" has to be matched by slot, not id). drop_peer()
+    marks that slot lost, reusing the EXACT device_lost/device_regained
+    signals and pause behaviour already built for a pulled gamepad — a
+    dropped network player already halts the party and waits, for free.
+    input_for() returns NetworkInput for a network slot.
+
+  tools/validate_networking.gd / .tscn / .sh (new)
+    A real two-process headless check: hosts on loopback, connects a second
+    process as a client, confirms the peer gets a roster slot, confirms
+    disconnect marks it lost rather than dropping it.
+    *** NEVER SUCCESSFULLY RUN. *** Running two Godot headless processes at
+    once crashed this sandbox from memory pressure, twice, before it could
+    finish. The script was reviewed by hand and reads correctly, but treat it
+    as unverified until it actually runs somewhere with headroom:
+
+        git pull
+        tools/validate_networking.sh
+
+    Prints PASS/FAIL per check, exits nonzero on any failure or timeout.
+    FIX WHATEVER IT REPORTS BEFORE BUILDING ANYTHING ON TOP OF THIS.
+
+  NETWORKING.md (new)
+    The fuller technical status doc — what's done, what deliberately is not,
+    why the scope stopped where it did, how to actually run the dedicated
+    server.
+
+REGRESSION CHECK: both pre-existing AI-teammate validators still pass with
+all of the above in place — validate_ai_companions.tscn 82/82,
+validate_ai_modes.tscn 63/63. Single-player, local co-op and the bot
+teammates are unaffected; this was additive only.
+
+WHAT'S LEFT (NETWORKING.md numbers these 1-6; the order I'd tackle them):
+
+  1. Forward a connected client's real input (movement vector, aim vector,
+     action-pressed state) to the server once a tick via RPC, and have the
+     server call NetworkInput.apply_snapshot() with it when it arrives.
+     Nothing does this yet — a connected peer currently takes a roster slot
+     but that slot's body does not move.
+
+  2. Gate the "decide and simulate" half of AnimatedCharacterClass /
+     EnemyStateClass behind is_multiplayer_authority() (a no-op in offline
+     play, since offline authority defaults to true for everyone) so only
+     the server ever runs real movement/AI/damage logic; add a
+     MultiplayerSynchronizer to the player and enemy scenes to replicate
+     position/animation/health down to clients. This is the highest-risk
+     bucket — touches the combat/state-machine code directly, needs careful
+     validator coverage, and ideally an actual playtest, not just headless
+     checks.
+
+  3. Already banked and worth remembering: MazeDemo.gd seeds every random
+     decision off `maze_seed` (_rng.seed = maze_seed), so the server only
+     has to send clients that one number — each client regenerates an
+     identical floor locally. Only gameplay state (who's alive, who's
+     where, what's been picked up) needs real replication, not every tile/
+     prop/enemy spawn.
+
+  4. server_lost signal on NetworkManager fires when a client loses the
+     server mid-run; nothing listens to it yet.
+
+  5. No in-game host/join UI exists — host()/join_room_code() only callable
+     from script or the --server CLI flag today. Deliberately deferred
+     until item 1 actually makes a network slot do something visible.
+
+  6. Client-side prediction/interpolation, web export bundle-size tuning,
+     NAT/firewall testing — all still ahead, unchanged from the original
+     plan.
+
+RESUME PROMPT, if handing this straight to an agent instead of re-reading all
+of the above:
+
+  Read NETWORKING.md and log.txt (2026-10-13 section) in this repo. Run
+  tools/validate_networking.sh and fix anything it reports as FAIL. Once
+  clean, continue with "what's left" item 1: add an RPC forwarding a
+  connected client's real input to the server once a tick, and have the
+  server call apply_snapshot() on that peer's NetworkInput. Don't touch
+  gameplay/combat/state-machine files beyond what's strictly needed for
+  that wiring, and keep validating against validate_ai_companions.tscn /
+  validate_ai_modes.tscn as you go so single-player and local co-op don't
+  regress.
+
+===============================================================================
