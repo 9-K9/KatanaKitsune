@@ -438,8 +438,45 @@ func update_scroll_look() -> void:
 ## through the floor, say. Without it, the sneak-as-defence rule quietly made
 ## crouching a discount on trap damage, because a blow with no source falls
 ## through to the flat soak.
+## The monster that last swung at her and when, so AI teammates can tell who
+## is picking on whom. Recorded before any guard or ward, because a blocked
+## blow is still an attack worth answering.
+var last_hurt_by: WeakRef = null
+var last_hurt_at_ms: int = -1
+
+
+func hurt_recently_by(enemy: Node, window_ms: int = 4000) -> bool:
+	return last_hurt_by != null and last_hurt_by.get_ref() == enemy \
+			and Time.get_ticks_msec() - last_hurt_at_ms <= window_ms
+
+
+func attacker_recent(window_ms: int = 4000) -> Node2D:
+	if last_hurt_by == null or Time.get_ticks_msec() - last_hurt_at_ms > window_ms:
+		return null
+	var enemy := last_hurt_by.get_ref() as Node2D
+	return enemy if is_instance_valid(enemy) and enemy.get("is_dead") != true else null
+
+
+func _note_attacker(from: Vector2) -> void:
+	if from == Vector2.INF or not is_inside_tree():
+		return
+	var best: Node2D = null
+	var best_distance: float = 260.0 * 260.0
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if not (enemy is Node2D) or enemy.get("is_dead") == true:
+			continue
+		var d: float = (enemy as Node2D).global_position.distance_squared_to(from)
+		if d < best_distance:
+			best = enemy
+			best_distance = d
+	if best != null:
+		last_hurt_by = weakref(best)
+		last_hurt_at_ms = Time.get_ticks_msec()
+
+
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		guardable: bool = true) -> void:
+	_note_attacker(from)
 	if CheatManager.immortality_enabled:
 		return
 	## The Invincibility scroll: nothing gets through while it burns, and it is

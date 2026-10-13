@@ -30,6 +30,18 @@ const SLOT_COLOURS: Array[Color] = [
 ## One entry per joined player:
 ## {"device": int, "scheme": int, "hair": int, "skin": int, "lost": bool, "bot": bool}
 var players: Array[Dictionary] = []
+
+## How an AI teammate picks its fights. Stored per bot slot; humans ignore it.
+enum BotMode { AGGRESSIVE, DEFENSIVE, STEALTH, PASSIVE }
+const BOT_MODE_NAMES: PackedStringArray = ["AGGRESSIVE", "DEFENSIVE", "STEALTH", "PASSIVE"]
+const BOT_MODE_TAGS: PackedStringArray = ["AGG", "DEF", "STL", "PAS"]
+const DEFAULT_BOT_MODE: int = BotMode.DEFENSIVE
+const BOT_MODE_HINTS: PackedStringArray = [
+	"HUNTS ANY MONSTER IT SEES",
+	"FIGHTS WHAT ATTACKS THE PARTY OR WHAT YOU ATTACK",
+	"SNEAKS WITH YOU AND STRIKES UNAWARE MONSTERS",
+	"FOLLOWS CLOSE, FIGHTS ONLY TO PROTECT",
+]
 var level_theme: int = -1
 
 
@@ -72,13 +84,31 @@ func add_bot() -> int:
 			scheme = i
 			break
 	players.append({"device": PlayerInput.BOT, "scheme": scheme, "hair": -1,
-			"skin": -1, "lost": false, "bot": true})
+			"skin": -1, "lost": false, "bot": true, "mode": DEFAULT_BOT_MODE})
 	roster_changed.emit()
 	return players.size() - 1
 
 
 func is_bot(slot: int) -> bool:
 	return slot >= 0 and slot < players.size() and players[slot].get("bot", false)
+
+
+func mode_of(slot: int) -> int:
+	if not is_bot(slot):
+		return DEFAULT_BOT_MODE
+	return int(players[slot].get("mode", DEFAULT_BOT_MODE))
+
+
+func set_mode(slot: int, mode: int) -> void:
+	if not is_bot(slot):
+		return
+	players[slot]["mode"] = posmod(mode, BOT_MODE_NAMES.size())
+	roster_changed.emit()
+
+
+func cycle_mode(slot: int, step: int = 1) -> int:
+	set_mode(slot, mode_of(slot) + step)
+	return mode_of(slot)
 
 
 func human_count() -> int:

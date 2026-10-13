@@ -59,11 +59,14 @@ var _base_frames: SpriteFrames = null
 ## device-blind — it answers to every pad at once — so once players are picking
 ## in turn the highlight is driven by hand from the active player's own device
 ## and focus is left out of it entirely.
-enum Phase { COUNT, BOTS, CLAIM, COLOUR, HAIR, SKIN, LEVEL }
+enum Phase { COUNT, BOTS, BOT_MODES, CLAIM, COLOUR, HAIR, SKIN, LEVEL }
 
 var _level_select: Control = null
 
 var _phase: int = Phase.COUNT
+## One behaviour per AI teammate, chosen right after the head count.
+var _bot_modes: Array[int] = []
+var _bot_cursor: int = 0
 var _wanted: int = 1
 var _bot_count: int = 0
 var _active: int = 0
@@ -379,6 +382,8 @@ func _drive(delta: float) -> void:
 			_drive_count()
 		Phase.BOTS:
 			_drive_bots()
+		Phase.BOT_MODES:
+			_drive_bot_modes()
 		Phase.CLAIM:
 			_drive_claim()
 		Phase.COLOUR:
@@ -425,7 +430,10 @@ func _drive_bots() -> void:
 		elif probe.just_pressed("MenuLeft") or probe.just_pressed("MenuUp"):
 			step = -1
 		if probe.confirm_pressed():
-			_enter_claim()
+			if _bot_count > 0:
+				_enter_bot_modes()
+			else:
+				_enter_claim()
 			return
 		if probe.cancel_pressed():
 			_enter_count()
@@ -433,6 +441,44 @@ func _drive_bots() -> void:
 	if step != 0:
 		_bot_count = clampi(_bot_count + step, 0, Roster.MAX_PLAYERS - _wanted)
 		_show_bot_prompt()
+
+
+func _enter_bot_modes() -> void:
+	_phase = Phase.BOT_MODES
+	while _bot_modes.size() < _bot_count:
+		_bot_modes.append(Roster.DEFAULT_BOT_MODE)
+	_bot_cursor = clampi(_bot_cursor, 0, _bot_count - 1)
+	for menu in _all_devices():
+		menu.prime()
+	_show_bot_mode_prompt()
+
+
+## Up / down picks the teammate, left / right picks how it fights.
+func _drive_bot_modes() -> void:
+	var row: int = 0
+	var step: int = 0
+	for probe in _all_devices():
+		if probe.just_pressed("MenuDown"):
+			row = 1
+		elif probe.just_pressed("MenuUp"):
+			row = -1
+		elif probe.just_pressed("MenuRight"):
+			step = 1
+		elif probe.just_pressed("MenuLeft"):
+			step = -1
+		if probe.confirm_pressed():
+			_enter_claim()
+			return
+		if probe.cancel_pressed():
+			_go_back()
+			return
+	if row == 0 and step == 0:
+		return
+	_bot_cursor = posmod(_bot_cursor + row, _bot_count)
+	if step != 0:
+		_bot_modes[_bot_cursor] = posmod(_bot_modes[_bot_cursor] + step,
+				Roster.BOT_MODE_NAMES.size())
+	_show_bot_mode_prompt()
 
 
 ## Whichever free device presses first takes this slot.
@@ -673,12 +719,18 @@ func _go_back() -> void:
 			get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
 		Phase.BOTS:
 			_enter_count()
+		Phase.BOT_MODES:
+			_phase = Phase.BOTS
+			_show_bot_prompt()
 		Phase.CLAIM:
 			## Nobody has claimed this slot yet, so step back over the player
 			## before and let them choose again.
 			if _active == 0:
 				Roster.clear()
-				_enter_count()
+				if _bot_count > 0:
+					_enter_bot_modes()
+				else:
+					_enter_count()
 			else:
 				_active -= 1
 				Roster.drop_last()
@@ -715,10 +767,13 @@ func _take_level(index: int) -> void:
 
 
 func _start_game() -> void:
-	for _i in mini(_bot_count, Roster.MAX_PLAYERS - Roster.count()):
-		if Roster.add_bot() < 0:
+	for i in mini(_bot_count, Roster.MAX_PLAYERS - Roster.count()):
+		var slot := Roster.add_bot()
+		if slot < 0:
 			push_error("CharacterSelect: could not add the selected AI teammate.")
 			return
+		if i < _bot_modes.size():
+			Roster.set_mode(slot, _bot_modes[i])
 	Score.begin_run()
 	Progression.begin_run()
 	## Player one's scheme stays the global one, so the title art and anything
@@ -761,6 +816,20 @@ func _show_bot_prompt() -> void:
 	prompt_count_row.text = bar
 	prompt_devices.text = "LEFT / RIGHT TO CHANGE   •   CONFIRM TO CONTINUE\n" \
 			+ "FOLLOW, FIGHT AND AVOID TRAPS   •   FOUR PARTY MEMBERS MAX"
+
+
+func _show_bot_mode_prompt() -> void:
+	prompt_overlay.visible = true
+	prompt_title.text = "AI TEAMMATE BEHAVIOUR"
+	var rows := PackedStringArray()
+	for i in _bot_count:
+		var mode: int = _bot_modes[i]
+		var shown: String = "< %s >" % Roster.BOT_MODE_NAMES[mode] if i == _bot_cursor \
+				else "  %s  " % Roster.BOT_MODE_NAMES[mode]
+		rows.append("AI%d  %s" % [_wanted + i + 1, shown])
+	prompt_count_row.text = "\n".join(rows)
+	prompt_devices.text = "UP / DOWN TO PICK   •   LEFT / RIGHT TO CHANGE   •   CONFIRM TO CONTINUE\n" \
+			+ Roster.BOT_MODE_HINTS[_bot_modes[_bot_cursor]]
 
 
 ## A fixed legend rather than one line per device actually plugged in — a pad

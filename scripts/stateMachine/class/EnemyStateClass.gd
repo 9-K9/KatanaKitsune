@@ -900,6 +900,20 @@ func provoke() -> bool:
 
 ## Who struck the killing blow, so the score goes to the right player.
 var _last_hit_by: int = -1
+var _last_hit_at_ms: int = -1
+
+
+## True when the given slot struck this monster within the window. AI
+## teammates use it to join a fight a human started.
+func hit_recently_by(slot: int, window_ms: int = 4000) -> bool:
+	return _last_hit_by == slot and _last_hit_at_ms >= 0 \
+			and Time.get_ticks_msec() - _last_hit_at_ms <= window_ms
+
+
+func last_hit_slot(window_ms: int = 4000) -> int:
+	if _last_hit_at_ms < 0 or Time.get_ticks_msec() - _last_hit_at_ms > window_ms:
+		return -1
+	return _last_hit_by
 
 
 func take_damage(amount: float, from: Vector2 = Vector2.INF,
@@ -910,6 +924,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 		var striker := Roster.nearest_to(get_tree(), from)
 		if striker != null and "slot" in striker:
 			_last_hit_by = striker.slot
+			_last_hit_at_ms = Time.get_ticks_msec()
 	if is_dead:
 		return
 	## Stone has no guard, no shell and no footing: the blow shatters it, for

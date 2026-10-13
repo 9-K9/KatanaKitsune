@@ -6,6 +6,10 @@ var game_paused : bool = false
 @onready var main_menu: VBoxContainer = $Center/Panel/Margin/MainMenu
 @onready var cheats_menu: VBoxContainer = $Center/Panel/Margin/CheatsMenu
 @onready var settings_menu: VBoxContainer = $Center/Panel/Margin/SettingsMenu
+@onready var teammates_menu: VBoxContainer = $Center/Panel/Margin/TeammatesMenu
+@onready var teammate_rows: VBoxContainer = $Center/Panel/Margin/TeammatesMenu/Rows
+@onready var teammate_hint: Label = $Center/Panel/Margin/TeammatesMenu/Hint
+@onready var teammates_button: Button = $Center/Panel/Margin/MainMenu/Teammates
 @onready var immortality_toggle: CheckButton = $Center/Panel/Margin/CheatsMenu/Immortality
 
 func _ready():
@@ -123,10 +127,55 @@ func _on_settings_pressed() -> void:
 func _on_settings_back_pressed() -> void:
 	_show_main_menu()
 
+## One button per AI teammate; pressing it steps that bot to the next mode.
+## Built on open rather than in the scene because the party size is not known
+## until the run starts.
+func _on_teammates_pressed() -> void:
+	main_menu.visible = false
+	teammates_menu.visible = true
+	_build_teammate_rows()
+	TitleScreen.focus_first_button(teammates_menu)
+
+func _on_teammates_back_pressed() -> void:
+	_show_main_menu()
+
+func _build_teammate_rows() -> void:
+	for child in teammate_rows.get_children():
+		teammate_rows.remove_child(child)
+		child.queue_free()
+	for slot in Roster.count():
+		if not Roster.is_bot(slot):
+			continue
+		var button := Button.new()
+		button.add_theme_font_size_override("font_size", 12)
+		button.pressed.connect(_on_teammate_row_pressed.bind(slot, button))
+		button.focus_entered.connect(_show_mode_hint.bind(slot))
+		teammate_rows.add_child(button)
+		_label_teammate_row(slot, button)
+
+func _on_teammate_row_pressed(slot: int, button: Button) -> void:
+	Roster.cycle_mode(slot)
+	_label_teammate_row(slot, button)
+	_show_mode_hint(slot)
+
+func _label_teammate_row(slot: int, button: Button) -> void:
+	button.text = "%s: %s" % [Roster.label_of(slot), Roster.BOT_MODE_NAMES[Roster.mode_of(slot)]]
+
+func _show_mode_hint(slot: int) -> void:
+	teammate_hint.text = Roster.BOT_MODE_HINTS[Roster.mode_of(slot)]
+
+func _has_bots() -> bool:
+	for slot in Roster.count():
+		if Roster.is_bot(slot):
+			return true
+	return false
+
 func _show_main_menu() -> void:
 	main_menu.visible = true
 	cheats_menu.visible = false
 	settings_menu.visible = false
+	teammates_menu.visible = false
+	teammates_button.visible = _has_bots()
 	## Focus follows whichever list is showing, so a pad can drive both.
 	TitleScreen.focus_first_button(main_menu)
 

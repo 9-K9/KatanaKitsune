@@ -34,8 +34,23 @@ step. Humans claim devices and pick costumes as before. Bots get distinct
 costumes and `AI2`/`AI3`/`AI4` markers and HUD tags, and never claim a controller.
 There is no online networking in this version.
 
-AI teammates follow the nearest living human, draw their katana and fight
-visible nearby enemies without wandering far from the party. They guard
+Each AI teammate then gets a **behaviour** (up/down picks the bot, left/right
+changes it). The pause menu's **AI TEAMMATES** entry changes it mid-run, and
+the HUD shows it on the bot's portrait:
+
+| Mode | Tag | Fights |
+|------|-----|--------|
+| Aggressive | AGG | any visible monster near the party |
+| Defensive (default) | DEF | monsters that just hurt a human or the bot, or that a human just struck |
+| Stealth | STL | while its human sneaks it sneaks too, blade sheathed, and stealth-strikes only monsters that have not noticed anyone; otherwise Defensive |
+| Passive | PAS | only monsters that just hurt the bot or a human; follows closer and keeps its blade sheathed until needed |
+
+"Just" means the last four seconds; once a fight is joined the bot sees it
+through for a few seconds more. A sneaking bot that is hit drops cover and
+fights back.
+
+AI teammates follow the nearest living human and fight visible nearby
+enemies their behaviour allows, without wandering far from the party. They guard
 ordinary melee telegraphs and back away from heavy attacks when the retreat
 is safe. They use the
 same movement, stamina, slash hit frames, damage and death rules as humans.

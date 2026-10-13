@@ -217,6 +217,10 @@ func _follow_checks() -> void:
 
 
 func _combat_checks() -> void:
+	# The engagement mechanics are mode-independent; Aggressive fights an
+	# unprovoked target, which keeps this scenario simple. validate_ai_modes
+	# covers what each mode chooses to fight.
+	Roster.set_mode(1, Roster.BotMode.AGGRESSIVE)
 	_world = TestWorld.new()
 	add_child(_world)
 	_human = _probe(0, Vector2(-200, 0))

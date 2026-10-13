@@ -21,6 +21,20 @@ the movement fixtures use lightweight bodies without sprite sheets.
 Pass `-- --combat-only` to skip the follow/pathfinding fixtures while working
 on combat or menus.
 
+## validate_ai_modes.gd
+
+Headless checks for AI teammate behaviour modes: the Roster mode store, the
+damage memory on players and monsters, `BotTactics` target rules for every
+mode, the pause-menu switcher, and the real player scene as a bot fighting
+(or declining to fight) a dummy under each mode, including Stealth's sneak
+and `flair` strike.
+
+```bash
+godot --headless --path . --scene res://tools/validate_ai_modes.tscn
+```
+
+Exits nonzero on a failed check.
+
 ## generate_title_power_variants.py
 
 Rebuild the eleven alternate title covers from the original

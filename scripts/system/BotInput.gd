@@ -14,11 +14,16 @@ const THREAT_STATES: Array[StringName] = [
 	&"attack", &"heavy", &"charge", &"stomp", &"crit",
 ]
 const EVADE_STATES: Array[StringName] = [&"heavy", &"charge", &"stomp", &"crit"]
+## Sneaking states a stealth strike (`flair`) can be thrown from.
+const SNEAK_READY_STATES: Array[StringName] = [&"stealthIdle", &"stealthWalk"]
+const DRAWN_STATES: Array[StringName] = [&"katanaIdle", &"katanaWalk", &"katanaRun"]
 
 var navigation := BotNavigation.new()
 var _body: WeakRef
 var _anchor: WeakRef
 var _target: WeakRef
+## Until when the bot sees its current fight through; see BotTactics.ENGAGE_MS.
+var _engaged_until_ms: int = 0
 var _move := Vector2.ZERO
 var _aim := Vector2.ZERO
 var _think_left: float = 0.0
@@ -103,13 +108,29 @@ func update(delta: float) -> void:
 	if body.get("actionBlockInput") == true:
 		return
 	var state := _state(body)
-	if body.get("katana_drawn") != true and _draw_left <= 0.0:
-		_now["Katana"] = true
-		_draw_left = 1.0
-		return
+	var mode := BotTactics.mode_for(body)
+	var sneaking := BotTactics.sneaking_with(mode, body, anchor)
 	if target != null:
 		var offset := BotNavigation.ground(target.global_position - body.global_position)
 		var distance: float = offset.length()
+		var immediate_threat: bool = distance <= ATTACK_REACH and _state(target) in THREAT_STATES
+		## A sneaking bot stalks with the blade sheathed and strikes from
+		## cover; anything else fights with the katana out.
+		var stalking: bool = sneaking and not immediate_threat
+		if stalking and body.get("stealthed") != true:
+			if body.get("katana_drawn") == true:
+				if _draw_left <= 0.0 and state in DRAWN_STATES:
+					_now["Katana"] = true
+					_draw_left = 1.0
+				return
+			if _draw_left <= 0.0:
+				_now["Stealth"] = true
+				_draw_left = 0.5
+			return
+		if not stalking and body.get("katana_drawn") != true and _draw_left <= 0.0:
+			_now["Katana"] = true
+			_draw_left = 1.0
+			return
 		_aim = offset.normalized()
 		if distance <= ATTACK_REACH and _state(target) in EVADE_STATES:
 			var away := -_aim.round()
@@ -129,7 +150,9 @@ func update(delta: float) -> void:
 			if _state(target) in THREAT_STATES and state in [&"katanaIdle", &"katanaBlock"]:
 				_now["Defend"] = true
 				return
-			if state in READY_STATES and _attack_left <= 0.0:
+			var ready: bool = state in SNEAK_READY_STATES if stalking \
+					else state in READY_STATES
+			if ready and _attack_left <= 0.0:
 				_tap_left = TAP_TIME
 				_attack_left = ATTACK_INTERVAL
 			_now["Attack"] = _tap_left > 0.0
@@ -145,13 +168,30 @@ func update(delta: float) -> void:
 				body.can_slash_target(target, facing, approach):
 			approach = _strike_position(body, target, approach)
 		_follow(body, approach, false, 2.0)
-	else:
-		var distance: float = _distance(body, anchor)
-		if distance <= FOLLOW_REACH:
-			navigation.reset()
-			_goal = Vector2.INF
+		return
+	## Nothing to fight: match the blade and the sneaking to the mode.
+	var drawn: bool = body.get("katana_drawn") == true
+	var wants_blade: bool = BotTactics.wants_blade(mode, body, anchor, false)
+	if _draw_left <= 0.0:
+		if wants_blade and not drawn:
+			_now["Katana"] = true
+			_draw_left = 1.0
 			return
-		_follow(body, anchor.global_position, distance > 340.0)
+		if not wants_blade and drawn and state in DRAWN_STATES:
+			_now["Katana"] = true
+			_draw_left = 1.0
+			return
+		if not drawn and sneaking != (body.get("stealthed") == true):
+			_now["Stealth"] = true
+			_draw_left = 0.5
+			return
+	var anchor_distance: float = _distance(body, anchor)
+	if anchor_distance <= BotTactics.follow_reach(mode, FOLLOW_REACH):
+		navigation.reset()
+		_goal = Vector2.INF
+		return
+	## Running out of stealth would give the party away.
+	_follow(body, anchor.global_position, anchor_distance > 340.0 and not sneaking)
 
 
 func _follow(body: CharacterBody2D, goal: Vector2, running: bool,
@@ -236,6 +276,13 @@ func _choose_target(body: CharacterBody2D) -> void:
 	var anchor := _living(_anchor)
 	var best: Node2D = null
 	var distance: float = NOTICE_REACH
+	var mode := BotTactics.mode_for(body)
+	var previous := _living(_target)
+	var now := Time.get_ticks_msec()
+	## A stalk is abandoned the moment the monster notices; any other fight is
+	## seen through for a few seconds after the last provocation.
+	var stick: bool = now < _engaged_until_ms \
+			and not BotTactics.sneaking_with(mode, body, anchor)
 	if anchor != null and _distance(body, anchor) <= LEASH:
 		for candidate in body.get_tree().get_nodes_in_group("enemy"):
 			if not (candidate is CharacterBody2D) or candidate.get("is_dead") == true \
@@ -243,9 +290,13 @@ func _choose_target(body: CharacterBody2D) -> void:
 				continue
 			var reach: float = _distance(body, candidate)
 			if reach < distance and _distance(candidate, anchor) <= LEASH \
-					and _visible(body, candidate):
+					and _visible(body, candidate) \
+					and ((stick and candidate == previous)
+						or BotTactics.provokes(mode, body, anchor, candidate)):
 				best = candidate
 				distance = reach
+	if best != null and BotTactics.provokes(mode, body, anchor, best):
+		_engaged_until_ms = now + BotTactics.ENGAGE_MS
 	_target = weakref(best) if best != null else null
 
 

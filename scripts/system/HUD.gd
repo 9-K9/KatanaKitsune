@@ -165,8 +165,23 @@ func _build_cell(slot: int) -> Dictionary:
 	_back_text(kills)
 	add_child(kills)
 
+	## An AI teammate's behaviour, on the foot of its portrait; it can change
+	## from the pause menu mid-run, so it is refreshed every frame.
+	var mode: Label = null
+	if Roster.is_bot(slot):
+		mode = Label.new()
+		mode.name = "Player%dMode" % (slot + 1)
+		mode.theme = UI_THEME
+		mode.position = Vector2(x, CELL_TOP + PORTRAIT - 16.0)
+		mode.size = Vector2(PORTRAIT, 14.0)
+		mode.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		mode.add_theme_font_size_override("font_size", 10)
+		mode.add_theme_color_override("font_color", Color(0.95, 0.92, 0.82))
+		_back_text(mode)
+		add_child(mode)
+
 	return {"slot": slot, "portrait": portrait, "frame": frame, "score": score,
-			"kills": kills,
+			"kills": kills, "mode": mode,
 			"health": health, "stamina": stamina, "eye": eye,
 			"eye_centre": eye.position + Vector2(EYE_SIZE, EYE_SIZE) * 0.5,
 			## Staggered per player, or four eyes blink in unison and the row
@@ -216,6 +231,9 @@ func _update_cell(index: int, delta: float) -> void:
 	var cell: Dictionary = _cells[index]
 	var kills: Label = cell["kills"]
 	kills.text = str(Score.floor_kills[cell["slot"]])
+	var mode: Label = cell["mode"]
+	if mode != null:
+		mode.text = Roster.BOT_MODE_TAGS[Roster.mode_of(cell["slot"])]
 	var body := _body_for(cell["slot"])
 	if body == null:
 		return
