@@ -33,6 +33,13 @@ const COVERS := "res://assets/sprites/ui/title_covers_kitsune"
 ## Used when a state has no cover of its own.
 const DEFAULT_COVER := "res://assets/sprites/ui/title_cover_kitsune.png"
 
+## The previous heroine's art, shown instead while the Karmageisha cheat has
+## her in play (CheatManager.karmageisha_active). Her cover set is one short
+## (Fire), which the neutral cover stands in for.
+const GOD_SPRITES := "res://assets/sprites/characters/KatanaKitsune/power_states"
+const GOD_COVERS := "res://assets/sprites/ui/title_power_states"
+const GOD_DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
+
 ## Shadow -> highlight ramp per state, matching tools/generate_kitsune_power_palettes.py.
 ##
 ## These used to be baked into a recoloured copy of every sheet. At the old
@@ -161,14 +168,18 @@ func select(index: int) -> void:
 
 
 func icon_path(index: int = -1) -> String:
-	return "%s/%s/HUDicon.png" % [SPRITES, STATES[_clamp(index)]["id"]]
+	var root: String = GOD_SPRITES if CheatManager.karmageisha_active else SPRITES
+	return "%s/%s/HUDicon.png" % [root, STATES[_clamp(index)]["id"]]
 
 
 ## The title art for a state, falling back to the neutral cover when that
-## state has none rather than leaving the screen blank. The previous heroine's
-## covers under title_power_states/ are kept for the old-character cheat.
+## state has none rather than leaving the screen blank.
 func cover_path(index: int = -1) -> String:
-	var path := "%s/%s.png" % [COVERS, STATES[_clamp(index)]["id"]]
+	var id: String = STATES[_clamp(index)]["id"]
+	if CheatManager.karmageisha_active:
+		var god := "%s/%s/titleCover_768x432.png" % [GOD_COVERS, id]
+		return god if ResourceLoader.exists(god) else GOD_DEFAULT_COVER
+	var path := "%s/%s.png" % [COVERS, id]
 	return path if ResourceLoader.exists(path) else DEFAULT_COVER
 
 

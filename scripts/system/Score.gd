@@ -165,7 +165,7 @@ func would_place(value: int) -> int:
 
 
 func submit(name: String, value: int, wave: int) -> void:
-	table.append({"name": name.substr(0, 9).strip_edges().to_upper(),
+	table.append({"name": name.substr(0, 12).strip_edges().to_upper(),
 			"points": value, "wave": wave})
 	table.sort_custom(func(a, b): return a["points"] > b["points"])
 	if table.size() > TABLE_SIZE:

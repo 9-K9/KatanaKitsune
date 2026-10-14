@@ -21,8 +21,10 @@ func _ready():
 	var art := get_node_or_null("Cover")
 	if art != null:
 		art.texture = load(PowerState.cover_path())
-	## Cheats are a development aid; a release export never shows them.
-	if not OS.is_debug_build():
+	## Cheats are a development aid; a release export never shows them, unless
+	## Karmageisha has been woken, in which case her immortality is yours to
+	## toggle here.
+	if not CheatManager.cheats_visible():
 		var cheats := main_menu.get_node_or_null("Cheats") as Control
 		if cheats != null:
 			cheats.queue_free()

@@ -246,14 +246,16 @@ func _read_scroll_input() -> void:
 		read_scroll(scrolls.selected)
 
 
-## Uses one scroll from a slot. Kept, not spent, when it would do nothing.
+## Uses one scroll from a slot. Kept, not spent, when it would do nothing,
+## and never spent at all by Karmageisha, whose stacks are bottomless.
 func read_scroll(index: int) -> bool:
 	var kind: int = scrolls.kind_at(index)
 	if kind == -1:
 		return false
 	if not use_scroll(kind):
 		return false
-	scrolls.take(index)
+	if not CheatManager.karmageisha_active:
+		scrolls.take(index)
 	return true
 ## Brings her lights towards where the current stance wants them.
 func _hood_lantern(delta: float) -> void:

@@ -80,8 +80,11 @@ func _begin() -> void:
 	_begin_started = true
 	## A score worth recording gets its name entered before the menu appears.
 	## The run ends either way; this is only whether the board remembers it.
+	## While Karmageisha is active the entry always opens, scored at zero: it
+	## is the only place the cheat can be switched off again.
 	var best: Dictionary = Score.best_of_run()
-	if Score.would_place(best["points"]) >= 0 and best["points"] > 0:
+	var placed: bool = Score.would_place(best["points"]) >= 0 and best["points"] > 0
+	if placed or CheatManager.karmageisha_active:
 		var wave: int = 1
 		var level = get_tree().current_scene
 		if level != null and "depth" in level:

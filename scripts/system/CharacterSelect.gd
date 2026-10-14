@@ -89,7 +89,7 @@ var _menu_probes: Array[PlayerInput] = []
 func _ready() -> void:
 	## Borrow the player's own SpriteFrames so the preview cannot drift from
 	## what the game actually plays.
-	var player: Node = load("res://scenes/characters/Kitsune.tscn").instantiate()
+	var player: Node = load(CheatManager.player_scene_path()).instantiate()
 	var sprite: AnimatedSprite2D = player.get_node("AnimationManager/AnimatedSprite2D")
 	_base_frames = sprite.sprite_frames
 	player.queue_free()
