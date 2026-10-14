@@ -29,6 +29,15 @@ Clip mapping
 ------------
 The export renamed four clips. Death has no bare equivalent in the new set, so
 death_* reuses the KatanaDeath sheets rather than shipping a duplicate copy.
+
+Power-state material
+--------------------
+The cloned ShaderMaterial carries Katana Kitsune's pure-red clothing key. The
+new model's hair and skirt are the same dark red, and the user wants both to
+take the elemental theme, so SHADER_PARAMS widens the key (see
+shaders/powerState.gdshader) and switches off the legacy hair/skin passes
+whose grey key would dim her white top. `--material-only` rewrites just that
+block in the existing Kitsune.tscn without minting new UIDs or touching sheets.
 """
 import hashlib
 import random
@@ -54,6 +63,19 @@ FRAMES = 16
 SRC_CELL = 480
 CELL_W, CELL_H = 432, 342
 CROP_X, CROP_Y = 24, 49
+
+## ShaderMaterial_powerState overrides, in the shader's raw 0..1 units.
+## Measured on Idle dir1 frame 0: hair r 40-106 sat .55-.90 g/r,b/r .11-.47;
+## skirt r 44-105 sat .63-.98 g/r,b/r .02-.38; skin g/r .85 b/r .80; top ~1.0.
+SHADER_PARAMS = {
+    "clothing_min_red": "0.117647",      # red > 30
+    "clothing_min_sat": "0.5",
+    "clothing_max_green_ratio": "0.5",
+    "clothing_max_blue_ratio": "0.5",
+    "clothing_amount_offset": "40.0",
+    "clothing_amount_range": "70.0",
+    "hair_skin_passes": "false",
+}
 
 ## old clip folder -> (export subfolder, export clip folder)
 CLIPS = {
@@ -175,8 +197,28 @@ def crop_sheet(src: Path) -> Image.Image:
     return out
 
 
+def patch_material(scene: str) -> str:
+    """Replace/insert SHADER_PARAMS inside the ShaderMaterial_powerState block."""
+    m = re.search(r'\[sub_resource type="ShaderMaterial" id="ShaderMaterial_powerState"\]\n(?:.+\n)+?(?=\n)', scene)
+    if m is None:
+        raise SystemExit("ShaderMaterial_powerState block not found")
+    block = m.group(0)
+    for key, value in SHADER_PARAMS.items():
+        line = f"shader_parameter/{key} = {value}\n"
+        block, n = re.subn(rf"^shader_parameter/{key} = .*\n", line, block, flags=re.M)
+        if n == 0:
+            block += line
+    return scene[:m.start()] + block + scene[m.end():]
+
+
 def main() -> None:
     apply = "--apply" in sys.argv
+    if "--material-only" in sys.argv:
+        patched = patch_material(NEW_SCENE.read_text())
+        if apply:
+            NEW_SCENE.write_text(patched)
+        print("material patched" if apply else "DRY RUN - re-run with --apply")
+        return
     uids = Uids()
     scene = OLD_SCENE.read_text()
 
@@ -226,6 +268,7 @@ def main() -> None:
     scene = scene.replace(f'[node name="{OLD_NODE}" type="CharacterBody2D"', f'[node name="{NEW_NODE}" type="CharacterBody2D"', 1)
     ns, ne = scene.count("[sub_resource "), scene.count("[ext_resource ")
     scene = re.sub(r"load_steps=\d+", f"load_steps={ns + ne + 1}", scene, count=1)
+    scene = patch_material(scene)
 
     if apply:
         NEW_SCENE.write_text(scene)

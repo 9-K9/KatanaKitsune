@@ -26,7 +26,7 @@ const STATES: Array[Dictionary] = [
 	{"id": "12_Spirit_CelestialQi",      "element": "SPIRIT",    "name": "CELESTIAL QI"},
 ]
 
-const SPRITES := "res://assets/sprites/characters/KatanaKitsune/power_states"
+const SPRITES := "res://assets/sprites/characters/Kitsune/power_states"
 const COVERS := "res://assets/sprites/ui/title_power_states"
 ## Used when a state has no cover of its own — Fire currently has none.
 const DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
@@ -188,6 +188,8 @@ func cover_path(index: int = -1) -> String:
 ## variety choice rather than following the player's picker. recolor_hair /
 ## recolor_skin are left enabled whenever this is called, since index 0 in
 ## each ramp list already matches the shader's natural/no-change defaults.
+## A material that sets the shader's `hair_skin_passes` uniform false
+## (Kitsune.tscn: her paint does not fit those keys) ignores both.
 func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: int = -1) -> void:
 	var i := _clamp(index)
 	var mat: ShaderMaterial = _material_for(sprite)

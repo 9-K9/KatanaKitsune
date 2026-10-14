@@ -72,6 +72,35 @@ with their `.import` sidecars under `assets/sprites/characters/Kitsune/sprites/`
 The export has no bare `Death` clip, so `death_*` plays the `KatanaDeath`
 sheets. Does not launch Godot.
 
+The cloned power-state material is then retuned for the new paint
+(`SHADER_PARAMS`): her hair and skirt are the same dark red, so the clothing
+key in `shaders/powerState.gdshader` is widened (red > 30, sat > 0.5,
+g/b < 0.5·r) to theme both together, and the legacy hair/skin passes are
+switched off so her pale skin and white top stay as painted. Those thresholds
+are shader uniforms whose defaults are the old pure-red key, so
+`KatanaKitsune.tscn` and the monsters render exactly as before.
+`--material-only --apply` rewrites just that block in the existing scene
+without minting new UIDs.
+
+## generate_kitsune_icons.py
+
+Renders the HUD icons for Kitsune: `assets/sprites/characters/Kitsune/HUDicon.png`
+plus `power_states/<id>/HUDicon.png` for each of the twelve aspects, in the
+same 96x96 framed format as the Katana Kitsune set, with a contact sheet at
+`power_states/_preview_powerStates.png`:
+
+```bash
+python3 tools/generate_kitsune_icons.py            # dry run, preview in /tmp
+python3 tools/generate_kitsune_icons.py --apply
+python3 tools/generate_kitsune_icons.py --check    # wide key on the old heroine
+```
+
+The bust is frame 0 of `Idle/Kitsune_Idle_dir1.png` (standing, south-west).
+Each aspect is recoloured by a NumPy port of `powerState.gdshader` fed the
+exact uniforms from `build_kitsune_character.SHADER_PARAMS` and the ramps
+parsed from `scripts/system/PowerState.gd`, so the icon matches her in play.
+Existing `.import` UIDs are kept across re-runs. Does not launch Godot.
+
 ## generate_title_power_variants.py
 
 Rebuild the eleven alternate title covers from the original
