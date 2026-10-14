@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/system/MazeDemo.gd" id="1_maze"]
 [ext_resource type="PackedScene" uid="uid://b854xsndpebqb" path="res://scenes/world/rooms/room_A.tscn" id="2_room"]
-[ext_resource type="PackedScene" uid="uid://crfws6oy432nx" path="res://scenes/characters/KatanaKitsune.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://qe45yend5vni" path="res://scenes/characters/Kitsune.tscn" id="3_player"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/ironBrazier.tscn" id="70_ironBrazier"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/stoneLantern.tscn" id="70_stoneLantern"]
 [ext_resource type="PackedScene" path="res://scenes/props/torches/stakeTorch.tscn" id="70_stakeTorch"]

@@ -52,6 +52,26 @@ process to 30 seconds and exits nonzero on a failed check or timed-out wait.
 Memory-heavy (two Godot processes at once); skip it on a machine already under
 memory pressure.
 
+## build_kitsune_character.py
+
+Builds the main player character, `scenes/characters/Kitsune.tscn`, from the
+new-model PixelOver export at
+`/home/emanzi/3D/Blender 4.5/Meshy-Blender-Toolkit/pixelover/sprites/KatanaKitsune_NewModel/`:
+
+```bash
+python3 tools/build_kitsune_character.py          # dry run
+python3 tools/build_kitsune_character.py --apply
+```
+
+It clones `scenes/characters/KatanaKitsune.tscn` (the previous model, kept
+for a later settings cheat) and swaps only the sheets behind each frame, so
+every state, animation name, AnimationPlayer track, collision shape and
+timing stays identical. The export's 480x480 frames are cropped to the
+game's 432x342 cells with her feet where the old model's were, and written
+with their `.import` sidecars under `assets/sprites/characters/Kitsune/sprites/`.
+The export has no bare `Death` clip, so `death_*` plays the `KatanaDeath`
+sheets. Does not launch Godot.
+
 ## generate_title_power_variants.py
 
 Rebuild the eleven alternate title covers from the original

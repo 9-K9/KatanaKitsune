@@ -262,7 +262,7 @@ func _combat_checks() -> void:
 	add_child(_world)
 	_human = _probe(0, Vector2(-200, 0))
 	# Only one shared player SpriteFrames resource, in a tiny empty physics world.
-	var player = load("res://scenes/characters/KatanaKitsune.tscn").instantiate()
+	var player = load("res://scenes/characters/Kitsune.tscn").instantiate()
 	player.slot = 1
 	_world.add_child(player)
 	player.add_collision_exception_with(_human)

@@ -305,7 +305,7 @@ func _live_checks() -> void:
 	human.add_to_group("player")
 	_shape(human, Vector2(64, 32))
 	_world.add_child(human)
-	var bot = load("res://scenes/characters/KatanaKitsune.tscn").instantiate()
+	var bot = load("res://scenes/characters/Kitsune.tscn").instantiate()
 	bot.slot = 1
 	_world.add_child(bot)
 	bot.add_collision_exception_with(human)
