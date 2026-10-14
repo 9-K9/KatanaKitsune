@@ -321,10 +321,20 @@ func _fallen_underfoot() -> Node:
 		var offset: Vector2 = (node as Node2D).global_position - global_position
 		offset.y /= 0.5
 		var distance: float = offset.length()
-		if distance <= revive_reach and distance < best_distance:
+		if distance <= revive_reach and distance < best_distance and _revive_visible(node):
 			best_distance = distance
 			best = node
 	return best
+
+
+func _revive_visible(fallen: Node2D) -> bool:
+	var ray := PhysicsRayQueryParameters2D.create(global_position, fallen.global_position,
+			collision_mask)
+	ray.exclude = [get_rid()]
+	for player in get_tree().get_nodes_in_group("player"):
+		if player is CollisionObject2D:
+			ray.exclude.append(player.get_rid())
+	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
 
 
 ## Points this player's controls at whatever device now owns their slot.

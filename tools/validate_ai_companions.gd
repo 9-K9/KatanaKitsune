@@ -10,6 +10,7 @@ class ProbePlayer extends CharacterBody2D:
 	var ignore_stealth_presses: bool = false
 	var stealth_press_count: int = 0
 	var input: PlayerInput
+	var speed: float = 183.0
 
 	func winded() -> bool:
 		return false
@@ -226,7 +227,7 @@ func _follow_checks() -> void:
 	_bot.position = Vector2.ZERO
 	_bot.input.reset()
 	await _frames(240)
-	_check(BotNavigation.ground(_human.position - _bot.position).length() <= 125.0,
+	_check(BotNavigation.ground(_human.position - _bot.position).length() <= BotInput.REVIVE_DISTANCE + 5.0,
 			"bot navigates to fallen teammate")
 	_check(_bot.input.pressed("Stealth") or not _bot.katana_drawn,
 			"bot initiates revive stance at fallen teammate")

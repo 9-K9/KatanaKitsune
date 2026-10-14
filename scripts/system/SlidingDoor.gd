@@ -47,6 +47,7 @@ var _flash_tween: Tween = null
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
+	add_to_group("bot_door")
 	collision_layer = 3
 	collision_mask = 0
 

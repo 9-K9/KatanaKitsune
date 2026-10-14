@@ -58,9 +58,16 @@ Bounded collision-aware pathfinding routes around walls, scenery, ponds and
 spike traps, including retracted spikes; if no safe route is found they stop
 or take a safe partial route rather than crossing the hazard or teleporting.
 Pause and floor loading freeze their controls, and descent resets their path.
-Humans can revive fallen bots normally, but bots do not revive, seek pickups,
-use scrolls or coordinate tactics. The run ends when all humans are down,
-even if a bot survives. Bot upgrade points are spent automatically across
+In every mode, a fallen human takes priority over fighting and following.
+Bots search across the floor, route around walls and pillars, then sheath and
+sneak within clear reach to revive using the normal sneak-meter cost. Fallen
+humans take priority over fallen bots; humans can also revive bots normally.
+A living bot keeps the run active while rescuing the party.
+Crowded bots yield in one consistent direction; when scenery blocks that
+direction they stay facing still and block human movement instead of flickering.
+Humans still pass through other humans, and bots through other bots.
+Bots do not seek pickups, use scrolls or coordinate tactics.
+Bot upgrade points are spent automatically across
 the least-upgraded stats; bot slots start ready between floors. High-score
 name entry uses the best human score, not a bot's score.
 

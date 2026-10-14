@@ -17,6 +17,7 @@ class ModeProbe extends CharacterBody2D:
 	var last_hurt_by: WeakRef = null
 	var last_hurt_at_ms: int = -1
 	var input: PlayerInput
+	var speed: float = 120.0
 
 	func winded() -> bool:
 		return false
@@ -360,6 +361,10 @@ func _live_checks() -> void:
 	enemy.hits = 0
 	var hid := [false]
 	await _run_frames(240, func() -> void: hid[0] = hid[0] or bot.stealthed)
+	if not hid[0]:
+		print("Stealth diagnostic: state=", machine.current_state.name, " position=", bot.position,
+				" drawn=", bot.katana_drawn, " cooldown=", input._draw_left,
+				" actionBlocked=", bot.actionBlockInput, " sneak=", bot.sneak)
 	_check(hid[0] and not bot.katana_drawn, "Stealth sneaks with its sneaking human")
 	_check(enemy.hits == 0, "Stealth leaves an alert monster alone")
 	enemy.aware(false)

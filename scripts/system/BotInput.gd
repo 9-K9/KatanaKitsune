@@ -14,7 +14,9 @@ const THREAT_STATES: Array[StringName] = [
 	&"attack", &"heavy", &"charge", &"stomp", &"crit",
 ]
 const EVADE_STATES: Array[StringName] = [&"heavy", &"charge", &"stomp", &"crit"]
-const REVIVE_DISTANCE: float = 120.0
+## Within the player's 190 reach, but outside two restored bodies even on the
+## squashed vertical axis, so standing up never spawns inside the rescuer.
+const REVIVE_DISTANCE: float = 160.0
 ## Sneaking states a stealth strike (`flair`) can be thrown from.
 const SNEAK_READY_STATES: Array[StringName] = [&"stealthIdle", &"stealthWalk"]
 const DRAWN_STATES: Array[StringName] = [&"katanaIdle", &"katanaWalk", &"katanaRun"]
@@ -44,13 +46,15 @@ var _tap_left: float = 0.0
 var _draw_left: float = 0.0
 var _goal := Vector2.INF
 var _repath_left: float = 0.0
-var _navigation_left: float = 0.0
 var _heading := Vector2.ZERO
 var _heading_left: float = 0.0
 var _wait_left: float = 0.0
 var _blocked_for: float = 0.0
 var _was_moving: bool = false
 var _last_position := Vector2.INF
+var _yielding: bool = false
+var _yield_heading := Vector2.ZERO
+var _edge_frames: Dictionary[String, int] = {}
 
 
 func _init() -> void:
@@ -67,6 +71,27 @@ func _sync() -> void:
 	pass
 
 
+## Decisions tick in physics, states tick in render. An edge must not toggle a
+## stance twice when two rendered frames share the same physics snapshot.
+func just_pressed(action: String) -> bool:
+	if not super.just_pressed(action):
+		return false
+	return _edge_in_frame("press:" + action)
+
+
+func just_released(action: String) -> bool:
+	if not super.just_released(action):
+		return false
+	return _edge_in_frame("release:" + action)
+
+
+func _edge_in_frame(key: String) -> bool:
+	var frame := Engine.get_process_frames()
+	if not _edge_frames.has(key):
+		_edge_frames[key] = frame
+	return _edge_frames[key] == frame
+
+
 func vector() -> Vector2:
 	return _move
 
@@ -78,6 +103,7 @@ func aim_vector() -> Vector2:
 func reset() -> void:
 	_now.clear()
 	_was.clear()
+	_edge_frames.clear()
 	_move = Vector2.ZERO
 	_aim = Vector2.ZERO
 	_anchor = null
@@ -89,19 +115,21 @@ func reset() -> void:
 	_draw_left = 0.0
 	_goal = Vector2.INF
 	_repath_left = 0.0
-	_navigation_left = 0.0
 	_heading = Vector2.ZERO
 	_heading_left = 0.0
 	_wait_left = 0.0
 	_blocked_for = 0.0
 	_was_moving = false
 	_last_position = Vector2.INF
+	_yielding = false
+	_yield_heading = Vector2.ZERO
 	navigation.reset()
 
 
 func update(delta: float) -> void:
 	_was = _now
 	_now = {}
+	_edge_frames.clear()
 	_move = Vector2.ZERO
 	_aim = Vector2.ZERO
 	var body := _body.get_ref() as CharacterBody2D if _body != null else null
@@ -118,7 +146,6 @@ func update(delta: float) -> void:
 	_tap_left = maxf(_tap_left - delta, 0.0)
 	_think_left -= delta
 	_repath_left -= delta
-	_navigation_left -= delta
 	if _think_left <= 0.0:
 		_think_left = THINK_INTERVAL
 		_choose_anchor(body)
@@ -142,7 +169,7 @@ func _decide(body: CharacterBody2D) -> void:
 	var state := _state(body)
 	var mode := BotTactics.mode_for(body)
 	var sneaking := BotTactics.sneaking_with(mode, body, anchor)
-	if target != null:
+	if target != null and fallen == null:
 		var target_offset := BotNavigation.ground(target.global_position - body.global_position)
 		var target_dist: float = target_offset.length()
 		var immediate_threat: bool = target_dist <= ATTACK_REACH and _state(target) in THREAT_STATES
@@ -206,11 +233,11 @@ func _decide(body: CharacterBody2D) -> void:
 			return
 	if fallen != null:
 		var reach: float = _distance(body, fallen)
-		if reach <= REVIVE_DISTANCE:
+		if reach <= REVIVE_DISTANCE and _visible(body, fallen):
 			navigation.reset()
 			_goal = Vector2.INF
 			if body.get("katana_drawn") == true:
-				if _draw_left <= 0.0 and (state == &"katanaIdle" or state == &""):
+				if _draw_left <= 0.0 and (state in DRAWN_STATES or state == &""):
 					_now["Katana"] = true
 					_draw_left = 1.0
 				return
@@ -222,7 +249,7 @@ func _decide(body: CharacterBody2D) -> void:
 					_now["Stealth"] = true
 					_draw_left = 0.5
 			return
-		_follow(body, fallen.global_position, reach > 240.0)
+		_follow(body, fallen.global_position, reach > 240.0, 22.0, REVIVE_DISTANCE)
 		return
 	## Nothing to fight: match the blade and the sneaking to the mode.
 	var drawn: bool = body.get("katana_drawn") == true
@@ -247,23 +274,23 @@ func _decide(body: CharacterBody2D) -> void:
 			_goal = Vector2.INF
 			return
 		## Running out of stealth would give the party away.
-		_follow(body, anchor.global_position, distance > 340.0 and not sneaking)
+		_follow(body, anchor.global_position, distance > 340.0 and not sneaking,
+				22.0, BotTactics.follow_reach(mode, FOLLOW_REACH))
 
 
 func _follow(body: CharacterBody2D, goal: Vector2, running: bool,
-		stop_distance: float = 22.0) -> void:
+		stop_distance: float = 22.0, arrival_reach: float = 0.0) -> void:
 	if _goal == Vector2.INF or (_repath_left <= 0.0 and \
 			BotNavigation.ground(goal - _goal).length() > 96.0) \
 			or (navigation.path.is_empty() and not navigation.searching and _repath_left <= 0.0):
 		_goal = goal
 		_repath_left = 0.75
-		navigation.begin(body.global_position, goal)
-	if _navigation_left <= 0.0:
-		_navigation_left = 0.1
-		navigation.advance()
+		navigation.begin(body.global_position, goal, arrival_reach)
+	navigation.advance()
 	while not navigation.path.is_empty() and \
 			BotNavigation.ground(navigation.path[0] - body.global_position).length() \
-			< stop_distance:
+			< stop_distance and (navigation.path.size() == 1 or
+			navigation.safe_segment(body.global_position, navigation.path[1])):
 		navigation.path.remove_at(0)
 	if navigation.path.is_empty():
 		return
@@ -302,6 +329,17 @@ func _steer(body: CharacterBody2D, delta: float) -> void:
 	var moved: float = BotNavigation.ground(position - _last_position).length() \
 			if _last_position != Vector2.INF else INF
 	_last_position = position
+	if body.get("actionBlockInput") == true or _now.get("Katana", false) \
+			or _now.get("Stealth", false):
+		_move = Vector2.ZERO
+		_was_moving = false
+		return
+	# Reviving is stationary. Nearby allies must not steer the rescuer away.
+	var fallen := _dead(_fallen)
+	if fallen != null and _distance(body, fallen) <= REVIVE_DISTANCE and _visible(body, fallen):
+		_move = Vector2.ZERO
+		_was_moving = false
+		return
 	var expected: float = maxf(float(body.get("speed")), 1.0) * delta
 	if _was_moving and moved < expected * 0.2:
 		_blocked_for += delta
@@ -322,6 +360,22 @@ func _steer(body: CharacterBody2D, delta: float) -> void:
 		return
 	var fighting: bool = _now.get("Attack", false) or _now.get("Defend", false)
 	var push := Vector2.ZERO if fighting else _separation(body)
+	# Contact owns the heading until the neighbour has cleared personal space.
+	# If this heading hits a wall, keep still; never hunt for sideways escapes.
+	if not _yielding and push.length() >= CROWDED:
+		_yielding = true
+		_yield_heading = push.normalized().round()
+	if _yielding:
+		if push.length() < 0.1:
+			_yielding = false
+			_heading_left = 0.0
+		else:
+			var ahead := position + Vector2(_yield_heading.x, _yield_heading.y * 0.5) * 16.0
+			_move = _yield_heading if navigation.safe_segment(position, ahead) else Vector2.ZERO
+			_aim = Vector2.ZERO
+			_now.erase("Run")
+			_was_moving = _move != Vector2.ZERO
+			return
 	var wanted := _move
 	if wanted == Vector2.ZERO:
 		if push.length() < CROWDED:
@@ -330,8 +384,6 @@ func _steer(body: CharacterBody2D, delta: float) -> void:
 		## Crowded while standing: walk clear instead of standing in a pile.
 		wanted = push.normalized()
 		_now["Run"] = false
-	else:
-		wanted = (wanted + push).normalized()
 	_heading_left -= delta
 	if _heading_left > 0.0 and _heading != Vector2.ZERO and _heading.dot(wanted) > 0.7:
 		wanted = _heading
@@ -339,7 +391,7 @@ func _steer(body: CharacterBody2D, delta: float) -> void:
 		_heading = wanted
 		_heading_left = HEADING_HOLD
 	var step := wanted.round()
-	var ahead := position + Vector2(step.x, step.y * 0.5) * 16.0
+	var ahead := position + Vector2(step.x, step.y * 0.5) * maxf(expected, 1.0)
 	if step != Vector2.ZERO and not navigation.safe_segment(position, ahead):
 		## Pushed into a wall by a neighbour: hold still rather than jitter.
 		_move = Vector2.ZERO
@@ -402,7 +454,7 @@ func _choose_anchor(body: CharacterBody2D) -> void:
 			best = candidate
 			distance = reach
 	var previous := _living(_anchor)
-	if best != previous:
+	if best != previous and _dead(_fallen) == null:
 		navigation.reset()
 		_goal = Vector2.INF
 	_anchor = weakref(best) if best != null else null
@@ -460,6 +512,11 @@ func _dead(reference: WeakRef) -> Node2D:
 
 
 func _choose_fallen(body: CharacterBody2D) -> void:
+	var previous := _dead(_fallen) as CharacterBody2D
+	# A detour can temporarily take us nearer another body. Finish this rescue
+	# instead of swapping goals at every corner of the route.
+	if previous != null and not Roster.is_bot(int(previous.get("slot"))):
+		return
 	var best: CharacterBody2D = null
 	var distance: float = INF
 	for candidate in body.get_tree().get_nodes_in_group("player"):
@@ -467,11 +524,15 @@ func _choose_fallen(body: CharacterBody2D) -> void:
 			continue
 		if candidate.get("is_dead") != true or candidate.is_queued_for_deletion():
 			continue
+		# Humans are always rescued before fallen AI teammates.
 		var reach: float = _distance(body, candidate)
+		if Roster.is_bot(int(candidate.get("slot"))):
+			reach += 1.0e12
 		if reach < distance:
 			best = candidate
 			distance = reach
-	var previous := _dead(_fallen)
+	if previous != null and best != null and Roster.is_bot(int(best.get("slot"))):
+		best = previous
 	if best != previous:
 		navigation.reset()
 		_goal = Vector2.INF

@@ -303,6 +303,8 @@ var _themes_used: Array[int] = []
 ## Every player, in slot order. _player stays as player one for the HUD.
 var _players: Array[Node2D] = []
 var _rooms: Dictionary = {}
+var _bot_floors: Array[TileMapLayer] = []
+var _bot_floor_bounds: Array[Rect2] = []
 ## How deep the run has gone. HUD reads this; each floor adds monsters.
 var depth: int = 1
 var _player: Node2D = null
@@ -408,6 +410,8 @@ func descend() -> void:
 	for body in keep:
 		_players.append(body)
 	_rooms.clear()
+	_bot_floors.clear()
+	_bot_floor_bounds.clear()
 	_streamer = null
 	_wave_live = false
 	_clearing = false
@@ -1772,6 +1776,39 @@ func bot_controls_active() -> bool:
 			and not get_tree().paused
 
 
+## Navigation uses the real floor extent, not a radius around the bot. Walls,
+## doors, columns and props are still tested with the bot's collision shape.
+func bot_navigation_bounds() -> Rect2:
+	if _bot_floors.is_empty():
+		for room in _rooms.values():
+			var ground := room.get_node_or_null("TileMap/Ground") as TileMapLayer
+			if ground == null or ground.tile_set == null:
+				continue
+			var used := ground.get_used_rect()
+			var bounds := Rect2(ground.to_global(ground.map_to_local(used.position)), Vector2.ZERO)
+			for corner in [used.position, Vector2i(used.end.x, used.position.y),
+					Vector2i(used.position.x, used.end.y), used.end]:
+				bounds = bounds.expand(ground.to_global(ground.map_to_local(corner)))
+			_bot_floors.append(ground)
+			_bot_floor_bounds.append(bounds.grow(float(ground.tile_set.tile_size.x)))
+	var result := Rect2()
+	for i in _bot_floor_bounds.size():
+		result = _bot_floor_bounds[i] if i == 0 else result.merge(_bot_floor_bounds[i])
+	return result
+
+
+func bot_navigation_contains(point: Vector2) -> bool:
+	if _bot_floors.is_empty():
+		bot_navigation_bounds()
+	for i in _bot_floors.size():
+		if not _bot_floor_bounds[i].has_point(point):
+			continue
+		var ground := _bot_floors[i]
+		if ground.get_cell_source_id(ground.local_to_map(ground.to_local(point))) != -1:
+			return true
+	return false
+
+
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused and not SceneLoader.is_active() \
 			and not _building and not _clearing and is_instance_valid(_player):
@@ -1902,7 +1939,7 @@ func _show_reconnect(text: String) -> void:
 		note.visible = text != ""
 
 
-## Lets the party walk through one another.
+## Same-control pairs pass through; human/bot contact stays solid.
 ##
 ## Collision exceptions rather than layers: players sit on layer 1 alongside the
 ## walls, and everything that has to notice a player — pickups, spike traps,
@@ -1910,16 +1947,20 @@ func _show_reconnect(text: String) -> void:
 ## other would quietly break all of those. An exception is per-pair and touches
 ## nothing else.
 ##
-## Two players shoved apart by their own collision is how a revived or
-## reconnected character ends up launched through the geometry and out into
-## black space: they spawn on the same spot and the solver has to resolve it.
+## Bots yield to humans, but cannot be forced through scenery when pinned.
+## Rescuers stop outside the fallen human's restored collision footprint.
 func _pass_through_each_other() -> void:
 	for a in _players:
 		if not is_instance_valid(a):
 			continue
 		for b in _players:
 			if b != a and is_instance_valid(b):
-				(a as CharacterBody2D).add_collision_exception_with(b)
+				# Humans can still cross each other, as can bots. Human/bot
+				# contact is solid so a bot pinned against scenery blocks.
+				if Roster.is_bot(int(a.get("slot"))) != Roster.is_bot(int(b.get("slot"))):
+					(a as CharacterBody2D).remove_collision_exception_with(b)
+				else:
+					(a as CharacterBody2D).add_collision_exception_with(b)
 
 
 ## One camera for the table, framing every living player.

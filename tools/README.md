@@ -35,6 +35,24 @@ godot --headless --path . --scene res://tools/validate_ai_modes.tscn
 
 Exits nonzero on a failed check.
 
+## validate_ai_rescue_push.gd
+
+Headless regression checks for floor-wide rescue routes beyond the former
+spawn-radius limit, wall/pillar clearance, floor boundaries, rescue priority
+over combat in every mode, human-first rescue selection, and coherent pushing
+versus solid blocking when a bot is pinned. Loads one real player scene to
+verify revival through the state machine and the normal sneak-meter cost.
+
+```bash
+godot --headless --path . --scene res://tools/validate_ai_rescue_push.tscn --max-fps 120
+```
+
+Exits nonzero on a failed check. `-- --movement-only` skips the real-player
+revival fixture. `-- --maze-only` instead checks routes to walkable positions
+in every room of real generated indoor and exterior floors, including closed
+sliding doors, columns and ponds, and verifies the maze's human/bot collision
+policy. The grid resolves narrow entrances at 12 ground units per cell.
+
 ## validate_networking.gd
 
 Headless check that the dedicated-server WebSocket transport and the
