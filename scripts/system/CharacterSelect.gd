@@ -92,6 +92,11 @@ func _ready() -> void:
 	var player: Node = load(CheatManager.player_scene_path()).instantiate()
 	var sprite: AnimatedSprite2D = player.get_node("AnimationManager/AnimatedSprite2D")
 	_base_frames = sprite.sprite_frames
+	## And her material: the clothing key differs per heroine (Kitsune's hair
+	## and skirt need a wider one than the shader's defaults), and the scene's
+	## own material only has the defaults, which left her lighter hair unkeyed.
+	if sprite.material is ShaderMaterial:
+		preview.material = sprite.material.duplicate()
 	player.queue_free()
 
 	_build_icons()
