@@ -85,6 +85,19 @@ uniform float clothing_max_blue_ratio : hint_range(0.0, 1.0) = 0.35;
 uniform float clothing_amount_offset : hint_range(0.0, 255.0) = 45.0;
 uniform float clothing_amount_range : hint_range(1.0, 255.0) = 85.0;
 
+// Stray fill. PixelOver leaves the odd dull brown pixel inside Kitsune's hair
+// and skirt - the same paint, desaturated by downscaling - that misses the
+// key and stays brown while everything around it takes the theme. A warm
+// pixel (red the strongest channel) that fails the key but has at least
+// stray_neighbour_ratio of its opaque neighbours keyed is treated as
+// clothing too, ramped by its own red like any other. Outline stays: it is
+// black, below stray_min_red. Skin stays: its saturation is under
+// stray_min_sat (Kitsune's skin sits around 0.18-0.20).
+uniform bool fill_strays = false;
+uniform float stray_min_red : hint_range(0.0, 1.0) = 0.1;
+uniform float stray_min_sat : hint_range(0.0, 1.0) = 0.25;
+uniform float stray_neighbour_ratio : hint_range(0.0, 1.0) = 0.5;
+
 // Master switch for the two legacy passes below. PowerState.apply_to always
 // turns recolor_hair/recolor_skin on; a character whose paint does not fit
 // those keys (Kitsune: red hair, pale skin, white top that the grey hair key
@@ -163,7 +176,23 @@ float band_weight(vec3 hsv, vec4 band) {
 // shadow pixel apart from an outline pixel in isolation - both are the same
 // (0,0,0) - so this is the only way to keep outline black while still
 // recolouring the fur it borders.
-vec3 recolour(vec4 c, bool hair_context) {
+// The clothing key on its own, so the stray pass can count keyed neighbours
+// without recolouring them.
+bool clothing_key(vec4 c) {
+	float mx = max(c.r, max(c.g, c.b));
+	float mn = min(c.r, min(c.g, c.b));
+	float sat = (mx - mn) / max(mx, 0.00392157);
+	return c.a > 0.0
+		&& c.r >= mx
+		&& c.r > clothing_min_red
+		&& sat > clothing_min_sat
+		&& c.g < c.r * clothing_max_green_ratio
+		&& c.b < c.r * clothing_max_blue_ratio;
+}
+
+// `stray_context`: enough of this pixel's neighbours are keyed clothing that
+// a warm off-key pixel here is a stray to be filled (see fill_strays).
+vec3 recolour(vec4 c, bool hair_context, bool stray_context) {
 	if (c.a <= 0.0) {
 		return c.rgb;
 	}
@@ -181,12 +210,10 @@ vec3 recolour(vec4 c, bool hair_context) {
 	}
 
 	if (enabled) {
-		bool is_clothing =
-			c.r >= mx
-			&& c.r > clothing_min_red
-			&& sat > clothing_min_sat
-			&& c.g < c.r * clothing_max_green_ratio
-			&& c.b < c.r * clothing_max_blue_ratio;
+		bool is_clothing = clothing_key(c);
+		if (!is_clothing && fill_strays && stray_context) {
+			is_clothing = c.r >= mx && c.r > stray_min_red && sat > stray_min_sat;
+		}
 		if (is_clothing) {
 			float amount = clamp((c.r * 255.0 - clothing_amount_offset) / clothing_amount_range, 0.0, 1.0);
 			return mix(shadow_color, highlight_color, amount);
@@ -241,12 +268,14 @@ void fragment() {
 	// the highlight-softening blend below, so each neighbour texel is only
 	// sampled once per fragment.
 	float grey_neighbours = 0.0;
+	float keyed_neighbours = 0.0;
 	float opaque_neighbours = 0.0;
 	vec4 neighbour_texels[8];
 	bool neighbour_opaque[8];
 	int n_idx = 0;
 
-	bool need_neighbours = ((recolor_hair && hair_skin_passes) || soften_highlights) && t.a > 0.0;
+	bool need_neighbours = ((recolor_hair && hair_skin_passes) || soften_highlights
+		|| (enabled && fill_strays)) && t.a > 0.0;
 	if (need_neighbours) {
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = -1; dy <= 1; dy++) {
@@ -266,6 +295,9 @@ void fragment() {
 					if ((nmx - nmn) <= 0.035) {
 						grey_neighbours += 1.0;
 					}
+					if (clothing_key(n)) {
+						keyed_neighbours += 1.0;
+					}
 				}
 			}
 		}
@@ -277,7 +309,12 @@ void fragment() {
 	bool hair_context = opaque_neighbours < 3.0
 		|| (grey_neighbours / max(opaque_neighbours, 1.0)) >= HAIR_CONTEXT_RATIO;
 
-	vec3 color = recolour(t, hair_context);
+	// A stray needs real neighbours to be judged against; a lone speck with
+	// fewer than 3 is left to the ordinary key.
+	bool stray_context = opaque_neighbours >= 3.0
+		&& (keyed_neighbours / max(opaque_neighbours, 1.0)) >= stray_neighbour_ratio;
+
+	vec3 color = recolour(t, hair_context, stray_context);
 
 	if (soften_highlights && t.a > 0.0) {
 		vec3 acc = vec3(0.0);
@@ -289,7 +326,7 @@ void fragment() {
 				// Softening doesn't recompute each neighbour's own context -
 				// assume fur interior, same small accepted imprecision as
 				// the clothing/face exception documented above.
-				vec3 nc = recolour(neighbour_texels[i], true);
+				vec3 nc = recolour(neighbour_texels[i], true, false);
 				acc += nc;
 				lum_acc += luma(nc);
 				count += 1.0;

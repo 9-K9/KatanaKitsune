@@ -75,6 +75,8 @@ SHADER_PARAMS = {
     "clothing_amount_offset": "40.0",
     "clothing_amount_range": "70.0",
     "hair_skin_passes": "false",
+    # Fill the odd dull-brown pixel inside hair/skirt that misses the key.
+    "fill_strays": "true",
 }
 
 ## old clip folder -> (export subfolder, export clip folder)

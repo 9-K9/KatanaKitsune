@@ -55,6 +55,7 @@ def shader_defaults() -> dict:
         clothing_min_red=0.137255, clothing_min_sat=0.72,
         clothing_max_green_ratio=0.42, clothing_max_blue_ratio=0.35,
         clothing_amount_offset=45.0, clothing_amount_range=85.0,
+        fill_strays=False, stray_min_red=0.1, stray_min_sat=0.25, stray_neighbour_ratio=0.5,
         hair_skin_passes=True, recolor_hair=True, recolor_skin=True,
         hair_shadow=np.zeros(3), hair_highlight=np.array((168, 168, 168)) / 255,
         skin_shadow=np.array((108, 64, 48)) / 255, skin_highlight=np.array((238, 170, 142)) / 255,
@@ -72,7 +73,16 @@ def kitsune_params(ramp) -> dict:
     return P
 
 
-def recolour(c, hair_ctx, P):
+def clothing_key(c, P):
+    rgb = c[..., :3]
+    r, g, b = c[..., 0], c[..., 1], c[..., 2]
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    sat = (mx - mn) / np.maximum(mx, 1 / 255)
+    return ((c[..., 3] > 0) & (r >= mx) & (r > P["clothing_min_red"]) & (sat > P["clothing_min_sat"])
+            & (g < r * P["clothing_max_green_ratio"]) & (b < r * P["clothing_max_blue_ratio"]))
+
+
+def recolour(c, hair_ctx, P, stray_ctx=None):
     rgb = c[..., :3]
     a = c[..., 3]
     r, g, b = c[..., 0], c[..., 1], c[..., 2]
@@ -81,8 +91,10 @@ def recolour(c, hair_ctx, P):
     out = rgb.copy()
     done = a <= 0
     if P["enabled"]:
-        cloth = ((~done) & (r >= mx) & (r > P["clothing_min_red"]) & (sat > P["clothing_min_sat"])
-                 & (g < r * P["clothing_max_green_ratio"]) & (b < r * P["clothing_max_blue_ratio"]))
+        cloth = clothing_key(c, P)
+        if P["fill_strays"] and stray_ctx is not None:
+            cloth |= ((~done) & ~cloth & stray_ctx & (r >= mx)
+                      & (r > P["stray_min_red"]) & (sat > P["stray_min_sat"]))
         amt = np.clip((r * 255 - P["clothing_amount_offset"]) / P["clothing_amount_range"], 0, 1)[..., None]
         out[cloth] = (P["shadow"] + (P["highlight"] - P["shadow"]) * amt)[cloth]
         done |= cloth
@@ -113,7 +125,9 @@ def shade(img: Image.Image, P: dict) -> Image.Image:
     ngrey = nop & ((nb[..., :3].max(-1) - nb[..., :3].min(-1)) <= 0.035)
     opaque_n, grey_n = nop.sum(0), ngrey.sum(0)
     hair_ctx = (opaque_n < 3) | ((grey_n / np.maximum(opaque_n, 1)) >= 0.5)
-    color = recolour(im, hair_ctx, P)
+    keyed_n = np.stack([clothing_key(nb[i], P) for i in range(8)]).sum(0)
+    stray_ctx = (opaque_n >= 3) & ((keyed_n / np.maximum(opaque_n, 1)) >= P["stray_neighbour_ratio"])
+    color = recolour(im, hair_ctx, P, stray_ctx)
     if P["soften_highlights"]:
         ncol = np.stack([recolour(nb[i], np.ones((H, W), bool), P) for i in range(8)])
         w = nop[..., None].astype(float)

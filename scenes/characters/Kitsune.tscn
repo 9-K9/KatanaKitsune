@@ -315,6 +315,7 @@ shader_parameter/clothing_max_blue_ratio = 0.5
 shader_parameter/clothing_amount_offset = 40.0
 shader_parameter/clothing_amount_range = 70.0
 shader_parameter/hair_skin_passes = false
+shader_parameter/fill_strays = true
 
 [sub_resource type="AtlasTexture" id="At_000_00"]
 atlas = ExtResource("10_b7ing")
