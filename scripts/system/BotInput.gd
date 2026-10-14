@@ -18,6 +18,16 @@ const REVIVE_DISTANCE: float = 120.0
 ## Sneaking states a stealth strike (`flair`) can be thrown from.
 const SNEAK_READY_STATES: Array[StringName] = [&"stealthIdle", &"stealthWalk"]
 const DRAWN_STATES: Array[StringName] = [&"katanaIdle", &"katanaWalk", &"katanaRun"]
+## Personal space between party members, in ground units (bodies touch at ~70).
+const SPACE_RADIUS: float = 130.0
+## Crowding above this (0..1 per neighbour) makes an idle bot step aside.
+const CROWDED: float = 0.4
+## A chosen heading is kept this long unless it swings more than ~45 degrees.
+const HEADING_HOLD: float = 0.3
+## Standing still this long while trying to move counts as blocked...
+const BLOCKED_GRACE: float = 0.2
+## ...and a blocked bot waits this long before it picks a new way.
+const BLOCKED_WAIT: float = 1.0
 
 var navigation := BotNavigation.new()
 var _body: WeakRef
@@ -35,6 +45,12 @@ var _draw_left: float = 0.0
 var _goal := Vector2.INF
 var _repath_left: float = 0.0
 var _navigation_left: float = 0.0
+var _heading := Vector2.ZERO
+var _heading_left: float = 0.0
+var _wait_left: float = 0.0
+var _blocked_for: float = 0.0
+var _was_moving: bool = false
+var _last_position := Vector2.INF
 
 
 func _init() -> void:
@@ -74,6 +90,12 @@ func reset() -> void:
 	_goal = Vector2.INF
 	_repath_left = 0.0
 	_navigation_left = 0.0
+	_heading = Vector2.ZERO
+	_heading_left = 0.0
+	_wait_left = 0.0
+	_blocked_for = 0.0
+	_was_moving = false
+	_last_position = Vector2.INF
 	navigation.reset()
 
 
@@ -102,6 +124,11 @@ func update(delta: float) -> void:
 		_choose_anchor(body)
 		_choose_target(body)
 		_choose_fallen(body)
+	_decide(body)
+	_steer(body, delta)
+
+
+func _decide(body: CharacterBody2D) -> void:
 	var fallen := _dead(_fallen)
 	var anchor := _living(_anchor)
 	if anchor == null and fallen == null:
@@ -260,12 +287,92 @@ func _follow(body: CharacterBody2D, goal: Vector2, running: bool,
 				best = candidate
 				alignment = score
 		if best == Vector2.ZERO:
-			navigation.reset()
-			_repath_left = 0.0
+			_begin_wait()
 			return
 		direction = best
 	_move = direction
 	_now["Run"] = running and not body.winded()
+
+
+## Runs after every decision: keeps party members out of each other's space,
+## holds a heading long enough that the sprite stops flickering between
+## directions, and parks a blocked bot for a moment before it tries elsewhere.
+func _steer(body: CharacterBody2D, delta: float) -> void:
+	var position := body.global_position
+	var moved: float = BotNavigation.ground(position - _last_position).length() \
+			if _last_position != Vector2.INF else INF
+	_last_position = position
+	var expected: float = maxf(float(body.get("speed")), 1.0) * delta
+	if _was_moving and moved < expected * 0.2:
+		_blocked_for += delta
+	else:
+		_blocked_for = 0.0
+	if _wait_left > 0.0:
+		_wait_left -= delta
+		_move = Vector2.ZERO
+		_now.erase("Run")
+		if _wait_left <= 0.0:
+			navigation.reset()
+			_goal = Vector2.INF
+			_repath_left = 0.0
+	elif _blocked_for >= BLOCKED_GRACE and _move != Vector2.ZERO:
+		_begin_wait()
+	_was_moving = _move != Vector2.ZERO
+	if _wait_left > 0.0:
+		return
+	var fighting: bool = _now.get("Attack", false) or _now.get("Defend", false)
+	var push := Vector2.ZERO if fighting else _separation(body)
+	var wanted := _move
+	if wanted == Vector2.ZERO:
+		if push.length() < CROWDED:
+			_heading_left = 0.0
+			return
+		## Crowded while standing: walk clear instead of standing in a pile.
+		wanted = push.normalized()
+		_now["Run"] = false
+	else:
+		wanted = (wanted + push).normalized()
+	_heading_left -= delta
+	if _heading_left > 0.0 and _heading != Vector2.ZERO and _heading.dot(wanted) > 0.7:
+		wanted = _heading
+	else:
+		_heading = wanted
+		_heading_left = HEADING_HOLD
+	var step := wanted.round()
+	var ahead := position + Vector2(step.x, step.y * 0.5) * 16.0
+	if step != Vector2.ZERO and not navigation.safe_segment(position, ahead):
+		## Pushed into a wall by a neighbour: hold still rather than jitter.
+		_move = Vector2.ZERO
+		_heading_left = 0.0
+		_was_moving = false
+		return
+	_move = wanted
+	_was_moving = _move != Vector2.ZERO
+
+
+func _begin_wait() -> void:
+	_wait_left = BLOCKED_WAIT
+	_blocked_for = 0.0
+	_heading_left = 0.0
+	_move = Vector2.ZERO
+	_now.erase("Run")
+
+
+## Summed repulsion from every living party member inside SPACE_RADIUS, in
+## ground units, each contributing 0 at the edge up to 1 when overlapping.
+func _separation(body: CharacterBody2D) -> Vector2:
+	var push := Vector2.ZERO
+	for other in Roster.bodies(body.get_tree()):
+		if other == body:
+			continue
+		var offset := BotNavigation.ground(body.global_position - other.global_position)
+		var distance: float = offset.length()
+		if distance >= SPACE_RADIUS:
+			continue
+		var away := offset / distance if distance > 1.0 \
+				else Vector2.RIGHT.rotated(float(body.get_instance_id() % 628) * 0.01)
+		push += away * (1.0 - distance / SPACE_RADIUS)
+	return push
 
 
 func _strike_position(body: CharacterBody2D, target: Node2D, fallback: Vector2) -> Vector2:
