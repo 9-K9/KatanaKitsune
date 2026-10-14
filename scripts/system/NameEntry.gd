@@ -2,14 +2,19 @@ extends CanvasLayer
 
 ## Arcade name entry, then the table.
 ##
-## Shown when a run ends on a score good enough to place. Up to nine characters,
-## driven by the device that earned the score rather than by whichever pad is
-## nearest — in a party, the entry belongs to the player whose run it was.
+## Shown when a run ends on a score good enough to place. Up to twelve
+## characters, any fewer is fine: confirm saves whatever is on the wheel, so a
+## name is never forced out to the last slot. Driven by the device that earned
+## the score rather than by whichever pad is nearest — in a party, the entry
+## belongs to the player whose run it was.
+##
+## The name goes through CheatManager rather than straight to Score, because
+## one particular name is the cheat code (see CheatManager.CODE_NAME).
 
 signal finished
 
 const LETTERS := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
-const NAME_LENGTH: int = 9
+const NAME_LENGTH: int = 12
 const SPACE_INDEX: int = 36
 ## Held direction repeat, so a stick does not spin the wheel.
 const REPEAT: float = 0.18
@@ -30,9 +35,11 @@ var _help: Label = null
 
 
 ## `slot` is the player whose score this is; their pad drives the wheel.
+## While Karmageisha is active the run is worth nothing, so the screen shows 0
+## regardless of what was passed in.
 func open(slot: int, points: int, wave: int) -> void:
 	_slot = slot
-	_points = points
+	_points = 0 if CheatManager.karmageisha_active else points
 	_wave = wave
 	_input = Roster.input_for(slot)
 	## Primed, or the button that dismissed the previous screen enters a letter
@@ -64,7 +71,7 @@ func _build() -> void:
 	if _input.device == PlayerInput.KEYBOARD:
 		_help.text = "TYPE YOUR NAME  •  BACKSPACE TO EDIT  •  ENTER TO SAVE"
 	else:
-		_help.text = "D-PAD: LETTER / SPACE  •  %s: NEXT  •  %s: BACK" % [
+		_help.text = "D-PAD: LETTER / SPACE  •  %s: NEXT (PAST THE END SAVES)  •  %s: BACK" % [
 			_input.confirm_button_label(), "CANCEL"]
 
 	_table = _label(20.0, Color(0.72, 0.68, 0.60))
@@ -101,11 +108,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if letter_index < 0:
 		return
 	_letters[_at] = letter_index
-	if _at < NAME_LENGTH - 1:
-		_at += 1
-	else:
-		_commit()
-		return
+	## The last slot just fills; Enter is what saves, so a twelve-letter name is
+	## not committed the instant its final letter lands.
+	_at = mini(_at + 1, NAME_LENGTH - 1)
 	_refresh()
 	get_viewport().set_input_as_handled()
 
@@ -166,7 +171,7 @@ func _refresh() -> void:
 
 	var rows := "HIGH SCORES\n"
 	for i in mini(Score.table.size(), 5):
-		rows += "%d.  %-9s  %8d   wave %d\n" % [
+		rows += "%d.  %-12s  %8d   wave %d\n" % [
 			i + 1, Score.table[i]["name"], Score.table[i]["points"],
 			Score.table[i]["wave"]]
 	_table.text = rows
@@ -180,7 +185,9 @@ func _commit() -> void:
 	name = name.strip_edges()
 	if name.is_empty():
 		name = "PLAYER"
-	Score.submit(name.strip_edges(), _points, _wave)
+	## CheatManager saves the score, or recognises the code and swaps the
+	## heroine instead. Either way the table below is current afterwards.
+	CheatManager.on_highscore_name(name, _points, _wave)
 	_refresh()
 	_entry.text = name
 	await get_tree().create_timer(1.8, true).timeout

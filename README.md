@@ -180,6 +180,30 @@ ones close fast and the heavy ones lumber.
 Dragon, Vermilion Phoenix, White Tiger, Black Tortoise and the rest — chosen at
 character select and read by the title screen, the maze and the player alike.
 
+**Revised title artwork.** The title, character-select and pause screens show
+the new heroine in the chosen aspect's colours:
+`assets/sprites/ui/title_covers_kitsune/<state id>.png`, with
+`title_cover_kitsune.png` as the neutral fallback. Each is a 768x432 Lanczos
+reduction of a GPT-generated master (`/mnt/K-DRIVE/Pictures/Misc/Meshy/TitleCover.png`
+and the `title_variants/` set); the full-resolution sources stay outside the
+game repository (see `tools/build_kitsune_title_covers.py`). The previous
+`title_cover.png` and `title_power_states/` artwork remain in place for the
+old-character cheat below.
+
+**KARMAGEISHA.** The high-score name entry takes up to twelve characters
+(confirm saves whatever is on the wheel, so shorter names are fine). Enter
+`KARMAGEISHA` as your name and the score is saved under it, then the previous
+heroine — Katana Kitsune, `scenes/characters/KatanaKitsune.tscn` — takes over
+every player slot, humans and bots alike, as a god: triple damage, 1.6x speed,
+twice the sneak meter at half the drain, immortality on by default (toggleable
+from the pause menu's Cheats submenu, which she makes visible in release
+builds), and all six scrolls stocked and never spent. HUD icons and the
+title/pause/select covers revert to her art. The trade is the scoreboard: while
+she is active a run scores nothing and the name entry still opens on game over
+showing 0, and entering any other name there turns her off again. The state
+persists across launches in `user://cheats.cfg`; the logic lives in
+`scripts/system/CheatManager.gd`.
+
 **Outdoor biomes are asset-gated.** `scripts/system/ExteriorBiome.gd` owns the
 Sakura / desert / snow selection, terrain slots and weather compatibility. The
 runtime checks `res://resources/biomes/*.tres`, `res://assets/pixellab/japanese_environment/biome_tiles/*.png`

@@ -277,12 +277,14 @@ func _apply_buffs() -> void:
 	if _base_damage <= 0.0:
 		return
 	damage = _base_damage * _buff_multiplier(Pickup.Kind.DAMAGE) \
-			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.ATTACK)
+			* _buff_multiplier(SCROLL_BUFF + Scroll.Kind.ATTACK) \
+			* CheatManager.damage_factor()
 	_apply_speed()
 
 
 func _apply_speed() -> void:
-	var trained: float = Progression.speed_factor(_progress_slot())
+	var trained: float = Progression.speed_factor(_progress_slot()) \
+			* CheatManager.speed_factor()
 	walkSpeed = _base_walk * _buff_multiplier(Pickup.Kind.SPEED) * trained
 	## Swiftness is a running scroll: it lengthens her stride at speed and
 	## leaves the careful walk alone.
@@ -312,12 +314,16 @@ func apply_progression() -> void:
 	stamina = clampf(stamina + max_stamina - was_stamina, 0.0, max_stamina)
 	stamina_regen = _progress_base["stamina_regen"] * Progression.stamina_regen_factor(slot)
 	var was_sneak: float = max_sneak
-	max_sneak = _progress_base["max_sneak"] * Progression.sneak_factor(slot)
+	max_sneak = _progress_base["max_sneak"] * Progression.sneak_factor(slot) \
+			* CheatManager.sneak_factor()
 	sneak = clampf(sneak + max_sneak - was_sneak, 0.0, max_sneak)
 	sneak_regen = _progress_base["sneak_regen"] * Progression.sneak_regen_factor(slot)
-	sneak_drain_factor = Progression.sneak_drain_factor(slot)
+	sneak_drain_factor = Progression.sneak_drain_factor(slot) \
+			* CheatManager.sneak_drain_factor()
 	_capture_base_stats()
-	_apply_speed()
+	## Buffs rather than speed alone, so the cheat's damage factor lands on
+	## spawn and not only once some pickup happens to recompute it.
+	_apply_buffs()
 
 
 func _buff_multiplier(kind: int) -> float:

@@ -26,10 +26,19 @@ const STATES: Array[Dictionary] = [
 	{"id": "12_Spirit_CelestialQi",      "element": "SPIRIT",    "name": "CELESTIAL QI"},
 ]
 
-const SPRITES := "res://assets/sprites/characters/KatanaKitsune/power_states"
-const COVERS := "res://assets/sprites/ui/title_power_states"
-## Used when a state has no cover of its own — Fire currently has none.
-const DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
+const SPRITES := "res://assets/sprites/characters/Kitsune/power_states"
+## Title/pause/select cover per aspect: Kitsune with her hair and skirt in that
+## aspect's colours, built by tools/build_kitsune_title_covers.py.
+const COVERS := "res://assets/sprites/ui/title_covers_kitsune"
+## Used when a state has no cover of its own.
+const DEFAULT_COVER := "res://assets/sprites/ui/title_cover_kitsune.png"
+
+## The previous heroine's art, shown instead while the Karmageisha cheat has
+## her in play (CheatManager.karmageisha_active). Her cover set is one short
+## (Fire), which the neutral cover stands in for.
+const GOD_SPRITES := "res://assets/sprites/characters/KatanaKitsune/power_states"
+const GOD_COVERS := "res://assets/sprites/ui/title_power_states"
+const GOD_DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
 
 ## Shadow -> highlight ramp per state, matching tools/generate_kitsune_power_palettes.py.
 ##
@@ -159,13 +168,18 @@ func select(index: int) -> void:
 
 
 func icon_path(index: int = -1) -> String:
-	return "%s/%s/HUDicon.png" % [SPRITES, STATES[_clamp(index)]["id"]]
+	var root: String = GOD_SPRITES if CheatManager.karmageisha_active else SPRITES
+	return "%s/%s/HUDicon.png" % [root, STATES[_clamp(index)]["id"]]
 
 
-## The title art for a state, falling back to the stock cover when that state
-## has none rather than leaving the screen blank.
+## The title art for a state, falling back to the neutral cover when that
+## state has none rather than leaving the screen blank.
 func cover_path(index: int = -1) -> String:
-	var path := "%s/%s/titleCover_1677x938.png" % [COVERS, STATES[_clamp(index)]["id"]]
+	var id: String = STATES[_clamp(index)]["id"]
+	if CheatManager.karmageisha_active:
+		var god := "%s/%s/titleCover_768x432.png" % [GOD_COVERS, id]
+		return god if ResourceLoader.exists(god) else GOD_DEFAULT_COVER
+	var path := "%s/%s.png" % [COVERS, id]
 	return path if ResourceLoader.exists(path) else DEFAULT_COVER
 
 
@@ -188,6 +202,8 @@ func cover_path(index: int = -1) -> String:
 ## variety choice rather than following the player's picker. recolor_hair /
 ## recolor_skin are left enabled whenever this is called, since index 0 in
 ## each ramp list already matches the shader's natural/no-change defaults.
+## A material that sets the shader's `hair_skin_passes` uniform false
+## (Kitsune.tscn: her paint does not fit those keys) ignores both.
 func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: int = -1) -> void:
 	var i := _clamp(index)
 	var mat: ShaderMaterial = _material_for(sprite)

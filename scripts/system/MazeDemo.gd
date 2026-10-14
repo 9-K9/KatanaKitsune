@@ -1720,15 +1720,23 @@ func _spawn_player(step: Vector2) -> void:
 	var wanted: int = maxi(Roster.count(), 1)
 	var centre: Vector2 = _room_centre(_start_cell)
 
-	## Spawned once and carried down; later floors only move them.
+	## Spawned once and carried down; later floors only move them. Which
+	## heroine depends on the cheat: Karmageisha swaps every slot, human or
+	## bot, for the old Katana Kitsune.
+	var scene: PackedScene = player_scene
+	if CheatManager.karmageisha_active:
+		scene = load(CheatManager.player_scene_path())
 	while _players.size() < wanted:
-		var body = player_scene.instantiate()
+		var body = scene.instantiate()
 		## Set before add_child so _ready picks the right device and colour —
 		## afterwards would be too late, the character would already have bound
 		## itself to the keyboard and repainted in somebody else's aspect.
 		body.slot = _players.size()
 		add_child(body)
 		_players.append(body)
+		## A god carries every scroll from the start, and never spends one.
+		if "scrolls" in body:
+			CheatManager.stock_scrolls(body.scrolls)
 		## Only when there is a party to tell apart. One player needs no label
 		## saying which one they are.
 		if wanted > 1:

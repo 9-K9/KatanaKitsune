@@ -52,9 +52,77 @@ process to 30 seconds and exits nonzero on a failed check or timed-out wait.
 Memory-heavy (two Godot processes at once); skip it on a machine already under
 memory pressure.
 
+## build_kitsune_character.py
+
+Builds the main player character, `scenes/characters/Kitsune.tscn`, from the
+new-model PixelOver export at
+`/home/emanzi/3D/Blender 4.5/Meshy-Blender-Toolkit/pixelover/sprites/KatanaKitsune_NewModel/`:
+
+```bash
+python3 tools/build_kitsune_character.py          # dry run
+python3 tools/build_kitsune_character.py --apply
+```
+
+It clones `scenes/characters/KatanaKitsune.tscn` (the previous model, kept
+for a later settings cheat) and swaps only the sheets behind each frame, so
+every state, animation name, AnimationPlayer track, collision shape and
+timing stays identical. The export's 480x480 frames are cropped to the
+game's 432x342 cells with her feet where the old model's were, and written
+with their `.import` sidecars under `assets/sprites/characters/Kitsune/sprites/`.
+The export has no bare `Death` clip, so `death_*` plays the `KatanaDeath`
+sheets. Does not launch Godot.
+
+The cloned power-state material is then retuned for the new paint
+(`SHADER_PARAMS`): her hair and skirt are the same dark red, so the clothing
+key in `shaders/powerState.gdshader` is widened (red > 30, sat > 0.5,
+g/b < 0.5·r) to theme both together, and the legacy hair/skin passes are
+switched off so her pale skin and white top stay as painted. Those thresholds
+are shader uniforms whose defaults are the old pure-red key, so
+`KatanaKitsune.tscn` and the monsters render exactly as before.
+`--material-only --apply` rewrites just that block in the existing scene
+without minting new UIDs.
+
+## generate_kitsune_icons.py
+
+Renders the HUD icons for Kitsune: `assets/sprites/characters/Kitsune/HUDicon.png`
+plus `power_states/<id>/HUDicon.png` for each of the twelve aspects, in the
+same 96x96 framed format as the Katana Kitsune set, with a contact sheet at
+`power_states/_preview_powerStates.png`:
+
+```bash
+python3 tools/generate_kitsune_icons.py            # dry run, preview in /tmp
+python3 tools/generate_kitsune_icons.py --apply
+python3 tools/generate_kitsune_icons.py --check    # wide key on the old heroine
+```
+
+The bust is frame 0 of `Idle/Kitsune_Idle_dir1.png` (standing, south-west).
+Each aspect is recoloured by a NumPy port of `powerState.gdshader` fed the
+exact uniforms from `build_kitsune_character.SHADER_PARAMS` and the ramps
+parsed from `scripts/system/PowerState.gd`, so the icon matches her in play.
+Existing `.import` UIDs are kept across re-runs. Does not launch Godot.
+
+## build_kitsune_title_covers.py
+
+Imports the twelve per-aspect title covers for Kitsune from the 1672x941
+masters at `/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/sprites/ui/title_variants/`
+(outside the repository), reducing each to 768x432 with Lanczos like the
+neutral `title_cover_kitsune.png`:
+
+```bash
+python3 tools/build_kitsune_title_covers.py          # dry run
+python3 tools/build_kitsune_title_covers.py --apply
+```
+
+Output is `assets/sprites/ui/title_covers_kitsune/<state id>.png` with its
+`.import` sidecar (UIDs kept across re-runs); `PowerState.cover_path()` reads
+them for the title screen, character select and pause menu. Does not launch
+Godot.
+
 ## generate_title_power_variants.py
 
-Rebuild the eleven alternate title covers from the original
+Legacy artwork tool for the previous heroine, not the active
+`title_cover_kitsune.png`. These covers are preserved for a future cheat.
+Rebuild the eleven alternate legacy title covers from the original
 `/mnt/K-DRIVE/Pictures/PixAI/KatanaKitsune/CoverTitle.png`, using Pillow and NumPy:
 
 ```bash

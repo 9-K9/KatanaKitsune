@@ -70,6 +70,27 @@ uniform bool enabled = false;
 uniform vec3 shadow_color = vec3(0.282353, 0.015686, 0.003922);
 uniform vec3 highlight_color = vec3(0.949020, 0.227451, 0.078431);
 
+// Clothing colour key. A texel is clothing when red is its largest channel,
+// red > clothing_min_red, saturation > clothing_min_sat and green/blue are
+// below the given fractions of red. Its position on the shadow->highlight
+// ramp is (red8 - clothing_amount_offset) / clothing_amount_range.
+// Defaults are Katana Kitsune's pure-red key (red > 35). Kitsune.tscn sets a
+// wider key (red > 30, sat > 0.5, g/b < 0.5r, (red8 - 40) / 70) so her
+// dark-red hair and skirt - the same paint - take the theme together while
+// her pale skin and white top stay out of it.
+uniform float clothing_min_red : hint_range(0.0, 1.0) = 0.137255;
+uniform float clothing_min_sat : hint_range(0.0, 1.0) = 0.72;
+uniform float clothing_max_green_ratio : hint_range(0.0, 1.0) = 0.42;
+uniform float clothing_max_blue_ratio : hint_range(0.0, 1.0) = 0.35;
+uniform float clothing_amount_offset : hint_range(0.0, 255.0) = 45.0;
+uniform float clothing_amount_range : hint_range(1.0, 255.0) = 85.0;
+
+// Master switch for the two legacy passes below. PowerState.apply_to always
+// turns recolor_hair/recolor_skin on; a character whose paint does not fit
+// those keys (Kitsune: red hair, pale skin, white top that the grey hair key
+// would dim) sets this false in its material and the passes are skipped.
+uniform bool hair_skin_passes = true;
+
 // Hair/fur recolour. Defaults match the natural black-fur look, so turning
 // this on with nothing chosen yet changes nothing.
 uniform bool recolor_hair = false;
@@ -162,14 +183,18 @@ vec3 recolour(vec4 c, bool hair_context) {
 	if (enabled) {
 		bool is_clothing =
 			c.r >= mx
-			&& c.r > 0.137255          // red > 35 at 8-bit
-			&& sat > 0.72
-			&& c.g < c.r * 0.42
-			&& c.b < c.r * 0.35;
+			&& c.r > clothing_min_red
+			&& sat > clothing_min_sat
+			&& c.g < c.r * clothing_max_green_ratio
+			&& c.b < c.r * clothing_max_blue_ratio;
 		if (is_clothing) {
-			float amount = clamp((c.r * 255.0 - 45.0) / 85.0, 0.0, 1.0);
+			float amount = clamp((c.r * 255.0 - clothing_amount_offset) / clothing_amount_range, 0.0, 1.0);
 			return mix(shadow_color, highlight_color, amount);
 		}
+	}
+
+	if (!hair_skin_passes) {
+		return c.rgb;
 	}
 
 	if (recolor_skin && c.r > 0.0) {
@@ -221,7 +246,7 @@ void fragment() {
 	bool neighbour_opaque[8];
 	int n_idx = 0;
 
-	bool need_neighbours = (recolor_hair || soften_highlights) && t.a > 0.0;
+	bool need_neighbours = ((recolor_hair && hair_skin_passes) || soften_highlights) && t.a > 0.0;
 	if (need_neighbours) {
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = -1; dy <= 1; dy++) {
