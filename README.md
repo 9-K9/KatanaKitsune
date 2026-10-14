@@ -180,6 +180,16 @@ ones close fast and the heavy ones lumber.
 Dragon, Vermilion Phoenix, White Tiger, Black Tortoise and the rest — chosen at
 character select and read by the title screen, the maze and the player alike.
 
+**Revised title artwork.** The title, character-select and pause screens show
+the new heroine in the chosen aspect's colours:
+`assets/sprites/ui/title_covers_kitsune/<state id>.png`, with
+`title_cover_kitsune.png` as the neutral fallback. Each is a 768x432 Lanczos
+reduction of a GPT-generated master (`/mnt/K-DRIVE/Pictures/Misc/Meshy/TitleCover.png`
+and the `title_variants/` set); the full-resolution sources stay outside the
+game repository (see `tools/build_kitsune_title_covers.py`). The previous
+`title_cover.png` and `title_power_states/` artwork remain untouched for a
+future old-character cheat.
+
 **Outdoor biomes are asset-gated.** `scripts/system/ExteriorBiome.gd` owns the
 Sakura / desert / snow selection, terrain slots and weather compatibility. The
 runtime checks `res://resources/biomes/*.tres`, `res://assets/pixellab/japanese_environment/biome_tiles/*.png`

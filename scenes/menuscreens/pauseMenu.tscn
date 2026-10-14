@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/system/PauseMenu.gd" id="1_8k1ei"]
 [ext_resource type="Script" path="res://scripts/system/SettingsPanel.gd" id="4_settings"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover.png" id="3_cover"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover_kitsune.png" id="3_cover"]
 [ext_resource type="Theme" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
 
 [node name="PauseMenu" type="CanvasLayer"]

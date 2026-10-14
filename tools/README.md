@@ -101,9 +101,28 @@ exact uniforms from `build_kitsune_character.SHADER_PARAMS` and the ramps
 parsed from `scripts/system/PowerState.gd`, so the icon matches her in play.
 Existing `.import` UIDs are kept across re-runs. Does not launch Godot.
 
+## build_kitsune_title_covers.py
+
+Imports the twelve per-aspect title covers for Kitsune from the 1672x941
+masters at `/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/sprites/ui/title_variants/`
+(outside the repository), reducing each to 768x432 with Lanczos like the
+neutral `title_cover_kitsune.png`:
+
+```bash
+python3 tools/build_kitsune_title_covers.py          # dry run
+python3 tools/build_kitsune_title_covers.py --apply
+```
+
+Output is `assets/sprites/ui/title_covers_kitsune/<state id>.png` with its
+`.import` sidecar (UIDs kept across re-runs); `PowerState.cover_path()` reads
+them for the title screen, character select and pause menu. Does not launch
+Godot.
+
 ## generate_title_power_variants.py
 
-Rebuild the eleven alternate title covers from the original
+Legacy artwork tool for the previous heroine, not the active
+`title_cover_kitsune.png`. These covers are preserved for a future cheat.
+Rebuild the eleven alternate legacy title covers from the original
 `/mnt/K-DRIVE/Pictures/PixAI/KatanaKitsune/CoverTitle.png`, using Pillow and NumPy:
 
 ```bash

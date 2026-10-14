@@ -27,9 +27,11 @@ const STATES: Array[Dictionary] = [
 ]
 
 const SPRITES := "res://assets/sprites/characters/Kitsune/power_states"
-const COVERS := "res://assets/sprites/ui/title_power_states"
-## Used when a state has no cover of its own — Fire currently has none.
-const DEFAULT_COVER := "res://assets/sprites/ui/title_cover.png"
+## Title/pause/select cover per aspect: Kitsune with her hair and skirt in that
+## aspect's colours, built by tools/build_kitsune_title_covers.py.
+const COVERS := "res://assets/sprites/ui/title_covers_kitsune"
+## Used when a state has no cover of its own.
+const DEFAULT_COVER := "res://assets/sprites/ui/title_cover_kitsune.png"
 
 ## Shadow -> highlight ramp per state, matching tools/generate_kitsune_power_palettes.py.
 ##
@@ -162,10 +164,11 @@ func icon_path(index: int = -1) -> String:
 	return "%s/%s/HUDicon.png" % [SPRITES, STATES[_clamp(index)]["id"]]
 
 
-## The title art for a state, falling back to the stock cover when that state
-## has none rather than leaving the screen blank.
+## The title art for a state, falling back to the neutral cover when that
+## state has none rather than leaving the screen blank. The previous heroine's
+## covers under title_power_states/ are kept for the old-character cheat.
 func cover_path(index: int = -1) -> String:
-	var path := "%s/%s/titleCover_1677x938.png" % [COVERS, STATES[_clamp(index)]["id"]]
+	var path := "%s/%s.png" % [COVERS, STATES[_clamp(index)]["id"]]
 	return path if ResourceLoader.exists(path) else DEFAULT_COVER
 
 

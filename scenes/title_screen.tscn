@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://eu8ko3xkjysk" path="res://scripts/system/TitleScreen.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://cs0g1velfuv2p" path="res://assets/sprites/ui/katanaKitsune.theme.tres" id="2_theme"]
 [ext_resource type="Script" path="res://scripts/system/SettingsPanel.gd" id="5_settings"]
-[ext_resource type="Texture2D" uid="uid://di3ld0tsgxfg8" path="res://assets/sprites/ui/title_cover.png" id="4_cover"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/title_cover_kitsune.png" id="4_cover"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_normal"]
 bg_color = Color(0.075, 0.055, 0.085, 0.94)
