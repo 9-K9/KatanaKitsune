@@ -8,6 +8,11 @@ and the safe line are the same line.
 > 2026-10-08 split: the workshop is no longer a git repository, and audio is
 > deliberately absent until the end of development.
 
+## Related repository
+
+The character creation and animation pipeline lives in
+[Meshy2PixelOver-PipeLine](https://github.com/9-K9/Meshy2PixelOver-PipeLine).
+
 ## State of play
 
 In development, and playable end to end: title → character select → maze.
