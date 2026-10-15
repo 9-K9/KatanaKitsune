@@ -1,5 +1,8 @@
 # KatanaKitsune (Isometric)
 
+**Primary source repository:** [9-K9/KatanaKitsune](https://github.com/9-K9/KatanaKitsune).
+All ongoing development and updates belong here, not in the legacy `rpg2k3` repository.
+
 An isometric action roguelike in Godot 4.7. You play a katana-carrying kitsune
 descending floor by floor through a dungeon of yokai, where the aggressive line
 and the safe line are the same line.
