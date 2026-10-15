@@ -447,8 +447,11 @@ func _choose_anchor(body: CharacterBody2D) -> void:
 	var best: CharacterBody2D = null
 	var distance: float = INF
 	for candidate in Roster.bodies(body.get_tree()):
-		if candidate == body or Roster.is_bot(int(candidate.get("slot"))):
+		if candidate == body or Roster.is_ai_controlled(int(candidate.get("slot"))):
 			continue
+		if int(candidate.get("slot")) == Roster.controlled_bot_slot:
+			best = candidate
+			break
 		var reach: float = _distance(body, candidate)
 		if reach < distance:
 			best = candidate
@@ -512,6 +515,12 @@ func _dead(reference: WeakRef) -> Node2D:
 
 
 func _choose_fallen(body: CharacterBody2D) -> void:
+	if Roster.controlled_bot_slot >= 0:
+		if _fallen != null:
+			navigation.reset()
+			_goal = Vector2.INF
+		_fallen = null
+		return
 	var previous := _dead(_fallen) as CharacterBody2D
 	# A detour can temporarily take us nearer another body. Finish this rescue
 	# instead of swapping goals at every corner of the route.

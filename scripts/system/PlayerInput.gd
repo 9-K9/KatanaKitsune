@@ -43,6 +43,8 @@ var _axes: Dictionary = {}		## action -> Array of [axis, sign]
 var _now: Dictionary = {}
 var _was: Dictionary = {}
 var _frame: int = -1
+var _held_until_release: Dictionary = {}
+var _bound_body: WeakRef
 
 
 func _init(for_device: int = KEYBOARD) -> void:
@@ -50,8 +52,19 @@ func _init(for_device: int = KEYBOARD) -> void:
 	_learn_bindings()
 
 
-func bind_body(_body: CharacterBody2D) -> void:
-	pass
+func bind_body(body: CharacterBody2D) -> void:
+	_bound_body = weakref(body)
+
+
+func _gameplay_active() -> bool:
+	if _bound_body == null:
+		return true
+	var body := _bound_body.get_ref() as CharacterBody2D
+	if not is_instance_valid(body) or body.get("is_dead") == true:
+		return false
+	var world := body.get_parent()
+	return world != null and (not world.has_method("bot_controls_active") \
+			or world.bot_controls_active())
 
 
 func update(_delta: float) -> void:
@@ -108,7 +121,12 @@ func _sync() -> void:
 	_was = _now
 	_now = {}
 	for action in _every_action():
-		_now[action] = _read(action)
+		var held: bool = _read(action)
+		if _held_until_release.has(action):
+			if not held:
+				_held_until_release.erase(action)
+			held = false
+		_now[action] = held
 	for menu in ["__confirm", "__cancel"]:
 		_now[menu] = _read_menu(menu)
 
@@ -124,10 +142,24 @@ func prime() -> void:
 	_was = _now.duplicate()
 
 
+## Handoffs should not continue a held attack or spend a second body's scroll.
+## Movement remains responsive; these actions become available on release.
+func suppress_held_actions() -> void:
+	_sync()
+	for action in _now:
+		if not _now[action]:
+			continue
+		if action in ["Attack", "Defend", "Katana", "Stealth", "Dodge", "Jump"] \
+				or String(action).begins_with("Scroll"):
+			_held_until_release[action] = true
+			_now[action] = false
+			_was[action] = false
+
+
 ## Is this player holding `action` right now.
 func pressed(action: String) -> bool:
 	_sync()
-	return _now.get(action, false)
+	return _gameplay_active() and _now.get(action, false)
 
 
 ## The live hardware read, before any frame bookkeeping.
@@ -154,12 +186,12 @@ func _read(action: String) -> bool:
 ## Did this player press `action` this frame.
 func just_pressed(action: String) -> bool:
 	_sync()
-	return _now.get(action, false) and not _was.get(action, false)
+	return _gameplay_active() and _now.get(action, false) and not _was.get(action, false)
 
 
 func just_released(action: String) -> bool:
 	_sync()
-	return not _now.get(action, false) and _was.get(action, false)
+	return _gameplay_active() and not _now.get(action, false) and _was.get(action, false)
 
 
 func _every_action() -> Array:

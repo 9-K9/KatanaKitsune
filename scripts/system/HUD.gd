@@ -125,7 +125,7 @@ func _build_cell(slot: int) -> Dictionary:
 
 	var tag := Label.new()
 	tag.position = Vector2(x + BAR_LEFT, CELL_TOP - 2.0)
-	tag.text = Roster.label_of(slot)
+	tag.text = "P1" if slot == Roster.controlled_bot_slot else Roster.label_of(slot)
 	tag.add_theme_font_size_override("font_size", 14)
 	tag.add_theme_color_override("font_color", tint)
 	_back_text(tag)
@@ -180,7 +180,7 @@ func _build_cell(slot: int) -> Dictionary:
 		_back_text(mode)
 		add_child(mode)
 
-	return {"slot": slot, "portrait": portrait, "frame": frame, "score": score,
+	return {"slot": slot, "portrait": portrait, "frame": frame, "score": score, "tag": tag,
 			"kills": kills, "mode": mode,
 			"health": health, "stamina": stamina, "eye": eye,
 			"eye_centre": eye.position + Vector2(EYE_SIZE, EYE_SIZE) * 0.5,
@@ -229,11 +229,15 @@ func _process(delta: float) -> void:
 
 func _update_cell(index: int, delta: float) -> void:
 	var cell: Dictionary = _cells[index]
+	var tag: Label = cell["tag"]
+	var controlled: bool = cell["slot"] == Roster.controlled_bot_slot
+	tag.text = "P1" if controlled else Roster.label_of(cell["slot"])
+	tag.add_theme_color_override("font_color", Roster.colour_of(0 if controlled else cell["slot"]))
 	var kills: Label = cell["kills"]
 	kills.text = str(Score.floor_kills[cell["slot"]])
 	var mode: Label = cell["mode"]
 	if mode != null:
-		mode.text = Roster.BOT_MODE_TAGS[Roster.mode_of(cell["slot"])]
+		mode.text = "P1 CTRL" if controlled else Roster.BOT_MODE_TAGS[Roster.mode_of(cell["slot"])]
 	var body := _body_for(cell["slot"])
 	if body == null:
 		return

@@ -53,6 +53,23 @@ in every room of real generated indoor and exterior floors, including closed
 sliding doors, columns and ponds, and verifies the maze's human/bot collision
 policy. The grid resolves narrow entrances at 12 ground units per cell.
 
+## validate_ai_takeover.gd
+
+Headless checks for player 1's temporary control of an AI teammate after death.
+Covers nearest-body selection, stable retention and death replacement, separate
+gameplay/menu ownership, keyboard/controller routing, held-action suppression,
+other human players retaining control, follower leadership and rescue suspension,
+real sneak-to-revive and automatic return, body inventories/resources, collision
+pairing, HUD/marker labels, reconnect, loading, pause and game-over rules.
+
+```bash
+godot --headless --path . --scene res://tools/validate_ai_takeover.tscn --max-fps 120
+godot --headless --path . --scene res://tools/validate_ai_takeover.tscn --max-fps 120 -- --maze-only
+```
+
+The separate `--maze-only` fixture builds an actual small maze and checks
+takeover across floor descent and teardown. Exits nonzero on a failed check.
+
 ## validate_networking.gd
 
 Headless check that the dedicated-server WebSocket transport and the

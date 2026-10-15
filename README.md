@@ -62,7 +62,22 @@ In every mode, a fallen human takes priority over fighting and following.
 Bots search across the floor, route around walls and pillars, then sheath and
 sneak within clear reach to revive using the normal sneak-meter cost. Fallen
 humans take priority over fallen bots; humans can also revive bots normally.
-A living bot keeps the run active while rescuing the party.
+If **player 1 falls**, their controls automatically transfer to the nearest
+living AI teammate. That teammate's HUD shows **P1 CTRL** and its ground marker
+identifies it as player 1's temporary character. Other AI teammates follow this
+temporary leader instead of attempting rescues independently, keeping their
+configured combat modes. Walk back to the original body and **sneak nearby to
+revive it normally**; control immediately returns to the original player and
+the borrowed teammate resumes its AI mode. If the borrowed teammate dies first,
+control transfers to the next nearest surviving AI.
+
+Only player 1 can borrow an AI, including in local co-op; other human players
+keep their own controls. Each character retains its own health, inventories,
+upgrades and score throughout the handoff. No AI left means no takeover, not
+game over if another human is still alive. The run ends only when **every human
+and AI teammate is down**. Temporary takeover is for local mixed human/AI
+parties; the current network lobby still contains human slots only.
+
 Crowded bots yield in one consistent direction; when scenery blocks that
 direction they stay facing still and block human movement instead of flickering.
 Humans still pass through other humans, and bots through other bots.

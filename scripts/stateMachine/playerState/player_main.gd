@@ -64,7 +64,7 @@ func _ready() -> void:
 	## Falls back to the keyboard when nothing has claimed a slot, so running the
 	## maze scene directly still gives a playable character.
 	if input == null:
-		input = Roster.input_for(slot) if Roster.count() > slot else PlayerInput.new()
+		input = Roster.gameplay_input_for(slot) if Roster.count() > slot else PlayerInput.new()
 	input.bind_body(self)
 	if NetworkManager.is_client:
 		var machine := get_node_or_null("FiniteStateMachine")
@@ -78,6 +78,7 @@ func _ready() -> void:
 	## replacement pad has a different index.
 	if not Roster.device_regained.is_connected(_rebind):
 		Roster.device_regained.connect(_rebind)
+	Roster.party_control_changed.connect(_on_party_control_changed)
 	## Repaint into this player's chosen aspect. Only the sheets behind each
 	## frame change, so every animation, region and timing is untouched. The
 	## index is per-player now: four players wear four different colours, and
@@ -175,6 +176,18 @@ func can_slash_target(target: Node2D, facing: String, from: Vector2 = Vector2.IN
 
 func _on_death() -> void:
 	$FiniteStateMachine.change_state("death")
+	_refresh_party_control()
+
+
+func revive(fraction: float = 0.5) -> void:
+	super.revive(fraction)
+	_refresh_party_control()
+
+
+func _refresh_party_control() -> void:
+	var world := get_parent()
+	if world != null and world.has_method("refresh_party_control"):
+		world.refresh_party_control()
 		
 func InputHandler():
 	##movement based on this player's own device, not on any device at all
@@ -183,6 +196,11 @@ func InputHandler():
 
 func _physics_process(_delta):
 	if NetworkManager.is_client:
+		return
+	var world := get_parent()
+	if world.has_method("bot_controls_active") and not world.bot_controls_active():
+		input.prime()
+		velocity = Vector2.ZERO
 		return
 	input.update(_delta)
 	update_buffs()
@@ -339,9 +357,22 @@ func _revive_visible(fallen: Node2D) -> bool:
 
 ## Points this player's controls at whatever device now owns their slot.
 func _rebind(for_slot: int) -> void:
-	if for_slot != slot:
+	if for_slot != Roster.controller_slot(slot):
 		return
-	input = Roster.input_for(slot)
+	_bind_gameplay_input()
+
+
+func _on_party_control_changed(previous: int, controlled: int) -> void:
+	if slot == 0 or slot == previous or slot == controlled:
+		_bind_gameplay_input()
+		if not (input is BotInput):
+			input.suppress_held_actions()
+	elif input is BotInput:
+		input.reset()
+
+
+func _bind_gameplay_input() -> void:
+	input = Roster.gameplay_input_for(slot)
 	input.bind_body(self)
 	## Primed, or the button that reconnected the pad reads as a fresh press on
 	## the first frame back.

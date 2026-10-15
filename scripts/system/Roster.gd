@@ -14,6 +14,7 @@ signal roster_changed()
 ## A pad vanished mid-game. The maze listens and halts until it is back.
 signal device_lost(slot: int)
 signal device_regained(slot: int)
+signal party_control_changed(previous_slot: int, controlled_slot: int)
 
 const MAX_PLAYERS: int = 4
 
@@ -43,6 +44,8 @@ const BOT_MODE_HINTS: PackedStringArray = [
 	"FOLLOWS CLOSE, FIGHTS ONLY TO PROTECT",
 ]
 var level_theme: int = -1
+## Gameplay ownership only. Slots, inventories, scores and menu inputs stay put.
+var controlled_bot_slot: int = -1
 
 
 func _ready() -> void:
@@ -52,6 +55,7 @@ func _ready() -> void:
 ## Wipes the roster back to nobody. Called when the select screen opens, so
 ## backing out to the title and starting again does not stack players up.
 func clear() -> void:
+	clear_party_control()
 	players.clear()
 	level_theme = -1
 	roster_changed.emit()
@@ -91,6 +95,75 @@ func add_bot() -> int:
 
 func is_bot(slot: int) -> bool:
 	return slot >= 0 and slot < players.size() and players[slot].get("bot", false)
+
+
+func is_ai_controlled(slot: int) -> bool:
+	return is_bot(slot) and slot != controlled_bot_slot
+
+
+func controller_slot(slot: int) -> int:
+	return 0 if slot == controlled_bot_slot and slot >= 0 else slot
+
+
+func gameplay_label_of(slot: int) -> String:
+	return "P1 (AI%d)" % (slot + 1) if slot == controlled_bot_slot and slot >= 0 else label_of(slot)
+
+
+func gameplay_input_for(slot: int) -> PlayerInput:
+	if controlled_bot_slot >= 0:
+		if slot == 0:
+			return PlayerInput.new(PlayerInput.BOT)
+		if slot == controlled_bot_slot:
+			return input_for(0)
+	return input_for(slot)
+
+
+func clear_party_control() -> void:
+	_set_party_control(-1)
+
+
+func update_party_control(crew: Array[Node2D]) -> void:
+	var first: CharacterBody2D = null
+	var selected: CharacterBody2D = null
+	for candidate in crew:
+		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion() \
+				or not (candidate is CharacterBody2D):
+			continue
+		var slot: int = int(candidate.get("slot"))
+		if slot == 0:
+			first = candidate
+		if slot == controlled_bot_slot and candidate.get("is_dead") != true and is_bot(slot):
+			selected = candidate
+	# Network lobbies currently have no bot slots. Do not borrow a remote peer's
+	# input or let a client select ownership independently of its server.
+	if first == null or first.get("is_dead") != true or is_bot(0) or is_network(0) \
+			or NetworkManager.is_client:
+		clear_party_control()
+		return
+	if selected != null:
+		return
+	var best_slot: int = -1
+	var distance: float = INF
+	for candidate in crew:
+		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion() \
+				or not (candidate is CharacterBody2D) or candidate.get("is_dead") == true:
+			continue
+		var slot: int = int(candidate.get("slot"))
+		if not is_bot(slot):
+			continue
+		var reach: float = BotNavigation.ground(candidate.global_position - first.global_position).length_squared()
+		if reach < distance or (reach == distance and (best_slot < 0 or slot < best_slot)):
+			best_slot = slot
+			distance = reach
+	_set_party_control(best_slot)
+
+
+func _set_party_control(slot: int) -> void:
+	if slot == controlled_bot_slot:
+		return
+	var previous := controlled_bot_slot
+	controlled_bot_slot = slot
+	party_control_changed.emit(previous, slot)
 
 
 ## Seats a remote player connecting over the network. Reuses a slot already

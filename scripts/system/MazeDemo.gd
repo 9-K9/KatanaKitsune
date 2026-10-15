@@ -345,6 +345,8 @@ var _start_cell := Vector2i.ZERO
 
 
 func _ready() -> void:
+	Roster.clear_party_control()
+	Roster.party_control_changed.connect(_on_party_control_changed)
 	var pending_floor := NetworkManager.consume_pending_floor()
 	if not pending_floor.is_empty():
 		maze_seed = int(pending_floor.get("seed", maze_seed))
@@ -371,6 +373,19 @@ func _ready() -> void:
 	SceneLoader.hold()
 	await _build()
 	SceneLoader.finish()
+
+
+func _exit_tree() -> void:
+	Roster.clear_party_control()
+
+
+func refresh_party_control() -> void:
+	if not _building and not NetworkManager.is_client:
+		Roster.update_party_control(_players)
+
+
+func _on_party_control_changed(_previous: int, _controlled: int) -> void:
+	_pass_through_each_other()
 
 
 ## Next floor. Rebuilds around the player rather than reloading the scene, so
@@ -1764,6 +1779,7 @@ func _spawn_player(step: Vector2) -> void:
 		_players[i].input.reset()
 
 	_theme_floor()
+	Roster.update_party_control(_players)
 	_pass_through_each_other()
 	_fit_camera()
 	if not Roster.device_lost.is_connected(_on_device_lost):
@@ -1810,6 +1826,8 @@ func bot_navigation_contains(point: Vector2) -> bool:
 
 
 func _physics_process(delta: float) -> void:
+	if bot_controls_active():
+		refresh_party_control()
 	if not get_tree().paused and not SceneLoader.is_active() \
 			and not _building and not _clearing and is_instance_valid(_player):
 		day_night.advance(delta)
@@ -1957,7 +1975,7 @@ func _pass_through_each_other() -> void:
 			if b != a and is_instance_valid(b):
 				# Humans can still cross each other, as can bots. Human/bot
 				# contact is solid so a bot pinned against scenery blocks.
-				if Roster.is_bot(int(a.get("slot"))) != Roster.is_bot(int(b.get("slot"))):
+				if Roster.is_ai_controlled(int(a.get("slot"))) != Roster.is_ai_controlled(int(b.get("slot"))):
 					(a as CharacterBody2D).remove_collision_exception_with(b)
 				else:
 					(a as CharacterBody2D).add_collision_exception_with(b)

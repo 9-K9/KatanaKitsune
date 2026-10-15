@@ -80,7 +80,7 @@ static func _defensive(body: Node, enemy: Node) -> bool:
 		return true
 	if enemy.has_method("last_hit_slot"):
 		var slot: int = enemy.last_hit_slot(HURT_WINDOW_MS)
-		return slot >= 0 and not Roster.is_bot(slot)
+		return slot >= 0 and not Roster.is_ai_controlled(slot)
 	return false
 
 
@@ -96,7 +96,7 @@ static func _hurt_any_human(body: Node, enemy: Node) -> bool:
 	if not body.is_inside_tree():
 		return false
 	for human in Roster.bodies(body.get_tree()):
-		if Roster.is_bot(int(human.get("slot"))):
+		if Roster.is_ai_controlled(int(human.get("slot"))):
 			continue
 		if _hurt_by(human, enemy):
 			return true
