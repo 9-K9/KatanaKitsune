@@ -24,3 +24,4 @@ __pycache__/
 # Ignored here so a stray copy of the library cannot walk back in. When audio is
 # picked up again, drop this rule and add only the files the game actually uses.
 sound/
+build/
