@@ -20,6 +20,12 @@ var _rects := {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	## Full-screen post shaders are the usual trouble spot on WebGL (and cost
+	## the most on integrated GPUs), so the browser build starts with them off.
+	## The Settings toggles still work and a saved choice wins over this default.
+	if OS.has_feature("web"):
+		for id in _enabled:
+			_enabled[id] = false
 	_load()
 	for id in EFFECTS:
 		_build(id)
