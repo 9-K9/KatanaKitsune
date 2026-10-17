@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/jizo_statue/jizo_statue_dir6.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(25.08, 0.0, 21.72, 5.267, 12.54, 9.122, 0.0, 10.534, -12.54, 9.122, -21.72, 5.267, -25.08, 0.0, -21.72, -5.267, -12.54, -9.122, -0.0, -10.534, 12.54, -9.122, 21.72, -5.267)
+
+[node name="jizo_statue" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-33.00, -176.00, 66.00, 166.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "jizo_statue"
+metadata/world_direction = 6
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -90.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(25.08, 0.0, 21.72, 5.267, 12.54, 9.122, 0.0, 10.534, -12.54, 9.122, -21.72, 5.267, -25.08, 0.0, -21.72, -5.267, -12.54, -9.122, -0.0, -10.534, 12.54, -9.122, 21.72, -5.267)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

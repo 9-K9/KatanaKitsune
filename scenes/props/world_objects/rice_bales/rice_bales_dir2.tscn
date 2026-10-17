@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_tkbhb"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_s7rcs"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_ghja4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/rice_bales/rice_bales_dir2.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/rice_bales_broken/rice_bales_broken_dir2.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(25.46, 0.0, 22.049, 5.347, 12.73, 9.261, 0.0, 10.693, -12.73, 9.261, -22.049, 5.347, -25.46, 0.0, -22.049, -5.347, -12.73, -9.261, -0.0, -10.693, 12.73, -9.261, 22.049, -5.347)
+
+[node name="rice_bales" type="StaticBody2D"]
+script = ExtResource("1_tkbhb")
+loot_scenes = Array[PackedScene]([ExtResource("2_s7rcs"), ExtResource("3_ghja4")])
+display_loot = true
+loot_display_lift = 97.5
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 28.0
+always_drops = true
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(-2.000000, -25.500000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "rice_bales"
+metadata/world_direction = 2
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.500000, -47.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(25.46, 0.0, 22.049, 5.347, 12.73, 9.261, 0.0, 10.693, -12.73, 9.261, -22.049, 5.347, -25.46, 0.0, -22.049, -5.347, -12.73, -9.261, -0.0, -10.693, 12.73, -9.261, 22.049, -5.347)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

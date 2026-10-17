@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sake_flask/sake_flask_dir1.png" id="new_art"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="CircleShape2D" id="zone"]
+radius = 18.0
+
+[node name="sake_flask" type="Area2D"]
+monitorable = false
+script = ExtResource("1_s")
+kind = 4
+amount = 45.0
+duration = 0.0
+y_sort_enabled = false
+use_world_art = true
+metadata/world_family = "sake_flask"
+metadata/world_direction = 1
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.250000, -26.750000)
+scale = Vector2(0.500000, 0.500000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("zone")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.55, 0.95, 0.7, 1)
+energy = 0.75
+texture_scale = 0.55
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -40.12)

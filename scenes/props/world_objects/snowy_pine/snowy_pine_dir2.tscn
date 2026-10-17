@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/snowy_pine/snowy_pine_dir2.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(40.0, 0.0, 34.641, 10.0, 20.0, 17.321, 0.0, 20.0, -20.0, 17.321, -34.641, 10.0, -40.0, 0.0, -34.641, -10.0, -20.0, -17.321, -0.0, -20.0, 20.0, -17.321, 34.641, -10.0)
+
+[node name="snowy_pine" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-91.80, -306.00, 173.18, 296.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "snowy_pine"
+metadata/world_direction = 2
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-4.557447, -150.395745)
+scale = Vector2(1.302128, 1.302128)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(40.0, 0.0, 34.641, 10.0, 20.0, 17.321, 0.0, 20.0, -20.0, 17.321, -34.641, 10.0, -40.0, 0.0, -34.641, -10.0, -20.0, -17.321, -0.0, -20.0, 20.0, -17.321, 34.641, -10.0)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/pond_reeds/pond_reeds_dir8.png" id="new_art"]
+
+[sub_resource type="ConvexPolygonShape2D" id="hurt"]
+points = PackedVector2Array(16.72, 0.0, 14.48, 3.511, 8.36, 6.082, 0.0, 7.022, -8.36, 6.082, -14.48, 3.511, -16.72, 0.0, -14.48, -3.511, -8.36, -6.082, -0.0, -7.022, 8.36, -6.082, 14.48, -3.511)
+
+[node name="pond_reeds" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+blocks_movement = false
+y_sort_enabled = false
+fade_rect = Rect2(-22.00, -87.00, 44.00, 77.00)
+collision_layer = 0
+collision_mask = 0
+metadata/world_family = "pond_reeds"
+metadata/world_direction = 8
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -43.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="HurtBox" type="Area2D" parent="." groups=["breakable_hitbox"]]
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("hurt")

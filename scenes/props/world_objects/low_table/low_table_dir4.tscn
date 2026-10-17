@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_3a3pr"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_pfcod"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_yafrm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/low_table/low_table_dir4.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/low_table_broken/low_table_broken_dir4.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(34.96, 0.0, 30.276, 7.342, 17.48, 12.716, 0.0, 14.683, -17.48, 12.716, -30.276, 7.342, -34.96, 0.0, -30.276, -7.342, -17.48, -12.716, -0.0, -14.683, 17.48, -12.716, 30.276, -7.342)
+
+[node name="low_table" type="StaticBody2D"]
+script = ExtResource("1_3a3pr")
+loot_scenes = Array[PackedScene]([ExtResource("2_pfcod"), ExtResource("3_yafrm")])
+display_loot = true
+loot_display_lift = 35.0
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 24.0
+always_drops = true
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(0.000000, -29.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "low_table"
+metadata/world_direction = 4
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -34.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(34.96, 0.0, 30.276, 7.342, 17.48, 12.716, 0.0, 14.683, -17.48, 12.716, -30.276, 7.342, -34.96, 0.0, -30.276, -7.342, -17.48, -12.716, -0.0, -14.683, 17.48, -12.716, 30.276, -7.342)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

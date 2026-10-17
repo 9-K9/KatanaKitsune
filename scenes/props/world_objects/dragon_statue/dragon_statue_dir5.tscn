@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/dragon_statue/dragon_statue_dir5.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(31.16, 0.0, 26.985, 6.544, 15.58, 11.334, 0.0, 13.087, -15.58, 11.334, -26.985, 6.544, -31.16, 0.0, -26.985, -6.544, -15.58, -11.334, -0.0, -13.087, 15.58, -11.334, 26.985, -6.544)
+
+[node name="dragon_statue" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-41.00, -172.00, 82.00, 162.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "dragon_statue"
+metadata/world_direction = 5
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(3.000000, -93.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(31.16, 0.0, 26.985, 6.544, 15.58, 11.334, 0.0, 13.087, -15.58, 11.334, -26.985, 6.544, -31.16, 0.0, -26.985, -6.544, -15.58, -11.334, -0.0, -13.087, 15.58, -11.334, 26.985, -6.544)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

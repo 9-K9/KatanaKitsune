@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/dead_tree_b/dead_tree_b_dir2.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(36.554, 0.0, 31.657, 9.138, 18.277, 15.828, 0.0, 18.277, -18.277, 15.828, -31.657, 9.138, -36.554, 0.0, -31.657, -9.138, -18.277, -15.828, -0.0, -18.277, 18.277, -15.828, 31.657, -9.138)
+
+[node name="dead_tree_b" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-45.69, -306.00, 91.38, 296.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "dead_tree_b"
+metadata/world_direction = 2
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -162.000000)
+scale = Vector2(1.384615, 1.384615)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(36.554, 0.0, 31.657, 9.138, 18.277, 15.828, 0.0, 18.277, -18.277, 15.828, -31.657, 9.138, -36.554, 0.0, -31.657, -9.138, -18.277, -15.828, -0.0, -18.277, 18.277, -15.828, 31.657, -9.138)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

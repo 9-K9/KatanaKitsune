@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_8tv4a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/stone_lantern_japanese/stone_lantern_japanese_dir4.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/stone_lantern_jp_broken/stone_lantern_jp_broken_dir4.png" id="new_broken"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(16.72, 0.0, 14.48, 3.511, 8.36, 6.082, 0.0, 7.022, -8.36, 6.082, -14.48, 3.511, -16.72, 0.0, -14.48, -3.511, -8.36, -6.082, -0.0, -7.022, 8.36, -6.082, 14.48, -3.511)
+
+[node name="stone_lantern_japanese" type="StaticBody2D"]
+script = ExtResource("1_8tv4a")
+max_health = 45.0
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(1.000000, -42.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "stone_lantern_japanese"
+metadata/world_direction = 4
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -42.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(16.72, 0.0, 14.48, 3.511, 8.36, 6.082, 0.0, 7.022, -8.36, 6.082, -14.48, 3.511, -16.72, 0.0, -14.48, -3.511, -8.36, -6.082, -0.0, -7.022, 8.36, -6.082, 14.48, -3.511)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.68, 0.34, 1)
+energy = 0.95
+shadow_enabled = true
+texture_scale = 2.4
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -64.50)

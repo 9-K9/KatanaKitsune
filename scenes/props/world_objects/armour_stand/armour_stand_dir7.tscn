@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_9bttg"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_pvptv"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_0ryrv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/armour_stand/armour_stand_dir7.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/armour_stand_broken/armour_stand_broken_dir7.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(30.78, 0.0, 26.656, 6.464, 15.39, 11.196, 0.0, 12.928, -15.39, 11.196, -26.656, 6.464, -30.78, 0.0, -26.656, -6.464, -15.39, -11.196, -0.0, -12.928, 15.39, -11.196, 26.656, -6.464)
+
+[node name="armour_stand" type="StaticBody2D"]
+script = ExtResource("1_9bttg")
+loot_scenes = Array[PackedScene]([ExtResource("2_pvptv"), ExtResource("3_0ryrv")])
+display_loot = true
+loot_display_lift = 138.8
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 36.0
+always_drops = true
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(-13.000000, -65.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "armour_stand"
+metadata/world_direction = 7
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-2.000000, -95.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(30.78, 0.0, 26.656, 6.464, 15.39, 11.196, 0.0, 12.928, -15.39, 11.196, -26.656, 6.464, -30.78, 0.0, -26.656, -6.464, -15.39, -11.196, -0.0, -12.928, 15.39, -11.196, 26.656, -6.464)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

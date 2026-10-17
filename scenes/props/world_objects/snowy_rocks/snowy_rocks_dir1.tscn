@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/snowy_rocks/snowy_rocks_dir1.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(34.2, 0.0, 29.618, 7.182, 17.1, 12.44, 0.0, 14.364, -17.1, 12.44, -29.618, 7.182, -34.2, 0.0, -29.618, -7.182, -17.1, -12.44, -0.0, -14.364, 17.1, -12.44, 29.618, -7.182)
+
+[node name="snowy_rocks" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+y_sort_enabled = false
+fade_rect = Rect2(-45.00, -88.00, 90.00, 78.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "snowy_rocks"
+metadata/world_direction = 1
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(2.500000, -44.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(34.2, 0.0, 29.618, 7.182, 17.1, 12.44, 0.0, 14.364, -17.1, 12.44, -29.618, 7.182, -34.2, 0.0, -29.618, -7.182, -17.1, -12.44, -0.0, -14.364, 17.1, -12.44, 29.618, -7.182)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

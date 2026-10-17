@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Pickup.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/power_orb/power_orb_dir2.png" id="new_art"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="CircleShape2D" id="zone"]
+radius = 18.0
+
+[node name="power_orb" type="Area2D"]
+monitorable = false
+script = ExtResource("1_s")
+kind = 1
+amount = 1.6
+y_sort_enabled = false
+use_world_art = true
+metadata/world_family = "power_orb"
+metadata/world_direction = 2
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -21.000000)
+scale = Vector2(0.500000, 0.500000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("zone")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.55, 0.75, 1, 1)
+texture_scale = 0.7
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -33.00)

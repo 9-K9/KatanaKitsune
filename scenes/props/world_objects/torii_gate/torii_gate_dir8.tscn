@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/torii_gate/torii_gate_dir8.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(13.0, 0.0, 11.258, 3.5, 6.5, 6.062, 0.0, 7.0, -6.5, 6.062, -11.258, 3.5, -13.0, 0.0, -11.258, -3.5, -6.5, -6.062, -0.0, -7.0, 6.5, -6.062, 11.258, -3.5)
+
+[node name="torii_gate" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-122.00, -201.00, 244.00, 191.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "torii_gate"
+metadata/world_direction = 8
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -112.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="Post0" type="CollisionPolygon2D" parent="."]
+position = Vector2(-65.378882, 0.000000)
+polygon = PackedVector2Array(13.0, 0.0, 11.258, 3.5, 6.5, 6.062, 0.0, 7.0, -6.5, 6.062, -11.258, 3.5, -13.0, 0.0, -11.258, -3.5, -6.5, -6.062, -0.0, -7.0, 6.5, -6.062, 11.258, -3.5)
+
+[node name="Shadow0" type="LightOccluder2D" parent="."]
+position = Vector2(-65.378882, 0.000000)
+occluder = SubResource("shadow")
+
+[node name="Post1" type="CollisionPolygon2D" parent="."]
+position = Vector2(64.408805, 0.000000)
+polygon = PackedVector2Array(13.0, 0.0, 11.258, 3.5, 6.5, 6.062, 0.0, 7.0, -6.5, 6.062, -11.258, 3.5, -13.0, 0.0, -11.258, -3.5, -6.5, -6.062, -0.0, -7.0, 6.5, -6.062, 11.258, -3.5)
+
+[node name="Shadow1" type="LightOccluder2D" parent="."]
+position = Vector2(64.408805, 0.000000)
+occluder = SubResource("shadow")

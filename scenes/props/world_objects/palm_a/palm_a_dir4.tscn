@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/palm_a/palm_a_dir4.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(38.708, 0.0, 33.522, 9.677, 19.354, 16.761, 0.0, 19.354, -19.354, 16.761, -33.522, 9.677, -38.708, 0.0, -33.522, -9.677, -19.354, -16.761, -0.0, -19.354, 19.354, -16.761, 33.522, -9.677)
+
+[node name="palm_a" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-54.92, -306.00, 207.92, 296.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "palm_a"
+metadata/world_direction = 4
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(49.038462, -139.923077)
+scale = Vector2(1.307692, 1.307692)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(38.708, 0.0, 33.522, 9.677, 19.354, 16.761, 0.0, 19.354, -19.354, 16.761, -33.522, 9.677, -38.708, 0.0, -33.522, -9.677, -19.354, -16.761, -0.0, -19.354, 19.354, -16.761, 33.522, -9.677)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

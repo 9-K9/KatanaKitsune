@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/paper_lantern_lit/paper_lantern_lit_dir5.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/paper_lantern_broken/paper_lantern_broken_dir5.png" id="new_broken"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(10.64, 0.0, 9.215, 2.234, 5.32, 3.87, 0.0, 4.469, -5.32, 3.87, -9.215, 2.234, -10.64, 0.0, -9.215, -2.234, -5.32, -3.87, -0.0, -4.469, 5.32, -3.87, 9.215, -2.234)
+
+[node name="paper_lantern_lit" type="StaticBody2D"]
+script = ExtResource("1_s")
+max_health = 20.0
+break_frame_time = 0.08
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(-7.500000, -35.500000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "paper_lantern_lit"
+metadata/world_direction = 5
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(2.000000, -45.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(10.64, 0.0, 9.215, 2.234, 5.32, 3.87, 0.0, 4.469, -5.32, 3.87, -9.215, 2.234, -10.64, 0.0, -9.215, -2.234, -5.32, -3.87, -0.0, -4.469, 5.32, -3.87, 9.215, -2.234)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.72, 0.46, 1)
+energy = 0.85
+shadow_enabled = true
+texture_scale = 2.75
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -68.25)

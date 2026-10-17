@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sandstone_rocks/sandstone_rocks_dir5.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(36.1, 0.0, 31.264, 7.581, 18.05, 13.131, 0.0, 15.162, -18.05, 13.131, -31.264, 7.581, -36.1, 0.0, -31.264, -7.581, -18.05, -13.131, -0.0, -15.162, 18.05, -13.131, 31.264, -7.581)
+
+[node name="sandstone_rocks" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+y_sort_enabled = false
+fade_rect = Rect2(-47.50, -102.00, 95.00, 92.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "sandstone_rocks"
+metadata/world_direction = 5
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-1.500000, -50.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(36.1, 0.0, 31.264, 7.581, 18.05, 13.131, 0.0, 15.162, -18.05, 13.131, -31.264, 7.581, -36.1, 0.0, -31.264, -7.581, -18.05, -13.131, -0.0, -15.162, 18.05, -13.131, 31.264, -7.581)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

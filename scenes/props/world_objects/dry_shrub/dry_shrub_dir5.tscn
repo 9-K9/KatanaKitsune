@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/dry_shrub/dry_shrub_dir5.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(20.0, 0.0, 17.321, 5.0, 10.0, 8.66, 0.0, 10.0, -10.0, 8.66, -17.321, 5.0, -20.0, 0.0, -17.321, -5.0, -10.0, -8.66, -0.0, -10.0, 10.0, -8.66, 17.321, -5.0)
+
+[node name="dry_shrub" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+y_sort_enabled = false
+fade_rect = Rect2(-43.00, -86.00, 86.00, 76.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "dry_shrub"
+metadata/world_direction = 5
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(4.000000, -45.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(20.0, 0.0, 17.321, 5.0, 10.0, 8.66, 0.0, 10.0, -10.0, 8.66, -17.321, 5.0, -20.0, 0.0, -17.321, -5.0, -10.0, -8.66, -0.0, -10.0, 10.0, -8.66, 17.321, -5.0)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

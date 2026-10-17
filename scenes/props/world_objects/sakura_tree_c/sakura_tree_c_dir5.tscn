@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sakura_tree_c/sakura_tree_c_dir5.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(30.871, 0.0, 26.735, 7.718, 15.435, 13.367, 0.0, 15.435, -15.435, 13.367, -26.735, 7.718, -30.871, 0.0, -26.735, -7.718, -15.435, -13.367, -0.0, -15.435, 15.435, -13.367, 26.735, -7.718)
+
+[node name="sakura_tree_c" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-79.21, -306.00, 165.19, 296.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "sakura_tree_c"
+metadata/world_direction = 5
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-3.384956, -158.415929)
+scale = Vector2(1.353982, 1.353982)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(30.871, 0.0, 26.735, 7.718, 15.435, 13.367, 0.0, 15.435, -15.435, 13.367, -26.735, 7.718, -30.871, 0.0, -26.735, -7.718, -15.435, -13.367, -0.0, -15.435, 15.435, -13.367, 26.735, -7.718)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

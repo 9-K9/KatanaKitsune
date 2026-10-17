@@ -35,9 +35,10 @@ extends StaticBody2D
 ## holding. Kept apart from the weighted loot roll so every breakable in the
 ## game can carry one without each scene's table being rebalanced.
 @export_range(0.0, 1.0, 0.01) var scroll_chance: float = 0.12
-const SCROLL_SCENE: PackedScene = preload("res://scenes/props/pickupScroll.tscn")
+const SCROLL_SCENE: PackedScene = preload("res://scenes/props/world_objects/scroll/scroll_dir1.tscn")
 var _scroll_rolled: bool = false
 @export var break_texture: Texture2D
+@export var break_sprite_position: Vector2 = Vector2.INF
 @export_range(1, 8, 1) var break_frames: int = 4
 @export_range(0.03, 0.3, 0.01) var break_frame_time: float = 0.09
 ## Frames in the intact sprite, cycled while the prop is whole. 0 leaves it
@@ -167,6 +168,8 @@ func _break() -> void:
 	var shattered: Texture2D = break_texture
 	if shattered != null:
 		sprite.texture = shattered
+		if break_sprite_position != Vector2.INF:
+			sprite.position = break_sprite_position
 		sprite.hframes = break_frames
 		sprite.frame = 0
 		## A tween bound to this prop, not an await on a tree timer, so a prop
@@ -225,7 +228,7 @@ func _lay_out_loot() -> void:
 	var picked: PackedScene = _roll()
 	if picked == null:
 		return
-	var thing = picked.instantiate()
+	var thing = WorldObjects.loot(picked).instantiate()
 	if not ("armed" in thing):
 		return
 	thing.armed = false
@@ -233,7 +236,7 @@ func _lay_out_loot() -> void:
 	## its own position for Y-sort the moment it is added (see Pickup._raise),
 	## and _ready runs synchronously inside add_child. Setting position after
 	## add_child would stomp that bias right back to zero.
-	(thing as Node2D).position = Vector2.ZERO
+	(thing as Node2D).position = Vector2(0, -loot_display_lift)
 	if "display_lift" in thing:
 		thing.display_lift = loot_display_lift
 	add_child(thing)
@@ -270,7 +273,7 @@ func _drop() -> void:
 	var picked: PackedScene = _roll()
 	if picked == null:
 		return
-	var thing = picked.instantiate()
+	var thing = WorldObjects.loot(picked).instantiate()
 	## Parent to the map rather than to self, or it would be freed along with
 	## the prop a quarter of a second later.
 	get_parent().add_child(thing)
@@ -285,7 +288,7 @@ func _drop_scroll() -> void:
 	_scroll_rolled = true
 	if randf() >= scroll_chance or get_parent() == null:
 		return
-	var scroll := SCROLL_SCENE.instantiate()
+	var scroll := WorldObjects.loot(SCROLL_SCENE).instantiate()
 	get_parent().add_child(scroll)
 	scroll.global_position = global_position + Vector2(22.0, 8.0)
 

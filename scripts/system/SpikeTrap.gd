@@ -20,6 +20,9 @@ enum Phase { HIDDEN, WARNING, OUT }
 ## traps rolls like a wave.
 @export var phase_offset: float = 0.0
 @export var max_health: float = 25.0
+@export var retracted_texture: Texture2D
+@export var extended_texture: Texture2D
+@export var retracted_position: Vector2 = Vector2.ZERO
 
 @onready var sprite: Sprite2D = $Sprite2D
 
@@ -32,9 +35,11 @@ var _flash_tween: Tween
 ## Everything standing on the trap right now. Damage is applied on the frame
 ## the spikes emerge, not on entry, so walking across between cycles is safe.
 var _occupants: Array[Node2D] = []
+var _extended_position: Vector2
 
 
 func _ready() -> void:
+	_extended_position = sprite.position
 	health = max_health
 	add_to_group("breakable")
 	add_to_group("bot_hazard")
@@ -69,14 +74,23 @@ func _set_phase(next: Phase) -> void:
 	match phase:
 		Phase.HIDDEN:
 			sprite.modulate = Color(0.55, 0.55, 0.6, 1.0)
-			sprite.scale = Vector2(1.0, 0.35)
+			_show_spikes(false)
 		Phase.WARNING:
 			sprite.modulate = Color(1.0, 0.75, 0.4, 1.0)
-			sprite.scale = Vector2(1.0, 0.55)
+			_show_spikes(false)
 		Phase.OUT:
 			sprite.modulate = Color.WHITE
-			sprite.scale = Vector2(1.0, 1.0)
+			_show_spikes(true)
 			_strike()
+
+
+func _show_spikes(extended: bool) -> void:
+	if extended_texture != null and retracted_texture != null:
+		sprite.texture = extended_texture if extended else retracted_texture
+		sprite.position = _extended_position if extended else retracted_position
+		sprite.scale = Vector2.ONE
+	else:
+		sprite.scale = Vector2(1.0, 1.0 if extended else 0.35)
 
 
 func _strike() -> void:

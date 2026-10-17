@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Exit.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/exit_stairs/exit_stairs_dir1.png" id="new_art"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(54.0, 0.0, 46.765, 11.0, 27.0, 19.053, 0.0, 22.0, -27.0, 19.053, -46.765, 11.0, -54.0, 0.0, -46.765, -11.0, -27.0, -19.053, -0.0, -22.0, 27.0, -19.053, 46.765, -11.0)
+
+[node name="exit_stairs" type="Area2D"]
+monitorable = false
+script = ExtResource("1_s")
+y_sort_enabled = false
+metadata/world_family = "exit_stairs"
+metadata/world_direction = 1
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -112.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(54.0, 0.0, 46.765, 11.0, 27.0, 19.053, 0.0, 22.0, -27.0, 19.053, -46.765, 11.0, -54.0, 0.0, -46.765, -11.0, -27.0, -19.053, -0.0, -22.0, 27.0, -19.053, 46.765, -11.0)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.6, 0.8, 1, 1)
+energy = 0.7
+texture_scale = 2.5
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -169.50)

@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/ExteriorProp.gd" id="2_scr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sakura_weeping/sakura_weeping_dir5.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(54.0, 0.0, 46.765, 11.0, 27.0, 19.053, 0.0, 22.0, -27.0, 19.053, -46.765, 11.0, -54.0, 0.0, -46.765, -11.0, -27.0, -19.053, -0.0, -22.0, 27.0, -19.053, 46.765, -11.0)
+
+[node name="sakura_weeping" type="StaticBody2D" groups=["exterior_prop"]]
+script = ExtResource("2_scr")
+max_health = 80.0
+y_sort_enabled = false
+fade_rect = Rect2(-104.50, -229.00, 209.00, 219.00)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "sakura_weeping"
+metadata/world_direction = 5
+metadata/natural_variant = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-8.500000, -124.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(54.0, 0.0, 46.765, 11.0, 27.0, 19.053, 0.0, 22.0, -27.0, 19.053, -46.765, 11.0, -54.0, 0.0, -46.765, -11.0, -27.0, -19.053, -0.0, -22.0, 27.0, -19.053, 46.765, -11.0)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

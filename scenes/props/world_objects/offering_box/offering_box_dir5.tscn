@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_n3jj5"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_1upih"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/offering_box/offering_box_dir5.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/offering_box_broken/offering_box_broken_dir5.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(48.64, 0.0, 42.123, 10.214, 24.32, 17.692, 0.0, 20.429, -24.32, 17.692, -42.123, 10.214, -48.64, 0.0, -42.123, -10.214, -24.32, -17.692, -0.0, -20.429, 24.32, -17.692, 42.123, -10.214)
+
+[node name="offering_box" type="StaticBody2D"]
+script = ExtResource("1_n3jj5")
+loot_scenes = Array[PackedScene]([ExtResource("2_1upih")])
+loot_weight = 7.0
+max_health = 35.0
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(1.000000, -46.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "offering_box"
+metadata/world_direction = 5
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -57.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(48.64, 0.0, 42.123, 10.214, 24.32, 17.692, 0.0, 20.429, -24.32, 17.692, -42.123, 10.214, -48.64, 0.0, -42.123, -10.214, -24.32, -17.692, -0.0, -20.429, 24.32, -17.692, 42.123, -10.214)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

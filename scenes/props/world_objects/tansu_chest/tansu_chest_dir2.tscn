@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_a6yum"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_9hpnq"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_ontwy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/tansu_chest/tansu_chest_dir2.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/tansu_chest_broken/tansu_chest_broken_dir2.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(13.3, 0.0, 11.518, 2.793, 6.65, 4.838, 0.0, 5.586, -6.65, 4.838, -11.518, 2.793, -13.3, 0.0, -11.518, -2.793, -6.65, -4.838, -0.0, -5.586, 6.65, -4.838, 11.518, -2.793)
+
+[node name="tansu_chest" type="StaticBody2D"]
+script = ExtResource("1_a6yum")
+loot_scenes = Array[PackedScene]([ExtResource("2_9hpnq"), ExtResource("3_ontwy")])
+display_loot = true
+loot_display_lift = 127.5
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 40.0
+always_drops = true
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(1.500000, -33.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "tansu_chest"
+metadata/world_direction = 2
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.500000, -59.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(13.3, 0.0, 11.518, 2.793, 6.65, 4.838, 0.0, 5.586, -6.65, 4.838, -11.518, 2.793, -13.3, 0.0, -11.518, -2.793, -6.65, -4.838, -0.0, -5.586, 6.65, -4.838, 11.518, -2.793)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

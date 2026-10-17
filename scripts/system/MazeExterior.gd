@@ -25,7 +25,7 @@ const NEIGHBOUR := {
 }
 const FACING_BACK := {"SE": "NW", "NW": "SE", "SW": "NE", "NE": "SW"}
 
-const PROP_DIR := "res://scenes/props/japanese/exterior/"
+const PROP_DIR := WorldObjects.SCENE_DIR
 const WATER_SHADER := "res://shaders/water.gdshader"
 ## Each side of a cell's diamond as its two corners, in units of the half-size.
 const SIDE_ENDS := {
@@ -582,15 +582,10 @@ func build_perimeter() -> void:
 						continue
 					var inset: float = [0.05, 0.14][row] + _rng.randf_range(-0.02, 0.02)
 					var spot: Vector2 = a.lerp(b, t).lerp(centre, inset)
-					var tree: String = ""
-					var bounds := Vector2(TREE_CANOPY, TREE_HEIGHT)
-					if biome.id != ExteriorBiome.Id.SAKURA:
-						tree = biome.edge_trees[_rng.randi_range(0, biome.edge_trees.size() - 1)]
-						bounds = _bounds_for_tree(tree)
+					var tree: String = biome.edge_trees[_rng.randi_range(0, biome.edge_trees.size() - 1)]
+					var bounds := _bounds_for_tree(tree)
 					if _crowded(spot, 90.0) or _clips_building(spot, bounds.x, bounds.y):
 						continue
-					if tree.is_empty():
-						tree = biome.edge_trees[_rng.randi_range(0, biome.edge_trees.size() - 1)]
 					_put(tree, spot, 90.0)
 			if gate:
 				var mid: Vector2 = a.lerp(b, 0.5).lerp(centre, 0.1)
@@ -719,7 +714,7 @@ func _crowded(world: Vector2, radius: float) -> bool:
 
 func _scene(prop: String) -> PackedScene:
 	if not _scenes.has(prop):
-		_scenes[prop] = load(PROP_DIR + prop + ".tscn")
+		_scenes[prop] = WorldObjects.scene(prop)
 	return _scenes[prop]
 
 
@@ -729,9 +724,10 @@ func _put(prop: String, world: Vector2, radius: float, mirrored: bool = false) -
 	var scene := _scene(prop)
 	if scene == null:
 		return null
-	var thing := scene.instantiate() as Node2D
-	if mirrored:
-		_mirror(thing)
+	var fixed_direction := 0
+	if prop == "torii_gate" or prop.begins_with("komainu_statue"):
+		fixed_direction = 3 if mirrored else 1
+	var thing := WorldObjects.choose(scene, _rng, fixed_direction).instantiate() as Node2D
 	if thing is ExteriorProp:
 		thing.collision_layer = 3 if thing.blocks_movement else 0
 	elif thing is CollisionObject2D:
@@ -746,8 +742,8 @@ func _put(prop: String, world: Vector2, radius: float, mirrored: bool = false) -
 
 func _put_lantern(world: Vector2) -> void:
 	for scene in _maze.torch_scenes:
-		if scene != null and "stoneLantern" in scene.resource_path:
-			var lantern := scene.instantiate() as Node2D
+		if WorldObjects.family_of(scene) == "stone_lantern_lit":
+			var lantern := WorldObjects.choose(scene, _rng).instantiate() as Node2D
 			_maze.add_child(lantern)
 			lantern.global_position = world
 			_solid.append([world, 35.0])
@@ -831,16 +827,15 @@ func _scatter(cell: Vector2i, props: Array, count: int, radius: float,
 func _bounds_for_tree(prop: String) -> Vector2:
 	if _tree_bounds.has(prop):
 		return _tree_bounds[prop]
-	if biome.id == ExteriorBiome.Id.SAKURA:
-		return Vector2(TREE_CANOPY, TREE_HEIGHT)
-	var instance := _scene(prop).instantiate() as Node2D
-	var sprite := instance.get_node_or_null("Sprite2D") as Sprite2D
 	var bounds := Vector2(TREE_CANOPY, TREE_HEIGHT)
-	if sprite != null:
-		var rect: Rect2 = sprite.transform * sprite.get_rect()
-		bounds = Vector2(maxf(absf(rect.position.x), absf(rect.end.x)),
-				maxf(60.0, -rect.position.y))
-	instance.free()
+	for direction in range(1, 9):
+		var instance := WorldObjects.scene(prop, direction).instantiate() as Node2D
+		var sprite := instance.get_node_or_null("Sprite2D") as Sprite2D
+		if sprite != null:
+			var rect: Rect2 = sprite.transform * sprite.get_rect()
+			bounds.x = maxf(bounds.x, maxf(absf(rect.position.x), absf(rect.end.x)))
+			bounds.y = maxf(bounds.y, -rect.position.y)
+		instance.free()
 	_tree_bounds[prop] = bounds
 	return bounds
 
@@ -894,10 +889,11 @@ func guard_entrances() -> void:
 		var ends: Array = SIDE_ENDS[side]
 		var along: Vector2 = ((ends[1] - ends[0]) * _half).normalized()
 		var out: Vector2 = (cell_centre(outside) - door).normalized()
+		var guardian: String = "komainu_statue" if _rng.randf() < 0.5 else "komainu_statue_b"
 		for s in [-1.0, 1.0]:
 			var p: Vector2 = door + out * 120.0 + along * 130.0 * s
 			if not blocked(p, 40.0):
-				_put("komainu_statue", p, 45.0, s > 0.0)
+				_put(guardian, p, 45.0, s > 0.0)
 
 
 ## Dresses one outdoor cell. Called from MazeDemo._populate before the

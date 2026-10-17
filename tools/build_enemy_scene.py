@@ -363,7 +363,7 @@ def wire_pool():
         if scene in text:
             continue
         rid = "90_%s" % folder
-        anchor = '[ext_resource type="PackedScene" path="res://scenes/props/spikeTrap.tscn"'
+        anchor = '[ext_resource type="PackedScene" path="res://scenes/props/world_objects/spike_trap_extended/spike_trap_extended_dir1.tscn"'
         if anchor not in text:
             anchor = text[text.index("[ext_resource"):].split("\n")[0]
         line = '[ext_resource type="PackedScene" path="%s" id="%s"]\n' % (scene, rid)

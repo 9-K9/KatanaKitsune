@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="3_break"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/brazier/brazier_dir4.png" id="new_art"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(28.12, 0.0, 24.353, 5.905, 14.06, 10.228, 0.0, 11.81, -14.06, 10.228, -24.353, 5.905, -28.12, 0.0, -24.353, -5.905, -14.06, -10.228, -0.0, -11.81, 14.06, -10.228, 24.353, -5.905)
+
+[node name="brazier" type="StaticBody2D"]
+script = ExtResource("3_break")
+scroll_chance = 0.0
+y_sort_enabled = false
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "brazier"
+metadata/world_direction = 4
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -46.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(28.12, 0.0, 24.353, 5.905, 14.06, 10.228, 0.0, 11.81, -14.06, 10.228, -24.353, 5.905, -28.12, 0.0, -24.353, -5.905, -14.06, -10.228, -0.0, -11.81, 14.06, -10.228, 24.353, -5.905)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.62, 0.28, 1)
+energy = 1.05
+shadow_enabled = true
+texture_scale = 1.9
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -74.25)

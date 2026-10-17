@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="2_break"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/pillar/pillar_dir2.png" id="new_art"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(22.0, 0.0, 19.053, 5.5, 11.0, 9.526, 0.0, 11.0, -11.0, 9.526, -19.053, 5.5, -22.0, 0.0, -19.053, -5.5, -11.0, -9.526, -0.0, -11.0, 11.0, -9.526, 19.053, -5.5)
+
+[node name="pillar" type="StaticBody2D"]
+script = ExtResource("2_break")
+loot_weight = 2.0
+empty_weight = 6.0
+max_health = 80.0
+y_sort_enabled = false
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "pillar"
+metadata/world_direction = 2
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -86.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(22.0, 0.0, 19.053, 5.5, 11.0, 9.526, 0.0, 11.0, -11.0, 9.526, -19.053, 5.5, -22.0, 0.0, -19.053, -5.5, -11.0, -9.526, -0.0, -11.0, 11.0, -9.526, 19.053, -5.5)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_typ5u"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_8p1k8"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_4ebqt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/tea_set/tea_set_dir1.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/tea_set_broken/tea_set_broken_dir1.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(44.84, 0.0, 38.833, 9.416, 22.42, 16.31, 0.0, 18.833, -22.42, 16.31, -38.833, 9.416, -44.84, 0.0, -38.833, -9.416, -22.42, -16.31, -0.0, -18.833, 22.42, -16.31, 38.833, -9.416)
+
+[node name="tea_set" type="StaticBody2D"]
+script = ExtResource("1_typ5u")
+loot_scenes = Array[PackedScene]([ExtResource("2_8p1k8"), ExtResource("3_4ebqt")])
+loot_weight = 7.0
+max_health = 10.0
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(-6.500000, -32.500000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "tea_set"
+metadata/world_direction = 1
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -53.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(44.84, 0.0, 38.833, 9.416, 22.42, 16.31, 0.0, 18.833, -22.42, 16.31, -38.833, 9.416, -44.84, 0.0, -38.833, -9.416, -22.42, -16.31, -0.0, -18.833, 22.42, -16.31, 38.833, -9.416)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

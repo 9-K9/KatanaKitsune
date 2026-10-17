@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Chair.gd" id="2_chair_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/chair/chair_dir2.png" id="new_art"]
+
+[sub_resource type="CircleShape2D" id="zone"]
+radius = 56.0
+
+[node name="chair" type="Node2D" groups=["chair"]]
+script = ExtResource("2_chair_script")
+facing = "south"
+seat_offset = Vector2(0, -18)
+sort_bias = -24.0
+y_sort_enabled = true
+metadata/world_family = "chair"
+metadata/world_direction = 2
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -24)
+offset = Vector2(0.000000, -20.500000)
+scale = Vector2(0.600000, 0.600000)
+texture = ExtResource("new_art")
+
+[node name="SitZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SitZone"]
+shape = SubResource("zone")

@@ -563,6 +563,8 @@ func _pillar_names(wall_prefix: String) -> Array[String]:
 ## then starts working with no further change. The material name is the wall
 ## prefix with its trailing "Wall" removed, which is how the wall sets are named.
 func _theme_pillars(wall_prefix: String) -> void:
+	if WorldObjects.family_of(pillar_scene) == "pillar":
+		return
 	## Tried from most specific to least: the set's own name, then with any
 	## trailing number dropped, then with "Wall" trimmed. Twenty-four of the
 	## sixty-four sets are numbered variants — casinoWall2, rusticBrickWall3 —
@@ -934,10 +936,12 @@ func _populate(step: Vector2) -> void:
 						rung = 6
 						_boss_placed = true
 					monster.apply_tier(rung, depth)
-		if not prop_scenes.is_empty() and not outdoors:
+		var prop_pool := _prop_pool()
+		if not prop_pool.is_empty() and not outdoors:
 			var m: int = _rng.randi_range(props_per_room.x, props_per_room.y)
 			for i in m:
-				_place(here, prop_scenes[_rng.randi_range(0, prop_scenes.size() - 1)])
+				var family: Array = prop_pool[_rng.randi_range(0, prop_pool.size() - 1)]
+				_place(here, family[0])
 		## Guaranteed, not rolled. Every room lights itself rather than relying
 		## on the lantern the player carries — a dark room is unreadable, and a
 		## uniform draw from the prop pool would leave some rooms with none.
@@ -974,7 +978,7 @@ func _prop_pool() -> Array:
 	for scene in prop_scenes:
 		if scene != null:
 			_prop_pool_cache.append([scene])
-	var facing := RegEx.create_from_string("_(south|north)(East|West)\\.tscn$")
+	var facing := RegEx.create_from_string("_(?:(south|north)(East|West)|dir[1-8])\\.tscn$")
 	var groups := {}
 	for scene in facing_prop_scenes:
 		if scene == null:
@@ -984,6 +988,9 @@ func _prop_pool() -> Array:
 			groups[key] = []
 			_prop_pool_cache.append(groups[key])
 		groups[key].append(scene)
+	for family in WorldObjects.catalog()["families"]:
+		if String(family).ends_with("_unlit"):
+			_prop_pool_cache.append([WorldObjects.scene(family)])
 	return _prop_pool_cache
 
 
@@ -998,7 +1005,7 @@ func _place(room: Node2D, scene: PackedScene) -> Node:
 	var cells := ground.get_used_cells()
 	if cells.is_empty():
 		return null
-	var thing = scene.instantiate()
+	var thing = WorldObjects.choose(scene, _rng).instantiate()
 	## Chairs also arrive through the prop pool, and want turning just the same.
 	if thing.has_method("face_randomly"):
 		thing.face_randomly(_rng)
@@ -1013,8 +1020,22 @@ func _place(room: Node2D, scene: PackedScene) -> Node:
 			spot = ground.to_global(
 				ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
 			tries += 1
+	var attempts := 0
+	while not _party_clear(spot, 100.0) and attempts < 80:
+		spot = ground.to_global(ground.map_to_local(cells[_rng.randi_range(0, cells.size() - 1)]))
+		attempts += 1
+	if not _party_clear(spot, 100.0) or (_ext != null and _ext.wet(spot)):
+		thing.queue_free()
+		return null
 	thing.global_position = spot
 	return thing
+
+
+func _party_clear(where: Vector2, radius: float) -> bool:
+	for body in _players:
+		if is_instance_valid(body) and body.global_position.distance_to(where) < radius:
+			return false
+	return true
 
 
 ## Drops the whole floor into gloom and gives the player a lantern, so the maze
@@ -1607,6 +1628,8 @@ func _place_dining_set(room: Node2D) -> void:
 	for _try in 24:
 		var candidate: Vector2i = cells[_rng.randi_range(0, cells.size() - 1)]
 		var origin: Vector2 = ground.map_to_local(candidate)
+		if not _party_clear(ground.to_global(origin), 140.0):
+			continue
 		var fits: int = 0
 		for seat in SEATS:
 			var at: Vector2 = origin + seat["offset"] * table_seat_gap
@@ -1617,11 +1640,14 @@ func _place_dining_set(room: Node2D) -> void:
 			pick = candidate
 		if fits == SEATS.size():
 			break
+	if best < 0:
+		return
 	var centre: Vector2 = ground.to_global(ground.map_to_local(pick))
 
 	## The facing is picked by scene rather than by swapping the sprite, since
 	## each facing has its own footprint.
-	var table := table_scenes[_rng.randi_range(0, table_scenes.size() - 1)].instantiate()
+	var table := WorldObjects.choose(table_scenes[0], _rng,
+			_rng.randi_range(0, 3) * 2 + 1).instantiate()
 	table.name = "DiningTable"
 	add_child(table)
 	(table as Node2D).global_position = centre
@@ -1657,7 +1683,7 @@ func _place_dining_set(room: Node2D) -> void:
 
 
 func _add_chair(where: Vector2, named: String) -> void:
-	var chair := chair_scene.instantiate()
+	var chair := WorldObjects.choose(chair_scene, _rng).instantiate()
 	chair.name = named
 	## Turned before it is added, so the setter has run by the time _ready picks
 	## the art. Without this every chair on the floor faces the same way, which
@@ -1693,9 +1719,7 @@ func _clear_buried_chairs() -> void:
 		var clearance := CircleShape2D.new()
 		clearance.radius = chair_clearance
 		probe.shape = clearance
-		## Its own base, not its origin, which sits SORT_LIFT above the floor.
-		probe.transform = Transform2D(0.0,
-				(chair as Node2D).global_position + Vector2(0.0, SORT_LIFT))
+		probe.transform = Transform2D(0.0, (chair as Node2D).global_position)
 		## Layer 2 only: props and columns, not walls. Props sit on layer 3, which
 		## is bits 1 and 2; the walls are bit 1 alone. Probing bit 1 therefore hit
 		## the walls too, and the wall collision is a deliberately oversized
@@ -1869,9 +1893,7 @@ func _scale_party() -> void:
 			body.apply_progression()
 
 
-## The way on is an empty room. No stairs: hunting the last monster is a better
-## end to a wave than hunting a staircase, and it means a level cannot be walked
-## past without engaging the thing it was built around.
+## Clearing the enemy wave still controls progression; stairs never bypass it.
 func _check_wave_cleared() -> void:
 	if _clearing or not _wave_live:
 		return
@@ -1884,6 +1906,7 @@ func _check_wave_cleared() -> void:
 
 func _finish_wave() -> void:
 	Score.wave_cleared(depth, Time.get_ticks_msec() * 0.001 - _wave_started)
+	_show_clear_stairs()
 	_announce_floor("AREA CLEAR")
 	await get_tree().create_timer(2.1, false).timeout
 	if not is_inside_tree():
@@ -1893,6 +1916,17 @@ func _finish_wave() -> void:
 		await _offer_upgrades(party)
 	if is_inside_tree():
 		descend()
+
+
+func _show_clear_stairs() -> Exit:
+	var stairs := WorldObjects.scene("exit_stairs", 1).instantiate() as Exit
+	stairs.name = "ClearedFloorStairs"
+	# Visual cue only: retain automatic area-clear descent and the upgrade screen.
+	stairs.monitoring = false
+	add_child(stairs)
+	stairs.global_position = _player.global_position + Vector2(100, 50) \
+			if is_instance_valid(_player) else _room_centre(_start_cell)
+	return stairs
 
 
 ## Between floors, while the clock is already frozen by _clearing.
@@ -2112,11 +2146,6 @@ func _place_pillars() -> void:
 			for i in wanted:
 				var world: Vector2 = layer.to_global(layer.map_to_local(cells[i])
 						+ _wall_footprint(layer, cells[i]) * pillar_wall_bias)
-				## The column's origin sits SORT_LIFT above its base so it sorts
-				## on the same footing as the characters, whose origins sit that
-				## far above their feet. Placing it that much higher leaves the
-				## stone itself exactly where it was.
-				world.y -= SORT_LIFT
 				var crowded := false
 				for other in placed:
 					if other.distance_to(world) < MIN_GAP:
@@ -2125,7 +2154,7 @@ func _place_pillars() -> void:
 				if crowded:
 					continue
 				placed.append(world)
-				var pillar := pillar_scene.instantiate()
+				var pillar := WorldObjects.choose(pillar_scene, _rng).instantiate()
 				pillar.name = "Pillar_%d_%d_%s_%d" % [cell.x, cell.y, side, i]
 				## Its own occlusion check, so a player walking up the screen
 				## behind a column does not simply vanish.
@@ -2134,7 +2163,7 @@ func _place_pillars() -> void:
 				fade.set_script(load("res://scripts/system/PillarFade.gd"))
 				pillar.add_child(fade)
 				add_child(pillar)
-				(pillar as Node2D).global_position = world + Vector2(0.0, pillar_sort_bias)
+				(pillar as Node2D).global_position = world
 
 
 ## Where a grid cell sits on screen.

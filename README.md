@@ -32,6 +32,39 @@ Open the project in **Godot 4.7** (GL Compatibility renderer) and press play.
 The main scene is `scenes/title_screen.tscn`; everything else is reachable from
 there. Viewport is 1536×864, stretched on `canvas_items`.
 
+## World objects
+
+World scenery uses the new eight-direction exports in
+`assets/sprites/world_objects/`, with independently spawnable scenes under
+`scenes/props/world_objects/`. All 92 supplied object/state sets are represented,
+including matching broken, lit/unlit and trap-state art.
+
+Natural biome objects use all eight views uniformly. Random furniture, statues
+and other man-made props use isometric directions 1/3/5/7 80% of the time and
+orthogonal directions 2/4/6/8 20% of the time. Dining seats, paired guardians and
+other functional arrangements retain appropriate facings. Food and pickup
+sprites use uniform 0.5 scale without shrinking their collection areas. Food
+and drink restore stamina; potions and charms restore health. Scroll pickups
+use the new world art while keeping the six existing inventory icons and
+type-colored glow.
+
+Chairs use 0.6 visual scale with a refitted seated anchor. They depth-sort at
+the seat and never block movement; their detection area only enables resting.
+Trees are scaled uniformly per view to twice the default player's visible
+standing height (306 pixels). Their blockers align with the roots rather than
+the canopy, with matching canopy-fade bounds. Gate collision follows the
+authored posts in each direction and leaves the passage open.
+
+Unlit lighting props can appear as room dressing alongside the guaranteed lit
+torch placements. New stairs appear as an area-clear cue; enemy-wave completion,
+automatic descent and between-floor upgrades remain unchanged.
+
+Replaced placeholder scenes and unused sprites were copied and checksum-verified
+in Dropbox under `KatanaKitsune/WorldObjectsArchive/placeholder-migration-2026-10-17/`
+before removal from this checkout. Animals, walls, windows, doors, floor tiles
+and roofs are not part of this sprite migration. See `tools/README.md` for the
+import and validation commands.
+
 ## Controls
 
 Keyboard or gamepad, up to four players locally.
@@ -182,8 +215,8 @@ behavior.
 neighbour half a room across and half a room down so the diamonds interlock,
 then knocks walls out from both sides. The result reads as one continuous space
 rather than a corridor. Pillars are stood in every opening so a removed wall
-looks like a deliberate colonnade. Walking onto the stairway `Exit` sends the
-run down a floor.
+looks like a deliberate colonnade. Clearing the enemy wave reveals a stairway
+cue and advances the run automatically, with upgrades between floors.
 
 **Scoring is a streak.** A kill opens a short window of invulnerability, and
 killing again inside it extends the window and climbs the grade. The window you

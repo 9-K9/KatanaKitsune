@@ -20,6 +20,7 @@ enum Kind { HEALTH, DAMAGE, SPEED, WARD, STAMINA, SCROLL }
 @export var amount: float = 30.0
 ## Power-up lifetime in seconds. Ignored by HEALTH.
 @export var duration: float = 12.0
+@export var use_world_art: bool = false
 
 ## Laid out on a table rather than lying loose. It is visible but cannot be
 ## taken — the meal is on the furniture, and she has to break the furniture to
@@ -89,7 +90,8 @@ var _retry_in: float = 0.3
 func _dress_scroll() -> void:
 	if scroll_kind < 0 or scroll_kind >= Scroll.COUNT:
 		scroll_kind = Scroll.random_kind()
-	sprite.texture = Scroll.icon(scroll_kind)
+	if not use_world_art:
+		sprite.texture = Scroll.icon(scroll_kind)
 	if _light != null:
 		_light.color = Scroll.INK[scroll_kind].lightened(0.35)
 

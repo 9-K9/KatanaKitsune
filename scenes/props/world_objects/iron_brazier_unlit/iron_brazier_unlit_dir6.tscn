@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/iron_brazier_unlit/iron_brazier_unlit_dir6.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/iron_brazier_broken/iron_brazier_broken_dir6.png" id="new_broken"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/glow.tres" id="world_glow"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(17.48, 0.0, 15.138, 3.671, 8.74, 6.358, 0.0, 7.342, -8.74, 6.358, -15.138, 3.671, -17.48, 0.0, -15.138, -3.671, -8.74, -6.358, -0.0, -7.342, 8.74, -6.358, 15.138, -3.671)
+
+[node name="iron_brazier_unlit" type="StaticBody2D"]
+script = ExtResource("1_s")
+max_health = 20.0
+break_frame_time = 0.08
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(1.000000, -42.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "iron_brazier_unlit"
+metadata/world_direction = 6
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -48.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(17.48, 0.0, 15.138, 3.671, 8.74, 6.358, 0.0, 7.342, -8.74, 6.358, -15.138, 3.671, -17.48, 0.0, -15.138, -3.671, -8.74, -6.358, -0.0, -7.342, 8.74, -6.358, 15.138, -3.671)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.6, 0.26, 1)
+energy = 1.05
+shadow_enabled = true
+texture_scale = 3.0
+
+texture = ExtResource("world_glow")
+position = Vector2(0, -72.00)
+enabled = false

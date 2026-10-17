@@ -6,16 +6,16 @@ enum Weather { CALM, PETALS, RAIN, SNOWFALL, SANDSTORM }
 
 const PARTICLE_DIR := "res://assets/pixellab/japanese_environment/weather/"
 const GROUND_DIR := "res://assets/pixellab/japanese_environment/biome_tiles/"
-const PROP_DIR := "res://scenes/props/japanese/exterior/"
+const PROP_DIR := WorldObjects.SCENE_DIR
 
 @export var id: Id = Id.SAKURA
 @export var art_approved: bool = false
 @export var approved_weather: Array[int] = []
 @export var compatible_weather: Array[int] = [Weather.CALM, Weather.PETALS, Weather.RAIN]
-@export var trees: Array[String] = ["sakura_tree_a", "sakura_tree_c", "sakura_weeping",
+@export var trees: Array[String] = ["sakura_tree_c", "sakura_tree_c", "sakura_weeping",
 		"black_pine", "bamboo_clump"]
 @export var edge_trees: Array[String] = ["black_pine", "black_pine", "bamboo_clump",
-		"bamboo_clump", "sakura_tree_a", "sakura_tree_c"]
+		"bamboo_clump", "sakura_tree_c", "sakura_tree_c"]
 @export var ground_paths: Array[String] = []
 ## Optional biome replacements for the Japanese paving and gravel families.
 @export var road_paths: Array[String] = []
@@ -48,9 +48,9 @@ func unavailable_reason() -> String:
 	if not art_approved:
 		return "projection, pivots and tile seams have not been approved"
 	for prop in trees + edge_trees + small_props:
-		if not ResourceLoader.exists(PROP_DIR + prop + ".tscn"):
+		if not ResourceLoader.exists(PROP_DIR + prop + "/" + prop + "_dir1.tscn"):
 			return "missing prop scene: " + prop
-		var scene := load(PROP_DIR + prop + ".tscn") as PackedScene
+		var scene := WorldObjects.scene(prop)
 		if scene == null or not scene.can_instantiate():
 			return "invalid prop scene: " + prop
 	if trees.is_empty() or edge_trees.is_empty():

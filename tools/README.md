@@ -2,6 +2,45 @@
 
 Dev-only scripts. Nothing here ships in the game.
 
+## migrate_world_objects.py / validate_world_objects.gd
+
+`migrate_world_objects.py` imports the approved Dropbox `WorldObjects` exports:
+736 directional PNGs, 66 spawnable object families (528 scenes) and 26 matching
+state sets. `resources/world_objects.json` records complete source coverage and
+legacy scene mappings; the export preset explicitly includes this runtime catalog.
+
+```bash
+python3 tools/migrate_world_objects.py --archive
+python3 tools/migrate_world_objects.py --generate --wire
+python3 tools/migrate_world_objects.py --archive-unused --cleanup
+godot --headless --path . --scene res://tools/validate_world_objects.tscn
+godot --headless --path . --script res://tools/validate_japanese_props.gd
+godot --headless --path . --scene res://tools/validate_breakable_environment.tscn --max-fps 120
+```
+
+The one-time archive is beside the source directory at
+`WorldObjectsArchive/placeholder-migration-2026-10-17/`, with relative paths and a
+SHA-256 manifest. Existing archive contents are never overwritten with different
+files. Run `--archive` only against the original baseline, not after editing
+scripts; subsequent scene regeneration reads the verified original templates.
+`--cleanup` refuses changed originals, missing backups and remaining scene
+references, and retains shared art. No `.glb`, `.pixelover` or preview PNG is
+copied into the game.
+
+The library validator checks every direction and state, ground-contact pivots,
+native scenery scale (except fitted chairs and double-player-height trees),
+exact half-size pickup visuals, food/potion effects,
+scroll identification, direction distributions and spawn-pool coverage. It
+also probes every variant from eight approach directions using both actor
+collision masks, checks pass-through chairs and open gate passages, and confirms
+tree colliders are centred on the roots rather than an asymmetric canopy.
+Run it with a renderer and `-- --render-sorting` to check actual front/behind
+draw order for all 528 variants in an isolated viewport.
+The environment validator checks real melee/projectiles, seating, lighting,
+nonblocking vegetation, pillars, stairs and generated Sakura/desert/snow floors.
+To capture rendered floors, run it without `--headless` and append
+`-- --capture-dir=/absolute/existing/directory`.
+
 ## validate_ai_companions.gd
 
 Headless-only, memory-conscious AI checks in small synthetic physics worlds.

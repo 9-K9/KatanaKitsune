@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_q8kla"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="2_te5gn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sake_barrel/sake_barrel_dir6.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/sake_barrel_broken/sake_barrel_broken_dir6.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(22.04, 0.0, 19.087, 4.628, 11.02, 8.017, 0.0, 9.257, -11.02, 8.017, -19.087, 4.628, -22.04, 0.0, -19.087, -4.628, -11.02, -8.017, -0.0, -9.257, 11.02, -8.017, 19.087, -4.628)
+
+[node name="sake_barrel" type="StaticBody2D"]
+script = ExtResource("1_q8kla")
+loot_scenes = Array[PackedScene]([ExtResource("2_te5gn")])
+loot_weight = 7.0
+max_health = 20.0
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(0.000000, -30.500000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "sake_barrel"
+metadata/world_direction = 6
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -36.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(22.04, 0.0, 19.087, 4.628, 11.02, 8.017, 0.0, 9.257, -11.02, 8.017, -19.087, 4.628, -22.04, 0.0, -19.087, -4.628, -11.02, -8.017, -0.0, -9.257, 11.02, -8.017, 19.087, -4.628)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

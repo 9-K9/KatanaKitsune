@@ -1,0 +1,590 @@
+{
+  "source_sets": {
+    "armour_stand": {
+      "role": "prop",
+      "directions": 8
+    },
+    "armour_stand_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "azalea_bush": {
+      "role": "biome",
+      "directions": 8
+    },
+    "bamboo_clump": {
+      "role": "biome",
+      "directions": 8
+    },
+    "bamboo_torch_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "bamboo_torch_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "bamboo_torch_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "black_pine": {
+      "role": "biome",
+      "directions": 8
+    },
+    "brazier": {
+      "role": "prop",
+      "directions": 8
+    },
+    "breakable_chest": {
+      "role": "prop",
+      "directions": 8
+    },
+    "breakable_chest_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "breakable_statue": {
+      "role": "prop",
+      "directions": 8
+    },
+    "breakable_statue_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "breakable_urn": {
+      "role": "prop",
+      "directions": 8
+    },
+    "breakable_urn_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "butsudan_shrine": {
+      "role": "prop",
+      "directions": 8
+    },
+    "butsudan_shrine_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "cactus_a": {
+      "role": "biome",
+      "directions": 8
+    },
+    "cactus_b": {
+      "role": "biome",
+      "directions": 8
+    },
+    "ceramic_jar": {
+      "role": "prop",
+      "directions": 8
+    },
+    "ceramic_jar_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "chair": {
+      "role": "prop",
+      "directions": 8
+    },
+    "dead_tree_a": {
+      "role": "biome",
+      "directions": 8
+    },
+    "dead_tree_b": {
+      "role": "biome",
+      "directions": 8
+    },
+    "desert_skull": {
+      "role": "biome",
+      "directions": 8
+    },
+    "dragon_statue": {
+      "role": "biome",
+      "directions": 8
+    },
+    "dry_shrub": {
+      "role": "biome",
+      "directions": 8
+    },
+    "exit_stairs": {
+      "role": "prop",
+      "directions": 8
+    },
+    "folding_screen": {
+      "role": "prop",
+      "directions": 8
+    },
+    "folding_screen_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "frozen_shrub": {
+      "role": "biome",
+      "directions": 8
+    },
+    "garden_rocks": {
+      "role": "biome",
+      "directions": 8
+    },
+    "grass_tuft": {
+      "role": "biome",
+      "directions": 8
+    },
+    "health_charm": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "health_potion": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "iron_brazier_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "iron_brazier_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "iron_brazier_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "jizo_statue": {
+      "role": "biome",
+      "directions": 8
+    },
+    "katana_rack": {
+      "role": "prop",
+      "directions": 8
+    },
+    "katana_rack_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "komainu_statue": {
+      "role": "biome",
+      "directions": 8
+    },
+    "komainu_statue_b": {
+      "role": "biome",
+      "directions": 8
+    },
+    "low_table": {
+      "role": "prop",
+      "directions": 8
+    },
+    "low_table_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "offering_box": {
+      "role": "prop",
+      "directions": 8
+    },
+    "offering_box_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "onigiri": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "palm_a": {
+      "role": "biome",
+      "directions": 8
+    },
+    "paper_lantern_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "paper_lantern_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "paper_lantern_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "pillar": {
+      "role": "prop",
+      "directions": 8
+    },
+    "pond_reeds": {
+      "role": "biome",
+      "directions": 8
+    },
+    "power_orb": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "rice_bales": {
+      "role": "prop",
+      "directions": 8
+    },
+    "rice_bales_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "sake_barrel": {
+      "role": "prop",
+      "directions": 8
+    },
+    "sake_barrel_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "sake_flask": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "sakura_tree_c": {
+      "role": "biome",
+      "directions": 8
+    },
+    "sakura_weeping": {
+      "role": "biome",
+      "directions": 8
+    },
+    "sandstone_rocks": {
+      "role": "biome",
+      "directions": 8
+    },
+    "scroll": {
+      "role": "pickup",
+      "directions": 8
+    },
+    "snowy_pine": {
+      "role": "biome",
+      "directions": 8
+    },
+    "snowy_rocks": {
+      "role": "biome",
+      "directions": 8
+    },
+    "spike_trap_extended": {
+      "role": "prop",
+      "directions": 8
+    },
+    "spike_trap_retracted": {
+      "role": "state",
+      "directions": 8
+    },
+    "spirit_censer_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "spirit_censer_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "spirit_censer_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "stake_torch_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "stake_torch_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "stake_torch_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "stone_lantern_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "stone_lantern_japanese": {
+      "role": "prop",
+      "directions": 8
+    },
+    "stone_lantern_jp_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "stone_lantern_lit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "stone_lantern_unlit": {
+      "role": "prop",
+      "directions": 8
+    },
+    "storage_chest": {
+      "role": "prop",
+      "directions": 8
+    },
+    "storage_chest_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "supply_crates": {
+      "role": "prop",
+      "directions": 8
+    },
+    "supply_crates_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "taiko_drum": {
+      "role": "prop",
+      "directions": 8
+    },
+    "taiko_drum_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "tansu_chest": {
+      "role": "prop",
+      "directions": 8
+    },
+    "tansu_chest_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "tea_set": {
+      "role": "prop",
+      "directions": 8
+    },
+    "tea_set_broken": {
+      "role": "state",
+      "directions": 8
+    },
+    "torii_gate": {
+      "role": "biome",
+      "directions": 8
+    },
+    "zabuton_stack": {
+      "role": "prop",
+      "directions": 8
+    },
+    "zabuton_stack_broken": {
+      "role": "state",
+      "directions": 8
+    }
+  },
+  "families": [
+    "armour_stand",
+    "azalea_bush",
+    "bamboo_clump",
+    "bamboo_torch_lit",
+    "bamboo_torch_unlit",
+    "black_pine",
+    "brazier",
+    "breakable_chest",
+    "breakable_statue",
+    "breakable_urn",
+    "butsudan_shrine",
+    "cactus_a",
+    "cactus_b",
+    "ceramic_jar",
+    "chair",
+    "dead_tree_a",
+    "dead_tree_b",
+    "desert_skull",
+    "dragon_statue",
+    "dry_shrub",
+    "exit_stairs",
+    "folding_screen",
+    "frozen_shrub",
+    "garden_rocks",
+    "grass_tuft",
+    "health_charm",
+    "health_potion",
+    "iron_brazier_lit",
+    "iron_brazier_unlit",
+    "jizo_statue",
+    "katana_rack",
+    "komainu_statue",
+    "komainu_statue_b",
+    "low_table",
+    "offering_box",
+    "onigiri",
+    "palm_a",
+    "paper_lantern_lit",
+    "paper_lantern_unlit",
+    "pillar",
+    "pond_reeds",
+    "power_orb",
+    "rice_bales",
+    "sake_barrel",
+    "sake_flask",
+    "sakura_tree_c",
+    "sakura_weeping",
+    "sandstone_rocks",
+    "scroll",
+    "snowy_pine",
+    "snowy_rocks",
+    "spike_trap_extended",
+    "spirit_censer_lit",
+    "spirit_censer_unlit",
+    "stake_torch_lit",
+    "stake_torch_unlit",
+    "stone_lantern_japanese",
+    "stone_lantern_lit",
+    "stone_lantern_unlit",
+    "storage_chest",
+    "supply_crates",
+    "taiko_drum",
+    "tansu_chest",
+    "tea_set",
+    "torii_gate",
+    "zabuton_stack"
+  ],
+  "natural": [
+    "azalea_bush",
+    "bamboo_clump",
+    "black_pine",
+    "cactus_a",
+    "cactus_b",
+    "dead_tree_a",
+    "dead_tree_b",
+    "desert_skull",
+    "dry_shrub",
+    "frozen_shrub",
+    "garden_rocks",
+    "grass_tuft",
+    "palm_a",
+    "pond_reeds",
+    "sakura_tree_c",
+    "sakura_weeping",
+    "sandstone_rocks",
+    "snowy_pine",
+    "snowy_rocks"
+  ],
+  "trees": [
+    "bamboo_clump",
+    "black_pine",
+    "dead_tree_a",
+    "dead_tree_b",
+    "palm_a",
+    "sakura_tree_c",
+    "snowy_pine"
+  ],
+  "player_height": 153,
+  "facings": {
+    "1": "southEast",
+    "2": "south",
+    "3": "southWest",
+    "4": "west",
+    "5": "northWest",
+    "6": "north",
+    "7": "northEast",
+    "8": "east"
+  },
+  "legacy": {
+    "scenes/props/brazier.tscn": "scenes/props/world_objects/brazier/brazier_dir1.tscn",
+    "scenes/props/breakableChest.tscn": "scenes/props/world_objects/breakable_chest/breakable_chest_dir1.tscn",
+    "scenes/props/breakableStatue.tscn": "scenes/props/world_objects/breakable_statue/breakable_statue_dir1.tscn",
+    "scenes/props/breakableUrn.tscn": "scenes/props/world_objects/breakable_urn/breakable_urn_dir1.tscn",
+    "scenes/props/chair.tscn": "scenes/props/world_objects/chair/chair_dir1.tscn",
+    "scenes/props/exitStairs.tscn": "scenes/props/world_objects/exit_stairs/exit_stairs_dir1.tscn",
+    "scenes/props/japanese/butsudan_shrine_northEast.tscn": "scenes/props/world_objects/butsudan_shrine/butsudan_shrine_dir7.tscn",
+    "scenes/props/japanese/butsudan_shrine_northWest.tscn": "scenes/props/world_objects/butsudan_shrine/butsudan_shrine_dir5.tscn",
+    "scenes/props/japanese/butsudan_shrine_southEast.tscn": "scenes/props/world_objects/butsudan_shrine/butsudan_shrine_dir1.tscn",
+    "scenes/props/japanese/butsudan_shrine_southWest.tscn": "scenes/props/world_objects/butsudan_shrine/butsudan_shrine_dir3.tscn",
+    "scenes/props/japanese/ceramic_jar_northEast.tscn": "scenes/props/world_objects/ceramic_jar/ceramic_jar_dir7.tscn",
+    "scenes/props/japanese/ceramic_jar_northWest.tscn": "scenes/props/world_objects/ceramic_jar/ceramic_jar_dir5.tscn",
+    "scenes/props/japanese/ceramic_jar_southEast.tscn": "scenes/props/world_objects/ceramic_jar/ceramic_jar_dir1.tscn",
+    "scenes/props/japanese/ceramic_jar_southWest.tscn": "scenes/props/world_objects/ceramic_jar/ceramic_jar_dir3.tscn",
+    "scenes/props/japanese/exterior/azalea_bush.tscn": "scenes/props/world_objects/azalea_bush/azalea_bush_dir1.tscn",
+    "scenes/props/japanese/exterior/bamboo_clump.tscn": "scenes/props/world_objects/bamboo_clump/bamboo_clump_dir1.tscn",
+    "scenes/props/japanese/exterior/black_pine.tscn": "scenes/props/world_objects/black_pine/black_pine_dir1.tscn",
+    "scenes/props/japanese/exterior/cactus_a.tscn": "scenes/props/world_objects/cactus_a/cactus_a_dir1.tscn",
+    "scenes/props/japanese/exterior/cactus_b.tscn": "scenes/props/world_objects/cactus_b/cactus_b_dir1.tscn",
+    "scenes/props/japanese/exterior/dead_tree_a.tscn": "scenes/props/world_objects/dead_tree_a/dead_tree_a_dir1.tscn",
+    "scenes/props/japanese/exterior/dead_tree_b.tscn": "scenes/props/world_objects/dead_tree_b/dead_tree_b_dir1.tscn",
+    "scenes/props/japanese/exterior/desert_skull.tscn": "scenes/props/world_objects/desert_skull/desert_skull_dir1.tscn",
+    "scenes/props/japanese/exterior/dragon_statue.tscn": "scenes/props/world_objects/dragon_statue/dragon_statue_dir1.tscn",
+    "scenes/props/japanese/exterior/dry_shrub.tscn": "scenes/props/world_objects/dry_shrub/dry_shrub_dir1.tscn",
+    "scenes/props/japanese/exterior/frozen_shrub.tscn": "scenes/props/world_objects/frozen_shrub/frozen_shrub_dir1.tscn",
+    "scenes/props/japanese/exterior/garden_rocks.tscn": "scenes/props/world_objects/garden_rocks/garden_rocks_dir1.tscn",
+    "scenes/props/japanese/exterior/grass_tuft.tscn": "scenes/props/world_objects/grass_tuft/grass_tuft_dir1.tscn",
+    "scenes/props/japanese/exterior/jizo_statue.tscn": "scenes/props/world_objects/jizo_statue/jizo_statue_dir1.tscn",
+    "scenes/props/japanese/exterior/komainu_statue.tscn": "scenes/props/world_objects/komainu_statue/komainu_statue_dir1.tscn",
+    "scenes/props/japanese/exterior/palm_a.tscn": "scenes/props/world_objects/palm_a/palm_a_dir1.tscn",
+    "scenes/props/japanese/exterior/pond_reeds.tscn": "scenes/props/world_objects/pond_reeds/pond_reeds_dir1.tscn",
+    "scenes/props/japanese/exterior/sakura_tree_a.tscn": "scenes/props/world_objects/sakura_tree_c/sakura_tree_c_dir1.tscn",
+    "scenes/props/japanese/exterior/sakura_tree_c.tscn": "scenes/props/world_objects/sakura_tree_c/sakura_tree_c_dir1.tscn",
+    "scenes/props/japanese/exterior/sakura_weeping.tscn": "scenes/props/world_objects/sakura_weeping/sakura_weeping_dir1.tscn",
+    "scenes/props/japanese/exterior/sandstone_rocks.tscn": "scenes/props/world_objects/sandstone_rocks/sandstone_rocks_dir1.tscn",
+    "scenes/props/japanese/exterior/snowy_pine.tscn": "scenes/props/world_objects/snowy_pine/snowy_pine_dir1.tscn",
+    "scenes/props/japanese/exterior/snowy_rocks.tscn": "scenes/props/world_objects/snowy_rocks/snowy_rocks_dir1.tscn",
+    "scenes/props/japanese/exterior/torii_gate.tscn": "scenes/props/world_objects/torii_gate/torii_gate_dir1.tscn",
+    "scenes/props/japanese/folding_screen_northEast.tscn": "scenes/props/world_objects/folding_screen/folding_screen_dir7.tscn",
+    "scenes/props/japanese/folding_screen_northWest.tscn": "scenes/props/world_objects/folding_screen/folding_screen_dir5.tscn",
+    "scenes/props/japanese/folding_screen_southEast.tscn": "scenes/props/world_objects/folding_screen/folding_screen_dir1.tscn",
+    "scenes/props/japanese/folding_screen_southWest.tscn": "scenes/props/world_objects/folding_screen/folding_screen_dir3.tscn",
+    "scenes/props/japanese/katana_rack_northEast.tscn": "scenes/props/world_objects/katana_rack/katana_rack_dir7.tscn",
+    "scenes/props/japanese/katana_rack_northWest.tscn": "scenes/props/world_objects/katana_rack/katana_rack_dir5.tscn",
+    "scenes/props/japanese/katana_rack_southEast.tscn": "scenes/props/world_objects/katana_rack/katana_rack_dir1.tscn",
+    "scenes/props/japanese/katana_rack_southWest.tscn": "scenes/props/world_objects/katana_rack/katana_rack_dir3.tscn",
+    "scenes/props/japanese/low_table_northEast.tscn": "scenes/props/world_objects/low_table/low_table_dir7.tscn",
+    "scenes/props/japanese/low_table_northWest.tscn": "scenes/props/world_objects/low_table/low_table_dir5.tscn",
+    "scenes/props/japanese/low_table_southEast.tscn": "scenes/props/world_objects/low_table/low_table_dir1.tscn",
+    "scenes/props/japanese/low_table_southWest.tscn": "scenes/props/world_objects/low_table/low_table_dir3.tscn",
+    "scenes/props/japanese/offering_box_northEast.tscn": "scenes/props/world_objects/offering_box/offering_box_dir7.tscn",
+    "scenes/props/japanese/offering_box_northWest.tscn": "scenes/props/world_objects/offering_box/offering_box_dir5.tscn",
+    "scenes/props/japanese/offering_box_southEast.tscn": "scenes/props/world_objects/offering_box/offering_box_dir1.tscn",
+    "scenes/props/japanese/offering_box_southWest.tscn": "scenes/props/world_objects/offering_box/offering_box_dir3.tscn",
+    "scenes/props/japanese/rice_bales_northEast.tscn": "scenes/props/world_objects/rice_bales/rice_bales_dir7.tscn",
+    "scenes/props/japanese/rice_bales_northWest.tscn": "scenes/props/world_objects/rice_bales/rice_bales_dir5.tscn",
+    "scenes/props/japanese/rice_bales_southEast.tscn": "scenes/props/world_objects/rice_bales/rice_bales_dir1.tscn",
+    "scenes/props/japanese/rice_bales_southWest.tscn": "scenes/props/world_objects/rice_bales/rice_bales_dir3.tscn",
+    "scenes/props/japanese/sake_barrel_northEast.tscn": "scenes/props/world_objects/sake_barrel/sake_barrel_dir7.tscn",
+    "scenes/props/japanese/sake_barrel_northWest.tscn": "scenes/props/world_objects/sake_barrel/sake_barrel_dir5.tscn",
+    "scenes/props/japanese/sake_barrel_southEast.tscn": "scenes/props/world_objects/sake_barrel/sake_barrel_dir1.tscn",
+    "scenes/props/japanese/sake_barrel_southWest.tscn": "scenes/props/world_objects/sake_barrel/sake_barrel_dir3.tscn",
+    "scenes/props/japanese/samurai_armour_stand_northEast.tscn": "scenes/props/world_objects/armour_stand/armour_stand_dir7.tscn",
+    "scenes/props/japanese/samurai_armour_stand_northWest.tscn": "scenes/props/world_objects/armour_stand/armour_stand_dir5.tscn",
+    "scenes/props/japanese/samurai_armour_stand_southEast.tscn": "scenes/props/world_objects/armour_stand/armour_stand_dir1.tscn",
+    "scenes/props/japanese/samurai_armour_stand_southWest.tscn": "scenes/props/world_objects/armour_stand/armour_stand_dir3.tscn",
+    "scenes/props/japanese/stone_lantern_northEast.tscn": "scenes/props/world_objects/stone_lantern_japanese/stone_lantern_japanese_dir7.tscn",
+    "scenes/props/japanese/stone_lantern_northWest.tscn": "scenes/props/world_objects/stone_lantern_japanese/stone_lantern_japanese_dir5.tscn",
+    "scenes/props/japanese/stone_lantern_southEast.tscn": "scenes/props/world_objects/stone_lantern_japanese/stone_lantern_japanese_dir1.tscn",
+    "scenes/props/japanese/stone_lantern_southWest.tscn": "scenes/props/world_objects/stone_lantern_japanese/stone_lantern_japanese_dir3.tscn",
+    "scenes/props/japanese/storage_chest_northEast.tscn": "scenes/props/world_objects/storage_chest/storage_chest_dir7.tscn",
+    "scenes/props/japanese/storage_chest_northWest.tscn": "scenes/props/world_objects/storage_chest/storage_chest_dir5.tscn",
+    "scenes/props/japanese/storage_chest_southEast.tscn": "scenes/props/world_objects/storage_chest/storage_chest_dir1.tscn",
+    "scenes/props/japanese/storage_chest_southWest.tscn": "scenes/props/world_objects/storage_chest/storage_chest_dir3.tscn",
+    "scenes/props/japanese/supply_crates_northEast.tscn": "scenes/props/world_objects/supply_crates/supply_crates_dir7.tscn",
+    "scenes/props/japanese/supply_crates_northWest.tscn": "scenes/props/world_objects/supply_crates/supply_crates_dir5.tscn",
+    "scenes/props/japanese/supply_crates_southEast.tscn": "scenes/props/world_objects/supply_crates/supply_crates_dir1.tscn",
+    "scenes/props/japanese/supply_crates_southWest.tscn": "scenes/props/world_objects/supply_crates/supply_crates_dir3.tscn",
+    "scenes/props/japanese/taiko_drum_northEast.tscn": "scenes/props/world_objects/taiko_drum/taiko_drum_dir7.tscn",
+    "scenes/props/japanese/taiko_drum_northWest.tscn": "scenes/props/world_objects/taiko_drum/taiko_drum_dir5.tscn",
+    "scenes/props/japanese/taiko_drum_southEast.tscn": "scenes/props/world_objects/taiko_drum/taiko_drum_dir1.tscn",
+    "scenes/props/japanese/taiko_drum_southWest.tscn": "scenes/props/world_objects/taiko_drum/taiko_drum_dir3.tscn",
+    "scenes/props/japanese/tansu_chest_northEast.tscn": "scenes/props/world_objects/tansu_chest/tansu_chest_dir7.tscn",
+    "scenes/props/japanese/tansu_chest_northWest.tscn": "scenes/props/world_objects/tansu_chest/tansu_chest_dir5.tscn",
+    "scenes/props/japanese/tansu_chest_southEast.tscn": "scenes/props/world_objects/tansu_chest/tansu_chest_dir1.tscn",
+    "scenes/props/japanese/tansu_chest_southWest.tscn": "scenes/props/world_objects/tansu_chest/tansu_chest_dir3.tscn",
+    "scenes/props/japanese/tea_set_northEast.tscn": "scenes/props/world_objects/tea_set/tea_set_dir7.tscn",
+    "scenes/props/japanese/tea_set_northWest.tscn": "scenes/props/world_objects/tea_set/tea_set_dir5.tscn",
+    "scenes/props/japanese/tea_set_southEast.tscn": "scenes/props/world_objects/tea_set/tea_set_dir1.tscn",
+    "scenes/props/japanese/tea_set_southWest.tscn": "scenes/props/world_objects/tea_set/tea_set_dir3.tscn",
+    "scenes/props/japanese/zabuton_stack_northEast.tscn": "scenes/props/world_objects/zabuton_stack/zabuton_stack_dir7.tscn",
+    "scenes/props/japanese/zabuton_stack_northWest.tscn": "scenes/props/world_objects/zabuton_stack/zabuton_stack_dir5.tscn",
+    "scenes/props/japanese/zabuton_stack_southEast.tscn": "scenes/props/world_objects/zabuton_stack/zabuton_stack_dir1.tscn",
+    "scenes/props/japanese/zabuton_stack_southWest.tscn": "scenes/props/world_objects/zabuton_stack/zabuton_stack_dir3.tscn",
+    "scenes/props/pickupDrink.tscn": "scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn",
+    "scenes/props/pickupFood.tscn": "scenes/props/world_objects/onigiri/onigiri_dir1.tscn",
+    "scenes/props/pickupHealth.tscn": "scenes/props/world_objects/health_potion/health_potion_dir1.tscn",
+    "scenes/props/pickupPower.tscn": "scenes/props/world_objects/power_orb/power_orb_dir1.tscn",
+    "scenes/props/pickupScroll.tscn": "scenes/props/world_objects/scroll/scroll_dir1.tscn",
+    "scenes/props/pillar.tscn": "scenes/props/world_objects/pillar/pillar_dir1.tscn",
+    "scenes/props/spikeTrap.tscn": "scenes/props/world_objects/spike_trap_extended/spike_trap_extended_dir1.tscn",
+    "scenes/props/torches/bambooTorch.tscn": "scenes/props/world_objects/bamboo_torch_lit/bamboo_torch_lit_dir1.tscn",
+    "scenes/props/torches/ironBrazier.tscn": "scenes/props/world_objects/iron_brazier_lit/iron_brazier_lit_dir1.tscn",
+    "scenes/props/torches/paperLantern.tscn": "scenes/props/world_objects/paper_lantern_lit/paper_lantern_lit_dir1.tscn",
+    "scenes/props/torches/spiritCenser.tscn": "scenes/props/world_objects/spirit_censer_lit/spirit_censer_lit_dir1.tscn",
+    "scenes/props/torches/stakeTorch.tscn": "scenes/props/world_objects/stake_torch_lit/stake_torch_lit_dir1.tscn",
+    "scenes/props/torches/stoneLantern.tscn": "scenes/props/world_objects/stone_lantern_lit/stone_lantern_lit_dir1.tscn"
+  }
+}

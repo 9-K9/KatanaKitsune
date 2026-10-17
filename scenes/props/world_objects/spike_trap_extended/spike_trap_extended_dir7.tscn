@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/SpikeTrap.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/spike_trap_extended/spike_trap_extended_dir7.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/spike_trap_retracted/spike_trap_retracted_dir7.png" id="new_hidden"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(47.88, 0.0, 41.465, 10.055, 23.94, 17.415, 0.0, 20.11, -23.94, 17.415, -41.465, 10.055, -47.88, 0.0, -41.465, -10.055, -23.94, -17.415, -0.0, -20.11, 23.94, -17.415, 41.465, -10.055)
+
+[node name="spike_trap_extended" type="Area2D"]
+script = ExtResource("1_s")
+y_sort_enabled = false
+retracted_texture = ExtResource("new_hidden")
+extended_texture = ExtResource("new_art")
+retracted_position = Vector2(0.000000, -38.000000)
+metadata/world_family = "spike_trap_extended"
+metadata/world_direction = 7
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -45.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(47.88, 0.0, 41.465, 10.055, 23.94, 17.415, 0.0, 20.11, -23.94, 17.415, -41.465, 10.055, -47.88, 0.0, -41.465, -10.055, -23.94, -17.415, -0.0, -20.11, 23.94, -17.415, 41.465, -10.055)

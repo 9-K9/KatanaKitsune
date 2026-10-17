@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_s"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/health_potion/health_potion_dir1.tscn" id="3_l"]
+[ext_resource type="PackedScene" path="res://scenes/monsters/karasuShinobi.tscn" id="4_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/breakable_urn/breakable_urn_dir4.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/breakable_urn_broken/breakable_urn_broken_dir4.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(28.12, 0.0, 24.353, 5.905, 14.06, 10.228, 0.0, 11.81, -14.06, 10.228, -24.353, 5.905, -28.12, 0.0, -24.353, -5.905, -14.06, -10.228, -0.0, -11.81, 14.06, -10.228, 24.353, -5.905)
+
+[node name="breakable_urn" type="StaticBody2D"]
+script = ExtResource("1_s")
+loot_scene = ExtResource("3_l")
+spawn_scene = ExtResource("4_s")
+max_health = 20.0
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(2.000000, -35.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "breakable_urn"
+metadata/world_direction = 4
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -44.500000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(28.12, 0.0, 24.353, 5.905, 14.06, 10.228, 0.0, 11.81, -14.06, 10.228, -24.353, 5.905, -28.12, 0.0, -24.353, -5.905, -14.06, -10.228, -0.0, -11.81, 14.06, -10.228, 24.353, -5.905)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")

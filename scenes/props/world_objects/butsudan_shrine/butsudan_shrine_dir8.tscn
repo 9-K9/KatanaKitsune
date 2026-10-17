@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/system/Breakable.gd" id="1_pkc8t"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/onigiri/onigiri_dir1.tscn" id="2_8jcs5"]
+[ext_resource type="PackedScene" path="res://scenes/props/world_objects/sake_flask/sake_flask_dir1.tscn" id="3_mhjbo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/butsudan_shrine/butsudan_shrine_dir8.png" id="new_art"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_objects/butsudan_shrine_broken/butsudan_shrine_broken_dir8.png" id="new_broken"]
+
+[sub_resource type="OccluderPolygon2D" id="shadow"]
+polygon = PackedVector2Array(24.32, 0.0, 21.062, 5.107, 12.16, 8.846, 0.0, 10.214, -12.16, 8.846, -21.062, 5.107, -24.32, 0.0, -21.062, -5.107, -12.16, -8.846, -0.0, -10.214, 12.16, -8.846, 21.062, -5.107)
+
+[node name="butsudan_shrine" type="StaticBody2D"]
+script = ExtResource("1_pkc8t")
+loot_scenes = Array[PackedScene]([ExtResource("2_8jcs5"), ExtResource("3_mhjbo")])
+display_loot = true
+loot_display_lift = 131.2
+loot_weight = 7.0
+empty_weight = 0.0
+max_health = 40.0
+always_drops = true
+y_sort_enabled = false
+break_texture = ExtResource("new_broken")
+break_frames = 1
+persist_broken = true
+break_sprite_position = Vector2(0.000000, -42.000000)
+collision_layer = 3
+collision_mask = 0
+metadata/world_family = "butsudan_shrine"
+metadata/world_direction = 8
+metadata/natural_variant = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0.000000, -46.000000)
+scale = Vector2(1.000000, 1.000000)
+texture = ExtResource("new_art")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(24.32, 0.0, 21.062, 5.107, 12.16, 8.846, 0.0, 10.214, -12.16, 8.846, -21.062, 5.107, -24.32, 0.0, -21.062, -5.107, -12.16, -8.846, -0.0, -10.214, 12.16, -8.846, 21.062, -5.107)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("shadow")
