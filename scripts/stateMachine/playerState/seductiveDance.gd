@@ -6,7 +6,7 @@ const TAUNT_RANGE: float = 340.0
 
 func on_enter():
 	pc.speed = 0.0
-	action_timer.wait_time = play_oneshot("seductiveDance")
+	action_timer.wait_time = play_oneshot("seductiveDance", 0.5)
 	action_timer.start()
 	_provoke()
 

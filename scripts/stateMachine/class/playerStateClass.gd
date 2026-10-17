@@ -32,9 +32,8 @@ var attack_damage_multiplier: float = 1.0
 func stateAnimation(state_to_animate):
 	var string_animation : String
 	string_animation = "%s_%s"%[state_to_animate,pc.facing_dir]
-	## Undoes any rate a one-shot state left behind. Looping states call this
-	## every frame, so the rate is back to normal as soon as one is entered.
-	animated_sprite.speed_scale = 1.0
+	animated_sprite.speed_scale = 0.5 if state_to_animate in [
+		"idle", "katanaIdle", "stealthIdle"] else 1.0
 	animated_sprite.play(string_animation)
 
 ## How long a clip actually runs, in seconds, for the way she is facing.

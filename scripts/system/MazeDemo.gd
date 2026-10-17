@@ -1999,20 +1999,14 @@ func _show_reconnect(text: String) -> void:
 ## other would quietly break all of those. An exception is per-pair and touches
 ## nothing else.
 ##
-## Bots yield to humans, but cannot be forced through scenery when pinned.
-## Rescuers stop outside the fallen human's restored collision footprint.
+## All teammates pass through each other, regardless of who controls them.
 func _pass_through_each_other() -> void:
 	for a in _players:
 		if not is_instance_valid(a):
 			continue
 		for b in _players:
 			if b != a and is_instance_valid(b):
-				# Humans can still cross each other, as can bots. Human/bot
-				# contact is solid so a bot pinned against scenery blocks.
-				if Roster.is_ai_controlled(int(a.get("slot"))) != Roster.is_ai_controlled(int(b.get("slot"))):
-					(a as CharacterBody2D).remove_collision_exception_with(b)
-				else:
-					(a as CharacterBody2D).add_collision_exception_with(b)
+				(a as CharacterBody2D).add_collision_exception_with(b)
 
 
 ## One camera for the table, framing every living player.

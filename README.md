@@ -119,9 +119,10 @@ game over if another human is still alive. The run ends only when **every human
 and AI teammate is down**. Temporary takeover is for local mixed human/AI
 parties; the current network lobby still contains human slots only.
 
-Crowded bots yield in one consistent direction; when scenery blocks that
-direction they stay facing still and block human movement instead of flickering.
-Humans still pass through other humans, and bots through other bots.
+All teammates pass through each other, including human/AI pairs and temporarily
+controlled AI bodies. Pairwise collision exceptions preserve normal collision
+with enemies and scenery, and leave pickups, traps and chair detection unchanged.
+Crowded bots can still yield in a consistent direction without facing flicker.
 Bots do not seek pickups, use scrolls or coordinate tactics.
 Bot upgrade points are spent automatically across
 the least-upgraded stats; bot slots start ready between floors. High-score

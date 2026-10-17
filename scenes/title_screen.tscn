@@ -131,6 +131,7 @@ theme_override_styles/focus = SubResource("StyleBox_button_hover")
 text = "◆   NEW GAME   ◆"
 
 [node name="OnlineCoop" type="Button" parent="UI/SafeArea/VBox/ButtonBox"]
+visible = false
 custom_minimum_size = Vector2(310, 38)
 layout_mode = 2
 disabled = true

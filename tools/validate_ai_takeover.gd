@@ -221,8 +221,8 @@ func _live_checks() -> void:
 			"temporary leader remains preferred over a nearer living human")
 	second.position = Vector2(-800, 0)
 	_check(borrowed.get_collision_exceptions().has(second)
-			and not borrowed.get_collision_exceptions().has(follower),
-			"borrowed body collides as a human, not an autonomous bot")
+			and borrowed.get_collision_exceptions().has(follower),
+			"borrowed body passes through both humans and autonomous bots")
 	var hud = load("res://scenes/menuscreens/hud.tscn").instantiate()
 	_world.add_child(hud)
 	await _frames(4)
@@ -312,8 +312,8 @@ func _live_checks() -> void:
 	_check(cell["tag"].text == "AI3" and cell["mode"].text == "PAS"
 			and Roster.gameplay_label_of(2) == "AI3", "HUD and ground label restore AI identity")
 	_check(borrowed.get_collision_exceptions().has(follower)
-			and not borrowed.get_collision_exceptions().has(second),
-			"return restores ordinary human/AI collision pairing")
+			and borrowed.get_collision_exceptions().has(second),
+			"return preserves pass-through collision for every teammate")
 	_kill(second)
 	follow_input._choose_fallen(follower)
 	_check(follow_input._dead(follow_input._fallen) == second,
@@ -398,11 +398,53 @@ func _maze_checks() -> void:
 	_check(Roster.controlled_bot_slot == -1, "actual maze teardown clears active takeover")
 
 
+func _party_collision_checks() -> void:
+	_setup(2)
+	_world.set_physics_process(false)
+	for slot in 4:
+		var body := _probe(slot, Vector2(slot * 100, 0))
+		body.collision_layer = 3
+		body.collision_mask = 3
+		var shape := CollisionShape2D.new()
+		var circle := CircleShape2D.new()
+		circle.radius = 20
+		shape.shape = circle
+		body.add_child(shape)
+	_world._pass_through_each_other()
+	await _frames(2)
+	for body: CharacterBody2D in _world._players:
+		for other: CharacterBody2D in _world._players:
+			if body == other:
+				continue
+			_check(body.get_collision_exceptions().has(other),
+					"every party pair has a collision exception")
+			_check(not body.test_move(
+					Transform2D(0, other.position - Vector2(50, 0)), Vector2(100, 0)),
+					"overlapping actor masks do not block teammate crossing")
+	var obstacle := StaticBody2D.new()
+	obstacle.position = Vector2(600, 0)
+	obstacle.collision_layer = 3
+	var shape := CollisionShape2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(30, 100)
+	shape.shape = box
+	obstacle.add_child(shape)
+	_world.add_child(obstacle)
+	await _frames(2)
+	for body: CharacterBody2D in _world._players:
+		_check(body.test_move(Transform2D(0, Vector2(550, 0)), Vector2(100, 0)),
+				"teammate exceptions preserve scenery collision")
+	_world.queue_free()
+	await _frames(2)
+	Roster.clear()
+
+
 func _run() -> void:
 	_scene = load("res://scenes/characters/Kitsune.tscn")
 	if "--maze-only" in OS.get_cmdline_user_args():
 		await _maze_checks()
 	else:
+		await _party_collision_checks()
 		await _selection_checks()
 		await _live_checks()
 	Roster.clear()

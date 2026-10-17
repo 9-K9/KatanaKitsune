@@ -634,7 +634,7 @@ func consume_knockback(delta: float) -> void:
 ## animation to frame 0 forever.
 func play_loop(state_name: String) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
-	animated_sprite.speed_scale = 1.0
+	animated_sprite.speed_scale = 0.5 if state_name == "idle" else 1.0
 	if animated_sprite.animation != clip or not animated_sprite.is_playing():
 		animated_sprite.play(clip)
 		_sync_collision_tween(clip)
@@ -666,9 +666,9 @@ func play_chase() -> void:
 
 
 ## Plays a one-shot clip from the top. Only call this from a state's on_enter.
-func play_once(state_name: String) -> void:
+func play_once(state_name: String, rate: float = 1.0) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
-	animated_sprite.speed_scale = 1.0
+	animated_sprite.speed_scale = rate
 	## A monster without this clip would keep looping its last one and leave the
 	## state waiting forever. Stopping reads as finished, so the state moves on.
 	if not animated_sprite.sprite_frames.has_animation(clip):
@@ -696,6 +696,7 @@ func _sync_collision_tween(clip: String) -> void:
 	_commit_collision_tween_motion()
 	if collision_tween.has_animation(clip):
 		_rebase_collision_tween(clip)
+		collision_tween.speed_scale = animated_sprite.speed_scale
 		collision_tween.play(clip)
 		return
 	collision_tween.stop()

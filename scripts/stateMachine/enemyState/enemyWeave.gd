@@ -35,7 +35,7 @@ func on_enter() -> void:
 	enemy.stop()
 	## Facing the player while channelling: she is taunting, not hiding.
 	enemy.face(enemy.direction_to_player())
-	enemy.play_once("taunt")
+	enemy.play_once("taunt", 0.5)
 
 
 func on_physics_process(_delta: float) -> void:

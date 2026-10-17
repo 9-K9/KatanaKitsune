@@ -2,6 +2,31 @@
 
 Dev-only scripts. Nothing here ships in the game.
 
+## Web release
+
+Export the current working tree with the matching Godot Web export templates:
+
+```bash
+godot --headless --path . --export-release Web build/web/index.html
+```
+
+Package the contents of `build/web/` as `build/KatanaKitsune-web.zip`, with
+`index.html` at the ZIP root. The current release fits in one archive below
+200,000,000 bytes; no split ZIP parts are needed. Upload that ZIP as an HTML5
+game, or extract its contents together onto a static web host. The single-threaded
+export does not require cross-origin isolation headers. Serve WebAssembly with
+the `application/wasm` MIME type. Build outputs are intentionally Git-ignored.
+
+The online co-op title button is hidden; local human/AI co-op remains available.
+Player idle, katana-idle and stealth-idle loops and enemy idle loops play at
+half speed. The player dance has a matching doubled state timer; enemy bubble
+dances retain frame-driven healing over the slower playback. Movement, combat,
+and non-dance taunts such as Kappa's fall retain their original rates. Validate with:
+
+```bash
+godot --headless --path . --scene res://tools/validate_player_animation_rates.tscn
+```
+
 ## migrate_world_objects.py / validate_world_objects.gd
 
 `migrate_world_objects.py` imports the approved Dropbox `WorldObjects` exports:

@@ -338,9 +338,9 @@ func _maze_checks() -> void:
 		var human: CharacterBody2D = maze._players[0]
 		_check(PhysicsServer2D.body_get_space(bot.get_rid()).is_valid(),
 				"maze probe retains a live physics body")
-		_check(not bot.get_collision_exceptions().has(human)
-				and not human.get_collision_exceptions().has(bot),
-				"actual maze enables solid human/bot contact")
+		_check(bot.get_collision_exceptions().has(human)
+				and human.get_collision_exceptions().has(bot),
+				"actual maze disables human/bot contact in both directions")
 		var nav := BotNavigation.new()
 		nav.bind_body(bot)
 		var bounds: Rect2 = maze.bot_navigation_bounds()
