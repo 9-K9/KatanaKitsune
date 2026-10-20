@@ -758,6 +758,9 @@ func _enter_level() -> void:
 		return
 	_phase = Phase.LEVEL
 	_hide_prompt()
+	## The party is complete, so settle who is P1, P2… by the device
+	## assignments saved in Settings before the level is picked.
+	Roster.apply_device_assignments()
 	$Right.visible = false
 	$PreviewHolder.visible = false
 	var focused := get_viewport().gui_get_focus_owner()

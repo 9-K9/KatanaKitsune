@@ -12,6 +12,23 @@ var game_paused : bool = false
 @onready var teammates_button: Button = $Center/Panel/Margin/MainMenu/Teammates
 @onready var immortality_toggle: CheckButton = $Center/Panel/Margin/CheatsMenu/Immortality
 
+## Whoever pressed Pause owns the menu: only their device drives it, through
+## every sub-menu, until they resume. After TAKEOVER_IDLE seconds without a
+## press from them, any other player's press takes the menu over instead, so a
+## pauser who walked away cannot hold the whole party hostage.
+const TAKEOVER_IDLE: float = 5.0
+const NO_OWNER: int = -1
+## [slot, PlayerInput] per local human, polled for the Pause edge per device —
+## Input.is_action_just_pressed cannot say *who* pressed.
+var _pausers: Array = []
+var _owner_slot: int = NO_OWNER
+var _owner_device: int = PlayerInput.BOT
+var _idle: float = 0.0
+## The frame a takeover happened on, so the press that took the menu is not
+## also read as that player's Pause and resumes the game in the same breath.
+var _took_over_frame: int = -1
+var _owner_label: Label
+
 func _ready():
 	## The tree is paused while this menu is up, so it has to keep processing
 	## or its own buttons would be dead.
@@ -29,13 +46,26 @@ func _ready():
 		if cheats != null:
 			cheats.queue_free()
 		CheatManager.set_immortality(false)
+	_owner_label = Label.new()
+	_owner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_owner_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_owner_label.add_theme_font_size_override("font_size", 11)
+	main_menu.add_child(_owner_label)
+	main_menu.move_child(_owner_label, 0)
+	if settings_menu is SettingsPanel and (settings_menu as SettingsPanel).controls != null:
+		(settings_menu as SettingsPanel).controls.input_filter = _event_allowed
+	Roster.roster_changed.connect(_rebuild_pausers)
+	_rebuild_pausers()
 	_show_main_menu()
 	_sync_immortality_label()
 
-func _process(_delta):
+func _process(delta: float):
 	## Owns the pause toggle either way, because this node keeps processing while
 	## the tree is frozen; GameManager stops dead the instant the pause takes
 	## effect, so it could never un-pause the game itself.
+	if visible:
+		_idle += delta
+		_sync_owner_label()
 	if _has_manager():
 		_process_with_manager()
 	else:
@@ -46,9 +76,12 @@ func _process(_delta):
 ## game_over stays excluded and the key cannot be used to un-die.
 func _process_with_manager() -> void:
 	var state: String = gameManager.getState()
-	if state != "game_over" and Input.is_action_just_pressed("Pause"):
-		gameManager.setState("game_play" if state == "game_paused" else "game_paused")
-		state = gameManager.getState()
+	if state != "game_over":
+		var who := _pause_pressed()
+		if who != NO_OWNER and _may_toggle(who):
+			gameManager.setState("game_play" if state == "game_paused" else "game_paused")
+			state = gameManager.getState()
+			_owner_changed(who if state == "game_paused" else NO_OWNER)
 	_set_shown(state == "game_paused")
 
 
@@ -74,9 +107,129 @@ func _process_standalone() -> void:
 	if get_tree().get_first_node_in_group("level_up_screen") != null:
 		_set_shown(false)
 		return
-	if Input.is_action_just_pressed("Pause"):
+	var who := _pause_pressed()
+	if who != NO_OWNER and _may_toggle(who):
 		get_tree().paused = not get_tree().paused
+		_owner_changed(who if get_tree().paused else NO_OWNER)
 	_set_shown(get_tree().paused)
+
+
+## ------------------------------------------------------------ ownership
+
+## One PlayerInput per local human so the Pause edge can be read per device.
+## With no roster (a level run straight from the editor) the keyboard and every
+## pad count, so pause still works there.
+func _rebuild_pausers() -> void:
+	_pausers.clear()
+	for slot in Roster.count():
+		if Roster.is_bot(slot) or Roster.is_network(slot):
+			continue
+		var input := PlayerInput.new(Roster.device_of(slot), slot)
+		input.prime()
+		_pausers.append([slot, input])
+	if _pausers.is_empty():
+		_pausers.append([0, PlayerInput.new(PlayerInput.KEYBOARD)])
+		for id in Input.get_connected_joypads():
+			_pausers.append([_pausers.size(), PlayerInput.new(id)])
+	if _owner_slot != NO_OWNER and _slot_device(_owner_slot) != _owner_device:
+		_owner_changed(NO_OWNER)
+
+
+## The slot whose Pause was pressed this frame, or NO_OWNER.
+func _pause_pressed() -> int:
+	for pair in _pausers:
+		if (pair[1] as PlayerInput).just_pressed("Pause"):
+			return pair[0]
+	return NO_OWNER
+
+
+## Opening is anyone's; closing belongs to the owner, or to anyone once the
+## owner has gone quiet.
+func _may_toggle(slot: int) -> bool:
+	if not visible or _owner_slot == NO_OWNER:
+		return true
+	if Engine.get_process_frames() == _took_over_frame:
+		return false
+	return slot == _owner_slot or _idle >= TAKEOVER_IDLE
+
+
+func _owner_changed(slot: int) -> void:
+	_owner_slot = slot
+	_owner_device = _slot_device(slot) if slot != NO_OWNER else PlayerInput.BOT
+	_idle = 0.0
+	_sync_owner_label()
+
+
+func _slot_device(slot: int) -> int:
+	for pair in _pausers:
+		if pair[0] == slot:
+			return (pair[1] as PlayerInput).device
+	return PlayerInput.BOT
+
+
+func _sync_owner_label() -> void:
+	if _owner_label == null:
+		return
+	if _owner_slot == NO_OWNER:
+		_owner_label.text = ""
+		return
+	var name := "P%d" % (_owner_slot + 1) if Roster.count() > 0 \
+			else _slot_input(_owner_slot).device_name()
+	_owner_label.modulate = Roster.colour_of(_owner_slot)
+	_owner_label.text = "%s PAUSED" % name if _idle < TAKEOVER_IDLE \
+			else "%s PAUSED — IDLE, ANY PLAYER MAY TAKE OVER" % name
+
+
+func _slot_input(slot: int) -> PlayerInput:
+	for pair in _pausers:
+		if pair[0] == slot:
+			return pair[1]
+	return PlayerInput.new()
+
+
+## Keyboard and mouse are one player's; a pad event names its own device.
+func _event_device(event: InputEvent) -> int:
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		return (event as InputEvent).device
+	return PlayerInput.KEYBOARD
+
+
+func _event_allowed(event: InputEvent) -> bool:
+	return _owner_slot == NO_OWNER or _event_device(event) == _owner_device
+
+
+## A deliberate press, as opposed to a release, a key repeat or a stick drift.
+func _is_press(event: InputEvent) -> bool:
+	if event is InputEventKey:
+		var key := event as InputEventKey
+		return key.pressed and not key.echo
+	if event is InputEventJoypadButton:
+		return (event as InputEventJoypadButton).pressed
+	if event is InputEventMouseButton:
+		return (event as InputEventMouseButton).pressed
+	if event is InputEventJoypadMotion:
+		return absf((event as InputEventJoypadMotion).axis_value) >= PlayerInput.DEADZONE
+	return false
+
+
+## Everything that is not the owner's is stopped here before Godot's UI sees
+## it. Mouse motion is let through so hovering still works for the owner and
+## stays harmless for anyone else.
+func _input(event: InputEvent) -> void:
+	if not visible or _owner_slot == NO_OWNER or event is InputEventMouseMotion:
+		return
+	if _event_allowed(event):
+		if _is_press(event):
+			_idle = 0.0
+		return
+	if _idle >= TAKEOVER_IDLE and _is_press(event):
+		var device := _event_device(event)
+		for pair in _pausers:
+			if (pair[1] as PlayerInput).device == device:
+				_owner_changed(pair[0])
+				_took_over_frame = Engine.get_process_frames()
+				break
+	get_viewport().set_input_as_handled()
 
 
 func _player_dead() -> bool:
@@ -94,6 +247,8 @@ func _set_shown(should_show: bool) -> void:
 	if should_show == visible:
 		return
 	visible = should_show
+	if not should_show:
+		_owner_changed(NO_OWNER)
 	## Focus has to be taken when the menu appears, not when it is built. The
 	## grab in _ready ran while this was still hidden, and a grab on a hidden
 	## tree does not stick — so a pad opened onto nothing.
@@ -105,6 +260,7 @@ func _on_resume_pressed():
 		gameManager.setState("game_play")
 	else:
 		get_tree().paused = false
+	_owner_changed(NO_OWNER)
 	_show_main_menu()
 
 func _on_cheats_pressed() -> void:

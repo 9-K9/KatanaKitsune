@@ -128,21 +128,54 @@ Bot upgrade points are spent automatically across
 the least-upgraded stats; bot slots start ready between floors. High-score
 name entry uses the best human score, not a bot's score.
 
-| Action | What it does |
-|--------|--------------|
-| `Left` `Right` `Up` `Down` | Move on the isometric lattice: WASD, left stick or D-pad |
-| `Run` | Sprint |
-| `Katana` | Draw or sheath the blade |
-| `Attack` | Slash — standing, crouched, or a charged strike held |
-| `Defend` | Raise a block; a well-timed one opens a counter-slash |
-| `Dodge` | Forward roll |
-| `Jump` | Jump, or a running jump at speed |
-| `Stealth` | Crouch into stealth, halving the range monsters notice you at |
-| `Action` | Interact — rest at a chair, take a pickup, descend a stairway |
-| `Pause` | Pause menu |
-| `Scroll1`–`Scroll6` | Keys `1`–`6`: read the scroll in that inventory slot |
-| `ScrollPrevious` / `ScrollNext` | Right stick left/right or left/right arrow keys: select the previous/next occupied slot |
-| `ScrollUse` | Press `L3` or up/down arrow: use the highlighted scroll |
+| Action | Keyboard | Gamepad | What it does |
+|--------|----------|---------|--------------|
+| `Left` `Right` `Up` `Down` | W A S D | Left stick / D-pad | Move on the isometric lattice |
+| `Run` | R | LT | Sprint |
+| `Katana` | X | Y | Draw or sheath the blade |
+| `Attack` | C | B | Slash — standing, crouched, or a charged strike held |
+| `Defend` | Z | X | Raise a block; a well-timed one opens a counter-slash |
+| `Dodge` | E | LB | Forward roll |
+| `Jump` | F | RT | Jump, or a running jump at speed |
+| `Stealth` | G | RB | Crouch into stealth, halving the range monsters notice you at |
+| `Action` | Space / Enter | A | Interact — rest at a chair, take a pickup, descend a stairway |
+| `Pause` | Backspace / Esc / Q | Back | Pause menu |
+| `Scroll1`–`Scroll6` | `1`–`6` | — | Read the scroll in that inventory slot |
+| `ScrollPrevious` / `ScrollNext` | Left / Right arrows | Right stick left/right | Select the previous/next occupied slot |
+| `ScrollUse` | Up / Down arrows | L3 | Use the highlighted scroll |
+
+Face buttons are listed by position: the bottom button confirms on every pad,
+whatever its label.
+
+### Remapping controls
+
+**SETTINGS → CONTROLS**, on the title screen or in the pause menu. Pick a
+**PLAYER** (P1–P4), optionally a **DEVICE** for them, then press any row and
+hit the key or button you want. Controls are per player, so P1 and P2 on two
+keyboards' worth of keys never collide. One input drives one action: binding a
+key already in use moves it off the old action, and the game refuses a change
+that would leave Pause with nothing. **EDITING** switches a row's view between
+the keyboard half and the gamepad half of the same player's bindings. Menus
+keep answering to every device, so a rebind can never lock you out of the menu
+that undoes it.
+
+Nothing takes effect until **APPLY**, which lists every change and asks you to
+**SAVE**, **DISCARD** or **KEEP EDITING**; **BACK** with unsaved edits asks the
+same. **RESET TO DEFAULT** puts the selected player back to the table above.
+Saved controls persist in `user://controls.cfg` and reach live players the
+frame after saving.
+
+**DEVICE** ties a controller to a slot. When the party is finalised on the
+select screen, an assigned device lands in its slot — "P1 is the keyboard" holds
+whichever pad pressed first — while unassigned devices keep joining by pressing
+a button. Picking a device already assigned to another slot swaps the two.
+
+### Who drives the pause menu
+
+Whoever pressed Pause owns the menu: only their device moves the highlight,
+through every sub-menu, until they resume. The header names them in their slot
+colour. After five seconds without a press from the owner, any other player's
+press takes the menu over (that press is swallowed, not clicked).
 
 Power-up selection wraps, skips empty slots and never activates a scroll.
 Each stick deflection or arrow press selects once; recenter/release before

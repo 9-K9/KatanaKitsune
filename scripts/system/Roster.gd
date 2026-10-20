@@ -336,7 +336,33 @@ func input_for(slot: int) -> PlayerInput:
 		return BotInput.new()
 	if is_network(slot):
 		return NetworkInput.new(peer_id_of(slot))
-	return PlayerInput.new(device_of(slot))
+	return PlayerInput.new(device_of(slot), slot)
+
+
+## Reorders the party so devices tied to a slot in Settings sit in that slot:
+## "P1 is the keyboard" holds whichever pad pressed first. Assigned players
+## come first in slot order; everyone else — unassigned devices, bots, network
+## players — keeps their relative order after them. Called once the select
+## screen has the whole party, because the select flow itself is "last slot"
+## based and would lose track if slots moved under it mid-claim.
+func apply_device_assignments() -> void:
+	var settings := get_node_or_null("/root/ControlSettings")
+	if settings == null or players.size() < 2:
+		return
+	var keyed: Array = []
+	for i in players.size():
+		var p: Dictionary = players[i]
+		var preferred: int = -1
+		if not p.get("bot", false) and p["device"] >= PlayerInput.KEYBOARD:
+			preferred = settings.slot_for_device(p["device"])
+		keyed.append([preferred if preferred >= 0 else MAX_PLAYERS + i, p])
+	keyed.sort_custom(func(a, b) -> bool: return a[0] < b[0])
+	var reordered: Array[Dictionary] = []
+	for pair in keyed:
+		reordered.append(pair[1])
+	if reordered != players:
+		players = reordered
+		roster_changed.emit()
 
 
 ## Every device with nobody on it yet: connected pads plus the keyboard. The

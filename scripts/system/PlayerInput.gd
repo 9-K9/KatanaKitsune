@@ -9,9 +9,10 @@ extends RefCounted
 ## raw device state instead — `Input.is_joy_button_pressed(device, button)` for
 ## pads, `Input.is_key_pressed(key)` for the keyboard.
 ##
-## The bindings are not hardcoded here. They are read out of the InputMap at
-## construction, so project.godot remains the single place controls are defined
-## and adding a binding there reaches all four players for free.
+## The bindings are not hardcoded here. They come from ControlSettings, which
+## reads project.godot's InputMap for the defaults and keeps one editable copy
+## per player slot, so each player can have their own keys. An input with no
+## slot (a join probe, a test) learns the defaults straight from the InputMap.
 ##
 ## `device` is a joypad index, or KEYBOARD for the player on the keys.
 
@@ -26,6 +27,11 @@ const NETWORK: int = -3
 const DEADZONE: float = 0.35
 
 var device: int = KEYBOARD
+## The roster slot whose control profile this reads, or -1 for the defaults.
+var slot: int = -1
+## ControlSettings.version these bindings were learnt from; a mismatch means
+## the player saved new controls and this should relearn.
+var _learnt_version: int = -1
 
 ## action -> what to look at on this device, gathered once from the InputMap.
 var _keys: Dictionary = {}		## action -> Array[int] of physical keycodes
@@ -47,9 +53,10 @@ var _held_until_release: Dictionary = {}
 var _bound_body: WeakRef
 
 
-func _init(for_device: int = KEYBOARD) -> void:
+func _init(for_device: int = KEYBOARD, for_slot: int = -1) -> void:
 	device = for_device
-	_learn_bindings()
+	slot = for_slot
+	relearn()
 
 
 func bind_body(body: CharacterBody2D) -> void:
@@ -77,6 +84,51 @@ func reset() -> void:
 
 func aim_vector() -> Vector2:
 	return Vector2.ZERO
+
+
+## Learns (or re-learns) this player's bindings. A slot takes its profile from
+## ControlSettings; anything else reads the defaults out of the InputMap.
+func relearn() -> void:
+	_keys = {}
+	_buttons = {}
+	_axes = {}
+	var settings := _settings()
+	if settings != null:
+		_learnt_version = settings.version
+		_learn_from(settings.bindings_for(slot))
+	else:
+		_learn_bindings()
+
+
+## The ControlSettings autoload, or null when this is a slotless input or the
+## script is running somewhere the autoload does not exist (a headless check).
+func _settings() -> Node:
+	if slot < 0:
+		return null
+	var loop := Engine.get_main_loop() as SceneTree
+	if loop == null or loop.root == null:
+		return null
+	return loop.root.get_node_or_null("ControlSettings")
+
+
+func _learn_from(bindings: Dictionary) -> void:
+	for name in bindings:
+		var entry: Dictionary = bindings[name]
+		var keys: Array[int] = []
+		for code in entry.get("keys", []):
+			keys.append(int(code))
+		var buttons: Array[int] = []
+		for idx in entry.get("buttons", []):
+			buttons.append(int(idx))
+		var axes: Array = []
+		for pair in entry.get("axes", []):
+			axes.append([int(pair[0]), float(pair[1])])
+		if not keys.is_empty():
+			_keys[name] = keys
+		if not buttons.is_empty():
+			_buttons[name] = buttons
+		if not axes.is_empty():
+			_axes[name] = axes
 
 
 ## Reads every action's events out of the InputMap and files them by the kind of
@@ -118,6 +170,11 @@ func _sync() -> void:
 	if frame == _frame:
 		return
 	_frame = frame
+	## Saved controls reach a live player here, the next frame after saving.
+	if _learnt_version >= 0:
+		var settings := _settings()
+		if settings != null and settings.version != _learnt_version:
+			relearn()
 	_was = _now
 	_now = {}
 	for action in _every_action():
