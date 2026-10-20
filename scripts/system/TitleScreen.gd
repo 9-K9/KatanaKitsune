@@ -4,6 +4,7 @@ extends Node2D
 ## Title screen. GameManager sends the player here on "game_title".
 
 const SELECT := "res://scenes/menuscreens/characterSelect.tscn"
+const LOBBY := "res://scenes/menuscreens/onlineLobby.tscn"
 
 ## The first button anywhere under `root`, focused so a controller has somewhere
 ## to start. Found by walking rather than by path, so moving a button in the
@@ -31,6 +32,11 @@ func _on_new_game_pressed():
 	## A Game Over leaves the tree paused if the player quits to title from it.
 	get_tree().paused = false
 	get_tree().change_scene_to_file(SELECT)
+
+
+func _on_online_coop_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(LOBBY)
 
 
 func _on_settings_pressed() -> void:

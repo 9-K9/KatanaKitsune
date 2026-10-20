@@ -15,6 +15,11 @@ extends PlayerInput
 var peer_id: int = 0
 var _move := Vector2.ZERO
 var _aim := Vector2.ZERO
+## True from the moment a snapshot lands until the next physics frame has
+## read it. Snapshots arrive at network rate, not physics rate, so without
+## this a press would read as "just pressed" on every frame until the next
+## packet — one tap of Attack became a flurry whenever a packet was late.
+var _fresh: bool = false
 
 
 func _init(for_peer: int = 0) -> void:
@@ -31,7 +36,10 @@ func _sync() -> void:
 
 
 func update(_delta: float) -> void:
-	pass
+	if _fresh:
+		_fresh = false
+		return
+	_was = _now.duplicate()
 
 
 func vector() -> Vector2:
@@ -47,6 +55,7 @@ func reset() -> void:
 	_was.clear()
 	_move = Vector2.ZERO
 	_aim = Vector2.ZERO
+	_fresh = false
 
 
 ## Called by NetworkManager when a fresh input snapshot arrives from this
@@ -57,3 +66,4 @@ func apply_snapshot(actions: Dictionary, move: Vector2, aim: Vector2) -> void:
 	_now = actions.duplicate()
 	_move = move
 	_aim = aim
+	_fresh = true

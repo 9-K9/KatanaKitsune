@@ -52,6 +52,7 @@ var _rest_y: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group("pickup")
 	if kind == Kind.SCROLL:
 		_dress_scroll()
 	if display_lift != 0.0:
@@ -148,6 +149,11 @@ func _hover(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if _taken or not body.is_in_group("player"):
 		return
+	## Online the server decides who picked what up; the client's copy only
+	## vanishes when told to (see network_taken), and the effect arrives in the
+	## next snapshot.
+	if NetworkManager.is_client:
+		return
 	## The player's hitbox Area2D is in the "player" group too; only the body
 	## carries the health and the buff state.
 	if not (body is CharacterBody2D):
@@ -166,6 +172,14 @@ func _on_body_entered(body: Node2D) -> void:
 	_consume()
 
 
+## A client's copy of a pickup the server has just handed out.
+func network_taken() -> void:
+	if _taken:
+		return
+	_taken = true
+	_consume()
+
+
 func _apply(player: CharacterBody2D) -> void:
 	match kind:
 		Kind.HEALTH:
@@ -181,6 +195,7 @@ func _apply(player: CharacterBody2D) -> void:
 
 
 func _consume() -> void:
+	NetworkManager.announce_world_event("pickup_taken", self)
 	set_deferred("monitoring", false)
 	var take := create_tween()
 	take.set_parallel(true)

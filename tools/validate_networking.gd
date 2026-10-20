@@ -19,6 +19,11 @@ class NetworkProbe extends CharacterBody2D:
 	var slot: int = -1
 	var input: PlayerInput
 
+	## Mirrors player_main: each physics frame ticks the input's edge bookkeeping.
+	func _physics_process(delta: float) -> void:
+		if input != null:
+			input.update(delta)
+
 var _failed: bool = false
 var _probe: NetworkProbe
 
@@ -66,9 +71,16 @@ func _run_server(port: int) -> void:
 	add_child(_probe)
 	await _wait_for(_snapshot_received,
 			"client input reaches its server-side NetworkInput and is bounded")
-	await _wait_for(func() -> bool: return Roster.any_lost(),
-			"the peer disconnecting marks its slot lost, not removed")
-	_check(Roster.count() == 1, "the slot is kept, not dropped, after disconnect")
+	_check(_probe.input.just_pressed("Attack"),
+			"a fresh snapshot reads as just pressed once")
+	## physics_frame fires before the step's callbacks, so three awaits are
+	## two full ticks of the probe's update().
+	for i in 3:
+		await get_tree().physics_frame
+	_check(_probe.input.pressed("Attack") and not _probe.input.just_pressed("Attack"),
+			"a held button stops reading as just pressed on later physics frames")
+	await _wait_for(func() -> bool: return Roster.count() == 0,
+			"a peer leaving the lobby frees its seat")
 	_check(not _probe.input.pressed("Attack")
 			and _probe.input.vector() == Vector2.ZERO
 			and _probe.input.aim_vector() == Vector2.ZERO,

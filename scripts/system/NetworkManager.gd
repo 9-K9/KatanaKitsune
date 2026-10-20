@@ -11,6 +11,15 @@ signal join_failed(reason: String)
 signal server_lost()
 signal lobby_updated(player_count: int, is_leader: bool)
 signal session_started()
+## The server ended the match (everyone died, or the room emptied). Clients
+## use it to leave the floor cleanly rather than sit in a frozen world.
+signal match_ended(reason: String)
+
+## A scene with nothing in it, for the dedicated server to sit in between
+## matches. Loading the title screen would only pull textures into memory on
+## a machine with no screen.
+const IDLE_SCENE := "res://scenes/world/serverIdle.tscn"
+const MATCH_SCENE := "res://scenes/world/mazeDemo.tscn"
 
 const DEFAULT_PORT: int = 8910
 const ACTOR_SNAPSHOT_INTERVAL: float = 0.05
@@ -28,6 +37,9 @@ var _session_started: bool = false
 var _pending_seed: int = 0
 var _pending_theme: int = 0
 var _snapshot_left: float = 0.0
+## Which local device drives this client's character online. Picked on the
+## lobby screen by whoever presses a button first; keyboard until then.
+var client_device: int = PlayerInput.KEYBOARD
 
 
 func _ready() -> void:
@@ -36,8 +48,18 @@ func _ready() -> void:
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	_client_input = PlayerInput.new(PlayerInput.KEYBOARD)
+	## Keeps snapshots flowing while a client sits in its pause menu — the
+	## server never pauses for one player, so the client must keep listening.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	set_client_device(PlayerInput.KEYBOARD)
 	_maybe_launch_dedicated_server()
+
+
+## Slot 0's bindings profile: online, the local human is always "player one"
+## on their own machine whatever seat the server gave them.
+func set_client_device(device: int) -> void:
+	client_device = device
+	_client_input = PlayerInput.new(device, 0)
 
 
 func _physics_process(_delta: float) -> void:
@@ -142,11 +164,18 @@ func parse_room_code(code: String) -> Dictionary:
 
 
 func stop() -> void:
+	var was_online: bool = is_client or is_server
 	if multiplayer.multiplayer_peer != null:
 		multiplayer.multiplayer_peer.close()
 	multiplayer.multiplayer_peer = null
 	is_server = false
 	is_client = false
+	_session_started = false
+	_room_leader_peer = 0
+	## The online roster was the server's party, not this machine's; leaving
+	## it behind would seat ghosts in the next local game.
+	if was_online:
+		Roster.clear()
 
 
 ## `--server` (or `--server=PORT`) boots straight into a headless dedicated
@@ -166,6 +195,44 @@ func _maybe_launch_dedicated_server() -> void:
 
 func _start_dedicated_server(port: int) -> void:
 	host(port)
+	get_tree().change_scene_to_file(IDLE_SCENE)
+
+
+## Back to an empty lobby, ready for the next party. Run whenever the room
+## empties or a match ends, so one finished game never leaves the server
+## stuck on a dead floor for everyone who connects afterwards.
+func _reset_server_session() -> void:
+	_session_started = false
+	_room_leader_peer = 0
+	_pending_seed = 0
+	Roster.clear()
+	get_tree().paused = false
+	if multiplayer.multiplayer_peer != null:
+		for peer_id in multiplayer.get_peers():
+			multiplayer.multiplayer_peer.disconnect_peer(peer_id)
+	## Only a finished floor needs tearing down; a server that was already
+	## idling (or a test harness hosting from its own scene) stays put.
+	var scene := get_tree().current_scene
+	if scene != null and scene.scene_file_path == MATCH_SCENE:
+		get_tree().change_scene_to_file(IDLE_SCENE)
+	print("NetworkManager: session reset, waiting for players")
+
+
+## The match is over for everyone. Tells every client first, so they can
+## leave the floor on their own terms, then clears the room.
+func end_session(reason: String) -> void:
+	if not is_server:
+		return
+	rpc("receive_match_ended", reason)
+	call_deferred("_reset_server_session")
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_match_ended(reason: String) -> void:
+	if not is_client:
+		return
+	_session_started = false
+	match_ended.emit(reason)
 
 
 func _on_peer_connected(peer_id: int) -> void:
@@ -191,9 +258,54 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		return
 	var slot: int = Roster.slot_of_peer(peer_id)
 	_reset_network_input(slot)
-	Roster.drop_peer(peer_id)
-	_send_lobby_state()
+	if not _session_started:
+		## Still in the lobby: the seat simply closes up. Holding it open is
+		## for a mid-game drop, not for someone who changed their mind.
+		if slot != -1:
+			Roster.players.remove_at(slot)
+			Roster.roster_changed.emit()
+	else:
+		## Mid-game there is no coming back (a reconnecting client has none of
+		## the floor's state), so the character falls where it stood and the
+		## rest of the party plays on rather than waiting on a pause screen.
+		Roster.drop_peer(peer_id)
+		_kill_body_in_slot(slot)
+	if _room_leader_peer == peer_id:
+		_room_leader_peer = 0
+		for entry in _roster_snapshot():
+			_room_leader_peer = int(entry["peer_id"])
+			break
 	print("NetworkManager: peer %d disconnected" % peer_id)
+	if multiplayer.get_peers().is_empty():
+		_reset_server_session()
+		return
+	_send_lobby_state()
+	if _session_started and _everyone_dead():
+		end_session("party_wiped")
+
+
+func _kill_body_in_slot(slot: int) -> void:
+	if slot == -1:
+		return
+	for body in get_tree().get_nodes_in_group("player"):
+		if body is CharacterBody2D and int(body.get("slot")) == slot \
+				and body.get("is_dead") == false:
+			body.health = 0
+			body.is_dead = true
+			if body.has_method("_on_death"):
+				body.call("_on_death")
+			return
+
+
+func _everyone_dead() -> bool:
+	var any := false
+	for body in get_tree().get_nodes_in_group("player"):
+		if not (body is CharacterBody2D) or not ("is_dead" in body):
+			continue
+		any = true
+		if not body.is_dead:
+			return false
+	return any
 
 
 @rpc("any_peer", "call_remote", "unreliable_ordered")
@@ -277,7 +389,7 @@ func _send_lobby_state() -> void:
 	var snapshot := _roster_snapshot()
 	for entry in snapshot:
 		rpc_id(int(entry["peer_id"]), "receive_lobby_state",
-				snapshot, _room_leader_peer)
+				snapshot, _room_leader_peer, _pending_theme)
 
 
 func _apply_remote_roster(snapshot: Array) -> bool:
@@ -320,19 +432,71 @@ func request_lobby_state() -> void:
 	var peer_id: int = multiplayer.get_remote_sender_id()
 	if Roster.slot_of_peer(peer_id) == -1:
 		return
-	rpc_id(peer_id, "receive_lobby_state", _roster_snapshot(), _room_leader_peer)
+	rpc_id(peer_id, "receive_lobby_state", _roster_snapshot(), _room_leader_peer,
+			_pending_theme)
 
 
 @rpc("authority", "call_remote", "reliable")
-func receive_lobby_state(snapshot: Array, leader_peer: int) -> void:
+func receive_lobby_state(snapshot: Array, leader_peer: int, theme: int) -> void:
 	if not is_client or not _apply_remote_roster(snapshot):
 		return
 	_room_leader_peer = leader_peer
+	_pending_theme = theme
 	lobby_updated.emit(Roster.count(), is_room_leader())
+
+
+func lobby_theme() -> int:
+	return _pending_theme
 
 
 func is_room_leader() -> bool:
 	return is_client and _room_leader_peer == multiplayer.get_unique_id()
+
+
+## This client's own seat. Stored locally as a keyboard slot (it is the one
+## seat this machine drives), so it is found by peer id alone rather than via
+## Roster.slot_of_peer, which only looks at network seats.
+func own_slot() -> int:
+	if not is_client:
+		return -1
+	var own_peer: int = multiplayer.get_unique_id()
+	for i in Roster.players.size():
+		if int(Roster.players[i].get("peer_id", 0)) == own_peer:
+			return i
+	return -1
+
+
+## Lobby choices travel to the server, which owns the roster, and come back
+## in the next lobby snapshot — so every client sees the same colours.
+func choose_scheme(scheme: int) -> void:
+	if is_client:
+		rpc_id(1, "request_scheme", scheme)
+
+
+func choose_theme(theme: int) -> void:
+	if is_client and is_room_leader():
+		rpc_id(1, "request_theme", theme)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_scheme(scheme: int) -> void:
+	if not is_server or _session_started:
+		return
+	var slot: int = Roster.slot_of_peer(multiplayer.get_remote_sender_id())
+	if slot == -1 or scheme < 0 or scheme >= PowerState.count() \
+			or Roster.scheme_taken(scheme, slot):
+		return
+	Roster.set_scheme(slot, scheme)
+	_send_lobby_state()
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_theme(theme: int) -> void:
+	if not is_server or _session_started \
+			or multiplayer.get_remote_sender_id() != _room_leader_peer:
+		return
+	_pending_theme = clampi(theme, 0, LevelTheme.NAMES.size() - 1)
+	_send_lobby_state()
 
 
 func start_room() -> void:
@@ -348,7 +512,7 @@ func request_start_session() -> void:
 		return
 	_session_started = true
 	_pending_seed = randi()
-	_pending_theme = 0
+	Roster.level_theme = _pending_theme
 	rpc("receive_session_start", _pending_seed, _pending_theme, _roster_snapshot())
 	_start_session_scene()
 
@@ -360,7 +524,9 @@ func receive_session_start(seed: int, theme: int, snapshot: Array) -> void:
 	_session_started = true
 	_pending_seed = seed
 	_pending_theme = theme
+	Roster.level_theme = theme
 	session_started.emit()
+	_start_session_scene()
 
 
 func consume_pending_floor() -> Dictionary:
@@ -370,7 +536,73 @@ func consume_pending_floor() -> Dictionary:
 
 
 func _start_session_scene() -> void:
-	get_tree().change_scene_to_file("res://scenes/world/mazeDemo.tscn")
+	get_tree().paused = false
+	get_tree().change_scene_to_file(MATCH_SCENE)
+
+
+## --- World events -----------------------------------------------------------
+## Everything on a floor that is not a character is placed identically on
+## both sides from the shared seed, so a thing is named by where it stands.
+## The server announces what happened to it; the client finds its own copy.
+
+static func world_key(node: Node2D) -> Vector2i:
+	return Vector2i(node.global_position.round())
+
+
+func announce_descend(seed: int, depth: int) -> void:
+	if is_server:
+		rpc("receive_descend", seed, depth)
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_descend(seed: int, depth: int) -> void:
+	if not is_client:
+		return
+	var world := get_tree().current_scene
+	if world != null and world.has_method("descend_to"):
+		world.descend_to(seed, depth)
+
+
+func announce_world_event(kind: String, node: Node2D) -> void:
+	if is_server:
+		rpc("receive_world_event", kind, world_key(node))
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_world_event(kind: String, key: Vector2i) -> void:
+	if not is_client:
+		return
+	var group: String = "breakable" if kind == "break" else "pickup"
+	var target := _find_world_node(group, key)
+	if target == null:
+		return
+	match kind:
+		"break":
+			if target.has_method("network_break"):
+				target.network_break()
+		"pickup_taken":
+			if target.has_method("network_taken"):
+				target.network_taken()
+
+
+func _find_world_node(group: String, key: Vector2i) -> Node2D:
+	var best: Node2D = null
+	var best_distance: float = 9.0 * 9.0
+	for node in get_tree().get_nodes_in_group(group):
+		if not (node is Node2D):
+			continue
+		var d: float = Vector2(key).distance_squared_to((node as Node2D).global_position)
+		if d < best_distance:
+			best = node
+			best_distance = d
+	return best
+
+
+func _scroll_state(body: Node) -> Array:
+	var inventory: Variant = body.get("scrolls")
+	if inventory == null or not ("kinds" in inventory):
+		return []
+	return [inventory.kinds, inventory.counts, inventory.selected]
 
 
 func _broadcast_actor_snapshot() -> void:
@@ -393,6 +625,9 @@ func _broadcast_actor_snapshot() -> void:
 			"katana_drawn": body.get("katana_drawn") == true,
 			"stealthed": body.get("stealthed") == true,
 			"crouched": body.get("crouched") == true,
+			"stamina": float(body.get("stamina")),
+			"max_stamina": float(body.get("max_stamina")),
+			"scrolls": _scroll_state(body),
 		})
 	var enemies: Array[Dictionary] = []
 	for enemy in get_tree().get_nodes_in_group("enemy"):
@@ -434,6 +669,14 @@ func receive_actor_snapshot(players: Array, enemies: Array) -> void:
 			body.katana_drawn = state.get("katana_drawn", false)
 			body.stealthed = state.get("stealthed", false)
 			body.crouched = state.get("crouched", false)
+			if "stamina" in body:
+				body.stamina = state.get("stamina", body.stamina)
+				body.max_stamina = state.get("max_stamina", body.max_stamina)
+			var scrolls: Variant = state.get("scrolls", [])
+			if scrolls is Array and scrolls.size() == 3 and body.get("scrolls") != null:
+				body.scrolls.kinds = scrolls[0]
+				body.scrolls.counts = scrolls[1]
+				body.scrolls.selected = int(scrolls[2])
 			if "facing_dir" in body:
 				body.facing_dir = state.get("facing", body.facing_dir)
 			_apply_actor_state(body, String(state.get("state", "")))
@@ -448,7 +691,12 @@ func receive_actor_snapshot(players: Array, enemies: Array) -> void:
 			enemy.global_position = state.get("position", enemy.global_position)
 			enemy.velocity = state.get("velocity", Vector2.ZERO)
 			enemy.health = state.get("health", enemy.health)
-			enemy.is_dead = state.get("is_dead", false)
+			if enemy.has_method("_refresh_health_bar"):
+				enemy.call("_refresh_health_bar")
+			var dead: bool = state.get("is_dead", false)
+			if dead and not enemy.is_dead and enemy.has_method("network_death"):
+				enemy.call("network_death")
+			enemy.is_dead = dead
 			if "facing_dir" in enemy:
 				enemy.facing_dir = state.get("facing", enemy.facing_dir)
 			_apply_actor_state(enemy, String(state.get("state", "")))

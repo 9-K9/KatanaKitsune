@@ -344,6 +344,7 @@ func _on_quit_pressed():
 	## Leaving the map has to lift the pause too, or the title screen loads
 	## into a frozen tree.
 	get_tree().paused = false
+	NetworkManager.stop()
 	if _has_manager():
 		gameManager.setState("game_title")
 	else:

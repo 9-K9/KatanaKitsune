@@ -78,6 +78,12 @@ func _begin() -> void:
 	if _begin_started:
 		return
 	_begin_started = true
+	## The dedicated server has no screen to show; it gives the clients a few
+	## seconds with theirs and then clears the room for the next party.
+	if NetworkManager.is_server:
+		get_tree().create_timer(float(countdown_from) + game_over_seconds, false) \
+				.timeout.connect(func(): NetworkManager.end_session("party_wiped"))
+		return
 	## A score worth recording gets its name entered before the menu appears.
 	## The run ends either way; this is only whether the board remembers it.
 	## While Karmageisha is active the entry always opens, scored at zero: it
@@ -131,11 +137,18 @@ func _on_retry_pressed() -> void:
 
 func _on_title_pressed() -> void:
 	get_tree().paused = false
+	NetworkManager.stop()
 	get_tree().change_scene_to_file(TITLE)
 
 
 func _on_continue_pressed() -> void:
 	get_tree().paused = false
+	## An online run cannot be continued from the aspect select; the room is
+	## the server's to reopen.
+	if NetworkManager.is_client:
+		NetworkManager.stop()
+		get_tree().change_scene_to_file(TITLE)
+		return
 	get_tree().change_scene_to_file(SELECT)
 
 
@@ -155,6 +168,7 @@ func _tick_game_over(delta: float) -> void:
 	if _expired_for >= game_over_seconds or _any_key():
 		_expired = false
 		get_tree().paused = false
+		NetworkManager.stop()
 		get_tree().change_scene_to_file(TITLE)
 
 

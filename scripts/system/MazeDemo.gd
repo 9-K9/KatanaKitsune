@@ -351,6 +351,9 @@ func _ready() -> void:
 	if not pending_floor.is_empty():
 		maze_seed = int(pending_floor.get("seed", maze_seed))
 		level_theme = int(pending_floor.get("theme", level_theme))
+	if NetworkManager.is_client:
+		NetworkManager.server_lost.connect(_on_online_ended.bind("server_lost"))
+		NetworkManager.match_ended.connect(_on_online_ended)
 	day_night.elapsed = day_night_start_seconds
 	if room_scene == null:
 		push_warning("MazeDemo: no room_scene set.")
@@ -392,12 +395,27 @@ func _on_party_control_changed(_previous: int, _controlled: int) -> void:
 ## she keeps her health, her buffs and her state machine across the descent —
 ## a reload would construct a fresh one and throw all of that away.
 func descend() -> void:
+	_descend_with(_rng.randi(), depth + 1)
+	NetworkManager.announce_descend(maze_seed, depth)
+
+
+## A client's descent. The server has already rolled the next floor's seed and
+## sent it over; building from the same seed yields the same maze, so only the
+## seed needs to cross the wire rather than the floor itself.
+func descend_to(seed: int, new_depth: int) -> void:
+	if _building:
+		return
+	_clearing = true
+	_descend_with(seed, new_depth)
+
+
+func _descend_with(seed: int, new_depth: int) -> void:
 	_building = true
 	if is_instance_valid(_weather):
 		_weather.stop()
 	_weather = null
-	depth += 1
-	maze_seed = _rng.randi()
+	depth = new_depth
+	maze_seed = seed
 	## Everyone who is playing survives the descent, not just player one. This
 	## used to spare `_player` alone, which with a party meant players two to
 	## four were freed with the floor — and because queue_free is deferred,
@@ -1897,6 +1915,9 @@ func _scale_party() -> void:
 func _check_wave_cleared() -> void:
 	if _clearing or not _wave_live:
 		return
+	## Clients only mirror what the server tells them; the server calls the floor.
+	if NetworkManager.is_client:
+		return
 	for node in get_tree().get_nodes_in_group("enemy"):
 		if is_instance_valid(node) and not (node.get("is_dead") == true):
 			return
@@ -1912,7 +1933,9 @@ func _finish_wave() -> void:
 	if not is_inside_tree():
 		return
 	var party: int = maxi(Roster.count(), 1)
-	if Progression.levelled_this_floor(party):
+	## Online, the upgrade screen would pause a server nobody can click on;
+	## levels are applied without the pick for now.
+	if Progression.levelled_this_floor(party) and not NetworkManager.is_networked():
 		await _offer_upgrades(party)
 	if is_inside_tree():
 		descend()
@@ -1951,10 +1974,31 @@ func _offer_upgrades(party: int) -> void:
 ## cost that player their run. Any spare pad plugged in adopts the waiting slot,
 ## so a replacement controller rescues them without a trip to a menu.
 func _on_device_lost(slot: int) -> void:
+	## An online player who drops is removed by NetworkManager, not waited for.
+	if Roster.is_network(slot):
+		return
 	if not get_tree().paused:
 		_paused_for_reconnect = true
 	get_tree().paused = true
 	_show_reconnect("PLAYER %d — RECONNECT CONTROLLER" % (slot + 1))
+
+
+## The server went away, or called the match. If everyone is already dead the
+## game-over screen is up and handles its own exit; otherwise say why and go
+## back to the title.
+func _on_online_ended(reason: String) -> void:
+	var game_over := get_node_or_null("GameOver")
+	if game_over != null and game_over.get("_begin_started") == true:
+		NetworkManager.stop()
+		return
+	NetworkManager.stop()
+	get_tree().paused = true
+	_show_reconnect("CONNECTION LOST" if reason == "server_lost" else "MATCH OVER")
+	await get_tree().create_timer(2.5, true).timeout
+	if not is_inside_tree():
+		return
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
 
 
 func _on_device_regained(_slot: int) -> void:

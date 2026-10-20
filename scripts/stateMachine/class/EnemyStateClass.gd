@@ -1132,6 +1132,23 @@ func begin_death() -> void:
 		health_bar.visible = false
 
 
+## A client's copy of a monster the server has just killed. The state machine
+## is switched off on clients, so nothing here would otherwise ever reach
+## finish_death(): the corpse plays its collapse and fades on a timer instead.
+func network_death() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	velocity = Vector2.ZERO
+	set_deferred("collision_layer", 0)
+	set_deferred("collision_mask", 0)
+	if is_instance_valid(health_bar):
+		health_bar.visible = false
+	if is_instance_valid(animated_sprite):
+		play_once("death")
+	get_tree().create_timer(2.0, false).timeout.connect(finish_death)
+
+
 ## The body in a given slot, or null.
 func _player_in_slot(slot: int) -> Node:
 	for body in Roster.bodies(get_tree()):

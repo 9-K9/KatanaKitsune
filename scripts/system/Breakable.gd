@@ -84,6 +84,9 @@ static func hit_target(collider: Node2D) -> Node2D:
 	return collider
 
 
+var _rng: RandomNumberGenerator = null
+
+
 func _ready() -> void:
 	health = max_health
 	add_to_group("breakable")
@@ -126,10 +129,34 @@ func take_damage(amount: float, _from: Vector2 = Vector2.INF,
 		_guardable: bool = true) -> void:
 	if _broken:
 		return
+	## Online, the server decides when a crate goes; clients get told.
+	if NetworkManager.is_client:
+		return
 	health -= amount
 	_flash()
 	if health <= 0.0:
 		_break()
+
+
+## A client's crate: the server broke its copy, so break this one the same way.
+func network_break() -> void:
+	if _broken:
+		return
+	health = 0.0
+	_break()
+
+
+## Loot rolls used to use the global RNG, which no two machines share. Seeding
+## from the floor and the prop's spot makes every machine roll the same drop
+## for the same crate, so a client sees the same scroll the server spawned.
+func _loot_rng() -> RandomNumberGenerator:
+	if _rng == null:
+		_rng = RandomNumberGenerator.new()
+		var world := get_tree().current_scene
+		var floor_seed: int = int(world.get("maze_seed")) if world != null \
+				and world.get("maze_seed") != null else 0
+		_rng.seed = hash([floor_seed, Vector2i(global_position.round())])
+	return _rng
 
 
 func _flash() -> void:
@@ -147,6 +174,7 @@ func _set_flash_amount(amount: float) -> void:
 
 func _break() -> void:
 	_broken = true
+	NetworkManager.announce_world_event("break", self)
 	remove_from_group("breakable")
 	set_process(false)
 	## Drop out of collision immediately so the player is not left shoving an
@@ -286,7 +314,7 @@ func _drop_scroll() -> void:
 	if _scroll_rolled:
 		return
 	_scroll_rolled = true
-	if randf() >= scroll_chance or get_parent() == null:
+	if _loot_rng().randf() >= scroll_chance or get_parent() == null:
 		return
 	var scroll := WorldObjects.loot(SCROLL_SCENE).instantiate()
 	get_parent().add_child(scroll)
@@ -298,7 +326,7 @@ func _roll() -> PackedScene:
 	var weights: Array[float] = []
 	var loot: PackedScene = loot_scene
 	if not loot_scenes.is_empty():
-		loot = loot_scenes[randi() % loot_scenes.size()]
+		loot = loot_scenes[_loot_rng().randi() % loot_scenes.size()]
 	if loot != null:
 		choices.append(loot)
 		weights.append(loot_weight)
@@ -314,7 +342,7 @@ func _roll() -> PackedScene:
 	var total: float = 0.0
 	for w in weights:
 		total += w
-	var roll: float = randf() * total
+	var roll: float = _loot_rng().randf() * total
 	for i in choices.size():
 		roll -= weights[i]
 		if roll <= 0.0:
