@@ -105,3 +105,10 @@ service, Caddy for `wss://` and a firewall), `upload_server.sh` (exports the
 plain-English README. The export is a `.pck` only, run by the stock Godot
 Linux binary with `--headless --main-pack`, so no Linux export template is
 needed on the development machine.
+
+### Live server (first deployment, 2026-10-20)
+
+London Droplet `209.97.138.84`. Room codes: `209-97-138-84.sslip.io:443`
+(encrypted, any build) or `209.97.138.84:8910` (desktop only). Service name
+`katanakitsune-server`; redeploy with `deploy/digitalocean/upload_server.sh
+209.97.138.84`.
