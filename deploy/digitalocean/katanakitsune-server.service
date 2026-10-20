@@ -1,0 +1,25 @@
+[Unit]
+Description=Katana Kitsune dedicated game server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=katana
+Group=katana
+WorkingDirectory=/opt/katanakitsune
+# Caddy terminates TLS on :443 and forwards plain WebSocket to this port.
+ExecStart=/opt/katanakitsune/godot --headless --main-pack /opt/katanakitsune/katanakitsune_server.pck --server=8910
+Restart=always
+RestartSec=3
+Environment=HOME=/opt/katanakitsune
+# Godot writes user:// here (logs, saves); keep it inside the install dir.
+Environment=XDG_DATA_HOME=/opt/katanakitsune/data
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/katanakitsune
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

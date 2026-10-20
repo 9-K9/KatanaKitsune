@@ -95,3 +95,13 @@ godot --headless --path . --server=8910
 Friends join by typing that machine's reachable address (LAN IP, VPN IP, or a
 forwarded public port) as the room code, e.g. `203.0.113.10:8910`, once an
 in-game join screen exists (see item 5 above).
+
+## Hosting on DigitalOcean
+
+`deploy/digitalocean/` holds a complete recipe for running the dedicated
+server on a $6/month Droplet: `setup_droplet.sh` (installs Godot, a systemd
+service, Caddy for `wss://` and a firewall), `upload_server.sh` (exports the
+`Linux Server` preset from `export_presets.cfg` and pushes it live), and a
+plain-English README. The export is a `.pck` only, run by the stock Godot
+Linux binary with `--headless --main-pack`, so no Linux export template is
+needed on the development machine.

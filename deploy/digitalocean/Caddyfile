@@ -1,0 +1,7 @@
+# Caddy gets a free HTTPS certificate for the hostname automatically and
+# forwards the encrypted WebSocket (wss://) to the game server on :8910.
+# {$SERVER_HOST} is filled in by setup_droplet.sh (an *.sslip.io name derived
+# from the Droplet's IP, or your own domain if you have one).
+{$SERVER_HOST} {
+	reverse_proxy 127.0.0.1:8910
+}
