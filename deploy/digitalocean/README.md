@@ -2,12 +2,13 @@
 
 Plain-English version: online co-op needs one computer that is always on
 ("the server"). Everyone's game connects to it, and it keeps the players in
-sync. These files turn a $6/month DigitalOcean Droplet into that computer.
+sync. The live deployment uses the 4 vCPU / 8 GB Basic Droplet.
 
 ## One-time setup (about 10 minutes)
 
 1. Create a Droplet at <https://cloud.digitalocean.com/droplets/new>:
-   Ubuntu 24.04, Basic / Regular / **$6 (1 GB RAM)**, Password login.
+   Ubuntu 24.04, Basic. The game runtime is small, but use at least 4 GB if
+   the Droplet will also build exports; the live machine has 8 GB.
    Note the IP address it gives you (e.g. `164.92.10.20`).
 2. Copy this folder to the Droplet and run the setup script. From a terminal
    on your own computer (replace the IP):
@@ -49,11 +50,13 @@ ssh root@<ip> systemctl restart katanakitsune-server   # restart
 |------|---------|
 | `setup_droplet.sh` | Installs everything on a fresh Droplet. |
 | `upload_server.sh` | Exports the pack, uploads it, restarts the service. |
+| `upload_web.sh` | Atomically publishes an existing Web export. |
 | `katanakitsune-server.service` | systemd unit: runs `godot --headless --main-pack ... --server=8910`, restarts on crash. |
 | `Caddyfile` | HTTPS/WebSocket front door on :443 → game server on :8910. |
 
-## Cost / limits
+## Live addresses and limits
 
-$6/month flat. One Droplet runs one room of up to 4 players (one
-`NetworkManager` session). Multiple simultaneous rooms would need either more
-service instances on different ports or a lobby server — see `NETWORKING.md`.
+- Browser game: <https://play.9-k9.io>
+- Room address: `209-97-138-84.sslip.io:443`
+- One service currently runs one room of up to four players. Multiple rooms
+  need more service instances or a lobby service; see `NETWORKING.md`.

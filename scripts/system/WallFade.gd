@@ -36,6 +36,9 @@ var _slopes: Dictionary = {}
 
 
 func _ready() -> void:
+	if OS.has_feature("dedicated_server"):
+		set_process(false)
+		return
 	if mode == Mode.FADE:
 		var shared := material as ShaderMaterial
 		if shared == null:
@@ -214,5 +217,4 @@ func _sort_y(cell: Vector2i) -> float:
 	var data: TileData = source.get_tile_data(get_cell_atlas_coords(cell),
 		get_cell_alternative_tile(cell))
 	return base if data == null else base + data.y_sort_origin
-
 

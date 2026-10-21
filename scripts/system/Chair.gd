@@ -22,7 +22,12 @@ func _apply_facing() -> void:
 	var texture := load("res://assets/sprites/world_objects/chair/chair_dir%d.png" % (index + 1)) as Texture2D
 	sprite.texture = texture
 	sprite.scale = Vector2(0.6, 0.6)
+	set_meta("world_direction", index + 1)
+	if OS.has_feature("dedicated_server"):
+		return
 	var image := texture.get_image()
+	if image == null:
+		return
 	var bounds := image.get_used_rect()
 	# Sort at the seat, not the sprite centre or the front tips of its legs.
 	y_sort_enabled = true
@@ -30,7 +35,6 @@ func _apply_facing() -> void:
 	sprite.offset = Vector2(texture.get_width() * 0.5 - bounds.get_center().x,
 			-(bounds.end.y - texture.get_height() * 0.5)) \
 			- sprite.position / sprite.scale
-	set_meta("world_direction", index + 1)
 
 
 func face_randomly(rng: RandomNumberGenerator) -> void:

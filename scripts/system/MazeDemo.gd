@@ -375,6 +375,8 @@ func _ready() -> void:
 	## builds without anything covering it.
 	SceneLoader.hold()
 	await _build()
+	if not is_inside_tree():
+		return
 	SceneLoader.finish()
 
 
@@ -453,11 +455,26 @@ func _descend_with(seed: int, new_depth: int) -> void:
 	## alive and still holding a reference to its sprite sheets — dropping the
 	## PackedScene now would free nothing, and the next floor's type would load
 	## on top of the last one's instead of in place of it.
-	await get_tree().process_frame
+	if not await _next_frame():
+		return
 	SceneLoader.begin("DESCENDING", "WAVE %d" % depth)
 	await _build()
+	if not is_inside_tree():
+		return
 	SceneLoader.finish()
 	_announce_floor()
+
+
+## A floor build spans many frames and can be cancelled when the last online
+## peer disconnects. The SceneTree outlives this node, so waiting on the main
+## loop is safe even after the current scene has been removed. Every caller
+## checks the result before touching the detached MazeDemo again.
+func _next_frame() -> bool:
+	var loop := Engine.get_main_loop() as SceneTree
+	if loop == null:
+		return false
+	await loop.process_frame
+	return is_inside_tree()
 
 
 ## Picks this floor's look at random, avoiding anything already seen this run.
@@ -495,6 +512,10 @@ func _roll_theme() -> void:
 ## layer rather than authored into a second prefab, so a themed floor is exactly
 ## the shape of the dungeon one and no room has to be drawn twice.
 func _theme_floor() -> void:
+	## Dedicated exports replace texture atlases with placeholders. Collision is
+	## authored on the room already; repainting it is visual-only.
+	if OS.has_feature("dedicated_server"):
+		return
 	if THEMES.is_empty():
 		return
 	if _theme_index < 0:
@@ -746,6 +767,8 @@ func _build() -> void:
 		_ext.plan()
 		_start_cell = _ext.start_cell
 	await _load_floor_monsters(_start_cell)
+	if not is_inside_tree():
+		return
 
 	var rooms_total: float = float(maxi(grid.x * grid.y, 1))
 	var built: float = 0.0
@@ -772,7 +795,8 @@ func _build() -> void:
 			built += 1.0
 			SceneLoader.step(0.25 + 0.35 * (built / rooms_total),
 					"BUILDING ROOMS  %d/%d" % [int(built), int(rooms_total)])
-			await get_tree().process_frame
+			if not await _next_frame():
+				return
 
 	SceneLoader.step(0.62, "CARVING THE MAZE")
 	_carve()
@@ -783,25 +807,30 @@ func _build() -> void:
 		_ext.build_ponds()
 		_ext.build_perimeter()
 		_ext.guard_entrances()
-	await get_tree().process_frame
+	if not await _next_frame():
+		return
 	SceneLoader.step(0.68, "RAISING COLUMNS")
 	_place_pillars()
-	await get_tree().process_frame
+	if not await _next_frame():
+		return
 	SceneLoader.step(0.74, "LIGHTING THE FLOOR")
 	_spawn_player(step)
 	## After _spawn_player, which is where the floor is themed: the windows are
 	## painted onto whichever wall texture this floor ended up with.
 	_paint_windows()
 	_place_starting_chair()
-	await get_tree().process_frame
+	if not await _next_frame():
+		return
 	await _populate(step)
+	if not is_inside_tree():
+		return
 	SceneLoader.step(0.98, "CLEARING THE WAY")
 	await _clear_buried_chairs()
 	## Armed only now: _populate has run, so an empty room from here really does
 	## mean the wave was cleared rather than that it has not started.
 	_wave_live = true
 	_light()
-	if _ext != null:
+	if _ext != null and not OS.has_feature("dedicated_server"):
 		_weather = OutdoorWeather.new()
 		_weather.name = "OutdoorWeather"
 		add_child(_weather)
@@ -864,7 +893,8 @@ func _ensure_monster_loaded(path: String) -> PackedScene:
 			var done: float = float(progress[0]) if not progress.is_empty() else 0.0
 			SceneLoader.step(0.25 + done * 0.1,
 					"SUMMONING %s" % path.get_file().get_basename().to_upper())
-			await get_tree().process_frame
+			if not await _next_frame():
+				return null
 			continue
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
 			var packed := ResourceLoader.load_threaded_get(path) as PackedScene
@@ -890,6 +920,8 @@ func _load_floor_monsters(start: Vector2i) -> void:
 				continue
 			var wanted: String = _next_wave_path()
 			var packed: PackedScene = await _ensure_monster_loaded(wanted)
+			if not is_inside_tree():
+				return
 			if packed != null:
 				_room_monster[cell] = packed
 	SceneLoader.step(0.25, "WAVE %d" % depth)
@@ -1059,6 +1091,8 @@ func _party_clear(where: Vector2, radius: float) -> bool:
 ## Drops the whole floor into gloom and gives the player a lantern, so the maze
 ## is lit by what she carries rather than being evenly visible everywhere.
 func _light() -> void:
+	if OS.has_feature("dedicated_server"):
+		return
 	if not has_node("Gloom"):
 		var tint := CanvasModulate.new()
 		tint.name = "Gloom"
@@ -1512,6 +1546,8 @@ func _add_window(layer: TileMapLayer, cell: Vector2i, dir: int) -> void:
 ## Paints the window art over this floor's own wall texture, intact and
 ## smashed, so a window always sits in matching stone whatever the theme.
 func _paint_windows() -> void:
+	if OS.has_feature("dedicated_server"):
+		return
 	var tiles: TileSet = null
 	for room in _rooms.values():
 		var probe := room.get_node_or_null("TileMap/Walls_SE") as TileMapLayer

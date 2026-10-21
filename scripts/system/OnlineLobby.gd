@@ -31,13 +31,14 @@ func _ready() -> void:
 	NetworkManager.join_failed.connect(_on_join_failed)
 	NetworkManager.server_lost.connect(_on_server_lost)
 	NetworkManager.lobby_updated.connect(_on_lobby_updated)
-	NetworkManager.match_ended.connect(func(_reason): _on_server_lost())
+	NetworkManager.match_ended.connect(_on_match_ended)
 	_show_join()
 
 
 func _exit_tree() -> void:
 	for sig in [NetworkManager.joined_server, NetworkManager.join_failed,
-			NetworkManager.server_lost, NetworkManager.lobby_updated]:
+			NetworkManager.server_lost, NetworkManager.lobby_updated,
+			NetworkManager.match_ended]:
 		for connection in sig.get_connections():
 			if connection["callable"].get_object() == self:
 				sig.disconnect(connection["callable"])
@@ -203,6 +204,10 @@ func _on_server_lost() -> void:
 	NetworkManager.stop()
 	_status.text = "LOST THE SERVER. TRY JOINING AGAIN."
 	_show_join()
+
+
+func _on_match_ended(_reason: String) -> void:
+	_on_server_lost()
 
 
 func _on_lobby_updated(_count: int, _leader: bool) -> void:

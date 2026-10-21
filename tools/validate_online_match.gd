@@ -155,10 +155,26 @@ func _run_client(port: int) -> void:
 	if party > 1:
 		await _wait_for(func() -> bool: return Roster.count() >= party,
 				"%d seats are taken before the leader starts" % party, WAIT_FOR_SEATS_SEC)
+		## A seat can appear one packet before that peer's chosen aspect. Waiting
+		## here prevents the validator leader from racing a human-speed choice by
+		## the second client and freezing the lobby snapshot too early.
+		await _wait_for(func() -> bool:
+				return Roster.players[party - 1].get("scheme", -1) == 1,
+				"the second player's chosen aspect reaches the leader",
+				WAIT_FOR_SEATS_SEC)
 		party = Roster.count()
 	NetworkManager.start_room()
 	await _wait_for(func() -> bool: return _world() != null,
 			"start opens the match floor on the client")
+	if "--disconnect-during-build" in OS.get_cmdline_user_args():
+		NetworkManager.stop()
+		## Tear down this client's own asynchronous floor builder too, then give
+		## WebSocket two frames to flush the close before the validator quits.
+		get_tree().change_scene_to_file(NetworkManager.IDLE_SCENE)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_check(not NetworkManager.is_client, "client disconnects during floor build")
+		return
 	var world := _world()
 	await _wait_for(func() -> bool: return _bodies().size() == party and _live_enemies() > 0,
 			"the client's floor has the party of %d and the wave" % party)
@@ -170,14 +186,13 @@ func _run_client(port: int) -> void:
 	await _wait_for(_enemies_moved.bind(_enemy_positions()), "enemy positions arrive from the server")
 	print("MEMORY: client on floor %.0f MB" % _memory_mb())
 	if party > 1:
-		## Hold "Right" so the second peer can see this body move via snapshots.
+		## Send the same validated snapshot that NetworkManager normally emits
+		## from hardware. This stays deterministic in a headless process, where
+		## synthetic key events are not guaranteed to affect raw key polling.
 		var before: Vector2 = body.global_position if body else Vector2.ZERO
-		_hold_key(KEY_D, true)
-		await _wait_for(func() -> bool:
-				return body != null and body.global_position != before,
-				"the leader's own body moves on held input")
+		var moved := await _drive_right_until_moved(body, before)
+		_check(moved, "the leader's input moves its server-authoritative body")
 		await get_tree().create_timer(1.5).timeout
-		_hold_key(KEY_D, false)
 	if _remote:
 		await _leave_remote_floor()
 		return
@@ -233,11 +248,24 @@ func _leave_remote_floor() -> void:
 	_check(Roster.count() == 0, "the roster is cleared for local play")
 
 
-func _hold_key(physical: Key, down: bool) -> void:
-	var event := InputEventKey.new()
-	event.physical_keycode = physical
-	event.pressed = down
-	Input.parse_input_event(event)
+func _drive_right_until_moved(body: CharacterBody2D, before: Vector2) -> bool:
+	var deadline := Time.get_ticks_msec() + int(TIMEOUT_SEC * 1000.0)
+	var actions: Dictionary = {}
+	for action in NetworkManager.NETWORK_ACTIONS:
+		actions[action] = action == "Right"
+	while Time.get_ticks_msec() < deadline:
+		NetworkManager.rpc_id(1, "receive_input_snapshot", actions,
+				Vector2.RIGHT, Vector2.RIGHT)
+		if is_instance_valid(body) and body.global_position != before:
+			## Release before returning so the authoritative body cannot keep
+			## walking if the next unreliable snapshot is delayed.
+			for action in actions:
+				actions[action] = false
+			NetworkManager.rpc_id(1, "receive_input_snapshot", actions,
+					Vector2.ZERO, Vector2.ZERO)
+			return true
+		await get_tree().process_frame
+	return false
 
 
 func _own_body() -> CharacterBody2D:

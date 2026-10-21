@@ -1,114 +1,53 @@
-# Online Multiplayer — Status & Plan
+# Online multiplayer
 
-Dedicated-server, up to 4 players, room-code join (no accounts, no lobby
-website) — see the original feasibility plan for the full rationale. This
-file tracks what's actually implemented versus what's still ahead, so nobody
-has to re-derive it from the commit log.
+KatanaKitsune supports one dedicated-server room with up to four players.
+The public WebSocket room is `209-97-138-84.sslip.io:443`; the browser build
+is at <https://play.9-k9.io>.
 
-## Done (this pass)
+## Implemented
 
-- **`scripts/system/NetworkManager.gd`** (new autoload, registered in
-  `project.godot`): wraps `WebSocketMultiplayerPeer`. `host(port)` starts a
-  listener; `join(address, port)` / `join_room_code("host[:port]")` connects
-  as a client. A room code is literally just the host's address — there is no
-  matchmaking server. `--server` / `--server=PORT` on the command line boots
-  straight into a headless dedicated server (for running this as the VPS/PaaS
-  process), bypassing the title screen entirely.
-- **`scripts/system/PlayerInput.gd`**: added a third device sentinel,
-  `NETWORK`, alongside the existing `KEYBOARD`/`BOT`, so a roster slot can be
-  "filled by a remote peer" without disturbing the existing local-hardware or
-  AI-teammate code paths.
-- **`scripts/system/NetworkInput.gd`** (new): a `PlayerInput` for a
-  network-controlled slot, shaped exactly like `BotInput` — never reads
-  `Input.*` locally. The client now sends a bounded input snapshot each
-  physics tick, and `NetworkManager` applies it only to the `NetworkInput`
-  belonging to that peer's roster slot. Disconnect clears held input.
-- **`scripts/system/Roster.gd`**: `join_network(peer_id)` seats a connecting
-  peer, reusing a slot already held open for a dropped network player instead
-  of always growing the roster (a `WebSocketMultiplayerPeer` hands out a new
-  peer id on every connection, so "the same peer reconnecting" is matched by
-  slot, not id). `drop_peer(peer_id)` marks that slot `lost`, reusing the
-  exact signal (`device_lost`/`device_regained`) and pause behaviour already
-  built for a yanked controller — a dropped network player already halts the
-  party and waits, for free. `input_for()` now returns `NetworkInput` for a
-  network slot.
-- **`tools/validate_networking.gd`/`.tscn`/`.sh`**: a real two-process
-  headless check (a server and a client can't share one process's
-  `MultiplayerAPI`) that hosts on loopback, connects, confirms the peer gets a
-  roster slot and its input reaches the server-side `NetworkInput`, then
-  confirms disconnect marks the slot lost and clears held input. Run with
-  `tools/validate_networking.sh` (see `tools/README.md`).
+- The title screen's **ONLINE CO-OP** flow joins the room, assigns seats,
+  chooses distinct aspects, lets the room leader choose an area, and starts.
+- The server owns player movement, enemies, damage, world-object state, floor
+  changes, and session reset. Clients send bounded input and render snapshots.
+- Every peer regenerates the same procedural floor from the server's seed.
+- Browser and desktop clients use secure WebSockets through Caddy.
+- Disconnects clear held input. When the room empties, the server cancels any
+  in-progress floor build and returns to its small idle scene.
+- The Linux server export strips visual resources. A live idle server uses
+  roughly 80 MB; a tested two-player floor peaked around 160 MB.
 
-## Why this scope and not more
+This is currently one room, not matchmaking. Multiple simultaneous rooms
+would require a room directory and multiple server instances/ports.
 
-The full plan has many more buckets (host-authoritative floor/enemy/damage
-simulation, replicated pickups/traps, client-side prediction, web export
-tuning). Wiring those into the actual gameplay/combat/state-machine code is a
-much larger, higher-risk change — dozens of files, and this environment
-cannot interactively playtest to catch a subtle regression in single-player
-or local co-op. This pass intentionally stayed inside pure-addition, zero
-gameplay-code-touched territory: every file above is either brand new or an
-isolated, additive change (`NETWORK` device, `is_network`/`join_network` on
-Roster) that cannot change behaviour for an existing keyboard/pad/bot slot.
-Both existing AI-teammate validator suites (82 + 63 checks) still pass
-unchanged after these edits.
+## Live validation
 
-## Not done yet (next phases)
-
-1. **Host-authoritative simulation.** Input snapshots now reach the server-side
-   `NetworkInput`, but characters and enemies are not yet assigned network
-   authority or replicated. The simplest correct model for a
-   dedicated server (no client-side prediction yet) is: only the server ever
-   runs real movement/AI/damage logic; clients only render replicated state.
-   Concretely, gate the "decide and simulate" side of `AnimatedCharacterClass`
-   / `EnemyStateClass` behind `is_multiplayer_authority()` (true everywhere in
-   offline play by default, so this is a no-op until a multiplayer peer is
-   actually active), and add a `MultiplayerSynchronizer` to the player and
-   enemy scenes replicating position/velocity/animation state/health.
-2. **Floor generation already has the right shape for this**: `MazeDemo.gd`
-   seeds every random decision from `maze_seed` (`_rng.seed = maze_seed`), so
-   the server only needs to send clients the seed, not every tile/prop/enemy
-   spawn — each client can regenerate an identical floor locally. Only
-   *gameplay* state (who's alive, who's where, what's been picked up) needs
-   real replication.
-3. **Disconnect/reconnect for the *human playing on this machine* losing the
-   server** (vs. the server losing a remote peer, which is done) — i.e. what
-   a client should do if `server_lost` fires mid-run.
-4. **In-game host/join UI.** No title-screen button or room-code entry field
-   exists yet — `NetworkManager.host()`/`join_room_code()` must be called from
-   script or the CLI flags today. Deliberately deferred until replicated
-   gameplay makes a network session visible, so the UI doesn't promise more
-   than the game currently does.
-5. **Client-side prediction/interpolation**, **web export bundle-size
-   tuning**, and **NAT/firewall testing** — unchanged from the original plan,
-   all still ahead.
-
-## Running the dedicated server for real
+`tools/validate_online_remote.sh` runs two stripped, headless clients against
+the public server. It proves seat/aspect synchronization, a shared seed and
+area, two bodies, enemy snapshots, server-authoritative player movement, and
+clean hang-up. Each client is memory-capped; override paths/caps with `GODOT`,
+`PCK`, and `MEM_CAP`.
 
 ```bash
-# On the machine that will host:
-godot --headless --path . --server=8910
-# or, from an exported build:
-./KatanaKitsune.x86_64 --server=8910
+godot --headless --path . --export-release "Test Client (stripped)" \
+  build/test/katanakitsune_testclient.pck
+PCK=build/test/katanakitsune_testclient.pck MEM_CAP=1G \
+  tools/validate_online_remote.sh 209-97-138-84.sslip.io:443 duo
 ```
 
-Friends join by typing that machine's reachable address (LAN IP, VPN IP, or a
-forwarded public port) as the room code, e.g. `203.0.113.10:8910`, once an
-in-game join screen exists (see item 5 above).
+The validator also has a disconnect-during-build mode used to guard the
+server's cancellation path. See `tools/validate_online_match.gd`.
 
-## Hosting on DigitalOcean
+## Operations
 
-`deploy/digitalocean/` holds a complete recipe for running the dedicated
-server on a $6/month Droplet: `setup_droplet.sh` (installs Godot, a systemd
-service, Caddy for `wss://` and a firewall), `upload_server.sh` (exports the
-`Linux Server` preset from `export_presets.cfg` and pushes it live), and a
-plain-English README. The export is a `.pck` only, run by the stock Godot
-Linux binary with `--headless --main-pack`, so no Linux export template is
-needed on the development machine.
+The DigitalOcean service is `katanakitsune-server` on `209.97.138.84`.
 
-### Live server (first deployment, 2026-10-20)
+```bash
+ssh root@209.97.138.84 systemctl status katanakitsune-server
+ssh root@209.97.138.84 journalctl -u katanakitsune-server -f
+deploy/digitalocean/upload_server.sh 209.97.138.84
+deploy/digitalocean/upload_web.sh 209.97.138.84
+```
 
-London Droplet `209.97.138.84`. Room codes: `209-97-138-84.sslip.io:443`
-(encrypted, any build) or `209.97.138.84:8910` (desktop only). Service name
-`katanakitsune-server`; redeploy with `deploy/digitalocean/upload_server.sh
-209.97.138.84`.
+The server listens on `127.0.0.1:8910`; Caddy terminates TLS on port 443.
+Direct port 8910 is not the browser room address.

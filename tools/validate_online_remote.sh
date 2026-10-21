@@ -17,8 +17,18 @@ HOST="${ROOM%:*}"
 PORT="${ROOM##*:}"
 GODOT_BIN="${GODOT:-godot}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PCK="${PCK:-}"
 LOG_DIR="${LOG_DIR:-/tmp/kk_online_remote}"
 TIMEOUT_SECONDS=240
+LEADER_PID=""
+
+cleanup() {
+	if [[ -n "$LEADER_PID" ]] && kill -0 "$LEADER_PID" 2>/dev/null; then
+		kill "$LEADER_PID" 2>/dev/null || true
+		wait "$LEADER_PID" 2>/dev/null || true
+	fi
+}
+trap cleanup EXIT
 
 mkdir -p "$LOG_DIR"
 LEADER_LOG="$LOG_DIR/leader.log"
@@ -36,7 +46,18 @@ fi
 
 cd "$PROJECT_DIR" || exit 1
 
-common=("$GODOT_BIN" --headless --path . res://tools/validate_online_match.tscn --max-fps 60 --)
+if [[ -n "$PCK" ]]; then
+	[[ "$PCK" = /* ]] || PCK="$PROJECT_DIR/$PCK"
+	if [[ ! -f "$PCK" ]]; then
+		echo "validate_online_remote: PCK not found: $PCK" >&2
+		exit 2
+	fi
+	common=("$GODOT_BIN" --headless --main-pack "$PCK" \
+		res://tools/validate_online_match.tscn --max-fps 60 --)
+else
+	common=("$GODOT_BIN" --headless --path . \
+		res://tools/validate_online_match.tscn --max-fps 60 --)
+fi
 command -v stdbuf >/dev/null 2>&1 && cap=(stdbuf -o0 -e0 "${cap[@]}")
 
 if [[ "$MODE" == "solo" ]]; then

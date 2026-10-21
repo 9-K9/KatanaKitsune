@@ -17,7 +17,8 @@ game, or extract its contents together onto a static web host. The single-thread
 export does not require cross-origin isolation headers. Serve WebAssembly with
 the `application/wasm` MIME type. Build outputs are intentionally Git-ignored.
 
-The online co-op title button is hidden; local human/AI co-op remains available.
+The online co-op title button joins the public dedicated room; local human/AI
+co-op remains available.
 Player idle, katana-idle and stealth-idle loops and enemy idle loops play at
 half speed. The player dance has a matching doubled state timer; enemy bubble
 dances retain frame-driven healing over the slower playback. Movement, combat,
@@ -150,6 +151,22 @@ Set `GODOT=/path/to/godot` if Godot is not on `PATH`. The wrapper bounds each
 process to 30 seconds and exits nonzero on a failed check or timed-out wait.
 Memory-heavy (two Godot processes at once); skip it on a machine already under
 memory pressure.
+
+## validate_online_match.gd
+
+End-to-end lobby and match validation. `validate_online_remote.sh` runs two
+stripped clients against the live TLS server and caps each process separately:
+
+```bash
+godot --headless --path . --export-release "Test Client (stripped)" \
+  build/test/katanakitsune_testclient.pck
+PCK=build/test/katanakitsune_testclient.pck MEM_CAP=1G \
+  tools/validate_online_remote.sh 209-97-138-84.sslip.io:443 duo
+```
+
+It checks seat/aspect state, identical floor seeds, enemy replication,
+server-authoritative player movement, and clean disconnect/reset. Pass `solo`
+as the final argument for a one-client smoke test.
 
 ## build_kitsune_character.py
 

@@ -208,7 +208,8 @@ func apply_to(sprite: AnimatedSprite2D, index: int = -1, hair: int = -1, skin: i
 	var i := _clamp(index)
 	var mat: ShaderMaterial = _material_for(sprite)
 	if mat == null:
-		push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
+		if not OS.has_feature("dedicated_server"):
+			push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
 		return
 	var ramp: Array = RAMPS.get(STATES[i]["id"], [])
 	if ramp.is_empty():
@@ -235,7 +236,8 @@ func apply_to_enemy(sprite: AnimatedSprite2D, monster: String, hue_shift: float)
 		return
 	var mat: ShaderMaterial = _material_for(sprite)
 	if mat == null:
-		push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
+		if not OS.has_feature("dedicated_server"):
+			push_warning("PowerState: %s has no powerState ShaderMaterial" % sprite.name)
 		return
 	mat.set_shader_parameter("recolor_hair", false)
 	mat.set_shader_parameter("recolor_skin", false)
