@@ -616,6 +616,22 @@ func _scroll_state(body: Node) -> Array:
 	return [inventory.kinds, inventory.counts, inventory.selected]
 
 
+func _actor_animation(body: Node) -> Dictionary:
+	var sprite := body.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if sprite == null:
+		sprite = body.get_node_or_null("AnimationManager/AnimatedSprite2D") as AnimatedSprite2D
+	if sprite == null:
+		return {}
+	return {
+		"animation": String(sprite.animation),
+		"frame": sprite.frame,
+		"frame_progress": sprite.frame_progress,
+		"playing": sprite.is_playing(),
+		"speed_scale": sprite.speed_scale,
+		"flip_h": sprite.flip_h,
+	}
+
+
 func _broadcast_actor_snapshot() -> void:
 	var players: Array[Dictionary] = []
 	for body in get_tree().get_nodes_in_group("player"):
@@ -639,6 +655,7 @@ func _broadcast_actor_snapshot() -> void:
 			"stamina": float(body.get("stamina")),
 			"max_stamina": float(body.get("max_stamina")),
 			"scrolls": _scroll_state(body),
+			"animation_state": _actor_animation(body),
 		})
 	var enemies: Array[Dictionary] = []
 	for enemy in get_tree().get_nodes_in_group("enemy"):
@@ -655,6 +672,7 @@ func _broadcast_actor_snapshot() -> void:
 			"state": state,
 			"health": float(enemy.get("health")),
 			"is_dead": enemy.get("is_dead") == true,
+			"animation_state": _actor_animation(enemy),
 		})
 	rpc("receive_actor_snapshot", players, enemies)
 
@@ -691,6 +709,7 @@ func receive_actor_snapshot(players: Array, enemies: Array) -> void:
 			if "facing_dir" in body:
 				body.facing_dir = state.get("facing", body.facing_dir)
 			_apply_actor_state(body, String(state.get("state", "")))
+			_apply_actor_animation(body, state.get("animation_state", {}))
 			break
 	for state in enemies:
 		if not (state is Dictionary):
@@ -711,6 +730,7 @@ func receive_actor_snapshot(players: Array, enemies: Array) -> void:
 			if "facing_dir" in enemy:
 				enemy.facing_dir = state.get("facing", enemy.facing_dir)
 			_apply_actor_state(enemy, String(state.get("state", "")))
+			_apply_actor_animation(enemy, state.get("animation_state", {}))
 			break
 
 
@@ -723,3 +743,29 @@ func _apply_actor_state(body: Node, state_name: String) -> void:
 		return
 	if machine.has_node(state_name):
 		machine.change_state(state_name)
+
+
+func _apply_actor_animation(body: Node, animation_state: Variant) -> void:
+	if not (animation_state is Dictionary) or animation_state.is_empty():
+		return
+	var sprite := body.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if sprite == null:
+		sprite = body.get_node_or_null("AnimationManager/AnimatedSprite2D") as AnimatedSprite2D
+	if sprite == null or sprite.sprite_frames == null:
+		return
+	var animation := StringName(animation_state.get("animation", ""))
+	if animation.is_empty() or not sprite.sprite_frames.has_animation(animation):
+		return
+	if sprite.animation != animation:
+		sprite.animation = animation
+	sprite.speed_scale = float(animation_state.get("speed_scale", 1.0))
+	sprite.flip_h = bool(animation_state.get("flip_h", false))
+	var last_frame := maxi(0, sprite.sprite_frames.get_frame_count(animation) - 1)
+	var frame := clampi(int(animation_state.get("frame", 0)), 0, last_frame)
+	var progress := clampf(float(animation_state.get("frame_progress", 0.0)), 0.0, 1.0)
+	sprite.set_frame_and_progress(frame, progress)
+	if bool(animation_state.get("playing", false)):
+		if not sprite.is_playing():
+			sprite.play()
+	elif sprite.is_playing():
+		sprite.pause()

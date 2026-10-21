@@ -183,6 +183,8 @@ func _run_client(port: int) -> void:
 	var body: CharacterBody2D = _own_body()
 	_check(body != null, "the client finds its own body")
 	_check(Roster.players[0].get("scheme", -1) == 3, "the client's body wears the chosen aspect")
+	await _wait_for(_animations_changed.bind(_actor_animation_frames()),
+			"player and enemy animation frames arrive from the server")
 	await _wait_for(_enemies_moved.bind(_enemy_positions()), "enemy positions arrive from the server")
 	print("MEMORY: client on floor %.0f MB" % _memory_mb())
 	if party > 1:
@@ -229,6 +231,8 @@ func _run_second_client(port: int) -> void:
 			"client2's floor has both bodies and the wave")
 	print("SEED: %d theme=%d depth=%d" % [world.maze_seed, world.level_theme, world.depth])
 	_check(_own_body() != null, "client2 finds its own body in slot %d" % slot)
+	await _wait_for(_animations_changed.bind(_actor_animation_frames()),
+			"player and enemy animation frames arrive on client2")
 	await _wait_for(_enemies_moved.bind(_enemy_positions()), "enemy positions arrive on client2")
 	await _wait_for(_leader_moved.bind(_bodies_positions()),
 			"the leader's body is seen moving on client2")
@@ -289,6 +293,36 @@ func _bodies_positions() -> Dictionary:
 	for body in _bodies():
 		positions[body.slot] = body.global_position
 	return positions
+
+
+func _actor_animation_frames() -> Dictionary:
+	var frames: Dictionary = {}
+	for actor in get_tree().get_nodes_in_group("player") + get_tree().get_nodes_in_group("enemy"):
+		var sprite := actor.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+		if sprite == null:
+			sprite = actor.get_node_or_null("AnimationManager/AnimatedSprite2D") as AnimatedSprite2D
+		if sprite != null:
+			frames[actor.get_instance_id()] = [String(sprite.animation), sprite.frame]
+	return frames
+
+
+func _animations_changed(before: Dictionary) -> bool:
+	var player_changed := false
+	var enemy_changed := false
+	for group in ["player", "enemy"]:
+		for actor in get_tree().get_nodes_in_group(group):
+			var sprite := actor.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+			if sprite == null:
+				sprite = actor.get_node_or_null("AnimationManager/AnimatedSprite2D") as AnimatedSprite2D
+			var key := actor.get_instance_id()
+			if sprite == null or not before.has(key):
+				continue
+			var changed: bool = before[key] != [String(sprite.animation), sprite.frame]
+			if group == "player":
+				player_changed = player_changed or changed
+			else:
+				enemy_changed = enemy_changed or changed
+	return player_changed and enemy_changed
 
 
 ## Slot 0's body is driven by the leader process; any movement means player
