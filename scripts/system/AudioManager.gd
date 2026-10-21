@@ -35,7 +35,7 @@ func _ready() -> void:
 	get_tree().node_added.connect(_on_node_added)
 	get_tree().scene_changed.connect(_on_scene_changed)
 	call_deferred("_wire_tree", get_tree().root)
-	call_deferred("_on_scene_changed", get_tree().current_scene)
+	call_deferred("_on_scene_changed")
 
 
 func _process(delta: float) -> void:
@@ -206,7 +206,8 @@ func _fade_out(player: AudioStreamPlayer, duration: float) -> void:
 	fade.tween_callback(player.stop)
 
 
-func _on_scene_changed(scene: Node) -> void:
+func _on_scene_changed() -> void:
+	var scene := get_tree().current_scene
 	if scene == null:
 		return
 	var path := scene.scene_file_path.to_lower()
