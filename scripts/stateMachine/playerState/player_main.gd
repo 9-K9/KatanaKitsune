@@ -254,6 +254,7 @@ func _read_scroll_input() -> void:
 			var action := "ScrollPrevious" if previous else "ScrollNext"
 			if input.just_pressed(action):
 				scrolls.cycle(-1 if previous else 1)
+				AudioManager.play("ui_scroll_select", -5.0)
 		return
 	for i in ScrollInventory.SLOTS:
 		if input.just_pressed("Scroll%d" % (i + 1)):
@@ -269,9 +270,12 @@ func _read_scroll_input() -> void:
 func read_scroll(index: int) -> bool:
 	var kind: int = scrolls.kind_at(index)
 	if kind == -1:
+		AudioManager.play("ui_error", -4.0)
 		return false
 	if not use_scroll(kind):
+		AudioManager.play("ui_error", -4.0)
 		return false
+	AudioManager.play_for("sfx_scroll_activate", self)
 	if not CheatManager.karmageisha_active:
 		scrolls.take(index)
 	return true

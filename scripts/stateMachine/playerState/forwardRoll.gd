@@ -13,6 +13,7 @@ var _heading: Vector2 = Vector2.ZERO
 var _length: float = 0.0
 
 func on_enter():
+	AudioManager.play_for("sfx_player_roll", pc)
 	pc.actionBlockInput = true
 	## Rolls the way she is facing if she is standing still.
 	var input: Vector2 = pc.InputHandler()

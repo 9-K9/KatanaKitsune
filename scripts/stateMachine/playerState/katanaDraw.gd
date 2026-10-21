@@ -8,6 +8,7 @@ var _left: float = 0.0
 
 
 func on_enter():
+	AudioManager.play_for("sfx_katana_draw", pc)
 	pc.katana_drawn = true
 	pc.speed = 0.0
 	_left = play_oneshot("katanaDraw", RATE)

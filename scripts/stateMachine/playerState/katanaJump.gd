@@ -13,6 +13,7 @@ var _length: float = 0.0
 var _rest_offset: Vector2 = Vector2.ZERO
 
 func on_enter():
+	AudioManager.play_for("sfx_player_jump_takeoff", pc)
 	pc.actionBlockInput = true
 	var input: Vector2 = pc.InputHandler()
 	_heading = input if input != Vector2.ZERO else pc.stateDirection(pc.facing_dir)
@@ -30,6 +31,7 @@ func on_physics_process(_delta):
 	pc.velocity.y *= 0.5
 	pc.move_and_slide()
 	if action_timer.is_stopped():
+		AudioManager.play_for("sfx_player_land", pc, -4.0)
 		change_state("katanaIdle")
 
 func on_exit():

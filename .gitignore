@@ -25,3 +25,8 @@ __pycache__/
 # picked up again, drop this rule and add only the files the game actually uses.
 sound/
 build/
+
+# Local mastering workspace and REAPER peak caches. Shipping masters live in
+# assets/audio/generated/final; these are reproducible intermediates.
+assets/audio/generated/optimized/
+assets/audio/generated/final/peaks/

@@ -42,6 +42,7 @@ var _shape: CollisionPolygon2D = null
 var _occluder: LightOccluder2D = null
 var _centre: Vector2 = Vector2.ZERO
 var _flash_tween: Tween = null
+var _was_moving: bool = false
 
 
 func _ready() -> void:
@@ -86,7 +87,11 @@ func _physics_process(delta: float) -> void:
 		return
 	var wanted: float = 1.0 if _anyone_near() else 0.0
 	if is_equal_approx(_open, wanted):
+		_was_moving = false
 		return
+	if not _was_moving:
+		AudioManager.play_for("sfx_door_slide", self, -5.0)
+	_was_moving = true
 	_open = move_toward(_open, wanted, delta * slide_speed)
 	_material.set_shader_parameter("open", _open)
 	## Passable once it is mostly open, and solid again only once fully shut,
@@ -145,6 +150,7 @@ func _flash() -> void:
 ## Torn paper stays in the frame, but it no longer stops anyone.
 func _break() -> void:
 	_broken = true
+	AudioManager.play_for("sfx_door_break", self)
 	remove_from_group("breakable")
 	_open = 0.0
 	_material.set_shader_parameter("open", 0.0)

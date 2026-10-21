@@ -513,6 +513,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	if guardable and (blocking or stealthed or crouched):
 		amount = _guarded(amount, from)
 		if amount <= 0.0:
+			AudioManager.play_for("sfx_parry_perfect" if parry_ready else "sfx_block_blade", self)
 			return
 	if amount > 0.0 and from != Vector2.INF:
 		HitEffects.blood(get_parent(), global_position + Vector2(0, -40), from, amount,
@@ -520,9 +521,11 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 	health -= amount
 	health = max(health, 0)
 	if health <= 0:
+		AudioManager.play_for("vox_kitsune_downed", self)
 		is_dead = true
 		_on_death()
 	else:
+		AudioManager.play_for("vox_kitsune_hurt", self, -2.0)
 		_start_invincibility()
 
 ## Falls out of the world's collision so the living can walk over the body.
@@ -541,6 +544,7 @@ func revive(fraction: float = 0.5) -> void:
 	if not is_dead:
 		return
 	is_dead = false
+	AudioManager.play_for("sfx_revive_complete", self)
 	health = maxf(max_health * fraction, 1.0)
 	if _layer_alive >= 0:
 		set_deferred("collision_layer", _layer_alive)

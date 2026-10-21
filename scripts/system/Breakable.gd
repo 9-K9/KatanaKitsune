@@ -174,6 +174,13 @@ func _set_flash_amount(amount: float) -> void:
 
 func _break() -> void:
 	_broken = true
+	var break_event := "sfx_break_wood"
+	var texture_name := sprite.texture.resource_path.to_lower() if sprite.texture != null else ""
+	if texture_name.contains("urn") or texture_name.contains("ceramic") or texture_name.contains("pot"):
+		break_event = "sfx_break_ceramic"
+	elif texture_name.contains("stone") or texture_name.contains("statue"):
+		break_event = "sfx_break_stone"
+	AudioManager.play_for(break_event, self)
 	NetworkManager.announce_world_event("break", self)
 	remove_from_group("breakable")
 	set_process(false)

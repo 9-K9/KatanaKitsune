@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+AudioManager="*res://scripts/system/AudioManager.gd"
 Dialogic="*uid://ds2q0uclmolvu"
 CheatManager="*res://scripts/system/CheatManager.gd"
 PowerState="*res://scripts/system/PowerState.gd"

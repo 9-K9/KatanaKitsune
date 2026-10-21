@@ -18,4 +18,5 @@ func _on_body_entered(body: Node2D) -> void:
 	if _used or not (body is CharacterBody2D) or not body.is_in_group("player"):
 		return
 	_used = true
+	AudioManager.play_for("sfx_floor_descend", self)
 	descended.emit()

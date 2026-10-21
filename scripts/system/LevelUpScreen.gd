@@ -95,6 +95,7 @@ func _move(column: Dictionary, step: int) -> void:
 	if column["ready"]:
 		return
 	column["cursor"] = wrapi(column["cursor"] + step, 0, READY_ROW + 1)
+	AudioManager.play("ui_nav_move", -5.0)
 	_refresh(column)
 
 
@@ -118,6 +119,7 @@ func _confirm(column: Dictionary) -> void:
 	if cursor == READY_ROW:
 		column["ready"] = true
 	elif Progression.spend(slot, cursor):
+		AudioManager.play("ui_levelup_spend")
 		column["spent"].append(cursor)
 		if Progression.points[slot] == 0:
 			column["cursor"] = READY_ROW

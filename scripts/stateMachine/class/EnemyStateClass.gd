@@ -669,6 +669,12 @@ func play_chase() -> void:
 func play_once(state_name: String, rate: float = 1.0) -> void:
 	var clip: String = "%s_%s" % [state_name, facing_dir]
 	animated_sprite.speed_scale = rate
+	if state_name.contains("attack") or state_name in ["charge", "cast", "shoot", "lunge"]:
+		AudioManager.enemy_event(self, "attack")
+	elif state_name.contains("alert"):
+		AudioManager.enemy_event(self, "alert")
+	elif state_name.contains("dodge") or state_name.contains("evade"):
+		AudioManager.play_for("sfx_enemy_dodge", self)
 	## A monster without this clip would keep looping its last one and leave the
 	## state waiting forever. Stopping reads as finished, so the state moves on.
 	if not animated_sprite.sprite_frames.has_animation(clip):
@@ -934,6 +940,7 @@ func take_damage(amount: float, from: Vector2 = Vector2.INF,
 			_last_hit_at_ms = Time.get_ticks_msec()
 	if is_dead:
 		return
+	AudioManager.enemy_event(self, "hurt")
 	## Stone has no guard, no shell and no footing: the blow shatters it, for
 	## far more than a cut to flesh would do, and it comes back to life
 	## reeling from it.
@@ -1114,6 +1121,8 @@ func begin_death() -> void:
 	if is_dead:
 		return
 	is_dead = true
+	AudioManager.enemy_event(self, "death")
+	AudioManager.play_for("sfx_enemy_defeat", self, -4.0)
 	died.emit()
 	## Scored here rather than in the death state, so it lands the instant the
 	## monster is out of the fight — the streak window has to open now, not when

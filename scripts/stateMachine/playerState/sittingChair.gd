@@ -78,6 +78,7 @@ func _walk_in(delta: float) -> void:
 
 func _settle() -> void:
 	_seated = true
+	AudioManager.play_for("sfx_player_sit_rest", pc, -5.0)
 	pc.velocity = Vector2.ZERO
 	pc.speed = 0.0
 	## The last pixels are taken exactly: walking gets her close, and the seat is

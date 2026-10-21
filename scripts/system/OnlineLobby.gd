@@ -202,17 +202,20 @@ func _on_join_pressed() -> void:
 
 
 func _on_joined() -> void:
+	AudioManager.play("ui_online_joined")
 	_joining = false
 	_status.text = "CONNECTED. WAITING FOR THE ROOM…"
 
 
 func _on_join_failed(reason: String) -> void:
+	AudioManager.play("ui_online_failed")
 	_joining = false
 	_status.text = "COULD NOT REACH THE SERVER (%s). CHECK THE ADDRESS AND TRY AGAIN." % reason
 	_show_join()
 
 
 func _on_server_lost() -> void:
+	AudioManager.play("ui_online_server_lost")
 	_joining = false
 	NetworkManager.stop()
 	_status.text = "LOST THE SERVER. TRY JOINING AGAIN."
@@ -232,6 +235,7 @@ func _on_lobby_updated(_count: int, _leader: bool) -> void:
 
 ## Next aspect nobody else in the room has taken.
 func _on_aspect_pressed() -> void:
+	AudioManager.play("ui_aspect_cycle")
 	var own: int = NetworkManager.own_slot()
 	if own < 0:
 		return
@@ -244,10 +248,12 @@ func _on_aspect_pressed() -> void:
 
 
 func _on_area_pressed() -> void:
+	AudioManager.play("ui_area_cycle")
 	NetworkManager.choose_theme((NetworkManager.lobby_theme() + 1) % LevelTheme.NAMES.size())
 
 
 func _on_start_pressed() -> void:
+	AudioManager.play("ui_online_match_start")
 	_status.text = "STARTING…"
 	NetworkManager.start_room()
 

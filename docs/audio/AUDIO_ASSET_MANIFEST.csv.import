@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dit6pia2xdid6"
+
+[deps]
+
+files=["res://docs/audio/AUDIO_ASSET_MANIFEST.Category.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Subcategory.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Asset Name.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Filename.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Description.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Game Trigger.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Source Reference.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Implementation Status.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Existing Audio.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Required.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Priority.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Audio Type.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.AI Tool.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.AI Prompt.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Duration.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Loop.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Variations.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Spatial Audio.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Target Format.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Implementation Notes.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Review Status.translation"]
+
+source_file="res://docs/audio/AUDIO_ASSET_MANIFEST.csv"
+dest_files=["res://docs/audio/AUDIO_ASSET_MANIFEST.Category.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Subcategory.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Asset Name.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Filename.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Description.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Game Trigger.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Source Reference.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Implementation Status.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Existing Audio.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Required.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Priority.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Audio Type.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.AI Tool.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.AI Prompt.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Duration.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Loop.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Variations.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Spatial Audio.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Target Format.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Implementation Notes.translation", "res://docs/audio/AUDIO_ASSET_MANIFEST.Review Status.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ddbap61tcba8a"
+
+[deps]
+
+files=["res://docs/audio/AUDIO_MASTERING_REPORT.output.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.category.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.loop.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.channels.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.sample.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.original.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.finished.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.trimmed.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.peak.translation"]
+
+source_file="res://docs/audio/AUDIO_MASTERING_REPORT.csv"
+dest_files=["res://docs/audio/AUDIO_MASTERING_REPORT.output.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.category.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.loop.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.channels.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.sample.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.original.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.finished.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.trimmed.translation", "res://docs/audio/AUDIO_MASTERING_REPORT.peak.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

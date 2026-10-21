@@ -6,60 +6,16 @@
 	reverse_proxy 127.0.0.1:8910
 }
 
+# Browser build. Set WEB_HOST=play.9-k9.io after its DNS A record points to
+# this Droplet. Until then an sslip.io hostname can be used for testing.
 {$WEB_HOST} {
-	handle /api/rooms* {
-		reverse_proxy 127.0.0.1:8909
+	root * /var/www/katanakitsune
+	encode zstd gzip
+	@pck path *.pck
+	header @pck Content-Type application/octet-stream
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
 	}
-	handle_path /lobby* {
-		root * /var/www/katanakitsune-lobby
-		file_server
-	}
-	handle_path /rooms/r01* {
-		reverse_proxy 127.0.0.1:8911
-	}
-	handle_path /rooms/r02* {
-		reverse_proxy 127.0.0.1:8912
-	}
-	handle_path /rooms/r03* {
-		reverse_proxy 127.0.0.1:8913
-	}
-	handle_path /rooms/r04* {
-		reverse_proxy 127.0.0.1:8914
-	}
-	handle_path /rooms/r05* {
-		reverse_proxy 127.0.0.1:8915
-	}
-	handle_path /rooms/r06* {
-		reverse_proxy 127.0.0.1:8916
-	}
-	handle_path /rooms/r07* {
-		reverse_proxy 127.0.0.1:8917
-	}
-	handle_path /rooms/r08* {
-		reverse_proxy 127.0.0.1:8918
-	}
-	handle_path /rooms/r09* {
-		reverse_proxy 127.0.0.1:8919
-	}
-	handle_path /rooms/r10* {
-		reverse_proxy 127.0.0.1:8920
-	}
-	handle_path /rooms/r11* {
-		reverse_proxy 127.0.0.1:8921
-	}
-	handle_path /rooms/r12* {
-		reverse_proxy 127.0.0.1:8922
-	}
-
-	handle {
-		root * /var/www/katanakitsune
-		encode zstd gzip
-		@pck path *.pck
-		header @pck Content-Type application/octet-stream
-		header {
-			X-Content-Type-Options nosniff
-			Referrer-Policy strict-origin-when-cross-origin
-		}
-		file_server
-	}
+	file_server
 }

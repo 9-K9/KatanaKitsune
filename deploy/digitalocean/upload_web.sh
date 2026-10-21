@@ -1,32 +1,29 @@
 #!/usr/bin/env bash
-# Upload an existing Godot Web export and switch it live atomically.
+# Upload the existing Godot Web export to the Droplet's static web root.
 set -euo pipefail
 
 DROPLET_IP="${1:?usage: upload_web.sh <droplet-ip>}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 WEB_BUILD="$PROJECT_DIR/build/web"
-STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
-REMOTE_NEW="/var/www/katanakitsune.new-$STAMP"
-REMOTE_BACKUP="/var/www/katanakitsune.previous-$STAMP"
 
 for required in index.html index.js index.wasm index.pck; do
 	if [[ ! -f "$WEB_BUILD/$required" ]]; then
-		echo "missing $WEB_BUILD/$required; export the Web preset first" >&2
+		echo "missing $WEB_BUILD/$required; export the Godot Web preset first" >&2
 		exit 1
 	fi
 done
 
-ssh "root@${DROPLET_IP}" "mkdir '$REMOTE_NEW'"
-scp "$WEB_BUILD"/* "root@${DROPLET_IP}:${REMOTE_NEW}/"
-ssh "root@${DROPLET_IP}" bash -s -- "$REMOTE_NEW" "$REMOTE_BACKUP" <<'EOF'
-set -euo pipefail
-incoming="$1"
-backup="$2"
-chown -R caddy:caddy "$incoming"
+echo "==> Uploading the web build to root@${DROPLET_IP}"
+ssh "root@${DROPLET_IP}" 'rm -rf /var/www/katanakitsune.new && mkdir -p /var/www/katanakitsune.new'
+scp "$WEB_BUILD"/* "root@${DROPLET_IP}:/var/www/katanakitsune.new/"
+
+echo "==> Publishing the uploaded build"
+ssh "root@${DROPLET_IP}" bash -s <<'EOF'
+set -e
+chown -R caddy:caddy /var/www/katanakitsune.new
 if [[ -d /var/www/katanakitsune ]]; then
+	backup="/var/www/katanakitsune.previous-$(date -u +%Y%m%dT%H%M%SZ)"
 	mv /var/www/katanakitsune "$backup"
 fi
-mv "$incoming" /var/www/katanakitsune
+mv /var/www/katanakitsune.new /var/www/katanakitsune
 EOF
-
-echo "Published https://play.9-k9.io (previous build: $REMOTE_BACKUP)"

@@ -23,6 +23,7 @@ var _coverage := Rect2()
 var _view_history: Array[Rect2] = []
 var _history_times: Array[float] = []
 var _clock: float = 0.0
+var _audio_weather: int = ExteriorBiome.Weather.CALM
 
 
 func setup(exterior: MazeExterior, seed_value: int, forced: int, strength: float) -> void:
@@ -127,6 +128,17 @@ func update_weather(delta: float, views: Array[Rect2]) -> void:
 	intensity = move_toward(intensity, desired, delta / TRANSITION_SECONDS)
 	if intensity <= 0.0 and current != _target:
 		current = _target
+	if current != _audio_weather:
+		_audio_weather = current
+		match current:
+			ExteriorBiome.Weather.PETALS:
+				AudioManager.play_ambience("amb_weather_petals", -11.0)
+			ExteriorBiome.Weather.RAIN:
+				AudioManager.play_ambience("amb_weather_rain", -9.0)
+			ExteriorBiome.Weather.SNOWFALL:
+				AudioManager.play_ambience("amb_weather_snow", -10.0)
+			ExteriorBiome.Weather.SANDSTORM:
+				AudioManager.play_ambience("amb_weather_sandstorm", -8.0)
 	for weather: int in _emitters:
 		var particles: GPUParticles2D = _emitters[weather]
 		var simulation := particles.process_material as ShaderMaterial

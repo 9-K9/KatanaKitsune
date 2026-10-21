@@ -2,13 +2,12 @@
 
 Plain-English version: online co-op needs one computer that is always on
 ("the server"). Everyone's game connects to it, and it keeps the players in
-sync. The live deployment uses the 4 vCPU / 8 GB Basic Droplet.
+sync. These files turn a $6/month DigitalOcean Droplet into that computer.
 
 ## One-time setup (about 10 minutes)
 
 1. Create a Droplet at <https://cloud.digitalocean.com/droplets/new>:
-   Ubuntu 24.04, Basic. The game runtime is small, but use at least 4 GB if
-   the Droplet will also build exports; the live machine has 8 GB.
+   Ubuntu 24.04, Basic / Regular / **$6 (1 GB RAM)**, Password login.
    Note the IP address it gives you (e.g. `164.92.10.20`).
 2. Copy this folder to the Droplet and run the setup script. From a terminal
    on your own computer (replace the IP):
@@ -26,6 +25,17 @@ sync. The live deployment uses the 4 vCPU / 8 GB Basic Droplet.
    ```bash
    deploy/digitalocean/upload_server.sh 164.92.10.20
    ```
+
+4. Upload the browser build:
+
+   ```bash
+   deploy/digitalocean/upload_web.sh 164.92.10.20
+   ```
+
+   The default browser URL is `https://play.<ip-with-dashes>.sslip.io/`. For
+   the official URL, add an A record for `play.9-k9.io` pointing at the
+   Droplet, set `WEB_HOST=play.9-k9.io` in Caddy's systemd override, and reload
+   Caddy.
 
    This exports the "Linux Server" preset from `export_presets.cfg` (a
    `.pck` with no graphics window — the server never draws anything) and
@@ -50,14 +60,12 @@ ssh root@<ip> systemctl restart katanakitsune-server   # restart
 |------|---------|
 | `setup_droplet.sh` | Installs everything on a fresh Droplet. |
 | `upload_server.sh` | Exports the pack, uploads it, restarts the service. |
-| `upload_web.sh` | Atomically publishes an existing Web export. |
+| `upload_web.sh` | Uploads `build/web/*` and atomically publishes the browser build. |
 | `katanakitsune-server.service` | systemd unit: runs `godot --headless --main-pack ... --server=8910`, restarts on crash. |
 | `Caddyfile` | HTTPS/WebSocket front door on :443 → game server on :8910. |
 
-## Live addresses and limits
+## Cost / limits
 
-- Browser game: <https://play.9-k9.io>
-- Room lobby: <https://play.9-k9.io/lobby>
-- The allocator starts up to 12 isolated rooms with four players each and
-  retires rooms after they remain empty for 15 minutes.
-- `209-97-138-84.sslip.io:443` remains available as the legacy direct room.
+$6/month flat. One Droplet runs one room of up to 4 players (one
+`NetworkManager` session). Multiple simultaneous rooms would need either more
+service instances on different ports or a lobby server — see `NETWORKING.md`.

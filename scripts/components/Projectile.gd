@@ -77,10 +77,12 @@ func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("enemy"):
 		return
 	if body.is_in_group("wall"):
+		AudioManager.play_at("sfx_enemy_projectile_hit", global_position, -4.0)
 		queue_free()
 		return
 	if (body.is_in_group("player") or body.is_in_group("breakable")) \
 			and body.has_method("take_damage"):
+		AudioManager.play_at("sfx_enemy_projectile_hit", global_position)
 		## Pass our own position so her guard can tell which way the shot came
 		## from — the same contract melee strikes use.
 		body.take_damage(damage, global_position)
@@ -93,6 +95,7 @@ func launch(from: Vector2, dir: Vector2, by: Node2D, cfg: Dictionary) -> void:
 	global_position = from
 	direction = dir
 	shooter = by
+	AudioManager.play_at("sfx_enemy_projectile_launch", from)
 	speed = cfg.get("speed", speed)
 	damage = cfg.get("damage", damage)
 	spin = cfg.get("spin", 0.0)

@@ -195,6 +195,7 @@ func _apply(player: CharacterBody2D) -> void:
 
 
 func _consume() -> void:
+	AudioManager.play_for("sfx_pickup_scroll" if kind == Kind.SCROLL else "sfx_pickup_health", self)
 	NetworkManager.announce_world_event("pickup_taken", self)
 	set_deferred("monitoring", false)
 	var take := create_tween()

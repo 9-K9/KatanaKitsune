@@ -21,11 +21,12 @@ fi
 
 PUBLIC_IP="$(curl -fsS -4 https://api.ipify.org || hostname -I | awk '{print $1}')"
 SERVER_HOST="${1:-${PUBLIC_IP//./-}.sslip.io}"
+WEB_HOST="${2:-play.${PUBLIC_IP//./-}.sslip.io}"
 
 echo "==> Installing packages"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -q
-apt-get install -y -q unzip curl ufw iproute2 python3 debian-keyring debian-archive-keyring apt-transport-https
+apt-get install -y -q unzip curl ufw debian-keyring debian-archive-keyring apt-transport-https
 
 echo "==> Installing Caddy"
 if ! command -v caddy >/dev/null; then
@@ -39,9 +40,7 @@ fi
 
 echo "==> Creating service user and install dir"
 id -u katana >/dev/null 2>&1 || useradd --system --home "$INSTALL_DIR" --shell /usr/sbin/nologin katana
-mkdir -p "$INSTALL_DIR/data" "$INSTALL_DIR/rooms" \
-	/opt/katanakitsune-lobby /var/lib/katanakitsune-lobby \
-	/var/www/katanakitsune-lobby
+mkdir -p "$INSTALL_DIR/data"
 
 echo "==> Downloading Godot ${GODOT_VERSION} (headless Linux runtime)"
 if [[ ! -x "$INSTALL_DIR/godot" ]]; then
@@ -58,14 +57,8 @@ chown -R katana:katana "$INSTALL_DIR"
 echo "==> Installing systemd service"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cp "$SCRIPT_DIR/katanakitsune-server.service" /etc/systemd/system/
-cp "$SCRIPT_DIR/katanakitsune-room@.service" /etc/systemd/system/
-cp "$SCRIPT_DIR/katanakitsune-lobby.service" /etc/systemd/system/
-cp "$SCRIPT_DIR/lobby_service.py" /opt/katanakitsune-lobby/
-cp -a "$SCRIPT_DIR/lobby/." /var/www/katanakitsune-lobby/
-chown -R caddy:caddy /var/www/katanakitsune-lobby
 systemctl daemon-reload
 systemctl enable katanakitsune-server
-systemctl enable --now katanakitsune-lobby
 
 echo "==> Configuring Caddy for https://${SERVER_HOST}"
 cp "$SCRIPT_DIR/Caddyfile" /etc/caddy/Caddyfile
@@ -73,6 +66,7 @@ mkdir -p /etc/systemd/system/caddy.service.d
 cat > /etc/systemd/system/caddy.service.d/override.conf <<EOF
 [Service]
 Environment=SERVER_HOST=${SERVER_HOST}
+Environment=WEB_HOST=${WEB_HOST}
 EOF
 systemctl daemon-reload
 systemctl enable caddy

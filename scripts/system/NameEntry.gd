@@ -38,6 +38,7 @@ var _help: Label = null
 ## While Karmageisha is active the run is worth nothing, so the screen shows 0
 ## regardless of what was passed in.
 func open(slot: int, points: int, wave: int) -> void:
+	AudioManager.play("ui_highscore_entry")
 	_slot = slot
 	_points = 0 if CheatManager.karmageisha_active else points
 	_wave = wave

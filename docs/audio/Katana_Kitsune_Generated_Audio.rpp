@@ -1,0 +1,3723 @@
+<REAPER_PROJECT 0.1 "7.82/linux-x86_64" 1770000000
+  RIPPLE 0
+  GROUPOVERRIDE 0 0 0
+  AUTOXFADE 1
+  TEMPO 120 4 4
+  PLAYRATE 1 0 0.25 4
+  <TRACK
+    NAME "SFX"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 0.345100
+      NAME "sfx_block_blade_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 0.595100
+      LENGTH 0.180700
+      NAME "sfx_block_blade_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.025800
+      LENGTH 0.374000
+      NAME "sfx_block_blade_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.649800
+      LENGTH 0.414800
+      NAME "sfx_block_blade_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.314600
+      LENGTH 0.352900
+      NAME "sfx_block_blade_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.917500
+      LENGTH 0.361300
+      NAME "sfx_block_blade_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_block_blade_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.528800
+      LENGTH 0.618800
+      NAME "sfx_break_ceramic_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_ceramic_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 4.397600
+      LENGTH 0.641500
+      NAME "sfx_break_ceramic_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_ceramic_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.289100
+      LENGTH 0.656400
+      NAME "sfx_break_ceramic_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_ceramic_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 6.195500
+      LENGTH 0.460700
+      NAME "sfx_break_ceramic_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_ceramic_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 6.906200
+      LENGTH 0.523800
+      NAME "sfx_break_ceramic_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_ceramic_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 7.680000
+      LENGTH 0.546400
+      NAME "sfx_break_stone_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_stone_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.476400
+      LENGTH 0.504500
+      NAME "sfx_break_stone_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_stone_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 9.230900
+      LENGTH 0.538900
+      NAME "sfx_break_stone_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_stone_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 10.019800
+      LENGTH 0.526000
+      NAME "sfx_break_stone_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_stone_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 10.795800
+      LENGTH 0.554600
+      NAME "sfx_break_wood_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_wood_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 11.600400
+      LENGTH 0.618500
+      NAME "sfx_break_wood_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_wood_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 12.468900
+      LENGTH 0.631400
+      NAME "sfx_break_wood_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_wood_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 13.350300
+      LENGTH 0.674700
+      NAME "sfx_break_wood_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_wood_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 14.275000
+      LENGTH 0.705500
+      NAME "sfx_break_wood_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_break_wood_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 15.230500
+      LENGTH 0.626600
+      NAME "sfx_door_break_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_break_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 16.107100
+      LENGTH 0.589600
+      NAME "sfx_door_break_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_break_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 16.946700
+      LENGTH 0.276900
+      NAME "sfx_door_break_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_break_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 17.473600
+      LENGTH 0.380500
+      NAME "sfx_door_break_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_break_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 18.104100
+      LENGTH 0.651700
+      NAME "sfx_door_slide_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_slide_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.005800
+      LENGTH 0.683700
+      NAME "sfx_door_slide_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_slide_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.939500
+      LENGTH 0.471000
+      NAME "sfx_door_slide_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_door_slide_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 20.660500
+      LENGTH 0.774800
+      NAME "sfx_exit_reveal"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_exit_reveal.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.685300
+      LENGTH 0.573900
+      NAME "sfx_floor_descend"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_floor_descend.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.509200
+      LENGTH 0.455900
+      NAME "sfx_hit_blade_flesh_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.215100
+      LENGTH 0.444000
+      NAME "sfx_hit_blade_flesh_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.909100
+      LENGTH 0.430200
+      NAME "sfx_hit_blade_flesh_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 24.589300
+      LENGTH 0.430900
+      NAME "sfx_hit_blade_flesh_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 25.270200
+      LENGTH 0.420600
+      NAME "sfx_hit_blade_flesh_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 25.940800
+      LENGTH 0.442400
+      NAME "sfx_hit_blade_flesh_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 26.633200
+      LENGTH 0.414600
+      NAME "sfx_hit_blade_flesh_07"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_07.wav"
+      >
+    >
+    <ITEM
+      POSITION 27.297800
+      LENGTH 0.444700
+      NAME "sfx_hit_blade_flesh_08"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_blade_flesh_08.wav"
+      >
+    >
+    <ITEM
+      POSITION 27.992500
+      LENGTH 0.461200
+      NAME "sfx_hit_critical_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_critical_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 28.703700
+      LENGTH 0.328700
+      NAME "sfx_hit_critical_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_critical_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 29.282400
+      LENGTH 0.384200
+      NAME "sfx_hit_critical_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_critical_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 29.916600
+      LENGTH 0.373300
+      NAME "sfx_hit_kick_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 30.539900
+      LENGTH 0.405500
+      NAME "sfx_hit_kick_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 31.195400
+      LENGTH 0.374500
+      NAME "sfx_hit_kick_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 31.819900
+      LENGTH 0.394400
+      NAME "sfx_hit_kick_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 32.464300
+      LENGTH 0.450100
+      NAME "sfx_hit_kick_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 33.164400
+      LENGTH 0.380900
+      NAME "sfx_hit_kick_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_hit_kick_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 33.795300
+      LENGTH 1.860000
+      NAME "sfx_katana_charge_build"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_charge_build.ogg"
+      >
+    >
+    <ITEM
+      POSITION 35.905300
+      LENGTH 0.402900
+      NAME "sfx_katana_counter_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_counter_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 36.558200
+      LENGTH 0.518900
+      NAME "sfx_katana_counter_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_counter_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 37.327100
+      LENGTH 0.523700
+      NAME "sfx_katana_counter_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_counter_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 38.100800
+      LENGTH 0.423100
+      NAME "sfx_katana_counter_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_counter_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 38.773900
+      LENGTH 0.384100
+      NAME "sfx_katana_draw_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_draw_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 39.408000
+      LENGTH 0.274200
+      NAME "sfx_katana_draw_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_draw_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 39.932200
+      LENGTH 0.623900
+      NAME "sfx_katana_draw_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_draw_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 40.806100
+      LENGTH 0.467900
+      NAME "sfx_katana_draw_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_draw_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 41.524000
+      LENGTH 0.378400
+      NAME "sfx_katana_sheathe_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_sheathe_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 42.152400
+      LENGTH 0.491200
+      NAME "sfx_katana_sheathe_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_sheathe_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 42.893600
+      LENGTH 0.395700
+      NAME "sfx_katana_sheathe_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_sheathe_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 43.539300
+      LENGTH 0.868500
+      NAME "sfx_katana_slash_charged_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_charged_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 44.657800
+      LENGTH 0.844100
+      NAME "sfx_katana_slash_charged_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_charged_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 45.751900
+      LENGTH 0.868900
+      NAME "sfx_katana_slash_charged_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_charged_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 46.870800
+      LENGTH 0.731300
+      NAME "sfx_katana_slash_charged_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_charged_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 47.852100
+      LENGTH 0.437400
+      NAME "sfx_katana_slash_fast_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 48.539500
+      LENGTH 0.220800
+      NAME "sfx_katana_slash_fast_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 49.010300
+      LENGTH 0.255900
+      NAME "sfx_katana_slash_fast_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 49.516200
+      LENGTH 0.397700
+      NAME "sfx_katana_slash_fast_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 50.163900
+      LENGTH 0.345500
+      NAME "sfx_katana_slash_fast_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 50.759400
+      LENGTH 0.378600
+      NAME "sfx_katana_slash_fast_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_katana_slash_fast_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 51.388000
+      LENGTH 0.447900
+      NAME "sfx_parry_perfect_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_parry_perfect_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 52.085900
+      LENGTH 0.527600
+      NAME "sfx_parry_perfect_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_parry_perfect_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 52.863500
+      LENGTH 0.652500
+      NAME "sfx_parry_perfect_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_parry_perfect_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 53.766000
+      LENGTH 0.389600
+      NAME "sfx_parry_perfect_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_parry_perfect_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 54.405600
+      LENGTH 0.790000
+      NAME "sfx_pickup_health_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_health_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 55.445600
+      LENGTH 0.680400
+      NAME "sfx_pickup_health_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_health_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 56.376000
+      LENGTH 0.737500
+      NAME "sfx_pickup_health_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_health_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 57.363500
+      LENGTH 0.559900
+      NAME "sfx_pickup_scroll_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_scroll_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 58.173400
+      LENGTH 0.280500
+      NAME "sfx_pickup_scroll_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_scroll_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 58.703900
+      LENGTH 0.552800
+      NAME "sfx_pickup_scroll_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_scroll_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 59.506700
+      LENGTH 0.619700
+      NAME "sfx_pickup_scroll_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_pickup_scroll_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 60.376400
+      LENGTH 0.452100
+      NAME "sfx_player_jump_takeoff_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_jump_takeoff_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 61.078500
+      LENGTH 0.470000
+      NAME "sfx_player_jump_takeoff_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_jump_takeoff_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 61.798500
+      LENGTH 0.442200
+      NAME "sfx_player_jump_takeoff_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_jump_takeoff_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 62.490700
+      LENGTH 0.435700
+      NAME "sfx_player_land_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_land_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 63.176400
+      LENGTH 0.381300
+      NAME "sfx_player_land_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_land_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 63.807700
+      LENGTH 0.452800
+      NAME "sfx_player_land_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_land_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 64.510500
+      LENGTH 0.418100
+      NAME "sfx_player_land_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_land_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 65.178600
+      LENGTH 0.352500
+      NAME "sfx_player_roll_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_roll_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 65.781100
+      LENGTH 0.454900
+      NAME "sfx_player_roll_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_roll_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 66.486000
+      LENGTH 0.495100
+      NAME "sfx_player_roll_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_roll_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 67.231100
+      LENGTH 0.474500
+      NAME "sfx_player_roll_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_roll_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 67.955600
+      LENGTH 0.104200
+      NAME "sfx_player_sit_rest_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_sit_rest_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 68.309800
+      LENGTH 0.550100
+      NAME "sfx_player_sit_rest_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_sit_rest_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 69.109900
+      LENGTH 1.080000
+      NAME "sfx_player_sit_rest_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_sit_rest_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 70.439900
+      LENGTH 0.250300
+      NAME "sfx_player_stealth_step_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_stealth_step_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 70.940200
+      LENGTH 0.180200
+      NAME "sfx_player_stealth_step_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_stealth_step_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 71.370400
+      LENGTH 0.288100
+      NAME "sfx_player_stealth_step_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_stealth_step_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 71.908500
+      LENGTH 0.206900
+      NAME "sfx_player_stealth_step_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_stealth_step_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 72.365400
+      LENGTH 0.341600
+      NAME "sfx_player_step_earth_walk_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_earth_walk_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 72.957000
+      LENGTH 0.480000
+      NAME "sfx_player_step_earth_walk_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_earth_walk_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 73.687000
+      LENGTH 0.221400
+      NAME "sfx_player_step_earth_walk_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_earth_walk_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 74.158400
+      LENGTH 0.399900
+      NAME "sfx_player_step_earth_walk_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_earth_walk_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 74.808300
+      LENGTH 0.412000
+      NAME "sfx_player_step_earth_walk_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_earth_walk_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 75.470300
+      LENGTH 0.331700
+      NAME "sfx_player_step_hard_walk_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 76.052000
+      LENGTH 0.383800
+      NAME "sfx_player_step_hard_walk_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 76.685800
+      LENGTH 0.438600
+      NAME "sfx_player_step_hard_walk_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 77.374400
+      LENGTH 0.379500
+      NAME "sfx_player_step_hard_walk_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 78.003900
+      LENGTH 0.297200
+      NAME "sfx_player_step_hard_walk_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 78.551100
+      LENGTH 0.385600
+      NAME "sfx_player_step_hard_walk_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_hard_walk_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 79.186700
+      LENGTH 0.352700
+      NAME "sfx_player_step_run_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 79.789400
+      LENGTH 0.293800
+      NAME "sfx_player_step_run_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 80.333200
+      LENGTH 0.400800
+      NAME "sfx_player_step_run_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 80.984000
+      LENGTH 0.400200
+      NAME "sfx_player_step_run_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 81.634200
+      LENGTH 0.408500
+      NAME "sfx_player_step_run_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 82.292700
+      LENGTH 0.358800
+      NAME "sfx_player_step_run_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_run_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 82.901500
+      LENGTH 0.328500
+      NAME "sfx_player_step_snow_walk_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_snow_walk_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 83.480000
+      LENGTH 0.199300
+      NAME "sfx_player_step_snow_walk_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_snow_walk_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 83.929300
+      LENGTH 0.396900
+      NAME "sfx_player_step_snow_walk_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_snow_walk_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 84.576200
+      LENGTH 0.381900
+      NAME "sfx_player_step_snow_walk_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_snow_walk_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 85.208100
+      LENGTH 0.360400
+      NAME "sfx_player_step_snow_walk_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_player_step_snow_walk_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 85.818500
+      LENGTH 2.250000
+      NAME "sfx_revive_channel"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_revive_channel.ogg"
+      >
+    >
+    <ITEM
+      POSITION 88.318500
+      LENGTH 0.525200
+      NAME "sfx_revive_complete"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_revive_complete.wav"
+      >
+    >
+    <ITEM
+      POSITION 89.093700
+      LENGTH 0.757300
+      NAME "sfx_scroll_activate_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 90.101000
+      LENGTH 0.790000
+      NAME "sfx_scroll_activate_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 91.141000
+      LENGTH 0.760200
+      NAME "sfx_scroll_activate_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 92.151200
+      LENGTH 0.619900
+      NAME "sfx_scroll_activate_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 93.021100
+      LENGTH 0.684500
+      NAME "sfx_scroll_activate_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 93.955600
+      LENGTH 0.754200
+      NAME "sfx_scroll_activate_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_scroll_activate_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 94.959800
+      LENGTH 0.367600
+      NAME "sfx_slash_projectile_hit_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_hit_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 95.577400
+      LENGTH 0.353700
+      NAME "sfx_slash_projectile_hit_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_hit_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 96.181100
+      LENGTH 0.358200
+      NAME "sfx_slash_projectile_hit_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_hit_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 96.789300
+      LENGTH 0.463700
+      NAME "sfx_slash_projectile_hit_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_hit_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 97.503000
+      LENGTH 0.565500
+      NAME "sfx_slash_projectile_launch_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_launch_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 98.318500
+      LENGTH 0.635900
+      NAME "sfx_slash_projectile_launch_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_launch_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 99.204400
+      LENGTH 0.657200
+      NAME "sfx_slash_projectile_launch_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_launch_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 100.111600
+      LENGTH 0.428400
+      NAME "sfx_slash_projectile_launch_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_slash_projectile_launch_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 100.790000
+      LENGTH 0.663000
+      NAME "sfx_spike_strike_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_strike_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 101.703000
+      LENGTH 0.308400
+      NAME "sfx_spike_strike_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_strike_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 102.261400
+      LENGTH 0.672600
+      NAME "sfx_spike_strike_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_strike_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 103.184000
+      LENGTH 0.637300
+      NAME "sfx_spike_strike_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_strike_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 104.071300
+      LENGTH 0.226400
+      NAME "sfx_spike_warn_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_warn_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 104.547700
+      LENGTH 0.800000
+      NAME "sfx_spike_warn_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_warn_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 105.597700
+      LENGTH 0.083900
+      NAME "sfx_spike_warn_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_spike_warn_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 105.931600
+      LENGTH 1.352700
+      NAME "sfx_wave_clear"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_wave_clear.wav"
+      >
+    >
+  >
+  <TRACK
+    NAME "Enemies"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 0.400900
+      NAME "sfx_enemy_defeat_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_defeat_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 0.650900
+      LENGTH 0.524600
+      NAME "sfx_enemy_defeat_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_defeat_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.425500
+      LENGTH 0.385800
+      NAME "sfx_enemy_defeat_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_defeat_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.061300
+      LENGTH 0.636500
+      NAME "sfx_enemy_defeat_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_defeat_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.947800
+      LENGTH 0.259400
+      NAME "sfx_enemy_defeat_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_defeat_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.457200
+      LENGTH 0.286300
+      NAME "sfx_enemy_dodge_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_dodge_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.993500
+      LENGTH 0.377300
+      NAME "sfx_enemy_dodge_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_dodge_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 4.620800
+      LENGTH 0.404400
+      NAME "sfx_enemy_dodge_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_dodge_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.275200
+      LENGTH 0.433400
+      NAME "sfx_enemy_dodge_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_dodge_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.958600
+      LENGTH 0.834500
+      NAME "sfx_enemy_jor_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 7.043100
+      LENGTH 0.758600
+      NAME "sfx_enemy_jor_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.051700
+      LENGTH 0.642600
+      NAME "sfx_enemy_jor_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.944300
+      LENGTH 0.790000
+      NAME "sfx_enemy_jor_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 9.984300
+      LENGTH 0.552700
+      NAME "sfx_enemy_jor_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 10.787000
+      LENGTH 0.609900
+      NAME "sfx_enemy_jor_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 11.646900
+      LENGTH 0.652600
+      NAME "sfx_enemy_jor_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 12.549500
+      LENGTH 0.846600
+      NAME "sfx_enemy_jor_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 13.646100
+      LENGTH 0.715900
+      NAME "sfx_enemy_jor_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 14.612000
+      LENGTH 0.990000
+      NAME "sfx_enemy_jor_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 15.852000
+      LENGTH 0.556300
+      NAME "sfx_enemy_jor_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 16.658300
+      LENGTH 0.979100
+      NAME "sfx_enemy_jor_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_jor_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 17.887400
+      LENGTH 0.540000
+      NAME "sfx_enemy_kap_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 18.677400
+      LENGTH 0.628800
+      NAME "sfx_enemy_kap_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.556200
+      LENGTH 0.810700
+      NAME "sfx_enemy_kap_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 20.616900
+      LENGTH 0.430800
+      NAME "sfx_enemy_kap_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.297700
+      LENGTH 0.411500
+      NAME "sfx_enemy_kap_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.959200
+      LENGTH 0.684100
+      NAME "sfx_enemy_kap_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.893300
+      LENGTH 0.535300
+      NAME "sfx_enemy_kap_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.678600
+      LENGTH 0.460400
+      NAME "sfx_enemy_kap_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 24.389000
+      LENGTH 0.722400
+      NAME "sfx_enemy_kap_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 25.361400
+      LENGTH 0.572700
+      NAME "sfx_enemy_kap_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 26.184100
+      LENGTH 0.758100
+      NAME "sfx_enemy_kap_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 27.192200
+      LENGTH 0.823100
+      NAME "sfx_enemy_kap_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kap_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 28.265300
+      LENGTH 0.402400
+      NAME "sfx_enemy_kar_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 28.917700
+      LENGTH 0.207400
+      NAME "sfx_enemy_kar_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 29.375100
+      LENGTH 0.194800
+      NAME "sfx_enemy_kar_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 29.819900
+      LENGTH 0.444000
+      NAME "sfx_enemy_kar_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 30.513900
+      LENGTH 0.408400
+      NAME "sfx_enemy_kar_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 31.172300
+      LENGTH 0.243200
+      NAME "sfx_enemy_kar_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 31.665500
+      LENGTH 0.484700
+      NAME "sfx_enemy_kar_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 32.400200
+      LENGTH 0.628400
+      NAME "sfx_enemy_kar_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 33.278600
+      LENGTH 0.629100
+      NAME "sfx_enemy_kar_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 34.157700
+      LENGTH 0.722400
+      NAME "sfx_enemy_kar_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 35.130100
+      LENGTH 0.492100
+      NAME "sfx_enemy_kar_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 35.872200
+      LENGTH 0.585800
+      NAME "sfx_enemy_kar_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kar_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 36.708000
+      LENGTH 0.837600
+      NAME "sfx_enemy_kas_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 37.795600
+      LENGTH 0.800700
+      NAME "sfx_enemy_kas_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 38.846300
+      LENGTH 0.754200
+      NAME "sfx_enemy_kas_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 39.850500
+      LENGTH 0.770200
+      NAME "sfx_enemy_kas_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 40.870700
+      LENGTH 0.748100
+      NAME "sfx_enemy_kas_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 41.868800
+      LENGTH 0.704000
+      NAME "sfx_enemy_kas_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 42.822800
+      LENGTH 0.456200
+      NAME "sfx_enemy_kas_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 43.529000
+      LENGTH 0.644100
+      NAME "sfx_enemy_kas_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 44.423100
+      LENGTH 0.927200
+      NAME "sfx_enemy_kas_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 45.600300
+      LENGTH 0.968900
+      NAME "sfx_enemy_kas_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 46.819200
+      LENGTH 0.639100
+      NAME "sfx_enemy_kas_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 47.708300
+      LENGTH 0.808700
+      NAME "sfx_enemy_kas_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_kas_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 48.767000
+      LENGTH 0.669100
+      NAME "sfx_enemy_nin_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 49.686100
+      LENGTH 0.659400
+      NAME "sfx_enemy_nin_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 50.595500
+      LENGTH 0.804300
+      NAME "sfx_enemy_nin_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 51.649800
+      LENGTH 0.557000
+      NAME "sfx_enemy_nin_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 52.456800
+      LENGTH 0.625900
+      NAME "sfx_enemy_nin_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 53.332700
+      LENGTH 0.529800
+      NAME "sfx_enemy_nin_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 54.112500
+      LENGTH 0.671500
+      NAME "sfx_enemy_nin_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 55.034000
+      LENGTH 0.524900
+      NAME "sfx_enemy_nin_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 55.808900
+      LENGTH 0.805500
+      NAME "sfx_enemy_nin_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 56.864400
+      LENGTH 0.733500
+      NAME "sfx_enemy_nin_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 57.847900
+      LENGTH 0.163600
+      NAME "sfx_enemy_nin_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 58.261500
+      LENGTH 0.536700
+      NAME "sfx_enemy_nin_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_nin_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 59.048200
+      LENGTH 0.870000
+      NAME "sfx_enemy_oni_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 60.168200
+      LENGTH 0.813500
+      NAME "sfx_enemy_oni_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 61.231700
+      LENGTH 0.804300
+      NAME "sfx_enemy_oni_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 62.286000
+      LENGTH 0.702200
+      NAME "sfx_enemy_oni_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 63.238200
+      LENGTH 0.758700
+      NAME "sfx_enemy_oni_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 64.246900
+      LENGTH 0.712000
+      NAME "sfx_enemy_oni_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 65.208900
+      LENGTH 0.754200
+      NAME "sfx_enemy_oni_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 66.213100
+      LENGTH 0.935600
+      NAME "sfx_enemy_oni_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 67.398700
+      LENGTH 0.836100
+      NAME "sfx_enemy_oni_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 68.484800
+      LENGTH 0.859200
+      NAME "sfx_enemy_oni_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 69.594000
+      LENGTH 0.961300
+      NAME "sfx_enemy_oni_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 70.805300
+      LENGTH 0.887000
+      NAME "sfx_enemy_oni_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_oni_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 71.942300
+      LENGTH 0.202600
+      NAME "sfx_enemy_projectile_hit_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_hit_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 72.394900
+      LENGTH 0.423700
+      NAME "sfx_enemy_projectile_hit_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_hit_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 73.068600
+      LENGTH 0.267800
+      NAME "sfx_enemy_projectile_hit_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_hit_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 73.586400
+      LENGTH 0.327700
+      NAME "sfx_enemy_projectile_hit_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_hit_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 74.164100
+      LENGTH 0.405500
+      NAME "sfx_enemy_projectile_hit_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_hit_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 74.819600
+      LENGTH 0.383200
+      NAME "sfx_enemy_projectile_launch_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_launch_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 75.452800
+      LENGTH 0.504500
+      NAME "sfx_enemy_projectile_launch_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_launch_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 76.207300
+      LENGTH 0.590000
+      NAME "sfx_enemy_projectile_launch_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_launch_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 77.047300
+      LENGTH 0.445900
+      NAME "sfx_enemy_projectile_launch_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_launch_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 77.743200
+      LENGTH 0.337800
+      NAME "sfx_enemy_projectile_launch_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_projectile_launch_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 78.331000
+      LENGTH 0.247500
+      NAME "sfx_enemy_step_heavy_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_heavy_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 78.828500
+      LENGTH 0.375700
+      NAME "sfx_enemy_step_heavy_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_heavy_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 79.454200
+      LENGTH 0.393400
+      NAME "sfx_enemy_step_heavy_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_heavy_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 80.097600
+      LENGTH 0.386300
+      NAME "sfx_enemy_step_heavy_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_heavy_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 80.733900
+      LENGTH 0.228200
+      NAME "sfx_enemy_step_heavy_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_heavy_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 81.212100
+      LENGTH 0.455900
+      NAME "sfx_enemy_step_light_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_light_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 81.918000
+      LENGTH 0.470000
+      NAME "sfx_enemy_step_light_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_light_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 82.638000
+      LENGTH 0.470000
+      NAME "sfx_enemy_step_light_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_light_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 83.358000
+      LENGTH 0.432900
+      NAME "sfx_enemy_step_light_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_light_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 84.040900
+      LENGTH 0.421600
+      NAME "sfx_enemy_step_light_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_step_light_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 84.712500
+      LENGTH 0.791400
+      NAME "sfx_enemy_ten_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 85.753900
+      LENGTH 0.426700
+      NAME "sfx_enemy_ten_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 86.430600
+      LENGTH 0.692500
+      NAME "sfx_enemy_ten_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 87.373100
+      LENGTH 0.647900
+      NAME "sfx_enemy_ten_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 88.271000
+      LENGTH 0.703400
+      NAME "sfx_enemy_ten_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 89.224400
+      LENGTH 0.633500
+      NAME "sfx_enemy_ten_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 90.107900
+      LENGTH 0.706700
+      NAME "sfx_enemy_ten_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 91.064600
+      LENGTH 0.847100
+      NAME "sfx_enemy_ten_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 92.161700
+      LENGTH 0.889000
+      NAME "sfx_enemy_ten_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 93.300700
+      LENGTH 0.703000
+      NAME "sfx_enemy_ten_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 94.253700
+      LENGTH 0.378900
+      NAME "sfx_enemy_ten_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 94.882600
+      LENGTH 0.771200
+      NAME "sfx_enemy_ten_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_ten_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 95.903800
+      LENGTH 0.849800
+      NAME "sfx_enemy_yok_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 97.003600
+      LENGTH 0.870000
+      NAME "sfx_enemy_yok_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 98.123600
+      LENGTH 0.867500
+      NAME "sfx_enemy_yok_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 99.241100
+      LENGTH 0.712400
+      NAME "sfx_enemy_yok_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 100.203500
+      LENGTH 0.699700
+      NAME "sfx_enemy_yok_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 101.153200
+      LENGTH 0.790000
+      NAME "sfx_enemy_yok_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 102.193200
+      LENGTH 0.740900
+      NAME "sfx_enemy_yok_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 103.184100
+      LENGTH 0.902500
+      NAME "sfx_enemy_yok_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 104.336600
+      LENGTH 0.990000
+      NAME "sfx_enemy_yok_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 105.576600
+      LENGTH 0.983300
+      NAME "sfx_enemy_yok_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 106.809900
+      LENGTH 0.901900
+      NAME "sfx_enemy_yok_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 107.961800
+      LENGTH 0.880000
+      NAME "sfx_enemy_yok_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yok_hurtdeath_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 109.091800
+      LENGTH 0.563200
+      NAME "sfx_enemy_yuk_alert_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_alert_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 109.905000
+      LENGTH 0.737200
+      NAME "sfx_enemy_yuk_alert_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_alert_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 110.892200
+      LENGTH 0.826300
+      NAME "sfx_enemy_yuk_alert_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_alert_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 111.968500
+      LENGTH 0.584800
+      NAME "sfx_enemy_yuk_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 112.803300
+      LENGTH 0.623000
+      NAME "sfx_enemy_yuk_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 113.676300
+      LENGTH 0.507800
+      NAME "sfx_enemy_yuk_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 114.434100
+      LENGTH 0.644200
+      NAME "sfx_enemy_yuk_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 115.328300
+      LENGTH 0.729600
+      NAME "sfx_enemy_yuk_hurtdeath_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_hurtdeath_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 116.307900
+      LENGTH 0.881200
+      NAME "sfx_enemy_yuk_hurtdeath_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_hurtdeath_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 117.439100
+      LENGTH 0.859900
+      NAME "sfx_enemy_yuk_hurtdeath_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_hurtdeath_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 118.549000
+      LENGTH 0.900800
+      NAME "sfx_enemy_yuk_hurtdeath_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_hurtdeath_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 119.699800
+      LENGTH 0.860700
+      NAME "sfx_enemy_yuk_hurtdeath_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/sfx_enemy_yuk_hurtdeath_05.wav"
+      >
+    >
+  >
+  <TRACK
+    NAME "Voices"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 0.411000
+      NAME "vox_kitsune_attack_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 0.661000
+      LENGTH 0.428300
+      NAME "vox_kitsune_attack_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.339300
+      LENGTH 0.340200
+      NAME "vox_kitsune_attack_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.929500
+      LENGTH 0.402900
+      NAME "vox_kitsune_attack_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.582400
+      LENGTH 0.315300
+      NAME "vox_kitsune_attack_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.147700
+      LENGTH 0.470000
+      NAME "vox_kitsune_attack_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_06.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.867700
+      LENGTH 0.418500
+      NAME "vox_kitsune_attack_07"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_07.wav"
+      >
+    >
+    <ITEM
+      POSITION 4.536200
+      LENGTH 0.331400
+      NAME "vox_kitsune_attack_08"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_attack_08.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.117600
+      LENGTH 0.807700
+      NAME "vox_kitsune_downed_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_downed_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 6.175300
+      LENGTH 1.061000
+      NAME "vox_kitsune_downed_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_downed_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 7.486300
+      LENGTH 1.089600
+      NAME "vox_kitsune_downed_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_downed_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.825900
+      LENGTH 1.185300
+      NAME "vox_kitsune_downed_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_downed_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 10.261200
+      LENGTH 2.070000
+      NAME "vox_kitsune_exhausted_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_exhausted_01.ogg"
+      >
+    >
+    <ITEM
+      POSITION 12.581200
+      LENGTH 2.070000
+      NAME "vox_kitsune_exhausted_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_exhausted_02.ogg"
+      >
+    >
+    <ITEM
+      POSITION 14.901200
+      LENGTH 2.070000
+      NAME "vox_kitsune_exhausted_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_exhausted_03.ogg"
+      >
+    >
+    <ITEM
+      POSITION 17.221200
+      LENGTH 0.479700
+      NAME "vox_kitsune_heavy_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_heavy_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 17.950900
+      LENGTH 0.788500
+      NAME "vox_kitsune_heavy_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_heavy_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 18.989400
+      LENGTH 0.535900
+      NAME "vox_kitsune_heavy_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_heavy_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.775300
+      LENGTH 0.637000
+      NAME "vox_kitsune_heavy_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_heavy_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 20.662300
+      LENGTH 0.544600
+      NAME "vox_kitsune_heavy_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_heavy_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.456900
+      LENGTH 0.369200
+      NAME "vox_kitsune_hurt_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.076100
+      LENGTH 0.370400
+      NAME "vox_kitsune_hurt_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.696500
+      LENGTH 0.391400
+      NAME "vox_kitsune_hurt_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.337900
+      LENGTH 0.311500
+      NAME "vox_kitsune_hurt_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.899400
+      LENGTH 0.280800
+      NAME "vox_kitsune_hurt_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 24.430200
+      LENGTH 0.431700
+      NAME "vox_kitsune_hurt_06"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/vox_kitsune_hurt_06.wav"
+      >
+    >
+  >
+  <TRACK
+    NAME "UI"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 0.470000
+      NAME "ui_area_cycle_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_area_cycle_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 0.720000
+      LENGTH 0.470000
+      NAME "ui_area_cycle_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_area_cycle_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 1.440000
+      LENGTH 0.470000
+      NAME "ui_area_cycle_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_area_cycle_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.160000
+      LENGTH 0.344900
+      NAME "ui_aspect_cycle_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_aspect_cycle_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 2.754900
+      LENGTH 0.348700
+      NAME "ui_aspect_cycle_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_aspect_cycle_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 3.353600
+      LENGTH 0.469700
+      NAME "ui_aspect_cycle_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_aspect_cycle_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 4.073300
+      LENGTH 0.470000
+      NAME "ui_aspect_cycle_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_aspect_cycle_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 4.793300
+      LENGTH 0.182600
+      NAME "ui_death_countdown_tick"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_death_countdown_tick.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.225900
+      LENGTH 0.420600
+      NAME "ui_dialogue_type_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_dialogue_type_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 5.896500
+      LENGTH 0.437900
+      NAME "ui_dialogue_type_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_dialogue_type_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 6.584400
+      LENGTH 0.470000
+      NAME "ui_dialogue_type_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_dialogue_type_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 7.304400
+      LENGTH 0.453100
+      NAME "ui_dialogue_type_04"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_dialogue_type_04.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.007500
+      LENGTH 0.469000
+      NAME "ui_dialogue_type_05"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_dialogue_type_05.wav"
+      >
+    >
+    <ITEM
+      POSITION 8.726500
+      LENGTH 0.378700
+      NAME "ui_error_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_error_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 9.355200
+      LENGTH 0.384700
+      NAME "ui_error_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_error_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 9.989900
+      LENGTH 0.372900
+      NAME "ui_error_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_error_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 10.612800
+      LENGTH 1.109700
+      NAME "ui_floor_announce"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_floor_announce.wav"
+      >
+    >
+    <ITEM
+      POSITION 11.972500
+      LENGTH 0.357100
+      NAME "ui_game_over_sting"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_game_over_sting.wav"
+      >
+    >
+    <ITEM
+      POSITION 12.579600
+      LENGTH 0.470000
+      NAME "ui_highscore_entry"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_highscore_entry.wav"
+      >
+    >
+    <ITEM
+      POSITION 13.299600
+      LENGTH 0.264700
+      NAME "ui_levelup_spend_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_levelup_spend_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 13.814300
+      LENGTH 0.213000
+      NAME "ui_levelup_spend_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_levelup_spend_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 14.277300
+      LENGTH 0.264400
+      NAME "ui_levelup_spend_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_levelup_spend_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 14.791700
+      LENGTH 2.250000
+      NAME "ui_low_health_loop"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_low_health_loop.ogg"
+      >
+    >
+    <ITEM
+      POSITION 17.291700
+      LENGTH 0.123600
+      NAME "ui_nav_back_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_back_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 17.665300
+      LENGTH 0.241800
+      NAME "ui_nav_back_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_back_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 18.157100
+      LENGTH 0.339200
+      NAME "ui_nav_confirm_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_confirm_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 18.746300
+      LENGTH 0.397500
+      NAME "ui_nav_confirm_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_confirm_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.393800
+      LENGTH 0.324100
+      NAME "ui_nav_confirm_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_confirm_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 19.967900
+      LENGTH 0.203400
+      NAME "ui_nav_move_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_move_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 20.421300
+      LENGTH 0.480000
+      NAME "ui_nav_move_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_move_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.151300
+      LENGTH 0.195000
+      NAME "ui_nav_move_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_nav_move_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 21.596300
+      LENGTH 0.332400
+      NAME "ui_online_failed"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_failed.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.178700
+      LENGTH 0.285300
+      NAME "ui_online_joined"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_joined.wav"
+      >
+    >
+    <ITEM
+      POSITION 22.714000
+      LENGTH 0.375500
+      NAME "ui_online_match_start"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_match_start.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.339500
+      LENGTH 0.150700
+      NAME "ui_online_player_join"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_player_join.wav"
+      >
+    >
+    <ITEM
+      POSITION 23.740200
+      LENGTH 0.466800
+      NAME "ui_online_player_leave"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_player_leave.wav"
+      >
+    >
+    <ITEM
+      POSITION 24.457000
+      LENGTH 0.502900
+      NAME "ui_online_server_lost"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_online_server_lost.wav"
+      >
+    >
+    <ITEM
+      POSITION 25.209900
+      LENGTH 0.342400
+      NAME "ui_player_ready_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_player_ready_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 25.802300
+      LENGTH 0.154400
+      NAME "ui_player_ready_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_player_ready_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 26.206700
+      LENGTH 0.395600
+      NAME "ui_player_ready_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_player_ready_03.wav"
+      >
+    >
+    <ITEM
+      POSITION 26.852300
+      LENGTH 0.173900
+      NAME "ui_scroll_select_01"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_scroll_select_01.wav"
+      >
+    >
+    <ITEM
+      POSITION 27.276200
+      LENGTH 0.151400
+      NAME "ui_scroll_select_02"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_scroll_select_02.wav"
+      >
+    >
+    <ITEM
+      POSITION 27.677600
+      LENGTH 0.377600
+      NAME "ui_scroll_select_03"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE WAVE
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/ui_scroll_select_03.wav"
+      >
+    >
+  >
+  <TRACK
+    NAME "Ambience"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 30.000000
+      NAME "amb_abandoned_shrines"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_abandoned_shrines.ogg"
+      >
+    >
+    <ITEM
+      POSITION 30.250000
+      LENGTH 30.000000
+      NAME "amb_bamboo_woodland"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_bamboo_woodland.ogg"
+      >
+    >
+    <ITEM
+      POSITION 60.500000
+      LENGTH 30.000000
+      NAME "amb_desert_ruins"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_desert_ruins.ogg"
+      >
+    >
+    <ITEM
+      POSITION 90.750000
+      LENGTH 20.000000
+      NAME "amb_fire_small"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_fire_small.ogg"
+      >
+    >
+    <ITEM
+      POSITION 111.000000
+      LENGTH 30.000000
+      NAME "amb_frozen_pass"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_frozen_pass.ogg"
+      >
+    >
+    <ITEM
+      POSITION 141.250000
+      LENGTH 20.000000
+      NAME "amb_interior_shrine"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_interior_shrine.ogg"
+      >
+    >
+    <ITEM
+      POSITION 161.500000
+      LENGTH 20.000000
+      NAME "amb_pond_water"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_pond_water.ogg"
+      >
+    >
+    <ITEM
+      POSITION 181.750000
+      LENGTH 30.000000
+      NAME "amb_sakura_gardens"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_sakura_gardens.ogg"
+      >
+    >
+    <ITEM
+      POSITION 212.000000
+      LENGTH 30.000000
+      NAME "amb_weather_petals"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_weather_petals.ogg"
+      >
+    >
+    <ITEM
+      POSITION 242.250000
+      LENGTH 30.000000
+      NAME "amb_weather_rain"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_weather_rain.ogg"
+      >
+    >
+    <ITEM
+      POSITION 272.500000
+      LENGTH 30.000000
+      NAME "amb_weather_sandstorm"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_weather_sandstorm.ogg"
+      >
+    >
+    <ITEM
+      POSITION 302.750000
+      LENGTH 30.000000
+      NAME "amb_weather_snow"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/amb_weather_snow.ogg"
+      >
+    >
+  >
+  <TRACK
+    NAME "Other"
+    PEAKCOL 16576
+    BEAT -1
+    AUTOMODE 0
+    <ITEM
+      POSITION 0.000000
+      LENGTH 90.100000
+      NAME "music_character_select"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_character_select.ogg"
+      >
+    >
+    <ITEM
+      POSITION 90.350000
+      LENGTH 180.100000
+      NAME "music_combat"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_combat.ogg"
+      >
+    >
+    <ITEM
+      POSITION 270.700000
+      LENGTH 10.642500
+      NAME "music_defeat"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_defeat.ogg"
+      >
+    >
+    <ITEM
+      POSITION 281.592500
+      LENGTH 180.100000
+      NAME "music_exploration"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_exploration.ogg"
+      >
+    >
+    <ITEM
+      POSITION 461.942500
+      LENGTH 150.100000
+      NAME "music_main_theme"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_main_theme.ogg"
+      >
+    >
+    <ITEM
+      POSITION 612.292500
+      LENGTH 90.100000
+      NAME "music_online_lobby"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_online_lobby.ogg"
+      >
+    >
+    <ITEM
+      POSITION 702.642500
+      LENGTH 8.017000
+      NAME "music_wave_victory"
+      FADEIN 1 0.005 0 1 0 0
+      FADEOUT 1 0.005 0 1 0 0
+      <SOURCE VORBIS
+        FILE "/home/emanzi/Godot/KatanaKitsune_WIP/KatanaKitsune-Isometric-/assets/audio/generated/optimized/music_wave_victory.ogg"
+      >
+    >
+  >
+>

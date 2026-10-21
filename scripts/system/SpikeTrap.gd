@@ -76,9 +76,11 @@ func _set_phase(next: Phase) -> void:
 			sprite.modulate = Color(0.55, 0.55, 0.6, 1.0)
 			_show_spikes(false)
 		Phase.WARNING:
+			AudioManager.play_for("sfx_spike_warn", self, -4.0)
 			sprite.modulate = Color(1.0, 0.75, 0.4, 1.0)
 			_show_spikes(false)
 		Phase.OUT:
+			AudioManager.play_for("sfx_spike_strike", self)
 			sprite.modulate = Color.WHITE
 			_show_spikes(true)
 			_strike()

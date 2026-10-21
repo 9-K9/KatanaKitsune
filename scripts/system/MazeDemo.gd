@@ -704,6 +704,7 @@ func _repoint(tiles: TileSet, prefix: String) -> void:
 ## the only sign was the small FLOOR counter in the corner, so walking onto them
 ## read as being teleported by a glitch rather than as descending.
 func _announce_floor(text: String = "") -> void:
+	AudioManager.play("ui_floor_announce", -3.0)
 	var layer := get_node_or_null("FloorLayer") as CanvasLayer
 	if layer == null:
 		layer = CanvasLayer.new()
@@ -815,6 +816,8 @@ func _build() -> void:
 		return
 	SceneLoader.step(0.74, "LIGHTING THE FLOOR")
 	_spawn_player(step)
+	if _level_theme != null:
+		AudioManager.play_ambience("amb_%s" % LevelTheme.NAMES[_level_theme.id])
 	## After _spawn_player, which is where the floor is themed: the windows are
 	## painted onto whichever wall texture this floor ended up with.
 	_paint_windows()
@@ -829,6 +832,7 @@ func _build() -> void:
 	## Armed only now: _populate has run, so an empty room from here really does
 	## mean the wave was cleared rather than that it has not started.
 	_wave_live = true
+	AudioManager.play_music("music_combat", -6.0)
 	_light()
 	if _ext != null and not OS.has_feature("dedicated_server"):
 		_weather = OutdoorWeather.new()
@@ -1962,6 +1966,8 @@ func _check_wave_cleared() -> void:
 
 
 func _finish_wave() -> void:
+	AudioManager.play("sfx_wave_clear")
+	AudioManager.play_music("music_wave_victory", -3.0)
 	Score.wave_cleared(depth, Time.get_ticks_msec() * 0.001 - _wave_started)
 	_show_clear_stairs()
 	_announce_floor("AREA CLEAR")
@@ -1978,6 +1984,7 @@ func _finish_wave() -> void:
 
 
 func _show_clear_stairs() -> Exit:
+	AudioManager.play("sfx_exit_reveal")
 	var stairs := WorldObjects.scene("exit_stairs", 1).instantiate() as Exit
 	stairs.name = "ClearedFloorStairs"
 	# Visual cue only: retain automatic area-clear descent and the upgrade screen.

@@ -13,6 +13,7 @@ var _next: String = ""
 
 
 func on_enter():
+	AudioManager.play_for("sfx_katana_sheathe", pc)
 	pc.katana_drawn = false
 	pc.speed = 0.0
 	## Claimed on the way in rather than on the way out, so a sheathe cut short

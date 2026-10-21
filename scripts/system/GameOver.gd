@@ -27,6 +27,7 @@ var _expired_for: float = 0.0
 var _countdown_label: Label = null
 var _over_layer: ColorRect = null
 var _over_label: Label = null
+var _last_countdown_shown: int = -1
 
 
 func _ready() -> void:
@@ -49,6 +50,9 @@ func _process(delta: float) -> void:
 
 	_left -= delta
 	var shown: int = maxi(int(ceil(_left)), 0)
+	if shown != _last_countdown_shown:
+		_last_countdown_shown = shown
+		AudioManager.play("ui_death_countdown_tick", -3.0, 0.0)
 	if _countdown_label != null:
 		_countdown_label.text = str(shown)
 	if _left <= 0.0:
@@ -153,6 +157,8 @@ func _on_continue_pressed() -> void:
 
 
 func _to_game_over() -> void:
+	AudioManager.play("ui_game_over_sting")
+	AudioManager.play_music("music_defeat", -3.0)
 	_counting = false
 	_expired = true
 	_expired_for = 0.0

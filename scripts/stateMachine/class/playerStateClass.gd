@@ -157,6 +157,16 @@ func playerAttack(hit_frame: int = 3):
 	if _swing_connected or animated_sprite.frame < hit_frame:
 		return
 	_swing_connected = true
+	var attack_event := "sfx_hit_kick"
+	if name in ["katanaSlashStand", "katanaSlashCrouched"]:
+		attack_event = "sfx_katana_slash_fast"
+	elif name == "katanaChargeAttack":
+		attack_event = "sfx_katana_slash_charged"
+		AudioManager.play_for("sfx_hit_critical", pc, -3.0)
+	elif name == "katanaCounterSlash":
+		attack_event = "sfx_katana_counter"
+	AudioManager.play_for(attack_event, pc)
+	AudioManager.play_for("vox_kitsune_heavy" if name == "katanaChargeAttack" else "vox_kitsune_attack", pc, -4.0)
 	## Targets come from the live blade overlap on the actual hit frame, so a
 	## monster that has already backed off is not hit and every breakable in
 	## range responds. Ordinary body contact is still harmless.
@@ -167,6 +177,7 @@ func playerAttack(hit_frame: int = 3):
 	if not pc.has_method("blade_targets"):
 		return
 	for body in pc.blade_targets():
+		AudioManager.play_for("sfx_hit_blade_flesh" if body.is_in_group("enemy") else "sfx_hit_kick", body, -2.0)
 		## A blade charged with stone turns the first monster it meets instead of
 		## cutting it. One charge, one monster; the rest of the swing cuts as
 		## normal.

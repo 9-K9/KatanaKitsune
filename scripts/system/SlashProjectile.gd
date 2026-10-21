@@ -21,6 +21,7 @@ func launch(from: Vector2, direction: Vector2, power: float) -> void:
 	global_position = from
 	damage = power
 	_heading = direction.normalized() if direction != Vector2.ZERO else Vector2.RIGHT
+	AudioManager.play_at("sfx_slash_projectile_launch", from)
 	## Aimed by the squashed vector, not the ground one: the sprite rotates on
 	## screen, so using the unsquashed heading points it above or below the line
 	## it actually travels.
@@ -72,4 +73,5 @@ func _on_body_entered(body: Node2D) -> void:
 	if not (body.is_in_group("enemy") or body.is_in_group("breakable")):
 		return
 	_hit[body.get_instance_id()] = true
+	AudioManager.play_for("sfx_slash_projectile_hit", body)
 	body.take_damage(damage, global_position)
