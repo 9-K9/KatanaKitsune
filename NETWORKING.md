@@ -1,8 +1,8 @@
 # Online multiplayer
 
-KatanaKitsune supports one dedicated-server room with up to four players.
-The public WebSocket room is `209-97-138-84.sslip.io:443`; the browser build
-is at <https://play.9-k9.io>.
+KatanaKitsune supports independent dedicated-server rooms with up to four
+players each. Create or join one at <https://play.9-k9.io/lobby>; the browser
+build is at <https://play.9-k9.io>.
 
 ## Implemented
 
@@ -12,13 +12,16 @@ is at <https://play.9-k9.io>.
   changes, and session reset. Clients send bounded input and render snapshots.
 - Every peer regenerates the same procedural floor from the server's seed.
 - Browser and desktop clients use secure WebSockets through Caddy.
+- The lobby allocates one of 12 isolated, on-demand services. Each service has
+  a 512 MB memory cap and is stopped after its room stays empty for 15 minutes.
 - Disconnects clear held input. When the room empties, the server cancels any
   in-progress floor build and returns to its small idle scene.
 - The Linux server export strips visual resources. A live idle server uses
   roughly 80 MB; a tested two-player floor peaked around 160 MB.
 
-This is currently one room, not matchmaking. Multiple simultaneous rooms
-would require a room directory and multiple server instances/ports.
+The initial pool limit is 12 concurrent groups (48 players if every room is
+full). It is deliberately conservative and can be adjusted after production
+load data is available.
 
 ## Live validation
 
@@ -32,7 +35,7 @@ clean hang-up. Each client is memory-capped; override paths/caps with `GODOT`,
 godot --headless --path . --export-release "Test Client (stripped)" \
   build/test/katanakitsune_testclient.pck
 PCK=build/test/katanakitsune_testclient.pck MEM_CAP=1G \
-  tools/validate_online_remote.sh 209-97-138-84.sslip.io:443 duo
+  tools/validate_online_remote.sh play.9-k9.io/rooms/r01 duo
 ```
 
 The validator also has a disconnect-during-build mode used to guard the
@@ -40,7 +43,9 @@ server's cancellation path. See `tools/validate_online_match.gd`.
 
 ## Operations
 
-The DigitalOcean service is `katanakitsune-server` on `209.97.138.84`.
+The allocator service is `katanakitsune-lobby`; allocated rooms run as
+`katanakitsune-room@N`. The original `katanakitsune-server` remains as a
+backward-compatible direct room.
 
 ```bash
 ssh root@209.97.138.84 systemctl status katanakitsune-server

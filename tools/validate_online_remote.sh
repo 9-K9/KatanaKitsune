@@ -13,8 +13,18 @@ set -u
 
 ROOM="${1:-209-97-138-84.sslip.io:443}"
 MODE="${2:-duo}"
-HOST="${ROOM%:*}"
-PORT="${ROOM##*:}"
+ROOM="${ROOM#wss://}"
+ROOM="${ROOM#ws://}"
+AUTHORITY="${ROOM%%/*}"
+PATH_PART=""
+[[ "$ROOM" == */* ]] && PATH_PART="/${ROOM#*/}"
+if [[ "$AUTHORITY" == *:* && "${AUTHORITY##*:}" =~ ^[0-9]+$ ]]; then
+	HOST="${AUTHORITY%:*}${PATH_PART}"
+	PORT="${AUTHORITY##*:}"
+else
+	HOST="${AUTHORITY}${PATH_PART}"
+	PORT=443
+fi
 GODOT_BIN="${GODOT:-godot}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PCK="${PCK:-}"

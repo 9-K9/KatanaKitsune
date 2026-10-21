@@ -161,7 +161,7 @@ stripped clients against the live TLS server and caps each process separately:
 godot --headless --path . --export-release "Test Client (stripped)" \
   build/test/katanakitsune_testclient.pck
 PCK=build/test/katanakitsune_testclient.pck MEM_CAP=1G \
-  tools/validate_online_remote.sh 209-97-138-84.sslip.io:443 duo
+  tools/validate_online_remote.sh play.9-k9.io/rooms/r01 duo
 ```
 
 It checks seat/aspect state, identical floor seeds, enemy replication,

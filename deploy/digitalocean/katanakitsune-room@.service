@@ -1,0 +1,26 @@
+[Unit]
+Description=Katana Kitsune room %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=katana
+Group=katana
+WorkingDirectory=/opt/katanakitsune
+ExecStart=/bin/bash -c 'exec /opt/katanakitsune/godot --headless --main-pack /opt/katanakitsune/katanakitsune_server.pck --server=$((8910 + %i))'
+Restart=on-failure
+RestartSec=2
+Environment=HOME=/opt/katanakitsune
+Environment=XDG_DATA_HOME=/opt/katanakitsune/rooms/%i
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/katanakitsune
+ProtectHome=true
+PrivateTmp=true
+MemoryMax=512M
+MemorySwapMax=128M
+TasksMax=128
+
+[Install]
+WantedBy=multi-user.target

@@ -28,6 +28,7 @@ set -e
 mv /opt/katanakitsune/katanakitsune_server.pck.new /opt/katanakitsune/katanakitsune_server.pck
 chown katana:katana /opt/katanakitsune/katanakitsune_server.pck
 systemctl restart katanakitsune-server
+systemctl try-restart 'katanakitsune-room@*.service' || true
 sleep 3
 systemctl --no-pager --lines=5 status katanakitsune-server
 EOF

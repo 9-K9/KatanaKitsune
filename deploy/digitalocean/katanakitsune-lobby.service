@@ -1,0 +1,24 @@
+[Unit]
+Description=Katana Kitsune room allocator
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /opt/katanakitsune-lobby/lobby_service.py
+Restart=always
+RestartSec=2
+Environment=KK_PUBLIC_HOST=play.9-k9.io
+Environment=KK_ROOM_COUNT=12
+Environment=KK_EMPTY_TTL=900
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/katanakitsune-lobby /opt/katanakitsune/rooms
+ProtectHome=true
+PrivateTmp=true
+MemoryMax=96M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

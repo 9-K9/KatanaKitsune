@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>KatanaKitsune Multiplayer Lobby</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background:#12080b; color:#f5d18a }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at top,#40161e,#12080b 60%) }
+    main { width:min(92vw,560px); padding:2rem; border:1px solid #9d603d; background:#190d10e8; box-shadow:0 24px 80px #000 }
+    h1 { letter-spacing:.12em; text-align:center; margin-top:0 }
+    p { color:#d8baa5; line-height:1.5 }
+    section { padding:1rem 0; border-top:1px solid #593229 }
+    input,button,a.play { box-sizing:border-box; width:100%; padding:.85rem; margin:.35rem 0; border:1px solid #a96942; background:#281319; color:#ffe3a8; font:inherit }
+    button,a.play { cursor:pointer; text-align:center; text-decoration:none; display:block; font-weight:700 }
+    button:hover,a.play:hover { background:#49212a }
+    #result { min-height:4rem; word-break:break-word }
+    .code { font-size:1.8rem; letter-spacing:.18em; color:#fff1bb }
+  </style>
+</head>
+<body><main>
+  <h1>KATANA KITSUNE</h1>
+  <p>Create a private room for up to four players, or enter a six-character code from a friend. An unused room expires after 15 minutes.</p>
+  <section><button id="create">CREATE ROOM</button></section>
+  <section>
+    <input id="code" maxlength="6" autocomplete="off" placeholder="ROOM CODE" aria-label="Room code">
+    <button id="join">JOIN ROOM</button>
+  </section>
+  <section id="result" aria-live="polite"></section>
+</main><script>
+const result=document.querySelector('#result'), code=document.querySelector('#code');
+async function request(url,options){
+  result.textContent='Preparing room…';
+  const response=await fetch(url,options), body=await response.json();
+  if(!response.ok) throw new Error(body.error||'Room service unavailable');
+  result.innerHTML=`<div>ROOM CODE</div><div class="code">${body.code}</div><p>Share this code with your party.</p><a class="play" href="/?room=${encodeURIComponent(body.address)}">PLAY IN BROWSER</a><button id="copy">COPY ROOM ADDRESS</button>`;
+  document.querySelector('#copy').onclick=async()=>{await navigator.clipboard.writeText(body.address);document.querySelector('#copy').textContent='COPIED';};
+}
+document.querySelector('#create').onclick=()=>request('/api/rooms',{method:'POST'}).catch(e=>result.textContent=e.message);
+document.querySelector('#join').onclick=()=>request('/api/rooms/'+code.value.trim().toUpperCase()).catch(e=>result.textContent=e.message);
+code.oninput=()=>code.value=code.value.toUpperCase().replace(/[^A-Z2-9]/g,'');
+</script></body></html>

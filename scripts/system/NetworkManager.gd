@@ -124,7 +124,11 @@ func host(port: int = DEFAULT_PORT) -> Error:
 ## Connects to someone else's dedicated server as a client.
 func join(address: String, port: int = DEFAULT_PORT, secure: bool = true) -> Error:
 	var peer := WebSocketMultiplayerPeer.new()
-	var url: String = "%s://%s:%d" % ["wss" if secure else "ws", address, port]
+	var slash: int = address.find("/")
+	var host: String = address.substr(0, slash) if slash >= 0 else address
+	var path: String = address.substr(slash) if slash >= 0 else ""
+	var url: String = "%s://%s:%d%s" % [
+			"wss" if secure else "ws", host, port, path]
 	var err: Error = peer.create_client(url, TLSOptions.client() if secure else null)
 	if err != OK:
 		push_error("NetworkManager: failed to join %s (%s)" % [url, error_string(err)])
@@ -137,9 +141,9 @@ func join(address: String, port: int = DEFAULT_PORT, secure: bool = true) -> Err
 	return OK
 
 
-## There is deliberately no account system or matchmaking site (per the
-## chosen scope): a room code is just the host's own address, typed in by
-## whoever is joining. "host" alone is shorthand for the default port.
+## A room address can include the reverse-proxy path allocated by the lobby,
+## for example play.9-k9.io/rooms/r01. "host" alone still means the default
+## port, preserving direct/legacy server addresses.
 func join_room_code(code: String, secure: bool = true) -> Error:
 	var parsed: Dictionary = parse_room_code(code)
 	var address: String = parsed["address"]
@@ -150,17 +154,21 @@ func join_room_code(code: String, secure: bool = true) -> Error:
 
 func parse_room_code(code: String) -> Dictionary:
 	var text: String = code.strip_edges()
+	text = text.trim_prefix("wss://").trim_prefix("ws://")
 	var port: int = DEFAULT_PORT
-	var address: String = text
-	var colon: int = text.rfind(":")
+	var slash: int = text.find("/")
+	var authority: String = text.substr(0, slash) if slash >= 0 else text
+	var path: String = text.substr(slash) if slash >= 0 else ""
+	var address: String = authority
+	var colon: int = authority.rfind(":")
 	if colon != -1:
-		var tail: String = text.substr(colon + 1)
+		var tail: String = authority.substr(colon + 1)
 		if tail.is_valid_int():
 			port = int(tail)
-			address = text.substr(0, colon)
+			address = authority.substr(0, colon)
 	if address.is_empty():
 		address = "127.0.0.1"
-	return {"address": address, "port": port}
+	return {"address": address + path, "port": port}
 
 
 func stop() -> void:

@@ -80,7 +80,7 @@ func _build() -> void:
 	column.add_child(_join_box)
 	_join_box.add_child(_label("ROOM ADDRESS", 12, DIM))
 	_code = LineEdit.new()
-	_code.text = DEFAULT_ROOM
+	_code.text = _room_from_web_url()
 	_code.custom_minimum_size = Vector2(0, 34)
 	_code.text_submitted.connect(func(_t): _on_join_pressed())
 	_join_box.add_child(_code)
@@ -103,6 +103,19 @@ func _build() -> void:
 	column.add_child(_device_label)
 	column.add_child(_button("◆   BACK   ◆", _on_back_pressed))
 	_refresh_device()
+
+
+func _room_from_web_url() -> String:
+	if not OS.has_feature("web"):
+		return DEFAULT_ROOM
+	var href: String = str(JavaScriptBridge.eval("window.location.href"))
+	var marker := "?room="
+	var start := href.find(marker)
+	if start < 0:
+		return DEFAULT_ROOM
+	var encoded := href.substr(start + marker.length()).get_slice("&", 0)
+	var room := encoded.uri_decode().strip_edges()
+	return room if not room.is_empty() else DEFAULT_ROOM
 
 
 func _label(text: String, size: int, colour: Color) -> Label:

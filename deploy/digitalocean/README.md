@@ -57,6 +57,7 @@ ssh root@<ip> systemctl restart katanakitsune-server   # restart
 ## Live addresses and limits
 
 - Browser game: <https://play.9-k9.io>
-- Room address: `209-97-138-84.sslip.io:443`
-- One service currently runs one room of up to four players. Multiple rooms
-  need more service instances or a lobby service; see `NETWORKING.md`.
+- Room lobby: <https://play.9-k9.io/lobby>
+- The allocator starts up to 12 isolated rooms with four players each and
+  retires rooms after they remain empty for 15 minutes.
+- `209-97-138-84.sslip.io:443` remains available as the legacy direct room.
