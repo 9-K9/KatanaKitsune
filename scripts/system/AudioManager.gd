@@ -54,7 +54,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _index_library() -> void:
-	for filename in DirAccess.get_files_at(AUDIO_ROOT):
+	# ResourceLoader normalizes imported `.remap` entries in exported PCKs,
+	# unlike a raw DirAccess scan, while returning the same filenames in-editor.
+	for filename in ResourceLoader.list_directory(AUDIO_ROOT):
 		if not filename.get_extension().to_lower() in ["wav", "ogg"]:
 			continue
 		var stem := filename.get_basename()
