@@ -32,6 +32,27 @@ Open the project in **Godot 4.7** (GL Compatibility renderer) and press play.
 The main scene is `scenes/title_screen.tscn`; everything else is reachable from
 there. Viewport is 1536×864, stretched on `canvas_items`.
 
+### Builds
+
+`export_presets.cfg` carries five presets. Export headless, one at a time, with
+`godot --headless --path . --export-release "<preset>" <export_path>`; everything
+lands under the git-ignored `build/`.
+
+| Preset | Output | Notes |
+|--------|--------|-------|
+| `Web` | `build/web/` → zip as `KatanaKitsune_web.zip` | No-threads build for itch.io and https://play.9-k9.io (publish with `deploy/digitalocean/upload_web.sh`). |
+| `Linux Desktop` | `build/linux/KatanaKitsune.x86_64` | Single file, pck embedded. `chmod +x` and run. |
+| `Windows Desktop` | `build/windows/KatanaKitsune.exe` | Single file, pck embedded. Stock Godot icon (a custom one needs rcedit + Wine). |
+| `macOS` | `build/macos/KatanaKitsune.zip` | Universal `.app`, ad-hoc signed only. Gatekeeper will warn: right-click → Open, or `xattr -dr com.apple.quarantine "KatanaKitsune (Isometric).app"`. |
+| `Linux Server` | `build/server/katanakitsune_server.pck` | Headless dedicated server, see `deploy/digitalocean/`. |
+
+The desktop builds use the same `wss://` server as the browser build, so ONLINE
+CO-OP works from any of them with an internet connection. They share the Web
+preset's exclusions (monster sets not yet on the roster, marketing art) so one
+set of content is being tested everywhere. Desktop export templates must be
+installed for 4.7.2 (`Godot_v4.7.2-stable_export_templates.tpz`; only the
+`linux_*`, `windows_*` and `macos.zip` entries are needed).
+
 ## World objects
 
 World scenery uses the new eight-direction exports in
