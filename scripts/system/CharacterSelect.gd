@@ -12,6 +12,12 @@ const SHOWCASE: Array[String] = [
 	"forwardRoll", "fastRun", "flair", "katanaIdle",
 ]
 const SECONDS_PER_CLIP: float = 1.6
+## The slow clips read as a pose, not a flurry: at native speed the idle sway
+## and the flair dance looked jittery on both heroines. Everything else runs
+## as it does in play.
+const CLIP_SPEED := {"idle": 0.5, "katanaIdle": 0.5, "flair": 0.6}
+## Slowed clips are held for proportionally longer so they still finish.
+const CLIP_HOLD := {"idle": 2.6, "katanaIdle": 2.6, "flair": 3.0}
 const DIRECTION := "southEast"
 
 ## Hair/skin recolour turned out to be unreliable in practice — it also
@@ -345,6 +351,7 @@ func _play_current() -> void:
 	var clip: String = SHOWCASE[_clip % SHOWCASE.size()]
 	var anim := "%s_%s" % [clip, DIRECTION]
 	if preview.sprite_frames != null and preview.sprite_frames.has_animation(anim):
+		preview.speed_scale = CLIP_SPEED.get(clip, 1.0)
 		preview.play(anim)
 		clip_label.text = clip
 	else:
@@ -354,7 +361,7 @@ func _play_current() -> void:
 func _process(delta: float) -> void:
 	_drive(delta)
 	_elapsed += delta
-	if _elapsed >= SECONDS_PER_CLIP:
+	if _elapsed >= CLIP_HOLD.get(SHOWCASE[_clip % SHOWCASE.size()], SECONDS_PER_CLIP):
 		_elapsed = 0.0
 		_clip += 1
 		_play_current()
