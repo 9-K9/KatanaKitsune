@@ -22,7 +22,15 @@ fi
 
 cd "$PROJECT_DIR" || exit 1
 
-timeout "${TIMEOUT_SECONDS}s" "$GODOT_BIN" --headless --path . \
+# Cap each process at 2 GB (set NO_CAP=1 to skip on systems without systemd)
+# and keep stdout unbuffered so a killed process still leaves its log behind.
+run=()
+command -v stdbuf >/dev/null 2>&1 && run+=(stdbuf -o0 -e0)
+if [[ "${NO_CAP:-0}" != "1" ]] && command -v systemd-run >/dev/null 2>&1; then
+	run+=(systemd-run --user --scope -q -p MemoryMax=${MEM_CAP:-3G} -p MemorySwapMax=0)
+fi
+
+timeout "${TIMEOUT_SECONDS}s" "${run[@]}" "$GODOT_BIN" --headless --path . \
 	res://tools/validate_online_match.tscn --max-fps 120 \
 	-- --role=server --port="$PORT" > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
@@ -30,7 +38,7 @@ SERVER_PID=$!
 # Give the server a moment to bind the port before the client dials in.
 sleep 1.5
 
-timeout "${TIMEOUT_SECONDS}s" "$GODOT_BIN" --headless --path . \
+timeout "${TIMEOUT_SECONDS}s" "${run[@]}" "$GODOT_BIN" --headless --path . \
 	res://tools/validate_online_match.tscn --max-fps 120 \
 	-- --role=client --port="$PORT" > "$CLIENT_LOG" 2>&1
 CLIENT_STATUS=$?
