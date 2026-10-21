@@ -96,7 +96,7 @@ def _public(room: dict, code: str) -> dict:
     slot = int(room["slot"])
     return {
         "code": code,
-        "address": f"{HOST}/rooms/r{slot:02d}",
+        "address": f"{HOST}:443/rooms/r{slot:02d}",
         "players": min(4, _connections(slot)),
         "capacity": 4,
     }

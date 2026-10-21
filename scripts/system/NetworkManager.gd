@@ -155,8 +155,11 @@ func join_room_code(code: String, secure: bool = true) -> Error:
 func parse_room_code(code: String) -> Dictionary:
 	var text: String = code.strip_edges()
 	text = text.trim_prefix("wss://").trim_prefix("ws://")
-	var port: int = DEFAULT_PORT
 	var slash: int = text.find("/")
+	## Routed lobby addresses are HTTPS/WSS paths and therefore use 443 even
+	## when an older lobby link omitted the explicit port. Plain hostnames keep
+	## the legacy direct-server default.
+	var port: int = 443 if slash >= 0 else DEFAULT_PORT
 	var authority: String = text.substr(0, slash) if slash >= 0 else text
 	var path: String = text.substr(slash) if slash >= 0 else ""
 	var address: String = authority
