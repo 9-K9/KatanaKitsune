@@ -37,7 +37,7 @@ Beds should be calm, sparse, seamless, and non-fatiguing. Avoid constant promine
 
 ### Voices
 
-Player vocalizations should be brief, agile, and nonverbal until character canon is approved. Enemy voices should reflect species material—wet kappa, feathered karasu/tengu, icy yuki-onna, heavy oni—without caricature. Do not generate spoken taunts until dialogue ownership is corrected.
+All playable characters, including Katana Kitsune and the legacy Karma Geisha, are female. Their vocalizations must be unmistakably feminine, brief, agile, and nonverbal. Jorogumo, Kasha, Nina Ninja, and Yuki Onna are also female; preserve a distinct feminine identity beneath each species texture. Other enemy voices should reflect species material—wet kappa, feathered karasu/tengu, heavy oni—without caricature. Do not generate spoken taunts until dialogue ownership is corrected.
 
 ### UI
 
@@ -69,4 +69,3 @@ Dry wooden ticks, brush/paper movement, small bells, and spirit glints. Confirma
 ## Review checklist
 
 Approve assets in gameplay, not in isolation. Check transient timing, repetition fatigue, mono compatibility, web decoding, overlap at four-player density, and whether every cue communicates a distinct event. Keep source masters and generation metadata even when the runtime file is OGG.
-
