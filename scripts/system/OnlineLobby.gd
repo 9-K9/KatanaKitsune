@@ -120,7 +120,7 @@ func _room_from_web_url() -> String:
 
 func _label(text: String, size: int, colour: Color) -> Label:
 	var label := Label.new()
-	label.text = text
+	label.text = tr(text)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", size)
 	label.add_theme_color_override("font_color", colour)
@@ -129,7 +129,7 @@ func _label(text: String, size: int, colour: Color) -> Label:
 
 func _button(text: String, handler: Callable) -> Button:
 	var button := Button.new()
-	button.text = text
+	button.text = tr(text)
 	button.custom_minimum_size = Vector2(310, 38)
 	button.add_theme_font_size_override("font_size", 16)
 	button.add_theme_color_override("font_color", GOLD)
@@ -153,7 +153,7 @@ func _refresh_device() -> void:
 	var device: int = NetworkManager.client_device
 	var name: String = "KEYBOARD" if device == PlayerInput.KEYBOARD \
 			else "PAD %d" % (device + 1)
-	_device_label.text = "PLAYING WITH: %s   •   PRESS A BUTTON ON ANOTHER DEVICE TO SWITCH" % name
+	_device_label.text = tr("PLAYING WITH: %s   •   PRESS A BUTTON ON ANOTHER DEVICE TO SWITCH") % name
 
 
 func _refresh_room() -> void:
@@ -180,8 +180,8 @@ func _refresh_room() -> void:
 			clampi(NetworkManager.lobby_theme(), 0, LevelTheme.NAMES.size() - 1)].to_upper()
 	_area_button.disabled = not leader
 	_start_button.disabled = not leader
-	_status.text = "YOU LEAD THE ROOM. PRESS START WHEN EVERYONE IS IN." if leader \
-			else "WAITING FOR THE ROOM LEADER TO START…"
+	_status.text = tr("YOU LEAD THE ROOM. PRESS START WHEN EVERYONE IS IN.") if leader \
+			else tr("WAITING FOR THE ROOM LEADER TO START…")
 	if get_viewport().gui_get_focus_owner() == null:
 		TitleScreen.focus_first_button(_room_box)
 
@@ -191,26 +191,26 @@ func _on_join_pressed() -> void:
 		return
 	var code: String = _code.text.strip_edges()
 	if code.is_empty():
-		_status.text = "TYPE THE ROOM ADDRESS FIRST."
+		_status.text = tr("TYPE THE ROOM ADDRESS FIRST.")
 		return
 	_joining = true
-	_status.text = "CONNECTING TO %s…" % code
+	_status.text = tr("CONNECTING TO %s…") % code
 	var err: Error = NetworkManager.join_room_code(code)
 	if err != OK:
 		_joining = false
-		_status.text = "COULD NOT CONNECT (%s)." % error_string(err)
+		_status.text = tr("COULD NOT CONNECT (%s).") % error_string(err)
 
 
 func _on_joined() -> void:
 	AudioManager.play("ui_online_joined")
 	_joining = false
-	_status.text = "CONNECTED. WAITING FOR THE ROOM…"
+	_status.text = tr("CONNECTED. WAITING FOR THE ROOM…")
 
 
 func _on_join_failed(reason: String) -> void:
 	AudioManager.play("ui_online_failed")
 	_joining = false
-	_status.text = "COULD NOT REACH THE SERVER (%s). CHECK THE ADDRESS AND TRY AGAIN." % reason
+	_status.text = tr("COULD NOT REACH THE SERVER (%s). CHECK THE ADDRESS AND TRY AGAIN.") % reason
 	_show_join()
 
 
@@ -218,7 +218,7 @@ func _on_server_lost() -> void:
 	AudioManager.play("ui_online_server_lost")
 	_joining = false
 	NetworkManager.stop()
-	_status.text = "LOST THE SERVER. TRY JOINING AGAIN."
+	_status.text = tr("LOST THE SERVER. TRY JOINING AGAIN.")
 	_show_join()
 
 
@@ -254,7 +254,7 @@ func _on_area_pressed() -> void:
 
 func _on_start_pressed() -> void:
 	AudioManager.play("ui_online_match_start")
-	_status.text = "STARTING…"
+	_status.text = tr("STARTING…")
 	NetworkManager.start_room()
 
 

@@ -74,7 +74,7 @@ func _show(index: int) -> void:
 		style.border_color = Color(1.0, 0.8, 0.4) if i == index else Color(0.4, 0.3, 0.22)
 		for state in ["normal", "hover", "pressed"]:
 			_buttons[i].add_theme_stylebox_override(state, style)
-	begin.text = "BEGIN — " + _themes[index].display_name
+	begin.text = tr("BEGIN") + " — " + tr(_themes[index].display_name)
 
 
 func _process(delta: float) -> void:

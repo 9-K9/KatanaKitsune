@@ -816,15 +816,15 @@ func _count_bar() -> String:
 ## a screen that looks like it is already asking you to pick a colour.
 func _show_count_prompt() -> void:
 	prompt_overlay.visible = true
-	prompt_title.text = "HOW MANY HUMAN PLAYERS?"
+	prompt_title.text = tr("HOW MANY HUMAN PLAYERS?")
 	prompt_count_row.text = _count_bar()
-	prompt_devices.text = "LEFT / RIGHT TO CHANGE   •   %s TO CONFIRM" \
+	prompt_devices.text = tr("LEFT / RIGHT TO CHANGE   •   %s TO CONFIRM") \
 			% PlayerInput.new(PlayerInput.KEYBOARD).confirm_button_label()
 
 
 func _show_bot_prompt() -> void:
 	prompt_overlay.visible = true
-	prompt_title.text = "HOW MANY AI TEAMMATES?"
+	prompt_title.text = tr("HOW MANY AI TEAMMATES?")
 	var bar := ""
 	for i in Roster.MAX_PLAYERS - _wanted + 1:
 		bar += ("[%d]" % i) if i == _bot_count else (" %d " % i)
@@ -835,7 +835,7 @@ func _show_bot_prompt() -> void:
 
 func _show_bot_mode_prompt() -> void:
 	prompt_overlay.visible = true
-	prompt_title.text = "AI TEAMMATE BEHAVIOUR"
+	prompt_title.text = tr("AI TEAMMATE BEHAVIOUR")
 	var rows := PackedStringArray()
 	for i in _bot_count:
 		var mode: int = _bot_modes[i]
@@ -865,7 +865,7 @@ const DEVICE_LEGEND: Array[Array] = [
 ## single "press a button" nobody owns the wording of.
 func _show_claim_prompt() -> void:
 	prompt_overlay.visible = true
-	prompt_title.text = "PLAYER %d — PRESS A BUTTON TO JOIN" % (_active + 1)
+	prompt_title.text = tr("PLAYER %d — PRESS A BUTTON TO JOIN") % (_active + 1)
 	prompt_count_row.text = ""
 	var lines: Array[String] = []
 	for entry in DEVICE_LEGEND:

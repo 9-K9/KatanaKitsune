@@ -216,7 +216,7 @@ func _build_game_over() -> void:
 	add_child(_over_layer)
 
 	_over_label = Label.new()
-	_over_label.text = "GAME OVER"
+	_over_label.text = tr("GAME OVER")
 	_over_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_over_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_over_label.anchor_right = 1.0

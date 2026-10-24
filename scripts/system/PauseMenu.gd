@@ -176,8 +176,8 @@ func _sync_owner_label() -> void:
 	var name := "P%d" % (_owner_slot + 1) if Roster.count() > 0 \
 			else _slot_input(_owner_slot).device_name()
 	_owner_label.modulate = Roster.colour_of(_owner_slot)
-	_owner_label.text = "%s PAUSED" % name if _idle < TAKEOVER_IDLE \
-			else "%s PAUSED — IDLE, ANY PLAYER MAY TAKE OVER" % name
+	_owner_label.text = tr("%s PAUSED") % name if _idle < TAKEOVER_IDLE \
+			else tr("%s PAUSED — IDLE, ANY PLAYER MAY TAKE OVER") % name
 
 
 func _slot_input(slot: int) -> PlayerInput:
@@ -338,7 +338,7 @@ func _show_main_menu() -> void:
 	TitleScreen.focus_first_button(main_menu)
 
 func _sync_immortality_label() -> void:
-	immortality_toggle.text = "IMMORTALITY IS ON" if CheatManager.immortality_enabled else "IMMORTALITY IS OFF"
+	immortality_toggle.text = tr("IMMORTALITY IS ON") if CheatManager.immortality_enabled else tr("IMMORTALITY IS OFF")
 
 func _on_quit_pressed():
 	## Leaving the map has to lift the pause too, or the title screen loads

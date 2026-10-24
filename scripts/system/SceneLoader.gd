@@ -66,7 +66,7 @@ func _build_ui() -> void:
 	var font: Font = load(FONT) if ResourceLoader.exists(FONT) else null
 
 	_title = Label.new()
-	_title.text = "LOADING"
+	_title.text = tr("LOADING")
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_title.add_theme_font_size_override("font_size", 38)

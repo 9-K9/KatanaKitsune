@@ -15,7 +15,7 @@ var controls: ControlsPanel
 
 func _ready() -> void:
 	var title := Label.new()
-	title.text = "DISPLAY"
+	title.text = tr("DISPLAY")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", font_size + 1)
 	add_child(title)
@@ -30,14 +30,14 @@ func _ready() -> void:
 		_display.append(toggle)
 
 	var controls_button := Button.new()
-	controls_button.text = "CONTROLS"
+	controls_button.text = tr("CONTROLS")
 	controls_button.add_theme_font_size_override("font_size", font_size + 1)
 	controls_button.pressed.connect(_open_controls)
 	add_child(controls_button)
 	_display.append(controls_button)
 
 	var back := Button.new()
-	back.text = "BACK"
+	back.text = tr("BACK")
 	back.add_theme_font_size_override("font_size", font_size + 1)
 	back.pressed.connect(func() -> void: back_pressed.emit())
 	add_child(back)
@@ -84,4 +84,4 @@ func _on_toggled(enabled: bool, id: String) -> void:
 
 func _update_label(id: String) -> void:
 	var toggle: CheckButton = _toggles[id]
-	toggle.text = "%s: %s" % [RetroFX.EFFECTS[id]["label"], "ON" if toggle.button_pressed else "OFF"]
+	toggle.text = "%s: %s" % [tr(RetroFX.EFFECTS[id]["label"]), tr("ON") if toggle.button_pressed else tr("OFF")]
